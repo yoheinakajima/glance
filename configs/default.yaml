@@ -40,8 +40,9 @@ models:
   image_token_budget_override: null
 
 vlm:
-  batch_size: 8                  # statements per forward batch
-  prefix_cache: true             # false = reference path (same as --no-prefix-cache)
+  batch_size: 8                  # reference path: full prompts per forward batch
+  suffix_batch_size: 16          # cached path: statement suffixes per forward batch
+  prefix_cache: false            # false = reference path (same as --no-prefix-cache); flipped on in M4
   letter_rotations: 4            # "up to 4 cyclic rotations" for the letter method
   off_mass_warn: 0.1
 

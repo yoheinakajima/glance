@@ -52,7 +52,8 @@ class ModelsConfig(_Strict):
 
 class VlmConfig(_Strict):
     batch_size: int = 8
-    prefix_cache: bool = True
+    suffix_batch_size: int = 16
+    prefix_cache: bool = False
     letter_rotations: int = 4
     off_mass_warn: float = 0.1
 

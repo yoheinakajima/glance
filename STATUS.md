@@ -27,6 +27,18 @@ Where the spec was ambiguous, the simpler option was taken and recorded here.
   make at inference, and only when the caller asks for it.
 - D9. Frontier baseline contract (used in M5): the scorer renders one prompt plus an enumerated answer list per
   question and the backend returns one pick per question, so the frontier backend stays type-agnostic too.
+- D10. VLM prompt layout: each image is introduced by a text label ("Image `img0`:") so instructions can name
+  images by backticked id; then `Context: <sorted JSON>`; then the statement block. `criteria` for noul render
+  as "Yes means: ..." / "No means: ..." lines. The `letter` template (not given in the spec) is
+  "Question / Options: A. ... / Answer with the letter of the correct option."; label logits are the logsumexp over
+  the `A` and ` A` token variants; rotations are up to 4 cyclic shifts spread evenly around the option cycle.
+- D11. The image token budget is per request: with k images each gets budget // k tokens. Pixels per token come
+  from the processor's patch and merge sizes.
+- D12. The VLM backend scores statements in a canonical (sorted) order and un-sorts the result. Batch composition
+  and padding perturb half-precision logits slightly; sorting makes a statement's logit independent of where the
+  caller listed it, so `independent` is permutation-invariant exactly, not approximately.
+- D13. Prefix cache reuse across calls: the last 2 image prefixes are kept (keyed by image sha256 and token count),
+  which is what the call log's "cache hit or miss" reports. The reference path reports no cache.
 
 ## Dependencies beyond the HANDOFF list
 
@@ -74,3 +86,27 @@ pytest: 65 passed (GLANCE_TEST_MODELS=1 includes the three samples on the real S
 ```
 
 Deviations: none. Open questions: none.
+
+## M2: VLM backend, reference path, `independent` and `letter` (2026-09-19)
+
+Built: `backends/vlm_hf.py` (Qwen3-VL-4B-Instruct, float16 on MPS, no generation anywhere: one forward pass, next-
+token logits at the empty assistant turn, `z = logsumexp(Yes variants) - logsumexp(No variants)`, `off_mass`,
+asserts on the assistant header and thinking tags, image token budget from processor patch/merge sizes), the
+reference path (full prompts, left padded, `--no-prefix-cache`), `Backend.score_labels` for `letter`.
+The cached path is written but stays off (`vlm.prefix_cache: false`) until its M4 acceptance check.
+
+Check (`GLANCE_TEST_MODELS=1 uv run pytest tests/test_m2_vlm.py -s`, reference path):
+
+```text
+[M2] off_mass over 50 statements in 20 items: mean=0.00000 max=0.00000      (< 0.1)
+[M2] max |dp| under option reordering (independent): 0.00e+00               (<= 1e-3)
+[M2] max |dz| between two identical runs: 0.00e+00                          (<= 1e-3)
+[M2] letter: receipt -> receipt, invoice -> invoice, dog -> other
+samples on --model vlm: receipt/invoice/dog all correct (SigLIP got the invoice wrong)
+image tokens: receipt 448, invoice 744, dog 600 (budget 768); manual tokenization == processor output
+pytest: 6 passed in 214 s (model tests), 65 passed (unit tests)
+```
+
+Deviations: none. MPS float16 ran clean (no NaNs, no CPU-fallback ops logged), so the mlx-vlm fallback was not
+needed. Open questions: raw probabilities are extremely peaked (p = 1.000000 on easy items); M4 calibration has
+to absorb that.
