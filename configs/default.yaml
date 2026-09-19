@@ -45,11 +45,8 @@ vlm:
   letter_rotations: 4            # "up to 4 cyclic rotations" for the letter method
   off_mass_warn: 0.1
 
-limits:
-  max_images: 4
-  max_options: 128
+limits:                          # image limits; request-shape limits are constants in glance/schema.py
   max_image_mb: 20
-  max_score_levels: 10
   formats: [JPEG, PNG, WEBP]
   max_side: 2048                 # resize policy: downscale so the longest side fits
 

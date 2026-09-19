@@ -58,10 +58,7 @@ class VlmConfig(_Strict):
 
 
 class LimitsConfig(_Strict):
-    max_images: int = 4
-    max_options: int = 128
     max_image_mb: int = 20
-    max_score_levels: int = 10
     formats: list[str] = ["JPEG", "PNG", "WEBP"]
     max_side: int = 2048
 

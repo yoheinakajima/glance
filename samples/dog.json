@@ -1,0 +1,46 @@
+{
+  "model": "siglip",
+  "state": {
+    "images": [
+      {
+        "id": "img0",
+        "path": "samples/dog.jpg"
+      }
+    ],
+    "context": {
+      "source": "expense app upload"
+    }
+  },
+  "questions": {
+    "is_receipt": {
+      "type": "noul",
+      "instructions": "Is `img0` a photo or scan of a purchase receipt?",
+      "criteria": {
+        "true": "a photo or scan of a purchase receipt",
+        "false": "something that is not a purchase receipt"
+      }
+    },
+    "doc_type": {
+      "type": "choice",
+      "instructions": "What kind of document is `img0`?",
+      "criteria": {
+        "receipt": "Itemized proof of purchase from a store or restaurant",
+        "invoice": "Bill requesting payment, naming payer and payee",
+        "other": null
+      }
+    },
+    "legibility": {
+      "type": "score",
+      "instructions": "How legible is the text in `img0`?",
+      "criteria": [
+        "Text cannot be read",
+        "Some words readable, totals or names unclear",
+        "All text clearly readable"
+      ]
+    }
+  },
+  "options": {
+    "choice_method": "independent",
+    "calibrated": false
+  }
+}
