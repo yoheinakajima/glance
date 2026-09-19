@@ -1,0 +1,42 @@
+[project]
+name = "glance"
+version = "0.1.0"
+description = "Image decision harness: typed questions about images answered from single forward passes (logit readout, no generation)."
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "torch",
+    "torchvision",
+    "transformers",
+    "accelerate",
+    "pillow",
+    "pydantic>=2",
+    "flask",
+    "python-dotenv",
+    "litellm",
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "matplotlib",
+    "datasets",
+    "pyyaml",
+    "pytest",
+]
+
+[project.scripts]
+glance = "glance.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["glance"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "models: needs downloaded model weights (run with GLANCE_TEST_MODELS=1)",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
