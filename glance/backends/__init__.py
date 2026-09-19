@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 from ..config import Config
-from .base import Backend, BackendUsage, LabelScores, PickItem, Statement, StatementScores, model_string
+from .base import Backend, BackendUsage, LabelScores, PickItem, PickResult, Statement, StatementScores, model_string
 
 __all__ = [
     "Backend",
     "BackendUsage",
     "LabelScores",
     "PickItem",
+    "PickResult",
     "Statement",
     "StatementScores",
     "model_string",

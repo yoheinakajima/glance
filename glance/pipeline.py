@@ -14,8 +14,20 @@ from .config import Config
 from .images import load_images
 from .logging_utils import Timer, call_log_writer, error_record, git_sha, new_request_id, utc_now
 from .prompts import PROMPT_VERSION
-from .schema import BackendError, DecideRequest, DecideResponse, ErrorResponse, GlanceError, Usage, parse_request
+from .schema import (
+    BackendError,
+    DecideRequest,
+    DecideResponse,
+    ErrorResponse,
+    GlanceError,
+    UnsupportedQuestionError,
+    Usage,
+    parse_request,
+)
 from .scorer import ScoringResult, build_answer, raw_probabilities, score_questions
+
+
+FRONTIER_REDACTED = "<redacted: frontier outputs are evaluation-only>"
 
 
 class DecisionTrace:
@@ -27,9 +39,13 @@ class DecisionTrace:
 
 
 class Engine:
-    def __init__(self, cfg: Config, source: str = "cli", backends: dict[str, Backend] | None = None):
+    def __init__(self, cfg: Config, source: str = "cli", backends: dict[str, Backend] | None = None,
+                 allow_frontier: bool = False):
         self.cfg = cfg
         self.source = source
+        # The frontier baseline sends images off the machine and costs money. It is eval-only: the eval runner
+        # turns it on after --confirm-spend; the server never does.
+        self.allow_frontier = allow_frontier
         self._backends: dict[str, Backend] = dict(backends or {})
         self._calibration: dict[str, calibration.CalibrationParams] = {}
         self._lock = threading.Lock()  # one forward pass at a time; the models are not re-entrant
@@ -97,6 +113,11 @@ class Engine:
         log["questions"] = {qid: q.model_dump() for qid, q in request.questions.items()}
         log["context"] = request.state.context
         log["choice_method"] = request.options.choice_method
+        if request.model == "frontier" and not self.allow_frontier:
+            raise UnsupportedQuestionError(
+                "the frontier baseline is eval-only: it sends images off this machine and spends money, so it runs "
+                "only from `glance eval --confirm-spend` (or `glance decide --confirm-spend`), never from the server"
+            )
 
         with timer.span("load"):
             images = load_images(request.state.images, self.cfg.limits)
@@ -133,11 +154,14 @@ class Engine:
                 raw = raw_probabilities(qs)
                 cal = calibration.apply(qs, params) if params is not None else None
                 answers[qid] = build_answer(question, qs, raw, cal)
+                # Frontier outputs are evaluation-only and must never land in a file that could serve as a
+                # training label, so the call log records that a pick was made but not what it was.
+                logged_answer = FRONTIER_REDACTED if backend.kind == "frontier" else answers[qid].model_dump()
                 question_logs[qid] = {
                     "type": qs.qtype, "method": qs.method, "keys": qs.keys,
                     "z": None if qs.z is None else qs.z.tolist(),
                     "raw_probabilities": raw, "calibrated_probabilities": cal,
-                    "answer": answers[qid].model_dump(), "statements": qs.statements,
+                    "answer": logged_answer, "statements": qs.statements,
                 }
 
         response = DecideResponse(

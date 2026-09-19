@@ -16,6 +16,10 @@ from pydantic import BaseModel, ConfigDict
 PROJECT_ROOT = Path(os.environ.get("GLANCE_ROOT") or Path(__file__).resolve().parent.parent)
 DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "default.yaml"
 
+# huggingface_hub reads HF_HOME when it is first imported, so point it at the project cache as early as possible.
+# load_config() sets the configured value too, which only differs if paths.hf_home was changed.
+os.environ.setdefault("HF_HOME", str(PROJECT_ROOT / ".cache" / "hf"))
+
 
 class _Strict(BaseModel):
     model_config = ConfigDict(extra="forbid", protected_namespaces=())

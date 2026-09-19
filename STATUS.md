@@ -39,6 +39,28 @@ Where the spec was ambiguous, the simpler option was taken and recorded here.
   caller listed it, so `independent` is permutation-invariant exactly, not approximately.
 - D13. Prefix cache reuse across calls: the last 2 image prefixes are kept (keyed by image sha256 and token count),
   which is what the call log's "cache hit or miss" reports. The reference path reports no cache.
+- D14. `letter` is capped at 26 options but the spec wants both methods on every choice suite, and `pets37` and
+  `caltech101` have 37 and 101. On such suites `letter` sees the true label plus 25 seeded random distractors (in
+  their original order). `independent` still scores all options; because its logits are per option, the report
+  also restricts them to letter's subset ("independent, same options") so the two methods are compared like for
+  like at no extra model cost.
+- D15. Splits alternate down the seeded order (even index = calibration, odd = test) instead of cutting the
+  shuffled list in half, so "the first items of the seeded order" after a `--max-hours` trim are still 50/50.
+- D16. `score` MAE is |expected score - label| in levels; `score` accuracy is argmax level = label. ECE is
+  top-label ECE with 15 equal-mass bins for all types (noul: confidence max(p, 1 - p)).
+- D17. POPE questions carry `criteria` ("a photo with a X in it" / "a photo with no X in it") so the dual encoder can
+  answer them and every backend sees the same request. GQA yes/no questions have no caption form, so `gqa_yesno`
+  runs on the VLM and the frontier baseline only; the report says so.
+- D18. Frontier outputs never reach disk: `predictions.jsonl` keeps only whether a pick was correct, and the call
+  log redacts the pick. The Engine refuses `model: frontier` unless the caller opted in (`--confirm-spend`); the
+  server never opts in, which also keeps it free of network calls at inference.
+- D19. `glance eval --resume <run_id>` skips rows already in `predictions.jsonl`. Not in the spec; added because a
+  multi-hour run that dies at hour three should not start over.
+- D20. `glance eval` fits calibration into `runs/<run_id>/calibration/` for its own report. Only
+  `glance calibrate --run <run_id>` writes the committed `calibration/` directory, so a smoke run cannot overwrite
+  params fit on a full run.
+- D21. The latency benchmark (1 image + 5 questions = 11 statements) rotates the three sample images and clears the
+  prefix cache before every request, so each timed request pays for its own image prefix.
 
 ## Dependencies beyond the HANDOFF list
 
@@ -110,3 +132,36 @@ pytest: 6 passed in 214 s (model tests), 65 passed (unit tests)
 Deviations: none. MPS float16 ran clean (no NaNs, no CPU-fallback ops logged), so the mlx-vlm fallback was not
 needed. Open questions: raw probabilities are extremely peaked (p = 1.000000 on easy items); M4 calibration has
 to absorb that.
+
+## M3: suites, manifests, metrics, plots, report, uncalibrated (2026-09-19)
+
+Built: `evals/suites/` (pope, gqa_yesno, pets37, caltech101, blur_ladder, doctype16, human_gold) with committed
+1,000-item manifests (`glance/evals/manifests/*.jsonl`: item id, image sha256, split), `evals/metrics.py`,
+`evals/run.py` (units = suite x backend x choice method, timed 10-item warmup, ETA, `--max-hours` trim, failure
+accounting, permutation sensitivity, latency benchmark), `evals/report.py` (go/no-go table first, per-suite
+results, independent vs letter, local vs baseline, top-20 confident errors with image paths, reliability and
+risk-coverage plots), `glance eval`, `glance calibrate`. Dataset licenses verified and recorded in `DATASETS.md`.
+
+Licensing outcomes: POPE rebuilt from the official MIT repo + COCO's image host (the Hub mirror has no license
+tag); Caltech-101 from the official CaltechDATA record, CC BY 4.0 (the Hub mirror says `unknown`); **`doctype16`
+skipped** because RVL-CDIP's cards say `other`; `human_gold` is empty, so it is skipped with a note.
+
+blur_ladder: rendered 8 examples (2 images x 4 levels), checked them against the level descriptions (crisp texture /
+slightly soft / shapes and colors only / vague blobs), then froze radii (0, 1.6, 4.0, 10.0) px at 384 px longest side.
+
+Checks (reference path, uncalibrated):
+
+```text
+glance eval --suite pope --n 200 --model vlm      -> runs/20260919T225415Z-b07b50 complete
+  pope/vlm test n=100: acc 0.890, AUROC 0.931, NLL 1.788, ECE 0.102, sel acc 50/80/90/100 = 0.98/0.925/0.911/0.89
+  0 failures; off_mass max 2e-6; latency (1 image + 5 questions, reference path) p50 8.7 s
+glance eval --suite pets37 --n 50                 -> runs/20260919T230914Z-dac969 complete, both choice methods
+  siglip independent acc 0.96 | vlm independent 0.92 (all 37) / 0.96 (letter's 26) | vlm letter 0.96
+  permutation (75 reordered requests each): independent max |dp| = 0.0e+00, letter max |dp| = 9.7e-01
+  latency p50: siglip 23 ms, vlm 8,958 ms (reference path)
+pytest: 93 passed, 11 skipped (model-gated)
+```
+
+Deviations: harness version bumped to 0.2.0 because the VLM readout now computes the Yes/No logits through a
+float32 copy of the output head (see M4; float16 quantizes a logit near 20 to steps of 1/64).
+Open questions: `letter` is strongly order-sensitive even with 4 rotations, which is the argument for `independent`.

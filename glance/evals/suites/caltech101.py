@@ -102,7 +102,7 @@ def build(cfg: Config, n: int) -> list[EvalItem]:
     head = files[: reserved_count(cfg)]
     raw_items = [
         RawItem(
-            item_id=f"{cat}/{path.name}",
+            item_id=f"{cat}/{path.stem}",
             question={"type": "choice", "instructions": INSTRUCTIONS, "criteria": criteria},
             label=cat,
             write_image=lambda dest, src=path: shutil.copyfile(src, dest),

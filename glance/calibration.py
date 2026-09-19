@@ -172,7 +172,7 @@ def fit_multiclass(zs: list[np.ndarray], labels: list[int], suite_ids: list[str]
 def fit_rows(rows: list[dict[str, Any]], n_bins: int = 15, isotonic: bool = False) -> tuple[dict[str, TypeFit], dict[str, TypeFit]]:
     """Fit pooled per-type params and per-suite params from calibration-split prediction rows.
 
-    Each row needs: suite, type, z (list of floats), label (bool for noul, class or level index otherwise).
+    Each row needs: suite, type, z (list of floats), label_index (0/1 for noul, class or level index otherwise).
     """
     types: dict[str, TypeFit] = {}
     per_suite: dict[str, TypeFit] = {}
@@ -181,9 +181,9 @@ def fit_rows(rows: list[dict[str, Any]], n_bins: int = 15, isotonic: bool = Fals
         suites = [r["suite"] for r in group]
         if qtype == "noul":
             return fit_noul(
-                np.array([r["z"][0] for r in group]), np.array([int(r["label"]) for r in group]), suites, n_bins, isotonic
+                np.array([r["z"][0] for r in group]), np.array([int(r["label_index"]) for r in group]), suites, n_bins, isotonic
             )
-        return fit_multiclass([np.asarray(r["z"]) for r in group], [int(r["label"]) for r in group], suites, n_bins)
+        return fit_multiclass([np.asarray(r["z"]) for r in group], [int(r["label_index"]) for r in group], suites, n_bins)
 
     for qtype in ("noul", "choice", "score"):
         group = [r for r in rows if r["type"] == qtype]

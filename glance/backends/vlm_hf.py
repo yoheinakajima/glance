@@ -158,13 +158,21 @@ class VlmBackend:
 
     # --- forward paths ----------------------------------------------------------------------------
 
-    def _collect(self, logits, token_ids: list[int]) -> tuple[np.ndarray, np.ndarray]:
+    def _collect(self, hidden, token_ids: list[int]) -> tuple[np.ndarray, np.ndarray]:
+        """Final hidden states [n, H] -> (logits at `token_ids`, log-normalizer over the vocabulary).
+
+        The selected logits go through a float32 copy of the output head. In float16 a logit near 20 is quantized
+        to steps of 1/64, which alone can move z = z_yes - z_no by several hundredths between two batch layouts.
+        """
         import torch
 
-        logits = logits.float()
-        selected = logits[:, token_ids].cpu().numpy().astype(np.float64)
-        log_norm = torch.logsumexp(logits, dim=-1).cpu().numpy().astype(np.float64)
-        return selected, log_norm
+        head = self.model.lm_head
+        weight = head.weight[token_ids].float()
+        selected = hidden.float() @ weight.T
+        if head.bias is not None:
+            selected = selected + head.bias[token_ids].float()
+        log_norm = torch.logsumexp(head(hidden).float(), dim=-1)
+        return selected.cpu().numpy().astype(np.float64), log_norm.cpu().numpy().astype(np.float64)
 
     def _reference(self, ids: list[list[int]], pixel_values, grid, token_ids: list[int]):
         """Every statement is a full prompt, batched with left padding."""
@@ -181,15 +189,14 @@ class VlmBackend:
                 attention[i, width - len(row) :] = 1
             input_ids = input_ids.to(self.device)
             with torch.no_grad():
-                out = self.model(
+                out = self.model.model(
                     input_ids=input_ids,
                     attention_mask=attention.to(self.device),
                     mm_token_type_ids=(input_ids == self.image_token_id).long(),
                     pixel_values=pixel_values.repeat(len(chunk), 1).to(self.device),
                     image_grid_thw=grid.repeat(len(chunk), 1).to(self.device),
-                    logits_to_keep=1,
                 )
-            sel, norm = self._collect(out.logits[:, -1], token_ids)
+                sel, norm = self._collect(out.last_hidden_state[:, -1], token_ids)  # left padded: last = final token
             selected.append(sel)
             log_norm.append(norm)
         return np.concatenate(selected), np.concatenate(log_norm)
@@ -282,8 +289,7 @@ class VlmBackend:
                 )
                 last = torch.tensor([len(s) - 1 for s in suffixes], device=self.device)
                 hidden = out.last_hidden_state[torch.arange(batch, device=self.device), last]
-                logits = self.model.lm_head(hidden)
-            sel, norm = self._collect(logits, token_ids)
+                sel, norm = self._collect(hidden, token_ids)
             selected.append(sel)
             log_norm.append(norm)
         return np.concatenate(selected), np.concatenate(log_norm), prefix_ms, hit

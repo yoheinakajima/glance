@@ -72,6 +72,15 @@ class PickItem:
     allowed: list[str]
 
 
+@dataclass
+class PickResult:
+    """Frontier baseline only: one enumerated answer per PickItem, in order."""
+
+    picks: list[str]
+    usage: BackendUsage = field(default_factory=BackendUsage)
+    timing_ms: dict[str, float] = field(default_factory=dict)
+
+
 @runtime_checkable
 class Backend(Protocol):
     name: str  # "siglip" | "vlm" | "frontier", as the caller names it in `model`
