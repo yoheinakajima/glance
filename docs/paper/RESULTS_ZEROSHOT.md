@@ -29,7 +29,12 @@ The frontier models were scored on the test half only (their n is smaller); inte
 
 **iNaturalist, 200 photos, labels from research-grade community identifications.**
 
-Pending (local run queued; frontier runs need the owner's one-paste commands).
+| System | yes/no | n | pick-one | n |
+| --- | --- | --- | --- | --- |
+| Qwen3-VL-4B + Glance (open, local) | 0.945 [0.922, 0.968] | 400 | 0.940 [0.905, 0.970] | 200 |
+| SigLIP2 (open dual encoder) | - | - | 0.880 [0.835, 0.925] | 200 |
+
+The frontier models were scored on the test half only (their n is smaller); intervals overlap everywhere.
 
 ## 3. Ratings against a rubric in words, zero-shot (five synthetic 4-level scales, same 1,000 held-out images)
 

@@ -1,0 +1,171 @@
+{
+  "runs": [
+    "20260920T232332Z-80efa7"
+  ],
+  "suites": {
+    "inat_choice": {
+      "vlm:independent": {
+        "accuracy": 0.94,
+        "ci95": [
+          0.905,
+          0.97
+        ],
+        "n": 200,
+        "per_class": {
+          "amphibian": [
+            0.95,
+            20
+          ],
+          "arachnid": [
+            0.85,
+            20
+          ],
+          "bird": [
+            1.0,
+            20
+          ],
+          "fish": [
+            0.95,
+            20
+          ],
+          "fungus": [
+            0.85,
+            20
+          ],
+          "insect": [
+            0.95,
+            20
+          ],
+          "mammal": [
+            0.85,
+            20
+          ],
+          "mollusc": [
+            1.0,
+            20
+          ],
+          "plant": [
+            1.0,
+            20
+          ],
+          "reptile": [
+            1.0,
+            20
+          ]
+        }
+      },
+      "vlm:letter": {
+        "accuracy": 0.95,
+        "ci95": [
+          0.92,
+          0.98
+        ],
+        "n": 200,
+        "per_class": {
+          "amphibian": [
+            1.0,
+            20
+          ],
+          "arachnid": [
+            0.95,
+            20
+          ],
+          "bird": [
+            1.0,
+            20
+          ],
+          "fish": [
+            0.95,
+            20
+          ],
+          "fungus": [
+            0.85,
+            20
+          ],
+          "insect": [
+            0.95,
+            20
+          ],
+          "mammal": [
+            0.85,
+            20
+          ],
+          "mollusc": [
+            1.0,
+            20
+          ],
+          "plant": [
+            1.0,
+            20
+          ],
+          "reptile": [
+            0.95,
+            20
+          ]
+        }
+      },
+      "siglip:independent": {
+        "accuracy": 0.88,
+        "ci95": [
+          0.835,
+          0.925
+        ],
+        "n": 200,
+        "per_class": {
+          "amphibian": [
+            0.85,
+            20
+          ],
+          "arachnid": [
+            0.85,
+            20
+          ],
+          "bird": [
+            1.0,
+            20
+          ],
+          "fish": [
+            0.9,
+            20
+          ],
+          "fungus": [
+            0.95,
+            20
+          ],
+          "insect": [
+            0.85,
+            20
+          ],
+          "mammal": [
+            0.8,
+            20
+          ],
+          "mollusc": [
+            0.9,
+            20
+          ],
+          "plant": [
+            0.85,
+            20
+          ],
+          "reptile": [
+            0.85,
+            20
+          ]
+        }
+      }
+    },
+    "inat_yesno": {
+      "vlm:statement": {
+        "accuracy": 0.945,
+        "ci95": [
+          0.9225,
+          0.9675
+        ],
+        "n": 400,
+        "on_yes_questions": 0.95,
+        "on_no_questions": 0.94
+      }
+    }
+  }
+}

@@ -1339,3 +1339,16 @@ images the three frontier models were scored on, so every size is paired with th
 creative-QA rubrics: first 100 test items each. The two fresh photo sets in full through `glance eval`. The 4B rows come
 from the existing collection restricted to the same items. The 8B model runs with the other GPU lane held idle.
 Weights are downloaded (2B 4.3 GB, 8B 17.6 GB; Apache-2.0; revisions as in MODELS.md).
+
+## 2026-09-20 16:52 Entry 35b: E12 result, the open model out of the box on 200 iNaturalist photos uploaded today (local rows; frontier pending)
+
+Run `20260920T232332Z-80efa7`, uncalibrated decisions, all items, nothing fit (`results/lab/fresh_inat.md`). Labels are
+research-grade community identifications; zero labels by us; the photos postdate every model.
+- Pick one of ten organism groups: Qwen3-VL-4B read with Glance 0.940 [0.905, 0.970] (lettered prompt 0.950); SigLIP2
+  0.880 [0.835, 0.925]. Yes/no ("Is the main subject a bird?"): 0.945 [0.922, 0.968], balanced (0.950 on yes, 0.940 on
+  no). Weakest groups: arachnid, fungus, mammal (0.85 each: spiders read as insects, evidence photos of mammals).
+- H30: pick-one >= 0.90: SUPPORTED. Yes/no >= 0.93: SUPPORTED. SigLIP2 within 5 points on pick-one: NOT SUPPORTED (6.0
+  behind). Frontier within 5 points either way: PENDING (the owner runs the paid calls; 300 calls per model, about $5.50
+  at list price for Opus 5 by the tool's estimate; per-model copies of the run exist with suffixes `-gpt`, `-gemini`).
+- Speed, same run: pick-one of ten 1.4 s per photo (ten statements in one packed pass), yes/no under 1 s, on a laptop
+  with a second GPU job running (contended, so an upper figure).
