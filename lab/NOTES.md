@@ -736,3 +736,27 @@ Expectation: about 0.83 (between `digits` 0.814 and `ens2` 0.858), JPEG the weak
 0.828, so it ships as `score_method: "fast2"` with calibrations for the five lab rubrics. The JPEG number says where
 the magnified crop earns its cost: 0.674 without it, 0.772 with it; on the other four scales the two-pass readout is
 within 0.1 to 4.4 points of `ens4d`. Guidance for users: `fast2` for many cheap rubrics, `ens4d` when fine detail matters.
+
+## 2026-09-20 10:50 Entry 22: E3 configuration, fixed before the second model has produced a single logit
+
+The owner approved E3 (a second model family) and, if it earns it, shipping a fitted hidden-state readout (E1).
+- Model: `HuggingFaceTB/SmolVLM2-2.2B-Instruct` at revision `482adb537c021c86670beed01cd58990d01e72e4`, Apache-2.0
+  (license tag read from the Hub API today), SigLIP vision tower + SmolLM2-1.7B: neither component is shared with
+  Qwen3-VL. About half the parameters of the first model, so lower absolute numbers are expected.
+- Backend: `glance/lab/generic_vlm.py`: the model's own chat template, the same user content (image label, image,
+  block), the same `p1` / `s1` prompt texts byte for byte, empty assistant turn, logits at the last position through a
+  float32 copy of the output head, same token variants (Yes/No spellings; digit with and without a leading space), one
+  prompt per forward pass. bfloat16 on MPS (float32 if bfloat16 fails to load or produces non-finite logits).
+- The one configuration choice: image processor `longest_edge = 768` (the image is split into 2 x 2 tiles plus a global
+  view, a few hundred image tokens for our 448 px images). Chosen now as the setting closest to the first model's that
+  does not downsample the image; it will not be tuned.
+- Items: the first 400 manifest items of each lab scale (50 per split and level: 200 calibration, 200 test), because the
+  reference path costs 8 forward passes per item. Readouts: `independent` and the four `ens4d` members.
+- Analysis, identical to the lab's: v0 readout as shipped (single temperature), v0 readout with its best cross-validated
+  calibration, `digits`, `zoom_digits`, `fast2`, `ens4d` with matrix scaling; fit on the 200 calibration items per
+  scale, test items scored once.
+- The method claim survives if, on mean test accuracy: shipped v0 < best-calibrated v0 <= `digits` < `ens4d`, with
+  `ens4d` at least 3 points above best-calibrated v0 and matrix scaling above temperature-only for the digit readout.
+  Registered guess for `ens4d`: 0.70 to 0.80 mean accuracy. If the digit readout is near chance (the model does not
+  put its answer on the digit tokens), that is reported as "the recipe needs per-model prompt work", which weakens
+  the generality claim.

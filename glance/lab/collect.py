@@ -31,6 +31,7 @@ BENCHES = {
     "ladders": ("glance.lab.ladders", "LADDERS", "manifests"),
     "distort25": ("glance.lab.distort25", "SCALES", "manifests_distort25"),
     "kadid": ("glance.lab.kadid", "SCALES", "manifests_kadid"),
+    "semantic": ("glance.lab.semantic", "SCALES", "manifests_semantic"),
 }
 
 
@@ -56,8 +57,8 @@ class HiddenStore:
     """Final hidden states of the digit readouts, one .npz per (bench, scale, method): `item_ids` and a float16 array.
     Logging only (for offline readout studies); not used by any registered result. Kept out of git (large)."""
 
-    def __init__(self, bench: str):
-        self.dir = LAB_DIR / "hidden" / bench
+    def __init__(self, bench: str, tag: str = ""):
+        self.dir = LAB_DIR / "hidden" / (bench + (f"@{tag}" if tag else ""))
         self.dir.mkdir(parents=True, exist_ok=True)
         self.pending: dict[tuple[str, str], dict[str, np.ndarray]] = {}
 
@@ -78,11 +79,16 @@ class HiddenStore:
 
 
 class Collector:
-    def __init__(self, prefix_cache: bool, keep_hidden: bool = False):
-        from ..backends.vlm_hf import VlmBackend
-
+    def __init__(self, prefix_cache: bool, keep_hidden: bool = False, second_model: dict[str, Any] | None = None):
         self.cfg = load_config(overrides={"vlm": {"prefix_cache": prefix_cache}})
-        self.backend = VlmBackend(self.cfg)
+        if second_model:  # replication on another model family (lab/NOTES.md entry 20, E3): plain HF forward passes
+            from .generic_vlm import GenericVlm
+
+            self.backend = GenericVlm(self.cfg, **second_model)
+        else:
+            from ..backends.vlm_hf import VlmBackend
+
+            self.backend = VlmBackend(self.cfg)
         self.backend.keep_hidden = keep_hidden
         self._anchor_images: dict[str, Any] = {}
 
@@ -151,13 +157,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, help="first N items of each ladder's manifest (after the split filter)")
     parser.add_argument("--prefix-cache", action="store_true", help="use the prefix-cached path (experiments); omit for the reference path")
     parser.add_argument("--save-hidden", action="store_true", help="also log the final hidden state of each digit readout to lab/hidden/ (not in git)")
+    parser.add_argument("--model-id", help="replicate on another Hugging Face image-text-to-text model (generic reference path)")
+    parser.add_argument("--revision", help="pinned revision of --model-id")
+    parser.add_argument("--image-longest-edge", type=int, help="image size handed to the second model's image processor")
     args = parser.parse_args(argv)
 
     out_path = PROJECT_ROOT / args.out
     done = {(r["ladder"], r["item_id"], r["method_key"]) for r in read_jsonl(out_path)}
     writer = JsonlWriter(out_path)
-    collector = Collector(prefix_cache=args.prefix_cache, keep_hidden=args.save_hidden)
-    hidden = HiddenStore(args.bench) if args.save_hidden else None
+    second = None
+    if args.model_id:
+        if not args.revision:
+            parser.error("--model-id needs a pinned --revision")
+        second = {"model_id": args.model_id, "revision": args.revision, "longest_edge": args.image_longest_edge}
+    collector = Collector(prefix_cache=args.prefix_cache, keep_hidden=args.save_hidden, second_model=second)
+    model_tag = f"{collector.backend.model_id}@{collector.backend.revision}"
+    hidden = HiddenStore(args.bench, args.model_id.split("/")[-1] if args.model_id else "") if args.save_hidden else None
     ladder_meta = load_ladder_meta(args.bench)
     if not args.ladders:
         args.ladders = ",".join(ladder_meta)
@@ -189,7 +204,7 @@ def main(argv: list[str] | None = None) -> int:
                     hidden.add(ladder, key, item["item_id"], collector.last_hidden)
                 writer.write({
                     "bench": args.bench, "ladder": ladder, "item_id": item["item_id"], "split": item["split"], "level": item["level"],
-                    "method": method, "anchors": config, "method_key": key, "prompt_version": sm.LAB_PROMPT_VERSION,
+                    "method": method, "anchors": config, "method_key": key, "prompt_version": sm.LAB_PROMPT_VERSION, "model": model_tag,
                     "prefix_cache": args.prefix_cache, **row,
                 })
             if index % 50 == 0 or index == len(items):
