@@ -26,6 +26,14 @@ from ..backends.base import Statement
 
 LAB_PROMPT_VERSION = "s1"
 METHODS = ("independent", "cumulative", "digits", "anchors_cumulative", "anchors_digits")
+# Round 2: the same three readouts with a second request image, `zoom`, a pixel-magnified crop from the centre of
+# `img0`, so that fine artifacts (grain, compression blocks, lost texture) are large enough for the model to see.
+ZOOM_METHODS = ("zoom_independent", "zoom_cumulative", "zoom_digits")
+ZOOM_FACTOR = 3
+ZOOM_SENTENCE = (
+    " `zoom` is a {factor}x pixel-magnified crop from the centre of `img0`: use it to judge fine detail, and "
+    "`img0` for the overall picture."
+)
 
 SCALE_BLOCK = "The answer scale, from lowest to highest:\n{steps}\n"
 CUMULATIVE_TEMPLATE = (
@@ -50,6 +58,21 @@ def _steps(levels: list[str], start: int) -> str:
 def with_anchors(instructions: str, levels: list[str], anchors: list[Anchor], start: int) -> str:
     refs = "; ".join(ANCHOR_REF.format(id=a.image_id, step=a.level + start, text=levels[a.level]) for a in anchors)
     return instructions + ANCHOR_SENTENCE.format(refs=refs)
+
+
+def with_zoom(instructions: str, factor: int = ZOOM_FACTOR) -> str:
+    return instructions + ZOOM_SENTENCE.format(factor=factor)
+
+
+def zoom_crop(image, factor: int = ZOOM_FACTOR):
+    """Centre crop of 1/factor of each side, enlarged back to the full size with nearest-neighbour sampling so that
+    pixel-level structure (noise grain, 8x8 JPEG blocks, resampling steps) is preserved and simply made bigger."""
+    from PIL import Image
+
+    w, h = image.size
+    cw, ch = w // factor, h // factor
+    left, top = (w - cw) // 2, (h - ch) // 2
+    return image.crop((left, top, left + cw, top + ch)).resize((cw * factor, ch * factor), Image.NEAREST)
 
 
 def independent_statements(instructions: str, levels: list[str]) -> list[Statement]:

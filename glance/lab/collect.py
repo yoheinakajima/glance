@@ -67,13 +67,22 @@ class Collector:
         levels, instructions = meta["levels"], meta["instructions"]
         target = self._image("img0", item["path"])
         images = [target]
+        if method.startswith("zoom_"):
+            import hashlib
+
+            from ..images import LoadedImage
+
+            crop = sm.zoom_crop(target.image)
+            images = [target, LoadedImage(id="zoom", image=crop, sha256=hashlib.sha256(crop.tobytes()).hexdigest(),
+                                          width=crop.width, height=crop.height, format="PNG", source="derived:zoom")]
+            instructions = sm.with_zoom(instructions)
         if method.startswith("anchors_"):
             # References first, the image being rated last, right before the question.
             images = self._anchors(anchors) + [target]
             start = 1 if "cumulative" in method else 0
             instructions = sm.with_anchors(instructions, levels, anchors, start)
         t0 = time.perf_counter()
-        if method == "independent":
+        if method.endswith("independent"):
             out = self.backend.score_statements(images, None, sm.independent_statements(instructions, levels))
             logits, off = out.z, out.off_mass
         elif method.endswith("cumulative"):

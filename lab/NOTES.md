@@ -112,3 +112,32 @@ Additions made after this reading (both zero-training, both standard calibration
 Follow-up analyses added in `glance/lab/extras.py`: learning curve (labeled examples needed), cross-scale transfer of
 a calibration, and an ensemble of readouts. Early blur learning curve on DEV: 8 labeled examples 0.75, 16 -> 0.84,
 32 -> 0.87 (mean of 20 random draws).
+
+## 2026-09-20 00:45 Entry 5: side check on multiple choice, and a second method family (magnified view)
+
+**Side check, no GPU (`tools/analyze_choice_ensemble.py`, output in `results/v0/analysis/`).** Question: multiple
+choice trails Claude Opus 5 by 4-5 points; does combining the two local backends close it? Both scored every option
+of every item in the full v0 run, so the combination (weighted sum of temperature-scaled log-probabilities; two
+temperatures and the weight fit on the calibration split) can be tested on saved logits. Test split: pets37 0.952
+(Qwen 0.892, SigLIP2 0.956, Opus 0.932), caltech101 0.937 (Qwen 0.919, SigLIP2 0.932, Opus 0.968). So the combination
+does not beat the better single model on accuracy. It does calibrate very well (ECE 0.015 and 0.026, floors 0.014 and
+0.019) and reaches selective accuracy 0.990 / 1.000 at 80% coverage. Half of Qwen's caltech101 errors are the
+dataset's own `Faces` vs `Faces_easy` pair (9 of 18). Decision: no further GPU time on multiple choice tonight.
+
+**Second pilot reading (blur and noise complete, DEV, n = 80 judged each; jpeg partial).** Noise: every method lands
+between 0.675 and 0.775 after calibration, Spearman about 0.9, within-one-level 0.975-1.0. Blur: 0.64-0.90. Anchors
+help a little on noise (0.74-0.78 vs 0.68-0.73 without) and not on blur, at 3-5x the cost. With 80 fit items the
+richer calibrations are data-starved, so the full run (500 fit items per scale) should be somewhat better, but the
+pattern is clear: ranking is good everywhere, and the residual errors sit at boundaries defined by fine detail
+(clean vs light grain, no artifacts vs mild artifacts).
+
+**Diagnosis.** That is a perception limit more than a calibration limit: sigma-10 grain or quality-25 JPEG blocks are
+pixel-scale structure in a 448 px image, and nothing in the prompt makes the model attend to it.
+
+**New method family `zoom_*` (registered before running it).** Same three readouts, but the request carries a second
+image `zoom`: the centre 1/3 x 1/3 of `img0` enlarged 3x with nearest-neighbour sampling, so grain, 8x8 compression
+blocks and resampling steps keep their structure and simply get bigger. The instructions gain one sentence saying
+what `zoom` is. Still zero-training and still inside the existing request format (2 of the 4 allowed images; each
+gets 384 image tokens). Hypothesis H5: `zoom_*` raises accuracy most on noise and jpeg, a little on blur and
+resolution (the 0 -> 1 boundary), and not at all on exposure. Example: `lab/sheets/_zoom_example.jpg`.
+Pilot 2 runs the three `zoom_*` methods on the same 160 calibration items per scale as pilot 1.
