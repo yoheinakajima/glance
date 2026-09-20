@@ -542,3 +542,13 @@ needs next, what is registered but not started.
   registered and not yet run.
 - D43. KADID-10k final: registered targets missed (0.527 exact); the follow-up with the pristine reference in the
   request (E9) is registered and queued.
+- D44. Owner's framing (2026-09-20 16:20, `lab/NOTES.md` entry 38): the headline is what a frozen OPEN model does
+  ZERO-SHOT as a general image decision engine (`docs/paper/RESULTS_ZEROSHOT.md`). That labeled examples help is a
+  caveat and an optional extension; a few-shot control for frontier models is low priority. Self-calibration from
+  unlabeled images is its own row, never called zero-shot.
+- D45. Next question set by the owner: does zero-shot improve with larger open models so that examples stop being
+  needed (E15: Qwen3-VL 2B / 4B / 8B, identical settings, prediction registered in entry 38). The owner raised the
+  model-download cap from 30 GB to 80 GB for E13 and E15. A 32B model needs a rented GPU: not decided.
+- D46. E1 result (entry 40): a fitted readout on the hidden state reaches 0.965 from one pass (token readout 0.867);
+  it is label-hungry (worse below about 32 labels), so it sits in the "if you have examples" section; shipping it into
+  the harness is approved in principle and not started.

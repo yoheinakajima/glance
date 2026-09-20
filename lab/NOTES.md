@@ -1321,3 +1321,12 @@ about 32 labels the token readout is the better prior. What it says about ZERO-S
 model already represents the severity almost perfectly; the zero-shot gap (0.558 exact) is a readout and convention
 problem, not a perception problem. Shipping a hidden-state fit into the harness (`glance fit --readout hidden`) is
 approved by the owner in principle and is NOT started; it waits behind the zero-shot table.
+
+## 2026-09-20 16:31 Entry 37b: two decisions recorded before any E13 or E15 data exists
+
+- E13: entry 37 called q-sit-mini "weak" on exposure and resolution without a number. The adapter's report uses
+  Spearman < 0.80 (the same bar as "ranks well") for "weak"; fixed here before any collection. Its 4-image CPU smoke test
+  (blur levels 0 to 3, expected degradation -3.96, -1.10, -0.46, -0.44) is the only model output seen so far.
+- The owner approved raising the model-download cap from the hand-off's 30 GB to 80 GB (16:29) for E13 (openjev v2 9.1 GB,
+  q-sit-mini 1.9 GB, already fetched; my brief to the assistant model had not checked the cap) and E15 (Qwen3-VL 2B
+  4.3 GB and 8B 17.6 GB, downloading). Disk free: 1.2 TB.
