@@ -1219,3 +1219,23 @@ feasible sources of the 120 needed, and `off_center` level 3 (centroid 0.6 of a 
 pushed far off-centre without being cut off (which is the `cutoff` rubric). The tolerance is not relaxed and the
 targets are not changed after the fact; E4 is reported over FIVE rubrics, and these two are listed as not buildable
 from this source.
+
+## 2026-09-20 15:55 Entry 37: E13, two runnable outside systems on the lab scales, registered before any adapter code
+
+Plan of record: `docs/paper/COMPARABLE_SYSTEMS.md` ("Four systems"). Fixed now, before code or weights:
+- Systems: `AlexWortega/openjev` v2 (4B, MIT per model card: an open reproduction of the Jev idea, claims scored by an
+  NLI-style P(true), never generating) and `zhangzicheng/q-sit-mini` (0.9B, MIT: a small model TRAINED to rate image
+  quality on a fixed Excellent / Good / Fair / Poor / Bad vocabulary). Revisions pinned at download and recorded in
+  `MODELS.md`. Licenses re-checked from the model cards at download; a non-MIT/Apache result stops the run.
+- Items: the five lab scales, the first 600 items per scale (`--limit 600`, the same items as the `letters-lab` job),
+  calibration split for fitting, test split scored once.
+- openjev: one claim per level in the scale's own words, P(true) per level, combined exactly like our `independent`
+  readout; reported uncalibrated and with our matrix calibration on its K probabilities.
+- q-sit-mini: its own prompt and vocabulary, logits over its five level words, reported (a) as a ranking (Spearman with
+  the true level, no labels of ours) and (b) with our matrix calibration on those five logits (K = 4 outputs).
+- H31: openjev uncalibrated lands below 0.60 mean accuracy (near our v0 as shipped, 0.500); with our calibration it
+  improves by at least 10 points and stays below `ens4d` (0.867). Embarrassing if it matches `ens4d`.
+- H32: q-sit-mini ranks the three distortion scales it was trained for (blur, jpeg, noise) well (Spearman >= 0.80) and
+  is weak on exposure and resolution; with our calibration its mean accuracy stays below `ens4d`. Embarrassing if a
+  0.9B trained scorer beats the frozen 4B model plus 500 labels.
+- Speed and memory are recorded for both (ms per rating, warm, GPU otherwise idle).
