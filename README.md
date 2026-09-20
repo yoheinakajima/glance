@@ -48,10 +48,22 @@ Each run writes `runs/<run_id>/`: `config.yaml`, `env.json`, `predictions.jsonl`
 
 ### Frontier baseline (optional, paid)
 
-Put `FRONTIER_MODEL` (a LiteLLM model id) and its API key in `.env` (see `.env.example`), then add
-`--confirm-spend` to `glance eval`. The runner prints a cost estimate first. The baseline runs on the test split
-only, capped by `--baseline-n` (default 300 per suite), never on `human_gold` without `--allow-upload-gold`, and its
-picks are never written to disk: only whether each one was right.
+No `.env` needed. Paste this into a terminal:
+
+```bash
+uv run glance baseline
+```
+
+It finds the finished full eval, asks which model to use (Enter accepts `anthropic/claude-opus-5`; OpenAI, Gemini or
+any LiteLLM model id also work), and asks for the API key with hidden input. The key stays in memory for that one
+process: it is never written to disk, to a log, or to the shell history. One test call checks the key, then the cost
+estimate is shown and nothing more is sent until you answer `y`. When it finishes, the run's `report.md` is rebuilt
+with the accuracy-gap and selective-accuracy rows filled in.
+
+The baseline runs on the test split only, capped by `--baseline-n` (default 300 per suite), never on `human_gold`
+without `--allow-upload-gold`, and its picks are never stored: only whether each one was right. If you would rather
+use environment variables, set `FRONTIER_MODEL` and the provider's key (names in `.env.example`) and the command skips
+the prompts; `glance eval --confirm-spend` also still works.
 
 ### Your own images (`human_gold`)
 

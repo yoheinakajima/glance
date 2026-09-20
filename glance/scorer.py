@@ -289,7 +289,8 @@ def _score_frontier(backend, images, context, questions: dict[str, Question]) ->
             qid=qid, qtype=q.type, keys=_keys(q), method="pick", pick=pick,
             statements=[{"prompt_hash": prompts.prompt_hash(item.prompt)}],
         )
-    return ScoringResult(scores=scores, usage=result.usage, timing_ms=result.timing_ms, warnings=[], cache_hit=None)
+    return ScoringResult(scores=scores, usage=result.usage, timing_ms=result.timing_ms,
+                         warnings=list(result.warnings), cache_hit=None)
 
 
 # --- answers ------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-"""glance doctor | decide | eval | calibrate | serve"""
+"""glance doctor | decide | eval | calibrate | baseline | serve"""
 
 from __future__ import annotations
 
@@ -109,6 +109,40 @@ def _cmd_calibrate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_baseline(args: argparse.Namespace) -> int:
+    import os
+
+    from .evals.baseline import add_baseline, ask_model_and_key, latest_full_run
+
+    cfg = load_config(args.config)
+    run_dir = cfg.path("runs") / args.run if args.run else latest_full_run(cfg)
+    if run_dir is None or not (run_dir / "predictions.jsonl").exists():
+        print("no finished eval run to add a baseline to; run `glance eval` first", file=sys.stderr)
+        return 2
+    print(f"Adding a frontier baseline to run {run_dir.name}", file=sys.stderr)
+
+    model = args.model or os.environ.get("FRONTIER_MODEL", "").strip() or None
+    api_key = None
+    key_in_env = False
+    if model:
+        import litellm
+
+        key_in_env = bool(litellm.validate_environment(model).get("keys_in_environment"))
+    if not key_in_env:
+        if not sys.stdin.isatty():
+            print("This command asks for your API key with hidden input, so it needs a real terminal.\n"
+                  "Paste this into your terminal:  uv run glance baseline", file=sys.stderr)
+            return 2
+        model, api_key = ask_model_and_key(model)
+    done = add_baseline(cfg, run_dir, model, api_key, baseline_n=args.baseline_n,
+                        allow_upload_gold=args.allow_upload_gold, confirmed=args.confirm_spend)
+    if done is None:
+        return 1
+    print(f"\nReport rebuilt: {done / 'report.md'}\n")
+    print((done / "summary.txt").read_text())
+    return 0
+
+
 def _cmd_serve(args: argparse.Namespace) -> int:
     from .server import serve
 
@@ -162,6 +196,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--run", required=True, metavar="RUN_ID")
     p.add_argument("--isotonic", action="store_true", help="isotonic regression for noul (needs >= 1000 calibration examples)")
     p.set_defaults(func=_cmd_calibrate)
+
+    p = sub.add_parser("baseline", help="add the frontier baseline to a finished eval run; asks for the API key in the terminal")
+    p.add_argument("--run", metavar="RUN_ID", help="eval run to add the baseline to (default: the largest finished run)")
+    p.add_argument("--model", help="LiteLLM model id (default: asked interactively, or FRONTIER_MODEL)")
+    p.add_argument("--baseline-n", type=int, help="items per suite, test split only (default: 300)")
+    p.add_argument("--allow-upload-gold", action="store_true", help="allow human_gold images to be sent to the provider")
+    p.add_argument("--confirm-spend", action="store_true", help="skip the interactive y/N after the cost estimate")
+    p.set_defaults(func=_cmd_baseline)
 
     p = sub.add_parser("serve", help="local HTTP server on 127.0.0.1 (POST /v1/decide, GET /v1/models, GET /healthz)")
     p.add_argument("--port", type=int, help="port (default: server.port in the config)")

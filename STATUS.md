@@ -69,6 +69,16 @@ Where the spec was ambiguous, the simpler option was taken and recorded here.
   biased upward on small samples, and at a few hundred test items that bias is the same size as the 0.05 gate.
   The gate itself is unchanged.
 - D24. `glance eval --permutation-items N` overrides the 100-item default of the permutation pass (see M5).
+- D25. `glance baseline` (added 2026-09-19 at the user's request, not in the hand-off): adds the frontier baseline to
+  a finished eval run without a `.env`. It prompts for provider, model and API key in the terminal (hidden input);
+  the key lives in memory for that process and is passed straight to LiteLLM, never to disk, logs or shell history,
+  and provider error text is scrubbed of anything key-shaped before it is logged. One test call validates the key,
+  then the cost estimate needs an interactive `y` before anything else is sent. Frontier rows are appended to the
+  existing run so they are compared against the local backends on exactly the same items.
+- D26. Frontier sampling: the hand-off says temperature 0, but current Claude models (and some others) reject
+  `temperature`. The adapter sends `temperature=0` first; only if the provider refuses it does it resend without,
+  and that switch is reported in the response warnings and the call log. Output cap raised to 4,096 tokens for
+  models that think before answering.
 
 ## Dependencies beyond the HANDOFF list
 
@@ -322,8 +332,8 @@ Newer small Apache-2.0 models in the same family exist (`Qwen/Qwen3.5-2B`, `Qwen
 
 ### Open inputs from you
 
-1. `FRONTIER_MODEL` plus its API key in `.env`, then `glance eval --model frontier --confirm-spend` to fill rows 1
-   and 3. I did not and will not enter keys.
+1. Paste `uv run glance baseline` into a terminal to fill rows 1 and 3. It asks for the model and the API key itself
+   (hidden input, memory only, no `.env`). I did not and will not handle keys.
 2. 200+ labeled images in `gold/human_gold.jsonl`: the public suites are likely in every model's training data.
 3. Whether to accept the prefix cache on this hardware (its drift is inside the oracle's own float16 noise).
 

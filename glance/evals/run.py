@@ -195,16 +195,18 @@ def _frontier_ready(args: RunArgs, notes: list[str]) -> bool:
     return True
 
 
-def estimate_frontier_cost(units: list[Unit]) -> dict[str, Any]:
-    """Rough spend estimate printed before any paid call."""
+def estimate_frontier_cost(units: list[Unit], model: str | None = None) -> dict[str, Any]:
+    """Rough spend estimate printed before any paid call. Deliberately on the high side."""
     import litellm
 
-    model = os.environ.get("FRONTIER_MODEL", "")
+    model = model or os.environ.get("FRONTIER_MODEL", "")
     calls = sum(len(u.items) for u in units if u.backend == "frontier")
+    # ~1,500 tokens for the image and template, the question text twice (prompt + JSON schema enum), and room for
+    # models that think before they answer.
     tokens_in = sum(
-        1500 + len(json.dumps(i.question)) // 3 for u in units if u.backend == "frontier" for i in u.items
+        1500 + 2 * len(json.dumps(i.question)) // 3 for u in units if u.backend == "frontier" for i in u.items
     )
-    tokens_out = 30 * calls
+    tokens_out = 400 * calls
     price = litellm.model_cost.get(model) or litellm.model_cost.get(model.split("/", 1)[-1]) or {}
     usd = None
     if price.get("input_cost_per_token") is not None:

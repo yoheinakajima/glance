@@ -79,6 +79,7 @@ class PickResult:
     picks: list[str]
     usage: BackendUsage = field(default_factory=BackendUsage)
     timing_ms: dict[str, float] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)
 
 
 @runtime_checkable
