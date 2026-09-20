@@ -19,3 +19,4 @@ lab/runs/kadid.jsonl
 lab/runs/distort25.jsonl
 # KADID-10k content is never redistributed, thumbnails included
 lab/sheets/_kadid_examples.jpg
+lab/hidden/

@@ -1,0 +1,45 @@
+{
+  "runs": {},
+  "local": {
+    "v0 readout as shipped (single temperature), 0 rubric labels": {
+      "accuracy": {
+        "blur": 0.625,
+        "exposure": 0.53,
+        "jpeg": 0.365,
+        "noise": 0.55,
+        "resolution": 0.48
+      },
+      "mean_accuracy": 0.51
+    },
+    "+ Glance ens4d, 0 labels": {
+      "accuracy": {
+        "blur": 0.47,
+        "exposure": 0.7,
+        "jpeg": 0.45,
+        "noise": 0.575,
+        "resolution": 0.655
+      },
+      "mean_accuracy": 0.57
+    },
+    "+ Glance ens4d, 32 labels": {
+      "accuracy": {
+        "blur": 0.906,
+        "exposure": 0.9212499999999999,
+        "jpeg": 0.7377500000000001,
+        "noise": 0.85025,
+        "resolution": 0.8712500000000002
+      },
+      "mean_accuracy": 0.8573000000000001
+    },
+    "+ Glance ens4d, 500 labels": {
+      "accuracy": {
+        "blur": 0.91,
+        "exposure": 0.935,
+        "jpeg": 0.745,
+        "noise": 0.875,
+        "resolution": 0.875
+      },
+      "mean_accuracy": 0.868
+    }
+  }
+}

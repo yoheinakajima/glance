@@ -99,6 +99,11 @@ class VlmBackend:
         self._label_ids = {lab: self._single_token_ids([lab, " " + lab]) for lab in prompts.LETTER_LABELS}
         self._prefix_cache: OrderedDict[str, _PrefixEntry] = OrderedDict()
         self._reads = 0
+        # Lab only: keep the final hidden state of every scored prompt (float16, request order) in `last_hidden`.
+        # Pure logging; the logits are computed exactly as before.
+        self.keep_hidden = False
+        self.last_hidden: np.ndarray | None = None
+        self._hidden_chunks: list[np.ndarray] = []
 
     # --- prompt building --------------------------------------------------------------------------
 
@@ -167,6 +172,8 @@ class VlmBackend:
         """
         import torch
 
+        if self.keep_hidden:
+            self._hidden_chunks.append(hidden.float().cpu().numpy().astype(np.float16))
         head = self.model.lm_head
         weight = head.weight[token_ids].float()
         selected = hidden.float() @ weight.T
@@ -303,6 +310,7 @@ class VlmBackend:
         import torch
 
         t0 = time.perf_counter()
+        self._hidden_chunks = []
         pixel_values, grid, tokens_per_image = self._encode_images(images)
         # Score in a canonical order. Batch composition and padding perturb half-precision logits slightly, so
         # sorting makes a statement's logit independent of where the caller listed it (option order, question order).
@@ -317,6 +325,7 @@ class VlmBackend:
             prefix_ms, hit = 0.0, None
         inverse = np.argsort(order)
         selected, log_norm = selected[inverse], log_norm[inverse]
+        self.last_hidden = np.concatenate(self._hidden_chunks)[inverse] if self.keep_hidden and self._hidden_chunks else None
         if self.device == "mps":
             torch.mps.synchronize()
         total_ms = (time.perf_counter() - t0) * 1000

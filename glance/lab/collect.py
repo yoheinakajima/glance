@@ -52,12 +52,38 @@ def anchors_for(ladder: str, config: str) -> list[sm.Anchor]:
     return [sm.Anchor(image_id=f"ref{level}", level=int(level), path=entry["paths"][int(level)]) for level in levels]
 
 
+class HiddenStore:
+    """Final hidden states of the digit readouts, one .npz per (bench, scale, method): `item_ids` and a float16 array.
+    Logging only (for offline readout studies); not used by any registered result. Kept out of git (large)."""
+
+    def __init__(self, bench: str):
+        self.dir = LAB_DIR / "hidden" / bench
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.pending: dict[tuple[str, str], dict[str, np.ndarray]] = {}
+
+    def add(self, ladder: str, key: str, item_id: str, vector: np.ndarray) -> None:
+        self.pending.setdefault((ladder, key), {})[item_id] = vector
+
+    def flush(self) -> None:
+        for (ladder, key), new in self.pending.items():
+            path = self.dir / f"{ladder}.{key.replace('@', '_at_').replace(':', '_')}.npz"
+            merged: dict[str, np.ndarray] = {}
+            if path.exists():
+                old = np.load(path, allow_pickle=False)
+                merged = dict(zip(old["item_ids"].tolist(), old["hidden"]))
+            merged.update(new)
+            ids = sorted(merged)
+            np.savez(path, item_ids=np.array(ids), hidden=np.stack([merged[i] for i in ids]).astype(np.float16))
+        self.pending = {}
+
+
 class Collector:
-    def __init__(self, prefix_cache: bool):
+    def __init__(self, prefix_cache: bool, keep_hidden: bool = False):
         from ..backends.vlm_hf import VlmBackend
 
         self.cfg = load_config(overrides={"vlm": {"prefix_cache": prefix_cache}})
         self.backend = VlmBackend(self.cfg)
+        self.backend.keep_hidden = keep_hidden
         self._anchor_images: dict[str, Any] = {}
 
     def _image(self, image_id: str, path: str):
@@ -75,6 +101,7 @@ class Collector:
     def run(self, method: str, meta: dict[str, Any], item: dict[str, Any], anchors: list[sm.Anchor],
             position: str | None = None) -> dict[str, Any]:
         levels, instructions = meta["levels"], meta["instructions"]
+        self.last_hidden = None
         target = self._image("img0", item["path"])
         images = [target]
         if method.startswith("zoom_"):
@@ -103,6 +130,8 @@ class Collector:
             block, labels = sm.digits_block(instructions, levels, reverse=reverse)
             out = self.backend.score_labels(images, None, [block], labels)
             logits, off = (out.logits[0][::-1] if reverse else out.logits[0]), out.off_mass
+            if self.backend.keep_hidden and self.backend.last_hidden is not None:
+                self.last_hidden = self.backend.last_hidden[0]
         return {
             "logits": [float(v) for v in logits], "off_mass_max": float(np.max(off)),
             "latency_ms": (time.perf_counter() - t0) * 1000, "image_tokens": out.usage.image_tokens,
@@ -121,12 +150,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--split", choices=["calibration", "test", "all"], default="all")
     parser.add_argument("--limit", type=int, help="first N items of each ladder's manifest (after the split filter)")
     parser.add_argument("--prefix-cache", action="store_true", help="use the prefix-cached path (experiments); omit for the reference path")
+    parser.add_argument("--save-hidden", action="store_true", help="also log the final hidden state of each digit readout to lab/hidden/ (not in git)")
     args = parser.parse_args(argv)
 
     out_path = PROJECT_ROOT / args.out
     done = {(r["ladder"], r["item_id"], r["method_key"]) for r in read_jsonl(out_path)}
     writer = JsonlWriter(out_path)
-    collector = Collector(prefix_cache=args.prefix_cache)
+    collector = Collector(prefix_cache=args.prefix_cache, keep_hidden=args.save_hidden)
+    hidden = HiddenStore(args.bench) if args.save_hidden else None
     ladder_meta = load_ladder_meta(args.bench)
     if not args.ladders:
         args.ladders = ",".join(ladder_meta)
@@ -154,12 +185,16 @@ def main(argv: list[str] | None = None) -> int:
                 position = config.split(":", 1)[1] if config and config.startswith("pos:") else None
                 anchors = anchors_for(ladder, config) if config and not position else []
                 row = collector.run(method, ladder_meta[ladder], item, anchors, position)
+                if hidden is not None and collector.last_hidden is not None:
+                    hidden.add(ladder, key, item["item_id"], collector.last_hidden)
                 writer.write({
                     "bench": args.bench, "ladder": ladder, "item_id": item["item_id"], "split": item["split"], "level": item["level"],
                     "method": method, "anchors": config, "method_key": key, "prompt_version": sm.LAB_PROMPT_VERSION,
                     "prefix_cache": args.prefix_cache, **row,
                 })
             if index % 50 == 0 or index == len(items):
+                if hidden is not None:
+                    hidden.flush()
                 rate = (time.perf_counter() - t_ladder) / index
                 print(f"[lab {time.strftime('%H:%M:%S')}] {ladder}: {index}/{len(items)} items, {rate:.2f} s/item", file=sys.stderr, flush=True)
     print(f"[lab] done in {(time.perf_counter() - started) / 60:.1f} min -> {out_path}", file=sys.stderr)
