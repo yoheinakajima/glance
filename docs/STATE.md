@@ -33,6 +33,15 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**Update 16:54.** `inat-eval` done (entry 35b: pick-one 0.940, yes/no 0.945; run `20260920T232332Z-80efa7`, copies `-gpt` and
+`-gemini` made for the owner's frontier calls; when they finish:
+`uv run python tools/fresh_report.py --set inat --run 20260920T232332Z-80efa7 --run 20260920T232332Z-80efa7-gpt --run 20260920T232332Z-80efa7-gemini`,
+then `tools/make_results_zeroshot.py`, verdict on the last part of H30). E14 done and FAILED (entry 39b). E15: weights downloaded;
+`scaling-2b` and `scaling-8b-alone` are in lane A after `semantic-zeroshot-test`; lane B has a `hold-for-8b` step after `smol-lab`
+(flag files `$TMPDIR/glance/laneB.holding` and `scaling8b.done`; if the 8B job dies, `touch $TMPDIR/glance/scaling8b.done` to release
+lane B); afterwards `uv run python tools/scaling_report.py` (verdicts H33 to H35; H36 from the four `lab/runs/scaling_*_eval.out` run
+ids with `tools/fresh_report.py`).
+
 **Update 16:32. READ FIRST: the owner re-framed the project (STATUS D44, D45; `lab/NOTES.md` entry 38).** Headline =
 what the frozen OPEN model does ZERO-SHOT as a general image decision engine: `docs/paper/RESULTS_ZEROSHOT.md`
 (`uv run python tools/make_results_zeroshot.py` after every job below). Labels are a caveat. Lane A order now:
