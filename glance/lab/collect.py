@@ -131,6 +131,18 @@ class Collector:
         elif method.endswith("cumulative"):
             out = self.backend.score_statements(images, None, sm.cumulative_statements(instructions, levels))
             logits, off = out.z, out.off_mass
+        elif method in ("letter", "letter4", "poles"):
+            # Other systems' readouts on the same model (lab/NOTES.md entry 24): option letters, not digits.
+            from .. import prompts
+
+            options = [levels[0], levels[-1]] if method == "poles" else list(levels)
+            k = len(options)
+            shifts = [round(r * k / 4) % k for r in range(4)] if method == "letter4" else [0]
+            shifts = list(dict.fromkeys(shifts))
+            blocks = [prompts.render_letter(instructions, options[s:] + options[:s]) for s in shifts]
+            out = self.backend.score_labels(images, None, blocks, prompts.LETTER_LABELS[:k])
+            per_option = np.stack([[out.logits[r, (i - s) % k] for i in range(k)] for r, s in enumerate(shifts)])
+            logits, off = per_option.mean(axis=0), out.off_mass
         else:
             reverse = method.endswith("digitsrev")
             block, labels = sm.digits_block(instructions, levels, reverse=reverse)
