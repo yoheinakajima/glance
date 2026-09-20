@@ -2,6 +2,7 @@
   "runs": {
     "20260920T165748Z-8ff72a": {
       "model": "anthropic/claude-opus-5",
+      "failed_calls_counted_wrong": 0,
       "n": {
         "blur": 200,
         "noise": 200,
@@ -20,6 +21,7 @@
     },
     "20260920T165949Z-8ff72a": {
       "model": "openai/gpt-5.6",
+      "failed_calls_counted_wrong": 0,
       "n": {
         "blur": 200,
         "noise": 200,
@@ -35,6 +37,25 @@
         "resolution": 0.505
       },
       "mean_accuracy": 0.597
+    },
+    "20260920T170146Z-8ff72a": {
+      "model": "openrouter/google/gemini-3.1-pro-preview",
+      "failed_calls_counted_wrong": 1,
+      "n": {
+        "blur": 200,
+        "noise": 200,
+        "jpeg": 200,
+        "exposure": 200,
+        "resolution": 200
+      },
+      "accuracy": {
+        "blur": 0.665,
+        "noise": 0.59,
+        "jpeg": 0.645,
+        "exposure": 0.655,
+        "resolution": 0.695
+      },
+      "mean_accuracy": 0.6499999999999999
     }
   },
   "local": {
@@ -158,6 +179,41 @@
       "ci95": [
         23.3,
         30.7
+      ]
+    },
+    "v0 readout as shipped (single temperature), 0 rubric labels minus openrouter/google/gemini-3.1-pro-preview": {
+      "points": -13.99999999999999,
+      "ci95": [
+        -18.7,
+        -9.3
+      ]
+    },
+    "+ Glance ens4d, 0 labels minus openrouter/google/gemini-3.1-pro-preview": {
+      "points": -7.9999999999999964,
+      "ci95": [
+        -12.399999999999997,
+        -3.6000000000000005
+      ]
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images minus openrouter/google/gemini-3.1-pro-preview": {
+      "points": 5.200000000000005,
+      "ci95": [
+        1.2999999999999998,
+        9.3
+      ]
+    },
+    "+ Glance ens4d, 32 labels minus openrouter/google/gemini-3.1-pro-preview": {
+      "points": 20.730000000000015,
+      "ci95": [
+        17.450000000000003,
+        24.055124999999997
+      ]
+    },
+    "+ Glance ens4d, 500 labels minus openrouter/google/gemini-3.1-pro-preview": {
+      "points": 21.800000000000008,
+      "ci95": [
+        18.3,
+        25.2
       ]
     }
   }

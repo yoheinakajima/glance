@@ -152,11 +152,24 @@ All on identical images and labels per table (`docs/paper/RESULTS_COMPARISONS.md
    ratings cost $0.159 to $0.243 on a rented cloud GPU no faster than the laptop ($0.019 to $0.030 with `fast2` at 25
    rubrics per image), against list-price upper estimates of $3.74 to $18.70 for frontier APIs. Electricity alone is
    under a cent.
-6. **Running now or queued:** a fitted readout on the VLM's final hidden states (is the 0.867 ceiling the token
-   interface or the 196-token image?); other systems' readouts on our model (option letters, rotated letters, two
-   poles); a second model family (SmolVLM2-2.2B, Apache-2.0); two runnable external systems (`openjev` v2, `q-sit-mini`);
-   a non-quality rubric benchmark with exact ground truth (cut-off, occlusion, tilt, caption legibility, watermark);
-   frontier APIs on the same images (needs the owner's key). Most trained IQA VLMs (Q-Align, DeQA-Score, ...) sit on
+6. **Frontier models on the same 1,000 held-out lab images, zero-shot** (the owner ran the paid calls; entries 31,
+   33, 33c; `results/lab/frontier_head_to_head.md`): Claude Opus 5 0.550, GPT-5.6 0.597, Gemini 3.1 Pro 0.650. The local
+   4B model with Glance: 0.570 with no labels (between them; Gemini is ahead by 8.0 points [3.6, 12.4]), 0.702 after
+   seeing unlabeled images of the rubric (ahead of all three, by 5.2 [1.3, 9.3] over Gemini), 0.857 with 32 labels (ahead
+   by 21 to 31 points). No few-shot prompt was tried for the frontier models. Measured frontier cost where logged: $3.03
+   to $7.64 per 1,000 answers, 1.2 to 4.0 s median per answer.
+7. **Photos no model can have seen** (131 Wikimedia Commons photos taken after the models' release, labels from
+   structured "depicts" statements, zero labels by us; entries 30, 30b, 33b): yes/no local 0.931, Gemini 0.947, Opus 5
+   0.924, GPT-5.6 0.893; pick-one of 13 local 0.885, Gemini 0.923, Opus 5 0.908, GPT-5.6 0.892. All intervals overlap. A
+   second such set with cleaner labels (200 iNaturalist research-grade observations, entry 35) is being scored.
+8. **Reading against the same model writing structured output** (entry 27c): 2.4x / 3.5x / 6.1x faster for 1 / 5 / 25
+   questions; accuracy of the written answers on the same items is being collected (entry 32).
+9. **Running now or queued:** a fitted readout on the VLM's final hidden states (interim, calibration split only, two
+   scales: 0.946 from ONE pass against 0.870 for `ens4d`; the full test comes once); reference-anchored ratings on
+   KADID-10k; other systems' readouts on our model (option letters, rotated letters, two poles); a second model family
+   (SmolVLM2-2.2B, Apache-2.0); two runnable external systems (`openjev` v2, `q-sit-mini`, entry 37); a non-quality
+   rubric benchmark with exact ground truth (cut-off, occlusion, tilt, caption legibility, watermark; two further
+   rubrics proved infeasible on portrait photos, entry 36b). Most trained IQA VLMs (Q-Align, DeQA-Score, ...) sit on
    LLaMA-2-derived bases and cannot be run under our Apache/MIT-weights rule; they are cited, not run
    (`docs/paper/COMPARABLE_SYSTEMS.md`).
 

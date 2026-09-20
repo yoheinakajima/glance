@@ -1239,3 +1239,20 @@ Plan of record: `docs/paper/COMPARABLE_SYSTEMS.md` ("Four systems"). Fixed now, 
   is weak on exposure and resolution; with our calibration its mean accuracy stays below `ens4d`. Embarrassing if a
   0.9B trained scorer beats the frozen 4B model plus 500 labels.
 - Speed and memory are recorded for both (ms per rating, warm, GPU otherwise idle).
+
+## 2026-09-20 16:00 Entry 33c: Gemini 3.1 Pro on the lab scales (the owner ran it through OpenRouter); measured frontier cost
+
+Same 1,000 held-out lab images, zero-shot, constrained pick: Gemini 3.1 Pro 0.650 (one failed call of 1,000, counted as
+wrong; `tools/compare_frontier_lab.py` now applies that rule to every frontier run), GPT-5.6 0.597, Opus 5 0.550.
+Gemini is the strongest of the three and it BEATS our zero-label readout: `ens4d` with no labels 0.570, a gap of
+-8.0 points [-12.4, -3.6]. With unlabeled images of the rubric (`glance fit --unlabeled`) the local model is ahead by
++5.2 [+1.3, +9.3]; with 32 labels by +20.7 [+17.5, +24.1]; with 500 by +21.8 [+18.3, +25.2]. So the honest sentence is
+no longer "matches frontier models at zero labels": it is "between them at zero labels (ahead of Opus 5 by 2, behind
+GPT-5.6 by 3, behind Gemini 3.1 Pro by 8), ahead of all three once it has seen unlabeled images of the rubric, and 21
+to 31 points ahead with 32 labels". No frontier model got few-shot examples; that remains untested.
+Measured cost and speed of the frontier calls that carry them (LiteLLM's cost per call): Gemini 3.1 Pro on the lab
+scales $6.15 per 1,000 ratings, median 4.0 s per answer, median 192 output tokens (it reasons before it answers);
+on the fresh photos Gemini $3.03 and GPT-5.6 $7.64 per 1,000 questions, medians 2.9 s and 1.2 s, 12 output tokens.
+The earlier Opus 5 and GPT-5.6 lab runs predate cost logging (latency medians 2.4 s and 1.1 s). These are within the
+cost model's estimated range ($3.74 to $18.70 per 1,000), which stays labeled as an estimate for the models without
+measured rows.

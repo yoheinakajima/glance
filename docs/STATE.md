@@ -20,7 +20,7 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
   tags, none made by us): yes/no 0.931, pick-one 0.885 (entry 30b).
 - Ratings, five synthetic lab scales: 0.558 with nothing, 0.697 with unlabeled images (`glance fit --unlabeled`), 0.856
   with 32 labels, 0.867 with 500 (`ens4d`); `fast2` 0.833; adaptive compute 0.863 at 2.57 passes (entry 27b, not yet in
-  the harness). Opus 5 zero-shot on the same 1,000 images: 0.550 (entry 31). Classical features: 0.979 with 500 labels,
+  the harness). Frontier models zero-shot on the same 1,000 images: Opus 5 0.550, GPT-5.6 0.597, Gemini 3.1 Pro 0.650 (entries 31, 33, 33c): Gemini beats the zero-label readout (0.570) by 8 points; the unlabeled-images fit (0.702) is ahead of all three. Classical features: 0.979 with 500 labels,
   0.752 with 32 (entry 25). SigLIP2: 0.330 -> 0.588 with the same map.
 - KADID-10k, fixed method, scored once: 0.527 exact, 0.880 within one, Spearman with human DMOS 0.763 (ceiling 0.840);
   registered targets missed (entry 28). Universal map across rubrics fails (0.350 vs raw 0.328; with bias removal 0.433;
@@ -43,7 +43,7 @@ second uncontaminated photo set from iNaturalist with community-verified labels 
 `uv run glance eval --suite inat_choice --suite inat_yesno --model vlm --model siglip --prefix-cache` on lane B and give
 the owner the one-paste frontier commands); (2) E13 (entry 37), adapters for openjev v2 and q-sit-mini
 (`glance/lab/external_systems.py`, `tools/external_collect.py`, `tools/external_report.py`); the 4B openjev model must
-not be loaded while two lanes are busy. Gemini on the lab scales was at 984 of 1,000 answers at 15:56.
+not be loaded while two lanes are busy. Gemini on the lab scales finished and is merged (entry 33c); it was at 984 of 1,000 answers at 15:56.
 
 GPU queue runner: `$TMPDIR/glance/gpuq.sh` reads `$TMPDIR/glance/gpuq.txt` one line at a time ("label ::: command"), log
 in `$TMPDIR/glance/queue_big.log`. Edit the txt file to add or reorder jobs (write a temp file, then `mv`); create

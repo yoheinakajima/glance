@@ -58,13 +58,17 @@ for run_id in args.run:
                     frontier_items[scale].add(r["item_id"])
         continue
     model = model or str(picks[0].get("model", "")).removeprefix("frontier:") or run_id
+    # A call that failed or returned no valid answer counts as a wrong answer (same rule as the written-output baseline).
+    answered = {(r["suite"], r["item_id"]) for r in picks}
+    failed = [e for e in read_jsonl(run_dir / "errors.jsonl") if e.get("backend") == "frontier" and (e["suite"], e["item_id"]) not in answered]
+    picks += [{"suite": e["suite"], "item_id": e["item_id"], "correct": False} for e in {(e["suite"], e["item_id"]): e for e in failed}.values()]
     per = collections.defaultdict(list)
     for r in picks:
         scale = r["suite"].removeprefix("ladder_")
         per[scale].append(bool(r["correct"]))
         frontier_items[scale].add(r["item_id"])
         frontier_correct[(run_id, scale, r["item_id"])] = bool(r["correct"])
-    result["runs"][run_id] = {"model": model, "n": {s: len(v) for s, v in per.items()},
+    result["runs"][run_id] = {"model": model, "failed_calls_counted_wrong": len({(e["suite"], e["item_id"]) for e in failed}), "n": {s: len(v) for s, v in per.items()},
                               "accuracy": {s: float(np.mean(v)) for s, v in per.items()},
                               "mean_accuracy": float(np.mean([np.mean(v) for v in per.values()]))}
 
