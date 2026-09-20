@@ -99,6 +99,28 @@ def ask_model_and_key(
     return model, key
 
 
+def smoke_check(engine: Engine, model_id: str, run_id: str, out=sys.stderr) -> bool:
+    """One cheap call first, so a wrong key or an unsupported model fails here and not 1,000 calls in."""
+    print(f"\nChecking {model_id} with one test call ...", file=out)
+    try:
+        trace = engine.decide({"model": "frontier", "state": {"images": [{"id": "img0", "path": SMOKE_IMAGE}]},
+                               "questions": {"q": SMOKE_QUESTION}}, source=f"eval:{run_id}:baseline:check")
+    except GlanceError as exc:
+        print(f"The test call failed, nothing else was sent.\n  {exc.code}: {exc.message}", file=out)
+        return False
+    for warning in trace.response.warnings:
+        print(f"  note: {warning}", file=out)
+    print("  ok: key accepted, structured output works.", file=out)
+    return True
+
+
+def check_model_key(cfg: Config, model_id: str, api_key: str | None, out=sys.stderr) -> bool:
+    """The same test call, on its own: lets a batch of baselines verify every key before any of them starts."""
+    backend = FrontierBackend(cfg, model_id=model_id, api_key=api_key)
+    engine = Engine(cfg, source="baseline:keycheck", backends={"frontier": backend}, allow_frontier=True)
+    return smoke_check(engine, model_id, "keycheck", out)
+
+
 def add_baseline(
     cfg: Config, run_dir: Path, model_id: str, api_key: str | None, baseline_n: int | None = None,
     allow_upload_gold: bool = False, confirmed: bool = False,
@@ -145,17 +167,8 @@ def add_baseline(
     backend = FrontierBackend(cfg, model_id=model_id, api_key=api_key)
     engine = Engine(cfg, source=f"eval:{run_id}:baseline", backends={"frontier": backend}, allow_frontier=True)
 
-    # One cheap call first, so a wrong key or an unsupported model fails here and not 1,000 calls in.
-    print(f"\nChecking {model_id} with one test call ...", file=out)
-    try:
-        trace = engine.decide({"model": "frontier", "state": {"images": [{"id": "img0", "path": SMOKE_IMAGE}]},
-                               "questions": {"q": SMOKE_QUESTION}}, source=f"eval:{run_id}:baseline:check")
-    except GlanceError as exc:
-        print(f"The test call failed, nothing else was sent.\n  {exc.code}: {exc.message}", file=out)
+    if not smoke_check(engine, model_id, run_id, out):
         return None
-    for warning in trace.response.warnings:
-        print(f"  note: {warning}", file=out)
-    print("  ok: key accepted, structured output works.", file=out)
 
     cost = estimate_frontier_cost(units, model=model_id)
     usd = "price unknown to LiteLLM" if cost["est_usd"] is None else f"about ${cost['est_usd']:.2f} at list price (an upper estimate)"
