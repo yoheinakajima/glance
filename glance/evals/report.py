@@ -594,6 +594,7 @@ def summary_text(metrics: dict[str, Any], extras: dict[str, Any], run_config: di
 def finalize_run(cfg: Config, run_dir: Path, calibrate: bool = True) -> dict[str, Any]:
     """predictions.jsonl -> calibration (in the run dir), metrics.json, plots/, report.md, summary.txt."""
     run_dir = Path(run_dir)
+    (run_dir / "errors.jsonl").touch()
     rows = read_jsonl(run_dir / "predictions.jsonl")
     extras = json.loads((run_dir / "extras.json").read_text()) if (run_dir / "extras.json").exists() else {}
     env = json.loads((run_dir / "env.json").read_text()) if (run_dir / "env.json").exists() else {}

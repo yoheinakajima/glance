@@ -51,7 +51,9 @@ def git_sha() -> str | None:
         )
     except (OSError, subprocess.SubprocessError):
         return None
-    return out.stdout.strip() or None if out.returncode == 0 else None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip() or None
 
 
 def _json_default(obj: Any) -> Any:

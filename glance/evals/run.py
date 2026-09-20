@@ -266,6 +266,7 @@ def run_eval(cfg: Config, args: RunArgs) -> Path:
     engine.allow_frontier = bool(frontier_units)  # only after _frontier_ready() saw --confirm-spend
     predictions = JsonlWriter(run_dir / "predictions.jsonl")
     errors = JsonlWriter(run_dir / "errors.jsonl")
+    errors.path.touch()  # the file exists even when nothing fails
     done = {(r["suite"].split("/")[0], r["backend"], r["method"], r["item_id"]) for r in read_jsonl(run_dir / "predictions.jsonl")}
     failures: dict[str, int] = {}
     attempts: dict[str, int] = {}

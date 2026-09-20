@@ -18,7 +18,9 @@ def _sysctl(name: str) -> str | None:
         out = subprocess.run(["sysctl", "-n", name], capture_output=True, text=True, timeout=5)
     except (OSError, subprocess.SubprocessError):
         return None
-    return out.stdout.strip() or None if out.returncode == 0 else None
+    if out.returncode != 0:
+        return None
+    return out.stdout.strip() or None
 
 
 def _ram_gb() -> float:

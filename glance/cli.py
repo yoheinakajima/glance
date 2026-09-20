@@ -28,6 +28,8 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
 def _config_overrides(args: argparse.Namespace) -> dict:
     overrides: dict = {}
+    if getattr(args, "image_token_budget", None):
+        overrides.setdefault("models", {})["image_token_budget_override"] = args.image_token_budget
     if getattr(args, "prefix_cache", False):
         overrides.setdefault("vlm", {})["prefix_cache"] = True
     if getattr(args, "no_prefix_cache", False):
@@ -151,6 +153,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--skip-latency", action="store_true", help="skip the 1 image + 5 questions latency benchmark")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
     p.add_argument("--no-calibrate", action="store_true", help="report raw probabilities only")
+    p.add_argument("--image-token-budget", type=int, help="VLM: override the tier's image token budget (token sweep)")
     p.add_argument("--resume", metavar="RUN_ID", help="continue an interrupted run, skipping rows already written")
     p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_eval)

@@ -110,7 +110,10 @@ def test_materialize_is_seeded_balanced_and_manifested(cfg, tmp_path):
 
 
 def test_suite_registry_and_skips(cfg, tmp_path):
-    assert set(SUITES) == {"pope", "gqa_yesno", "pets37", "caltech101", "blur_ladder", "doctype16", "human_gold"}
+    from glance.evals.suites import DEFAULT_SUITES, STRETCH_SUITES
+
+    assert set(DEFAULT_SUITES) == {"pope", "gqa_yesno", "pets37", "caltech101", "blur_ladder", "doctype16", "human_gold"}
+    assert set(SUITES) == set(DEFAULT_SUITES) | set(STRETCH_SUITES)
     with pytest.raises(SuiteSkipped, match="license"):
         SUITES["doctype16"].build(cfg, 10)
     cfg.paths.human_gold = str(tmp_path / "gold" / "human_gold.jsonl")
