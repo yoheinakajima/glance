@@ -4,8 +4,10 @@
 
 You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
 rubric) and get probability distributions back, read from the logits of single forward passes of an open model you
-already have (Qwen3-VL-4B by default). No text is generated, no weights are trained or shipped. The interface mirrors
-TypeSafe's Jev, which is text-only; Glance is the same shape for images, running locally.
+already have (Qwen3-VL-4B by default). No text is generated, no weights are trained or shipped. The request and
+response shapes follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar. That is where the
+resemblance ends: Glance is a readout-and-calibration recipe on someone else's frozen weights, the calibration is
+yours to fit, and it makes no speed or cost claim against any hosted model.
 
 What is new here is the *elicitation* for `score`, measured in `docs/paper/RESULTS_LAB.md`:
 
@@ -16,9 +18,12 @@ What is new here is the *elicitation* for `score`, measured in `docs/paper/RESUL
 | **+ Glance** (`ens4d`): digit readout, scale forward and reversed, with and without a magnified crop, per-rubric matrix calibration | **0.867** |
 
 About 32 labeled images per rubric are enough for the calibration, and it does **not** transfer from one rubric to
-another, so the verb that matters is `glance fit`. Measured on one 4B model and synthetic degradations so far; the
-generalization tests (25 distortion types, KADID-10k human scores) are in progress on this branch. One rating of a
-fresh image takes about 1.1 s on an Apple-silicon laptop; five ratings of the same image about 0.6 s each.
+another, so the verb that matters is `glance fit`. Measured on one 4B model and five synthetic single-factor scales
+with hand-written level texts. The harder test (25 distortion types, 5 levels, one generic wording, KADID-10k human
+scores) is running on this branch; early numbers are clearly lower and will be published as they are
+(`docs/BRIEFING.md`, section 7). One rating of a fresh image takes about 1.1 s on an Apple-silicon laptop, slower
+than the 0.44 s of the naive readout; five ratings of the same image cost about 0.6 s each, 25 about 0.34 s each.
+An earlier 609 ms figure was wrong and is corrected (`lab/NOTES.md`, entry 16).
 
 - `HANDOFF.md` is the original spec. `STATUS.md` is the build log, with every decision and deviation.
 - `docs/` is written for a paper: methods, results, reproduction, related work, research log. `lab/NOTES.md` is the

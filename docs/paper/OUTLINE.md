@@ -124,6 +124,22 @@ calibrated, so it is context, not a head-to-head comparison.
     generic question wording on 25 distortion types x 5 levels, on license-clean photos and on KADID-10k with human
     opinion scores (evaluation only), hypotheses H7 to H9 registered beforehand, including the parts that fail.
 
+## Positioning guardrails (agreed with the project owner, 2026-09-20)
+
+Say: a frozen 4B VLM already sees graded quality; the missing piece was how the question is asked and how the logits
+are remapped. Lead with the elicitation gap (0.500 -> 0.810 -> 0.867, same weights), the two errata (latency; small-n
+sharpness), and the harder benchmark's result as it comes out, misses included. `glance fit` is the product verb.
+
+Do not say: that Glance is a model or a System-One replacement; "Jev for vision" as a headline (use "Jev-like Score
+readout for VLMs" in related work only: same interface shape, different object, and this repository would lose a
+comparison on Jev's advertised latency); faster or cheaper than any hosted model (no dollar numbers exist, and
+`ens4d` is slower than the v0 readout for a single score); "works on any VLM" (one model measured; `fit` is the
+transfer mechanism, not a transfer result); "0.87 on image quality assessment" (five synthetic single-factor scales).
+Result rows read "Qwen3-VL-4B + Glance". No three-letter method acronyms.
+
+Latency sentence to reuse: one image, many rubrics: 341 to 584 ms per score packed; one rubric with four readouts:
+about 1.1 s; an earlier 609 ms figure was corrected.
+
 ## Section outline with figures/tables
 
 1. **Introduction.** Motivation (frontier-model cost/latency/data-control vs. open-model calibration
