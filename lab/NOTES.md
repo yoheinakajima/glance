@@ -669,3 +669,51 @@ second half of the calibration split:
   a severity axis; the extra freedom of the full matrix buys under a point, and only with more than 100 labels. For the
   paper: matrix scaling is kept as the recipe, the ordinal readout is reported as an equivalent with a quarter of the
   parameters, and "8 labels" is below what either can use.
+
+## 2026-09-20 10:30 Entry 20: a bigger claim, and the experiments that would earn it (registered before their data exists)
+
+**Why.** The owner asked whether the project can be more than what the outside reviews describe ("a careful recipe,
++5.7 points over a well-calibrated baseline, one model, one task family"). The stronger claim worth testing is about
+VLMs, not about our recipe: *the token interface discards most of what a frozen VLM perceives about graded visual
+attributes, and a few dozen labels recover it.* Four experiments, each of which can fail:
+
+**E1. A ladder of readouts up to the representation ceiling (lab scales).** The collector now also logs the final
+hidden state (2,560 numbers, the vector the output head multiplies) of each digit readout; logging was verified not to
+change a single logit (max difference 0.0 on re-collected items). Rungs on the same frozen model and images: v0 as
+shipped (0.500), v0 best calibration (0.810), `digits` + matrix (0.814), `ens4d` + matrix (0.867) are already
+measured. New rungs, fit on the calibration split, test split scored ONCE per rung at the full 500 labels:
+- R4a: multinomial logistic readout on the hidden state of the ONE `digits` pass; R4b: on the four `ens4d` passes'
+  hidden states concatenated. Features standardized, reduced by PCA fit on the calibration features (no labels
+  needed); PCA size from {32, 64, 128, 256} and L2 from {0.01, 0.05, 0.2, 1, 5} chosen by 5-fold cross-validated NLL
+  inside the fit labels only; held-out sharpness scalar as in `rating.fit_matrix(rescale="cv")`.
+- R5: the same readout on [16 member logits + hidden-state components]: the token readout as a built-in feature.
+- Label curve for `ens4d` + matrix, R4b and R5 at n = 16, 32, 64, 128, 500 (20 draws each below 500).
+Hypotheses. H12: R4b at 500 labels reaches mean test accuracy >= 0.92 and JPEG >= 0.85 (the information is in the
+representation; the digit tokens are a narrow window onto it). H13: at 32 labels R4b is WORSE than `ens4d` + matrix,
+with a crossing between 64 and 250 labels (the token readout is a strong prior when labels are few). H14: R5 is at
+least as good as both at every n.
+This is a measurement of a ceiling, and the comparison reviewers asked for ("otherwise this is logistic regression on
+VLM outputs": it is, and the question is on which features). A fitted readout on hidden states is closer to "training"
+than matrix scaling on logits is; the hand-off says to ask before any step toward training, so it does NOT go into the
+harness unless the owner says yes. The VLM's weights are untouched either way.
+
+**E2. Frontier models on the same held-out images.** Three SigLIP-backed eval runs of the `ladder_*` suites exist
+(`runs/20260920T165748Z-8ff72a`, `...165949Z-8ff72a`, `...170146Z-8ff72a`; 300 test images per scale each) so that
+`glance baseline --run <id>` can add one frontier model per run; `tools/compare_frontier_lab.py` then scores the local
+systems on exactly the same item ids from saved logits (0 labels, 32 labels, 500 labels). Registered expectation:
+frontier models zero-shot land between 0.45 and 0.70 mean accuracy; Qwen3-VL-4B + Glance with 0 labels is within 10
+points of them; with 32 labels it is ahead of all of them on at least 4 of 5 scales. Stated caveat: the frontier models
+get no labels and cannot be calibrated through a hard pick; the 0-label row is the like-for-like comparison.
+
+**E3. A second model family** (needs the owner's yes: the hand-off lists "switching model family" as ask-first, and it
+is a multi-GB download). Candidates verified Apache-2.0 today: `HuggingFaceTB/SmolVLM2-2.2B-Instruct` (SigLIP + SmolLM2;
+different vision tower AND language model) first, `OpenGVLab/InternVL3_5-4B-HF` (InternViT + Qwen3) second. Same
+prompts, same items, same calibration recipe, no tuning of wording for the new model. The method claim survives if the
+order naive < best-calibrated naive < `digits` + matrix < `ens4d` + matrix replicates; it weakens if matrix scaling
+does not beat temperature, if reversal does not help, or if the new model needs different wording to work at all.
+
+**E4. Rubrics that are not image quality, with exact ground truth** (`glance/lab/semantic.py`, being built from the Pet
+segmentation masks by a cheaper assistant model from my spec, rubric texts fixed in that spec): subject size, cut-off
+by the frame, off-centre, occlusion, tilt, caption legibility, watermark intrusiveness. Same method, per-rubric
+calibration on the calibration split, test scored once. Registered expectation: `ens4d` + matrix >= 0.75 mean accuracy
+with >= 0.95 within one level, and the v0 readout as shipped below 0.55; tilt is the rubric I expect to be worst.
