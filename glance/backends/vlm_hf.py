@@ -172,7 +172,11 @@ class VlmBackend:
         selected = hidden.float() @ weight.T
         if head.bias is not None:
             selected = selected + head.bias[token_ids].float()
-        log_norm = torch.logsumexp(head(hidden).float(), dim=-1)
+        # Normalizer = every other token (float16 head, upcast) + the selected tokens at their float32 values, so
+        # off_mass = 1 - P(selected) is exactly the mass on the other tokens and cannot go negative from mixed precision.
+        others = head(hidden).float()
+        others[:, token_ids] = float("-inf")
+        log_norm = torch.logaddexp(torch.logsumexp(others, dim=-1), torch.logsumexp(selected, dim=-1))
         return selected.cpu().numpy().astype(np.float64), log_norm.cpu().numpy().astype(np.float64)
 
     def _reference(self, ids: list[list[int]], pixel_values, grid, token_ids: list[int]):

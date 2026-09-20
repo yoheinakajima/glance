@@ -1,6 +1,6 @@
 [project]
 name = "glance"
-version = "0.2.0"
+version = "0.2.1"
 description = "Image decision harness: typed questions about images answered from single forward passes (logit readout, no generation)."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"

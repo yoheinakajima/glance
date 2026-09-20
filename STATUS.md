@@ -224,3 +224,105 @@ pytest: 95 passed, 11 skipped (model-gated)
 Deviations: prefix cache shipped off (above). Open questions: whether to accept the cache on this hardware given
 that its drift is inside the oracle's own float16 noise. It would cut eval time 3.7x and the 1 image + 5 questions
 latency from ~8.9 s to roughly 2 s. I did not flip it because the spec's fallback is explicit.
+
+## M5: frontier baseline adapter, full eval, final report (2026-09-19)
+
+Built: `backends/frontier.py` (LiteLLM, JSON schema that enumerates the allowed answers, temperature 0, model id
+from `FRONTIER_MODEL` and logged exactly; picks never written to disk; refused by the Engine without
+`--confirm-spend`; never on `human_gold` without `--allow-upload-gold`; cost estimate printed first; skipped
+cleanly without a key), per-suite `--max-hours` trim, ECE sampling floor, error breakdown, `glance calibrate`
+output committed under `calibration/`.
+
+Check: `glance eval --permutation-items 30` -> `runs/20260920T002639Z-2091d3/report.md` opens with the go/no-go
+table, every row filled with threshold, measured, and pass / FAIL / not measured. 5,326 requests, 0 failures,
+4 h 10 min. `glance calibrate --run 20260920T002639Z-2091d3` wrote `calibration/{8edfd9f546b5,1d941800c4af,
+eac746e4859c}.json`; `glance decide samples/invoice.json --model vlm --calibrated` answers with
+`calibration_version: cal_1d9418`; the same request under a different image token budget returns 409
+`calibration_mismatch`. `pytest`: 95 passed, 11 model-gated skipped; model-gated M2 checks re-run and passing.
+
+The frontier baseline did **not** run: no `FRONTIER_MODEL` or API key was present (checked by name only). Rows 1
+and 3 of the table therefore read "not measured", as the hand-off says they would.
+
+### Final summary
+
+```text
+GLANCE v0 SUMMARY
+run_id:             20260920T002639Z-2091d3
+machine:            Apple M5, 32 GB RAM, mps, float16 (tier apple_32gb)
+models:             google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab,
+                    Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17,
+                    frontier: none (no FRONTIER_MODEL / API key in .env)
+go/no-go:           NO-GO on what could be measured (the ECE gate misses on 3 of 5 suites).
+                    Two of the four gates need the frontier baseline and are not measured.
+
+| metric | threshold | measured | pass |
+| --- | --- | --- | --- |
+| Accuracy gap vs frontier baseline | <= 5 points, macro-averaged | not measured (no frontier baseline run) | not measured |
+| ECE after calibration | <= 0.05 per suite, 15 equal-mass bins | pets37 0.038, caltech101 0.034 pass; pope 0.066, gqa_yesno 0.093, blur_ladder 0.149 miss (sampling floors 0.040 / 0.074 / 0.097) | FAIL |
+| Selective accuracy at 80% coverage | >= baseline full-coverage accuracy | local 0.841 macro (pope 0.965, gqa 0.775, pets 0.960, caltech 0.972, blur 0.535); baseline not measured | not measured |
+| Permutation invariance (choice) | max shift <= 1e-3, independent | 0.0e+00 on 180 reordered VLM requests (letter: 9.7e-01) | pass |
+| Latency, 1 image + 5 questions | recorded; target <= 2 s on Apple Silicon | p50 8,604 ms / p95 10,817 ms (reference path, the shipped default); p50 1,265 ms / p95 1,462 ms with --prefix-cache; SigLIP 23 ms | recorded |
+
+choice method:      independent vs letter, same 26 options: pets37 acc 0.912 vs 0.904, caltech101 0.973 vs 0.977;
+                    calibrated ECE 0.038 vs 0.037 (pets37), 0.034 vs 0.023 (caltech101);
+                    p50 latency 8,422 vs 1,722 ms (pets37), 12,316 vs 981 ms (caltech101).
+                    independent over all options: pets37 0.892 (37), caltech101 0.919 (101).
+                    letter moves by up to 0.97 in probability when options are reordered (3 choice flips in 90);
+                    independent moves by exactly 0.
+weakest suite:      blur_ladder (score), acc 0.496, MAE 0.67 levels. Top confusions: level 2 -> 3 (51),
+                    0 -> 1 (49), 1 -> 2 (10): the ordering is right, every boundary sits one step too blurry.
+calibration gain:   ECE raw -> calibrated (vlm): pope 0.114 -> 0.066, gqa_yesno 0.204 -> 0.093, pets37 0.079 -> 0.038,
+                    caltech101 0.052 -> 0.034, blur_ladder 0.392 -> 0.149. NLL: 1.52 -> 0.26, 1.35 -> 0.53, 0.88 -> 0.39,
+                    0.75 -> 0.30, 3.43 -> 1.12. Fitted: Platt a=0.18 b=0.56, choice T=3.09, score T=8.28.
+cache speedup:      3.75x on 100 items / 1,685 statements, argmax agreement 100/100, but max |dz| 0.075 > 0.05:
+                    acceptance NOT met after two approaches, so it ships off (opt in with --prefix-cache).
+                    The reference path differs from itself by up to 0.093 when only its batch size changes.
+failures:           0 of 5,326 requests (every suite 0 failed, all valid).
+deviations:         (1) prefix cache off by default, per section 6; (2) permutation pass on 30 items x 3 orders per
+                    unit instead of 100 (it would have cost ~2 h of the 4 h budget to re-verify an invariance that holds
+                    by construction; M3 checked another 75); (3) caltech101 trimmed 500 -> 442 by --max-hours 4;
+                    (4) doctype16 skipped, RVL-CDIP license unclear; (5) human_gold empty; (6) letter on >26-option
+                    suites sees 26 options (D14); (7) report adds an ECE sampling floor and a per-suite time cap
+                    for --max-hours (D22, D23); (8) frontier baseline not run, no key.
+recommended v1 data: score first, then noul; choice is already a calibration problem that v0 solves.
+                    - score (blur_ladder, 50% error): level boundaries are question-specific. An offline refit on the
+                      saved logits with one bias per level + T (4 numbers, 250 labeled items) lifts accuracy 0.496 -> 0.724
+                      and MAE 0.67 -> 0.37, but ECE stays 0.15. v1 needs labeled examples per scale, at minimum enough to
+                      fit per-level offsets, and likely tuning data for graded visual quality.
+                    - noul on relational / attribute questions (gqa_yesno, 25.6% error, AUROC 0.81): this is a capability
+                      gap, not calibration: no -> yes 43, yes -> no 21. POPE (11.6%) is mostly missed objects (yes -> no 24)
+                      and hardest on the adversarial split (0.856 vs 0.929 random).
+                    - noul calibration does not transfer across domains: the pooled Platt offset (b = +0.56, learned on
+                      object-presence questions) turns "is this invoice a receipt?" from 0.28 raw into 0.60 calibrated.
+                      Per-domain calibration data is needed, which is what human_gold is for.
+                    - fine-grained choice confusions are narrow and known (ragdoll -> birman, Faces_easy -> Faces).
+```
+
+### What the result means
+
+The v0 question was whether logit readout plus post-hoc calibration gets close enough that v1 is a calibration
+problem rather than a data problem. On this evidence the answer differs by question type:
+
+- `choice`: yes. Accuracy is 0.89-0.92 over 37-101 options from yes/no readouts alone, one temperature brings ECE
+  under 0.05 on both suites, and `independent` is exactly order-invariant where `letter` is not.
+- `noul`: partly. Two Platt numbers cut NLL by 3-5x and ECE roughly in half, but ECE stays at 0.07-0.09 and the fitted
+  offset is domain-specific.
+- `score`: no. One temperature cannot move level boundaries, and even per-level offsets leave ECE at 0.15.
+
+Caveats that matter when reading the ECE gate: with 250 test items and 15 equal-mass bins, a perfectly calibrated
+predictor would itself measure 0.04-0.10 on these suites (the "sampling floor" column). gqa_yesno (0.093 vs floor
+0.074) is within noise of calibrated; pope (0.066 vs 0.040) and blur_ladder (0.149 vs 0.097) are not. Judging a 0.05
+gate cleanly needs roughly 1,000+ test items per suite, i.e. the prefix cache or a CUDA machine.
+
+Call-log `off_mass` values in this run (mean 0.004) are an artifact: the normalizer was float16 while the Yes/No
+logits were float32. Fixed in 0.2.1 (true values are ~1e-6, as in M2); `z` and every probability are unaffected.
+
+Newer small Apache-2.0 models in the same family exist (`Qwen/Qwen3.5-2B`, `Qwen3.5-4B`, `Qwen3.5-9B`, February
+2026). Not used in v0, per the hand-off.
+
+### Open inputs from you
+
+1. `FRONTIER_MODEL` plus its API key in `.env`, then `glance eval --model frontier --confirm-spend` to fill rows 1
+   and 3. I did not and will not enter keys.
+2. 200+ labeled images in `gold/human_gold.jsonl`: the public suites are likely in every model's training data.
+3. Whether to accept the prefix cache on this hardware (its drift is inside the oracle's own float16 noise).
