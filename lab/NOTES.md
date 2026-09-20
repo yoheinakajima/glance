@@ -1298,3 +1298,26 @@ content-free inputs and subtract them as the readout's prior. Fixed now:
   content-free (it may read as "very blurry" or "no noise at all"), in which case the correction hurts on some scales;
   a loss on any scale is reported per scale.
 - If it works it ships as the default zero-shot path for `score` (the prior is one tiny batch per rubric, cached).
+
+## 2026-09-20 16:31 Entry 40: E1 result, the readout ladder up to the hidden state (test split scored once)
+
+Collection: all 5,000 lab items, four `ens4d` passes each, final hidden state logged (bit-identical logits). Dev pass
+first (calibration split only, `lab/READOUT_LADDER_dev.md`: `ens4d` 0.869, R4a 0.949, R4b 0.961, R5 0.961), no choices
+were made from it; then the test split once (`lab/READOUT_LADDER.md`). Same frozen Qwen3-VL-4B, same images, same
+forward passes; only what is read differs. Mean exact accuracy over the five scales, all 500 calibration labels:
+- `ens4d` + matrix on the 4 x K digit logits (shipped): 0.867 (reproduces the published number), JPEG 0.772.
+- R4a, a fitted linear readout on the hidden state of ONE `digits` pass: 0.965, JPEG 0.968. One pass instead of four.
+- R4b, the four passes' hidden states: 0.974. R5, logits + hidden states: 0.977, NLL 0.060, mean ECE 0.006.
+For scale: 29 hand-built classical features with the same labels reach 0.979 (entry 23). The frozen general model's
+representation holds essentially everything the hand-built features do; the digit tokens expose only part of it.
+Labels needed (10 draws per size; the registration said 20, reduced for CPU time before any result was seen):
+n=16: `ens4d` 0.832, R4b 0.605, R5 0.826. n=32: 0.855 / 0.799 / 0.884. n=64: 0.861 / 0.904 / 0.914. n=128: 0.866 /
+0.935 / 0.945. Verdicts: H12 (R4b >= 0.92 and JPEG >= 0.85): SUPPORTED (0.974, 0.986). H13 (R4b worse than `ens4d` at
+32 labels, crossing between 64 and 250): first half SUPPORTED (0.799 against 0.855), crossing range NOT SUPPORTED: it
+crosses earlier, between 32 and 64 labels. H14 (R5 at least as good as both at every n): NOT SUPPORTED at n=16 (0.826
+against 0.832), supported from 32 labels up.
+Reading under the owner's framing (entry 38): this is an "if you have examples" result, and a label-hungry one: below
+about 32 labels the token readout is the better prior. What it says about ZERO-SHOT is indirect but important: the open
+model already represents the severity almost perfectly; the zero-shot gap (0.558 exact) is a readout and convention
+problem, not a perception problem. Shipping a hidden-state fit into the harness (`glance fit --readout hidden`) is
+approved by the owner in principle and is NOT started; it waits behind the zero-shot table.
