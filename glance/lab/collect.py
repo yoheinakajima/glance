@@ -32,6 +32,7 @@ BENCHES = {
     "distort25": ("glance.lab.distort25", "SCALES", "manifests_distort25"),
     "kadid": ("glance.lab.kadid", "SCALES", "manifests_kadid"),
     "semantic": ("glance.lab.semantic", "SCALES", "manifests_semantic"),
+    "ladders_null": ("glance.lab.ladders", "LADDERS", "manifests_null"),  # E14: content-free images, the readout's prior per rubric
 }
 
 
