@@ -717,3 +717,22 @@ segmentation masks by a cheaper assistant model from my spec, rubric texts fixed
 by the frame, off-centre, occlusion, tilt, caption legibility, watermark intrusiveness. Same method, per-rubric
 calibration on the calibration split, test scored once. Registered expectation: `ens4d` + matrix >= 0.75 mean accuracy
 with >= 0.95 within one level, and the v0 readout as shipped below 0.55; tilt is the rubric I expect to be worst.
+
+## 2026-09-20 10:40 Entry 21: a cheap two-pass member set for many-rubric requests (`fast2`), registered then scored once
+
+Three reviewers independently suggested making `digits` + `digitsrev` WITHOUT the magnified crop the cheap default for
+requests with many rubrics (measured cost 240 ms per rating at 5 rubrics, 133 ms at 25, against 584 / 341 ms for
+`ens4d`; `lab/PACKING.json`). That pair was never a selection candidate (the lab's two-pass candidates were
+`digits + zoom_digits` and the zoom pair), so its accuracy is unknown. Registered now: `fast2` = `digits` +
+`digitsrev`, matrix scaling, same recipe. Step 1, calibration split only: 5-fold CV accuracy and NLL next to `ens4d`
+and `digits`. Step 2, whatever step 1 says: score `fast2` ONCE on the test split and report it next to the published
+rows; it becomes `score_method: "fast2"` in the harness only if its test accuracy is at least that of `zoom_digits`
+alone minus one point (0.828), since otherwise one pass with the crop is the better cheap option.
+Expectation: about 0.83 (between `digits` 0.814 and `ens2` 0.858), JPEG the weakest.
+
+**Entry 21, result.** Calibration split, 5-fold CV accuracy / NLL: `digits` 0.817 / 0.456, `fast2` 0.831 / 0.414,
+`zoom_digits` 0.841 / 0.383, `ens4d` 0.875 / 0.314. Test split, scored once (`lab/dev/fast2.json`): `fast2` 0.833 mean
+(blur 0.890, exposure 0.902, jpeg 0.674, noise 0.854, resolution 0.844), as expected and above the registered bar of
+0.828, so it ships as `score_method: "fast2"` with calibrations for the five lab rubrics. The JPEG number says where
+the magnified crop earns its cost: 0.674 without it, 0.772 with it; on the other four scales the two-pass readout is
+within 0.1 to 4.4 points of `ens4d`. Guidance for users: `fast2` for many cheap rubrics, `ens4d` when fine detail matters.

@@ -14,7 +14,7 @@
     ]
   },
   "version": "rate_f04358",
-  "name": "lab/exposure",
+  "name": "lab/exposure/ens4d",
   "fit_date": "2026-09-20",
   "n": 500,
   "n_per_level": [

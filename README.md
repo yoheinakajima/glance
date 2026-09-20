@@ -70,6 +70,10 @@ g.ask("photo.jpg", {"blur": {...}, "noise": {...}, "usable": {...}})   # many qu
 g.fit("How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"], "labels/")
 ```
 
+Three rating modes (`options.score_method`, or `--method`): `ens4d` (default; 4 passes, 0.867 on the lab scales, about
+1.1 s for one rating), `fast2` (2 passes, no magnified crop; 0.833, and 133 to 240 ms per rating when a request carries
+5 to 25 rubrics; weak on compression artifacts, 0.674), `digits` (1 pass; 0.814).
+
 `score` is the expected level, `probabilities` the distribution over levels, `confidence` is 1 minus the normalized
 entropy. Use the expectation and the confidence, not only the top level: almost every error is an adjacent level.
 

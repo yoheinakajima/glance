@@ -1,0 +1,26 @@
+{
+  "digits": {
+    "cv_accuracy": 0.8168,
+    "cv_nll": 0.455842662406582
+  },
+  "fast2": {
+    "cv_accuracy": 0.8312000000000002,
+    "cv_nll": 0.4140081229424227,
+    "test_accuracy": {
+      "blur": 0.89,
+      "exposure": 0.902,
+      "jpeg": 0.674,
+      "noise": 0.854,
+      "resolution": 0.844
+    },
+    "test_mean": 0.8328000000000001
+  },
+  "zoom_digits": {
+    "cv_accuracy": 0.8412000000000001,
+    "cv_nll": 0.3831555189298624
+  },
+  "ens4d": {
+    "cv_accuracy": 0.8748000000000001,
+    "cv_nll": 0.31350857244136493
+  }
+}

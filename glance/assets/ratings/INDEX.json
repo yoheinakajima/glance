@@ -1,6 +1,7 @@
 [
   {
-    "name": "lab/blur",
+    "method": "ens4d",
+    "name": "lab/blur/ens4d",
     "version": "rate_e098aa",
     "file": "e098aad55bc7.json",
     "n": 500,
@@ -14,7 +15,8 @@
     ]
   },
   {
-    "name": "lab/noise",
+    "method": "ens4d",
+    "name": "lab/noise/ens4d",
     "version": "rate_7f5b9c",
     "file": "7f5b9c04f07d.json",
     "n": 500,
@@ -28,7 +30,8 @@
     ]
   },
   {
-    "name": "lab/jpeg",
+    "method": "ens4d",
+    "name": "lab/jpeg/ens4d",
     "version": "rate_961b81",
     "file": "961b8117fc4c.json",
     "n": 500,
@@ -42,7 +45,8 @@
     ]
   },
   {
-    "name": "lab/exposure",
+    "method": "ens4d",
+    "name": "lab/exposure/ens4d",
     "version": "rate_f04358",
     "file": "f04358088566.json",
     "n": 500,
@@ -56,11 +60,87 @@
     ]
   },
   {
-    "name": "lab/resolution",
+    "method": "ens4d",
+    "name": "lab/resolution/ens4d",
     "version": "rate_0462f3",
     "file": "0462f379fa6f.json",
     "n": 500,
     "cv_accuracy": 0.914,
+    "instructions": "How low is the resolution of `img0`?",
+    "criteria": [
+      "Full resolution: fine detail is rendered cleanly",
+      "Slightly low: fine detail is soft, as if enlarged a little",
+      "Low: visibly enlarged from a small image, edges are jagged or smeared",
+      "Very low: coarse, enlarged from a tiny thumbnail, only rough shapes remain"
+    ]
+  },
+  {
+    "method": "fast2",
+    "name": "lab/blur/fast2",
+    "version": "rate_1cdf9f",
+    "file": "1cdf9f3dda71.json",
+    "n": 500,
+    "cv_accuracy": 0.874,
+    "instructions": "How blurry is `img0`?",
+    "criteria": [
+      "Sharp: edges are crisp and fine texture such as fur or fabric is visible",
+      "Slightly soft: edges are a little smooth and the finest texture is lost, but everything is easy to make out",
+      "Clearly blurred: only larger shapes and colors are left, the subject is still recognizable",
+      "Heavily blurred: vague blobs of color, the subject is hard to identify"
+    ]
+  },
+  {
+    "method": "fast2",
+    "name": "lab/noise/fast2",
+    "version": "rate_c8e8dd",
+    "file": "c8e8dd6019a6.json",
+    "n": 500,
+    "cv_accuracy": 0.834,
+    "instructions": "How much grain or noise is in `img0`?",
+    "criteria": [
+      "Clean: smooth areas look smooth, no visible grain",
+      "Light grain: fine speckle is visible in smooth areas, details are unaffected",
+      "Noisy: speckle covers the whole image and hides fine detail",
+      "Very noisy: heavy speckle dominates, the subject is hard to see"
+    ]
+  },
+  {
+    "method": "fast2",
+    "name": "lab/jpeg/fast2",
+    "version": "rate_d134cb",
+    "file": "d134cbc268bd.json",
+    "n": 500,
+    "cv_accuracy": 0.668,
+    "instructions": "How strong are the compression artifacts in `img0`?",
+    "criteria": [
+      "None: smooth gradients and clean edges",
+      "Mild: faint blockiness or ringing around edges when you look closely",
+      "Strong: obvious square blocks and smeared detail",
+      "Severe: large flat blocks and banding of color, fine detail is gone"
+    ]
+  },
+  {
+    "method": "fast2",
+    "name": "lab/exposure/fast2",
+    "version": "rate_597bfe",
+    "file": "597bfec14cf9.json",
+    "n": 500,
+    "cv_accuracy": 0.912,
+    "instructions": "How underexposed (too dark) is `img0`?",
+    "criteria": [
+      "Well exposed: bright areas and shadows both show detail",
+      "Somewhat dark: the image is dim but everything is easy to see",
+      "Dark: shadows are crushed and the subject is hard to see",
+      "Nearly black: only the brightest parts are visible"
+    ]
+  },
+  {
+    "method": "fast2",
+    "name": "lab/resolution/fast2",
+    "version": "rate_f2d33a",
+    "file": "f2d33ae54695.json",
+    "n": 500,
+    "cv_accuracy": 0.868,
     "instructions": "How low is the resolution of `img0`?",
     "criteria": [
       "Full resolution: fine detail is rendered cleanly",

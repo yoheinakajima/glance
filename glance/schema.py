@@ -84,9 +84,9 @@ Question = Annotated[Union[NoulQuestion, ChoiceQuestion, ScoreQuestion], Field(d
 class Options(_Strict):
     choice_method: Literal["independent", "letter"] = "independent"
     # How `score` questions are read (v0.3, additive). "auto" = "ens4d" on the VLM, "statements" elsewhere.
-    # "statements" is the v0 method (one yes/no statement per level); "digits" and "ens4d" are Glance elicitation
+    # "statements" is the v0 method (one yes/no statement per level); "digits" (1 pass), "fast2" (2) and "ens4d" (4) are Glance elicitation
     # (`glance/rating.py`), which is calibrated per rubric with `glance fit`.
-    score_method: Literal["auto", "statements", "digits", "ens4d"] = "auto"
+    score_method: Literal["auto", "statements", "digits", "fast2", "ens4d"] = "auto"
     # true: every answer must be calibrated, or the request fails with calibration_mismatch (v0 behaviour).
     # "auto": calibrate the answers that have fitted parameters, warn about the others.
     calibrated: bool | Literal["auto"] = False

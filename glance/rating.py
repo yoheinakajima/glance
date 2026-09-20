@@ -31,9 +31,12 @@ from scipy.optimize import minimize
 from scipy.special import log_softmax, softmax
 
 RATING_PROMPT_VERSION = "s1"
-SCORE_METHODS = ("statements", "digits", "ens4d")
+SCORE_METHODS = ("statements", "digits", "fast2", "ens4d")
 MEMBERS: dict[str, tuple[str, ...]] = {
     "digits": ("digits",),
+    # two passes, no magnified crop: the cheap choice when a request carries many rubrics (0.833 on the lab scales
+    # against 0.867 for ens4d; weak on compression artifacts, where the crop matters; lab/NOTES.md entry 21)
+    "fast2": ("digits", "digitsrev"),
     "ens4d": ("digits", "zoom_digits", "digitsrev", "zoom_digitsrev"),
 }
 ZOOM_FACTOR = 3

@@ -111,6 +111,14 @@ def test_digits_is_one_pass_and_statements_is_v0(cfg, png_b64):
     assert v0.response.usage.forward_passes == 4 and len(backend.label_calls) == 1  # no new label call
 
 
+def test_fast2_is_two_passes_on_the_image_alone(cfg, png_b64):
+    backend = CountingBackend()
+    trace = Engine(cfg, backends={"vlm": backend}).decide(_body(png_b64, {"blur": _rate(), "noise": _rate("How noisy is `img0`?")}, score_method="fast2"))
+    assert [c["images"] for c in backend.label_calls] == [["img0"]] and len(backend.label_calls[0]["prompts"]) == 4
+    assert trace.response.usage.forward_passes == 4 and trace.scoring.scores["blur"].features.shape == (8,)
+    assert trace.response.answers["blur"].method == "fast2"
+
+
 def test_dual_encoder_keeps_statements_and_rejects_explicit_ens4d(cfg, png_b64):
     backend = CountingBackend()
     backend.kind = "dual_encoder"
