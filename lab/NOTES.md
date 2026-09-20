@@ -1117,3 +1117,23 @@ the thing appears, not that it is the main subject. "car" (0.58 for the VLM, 0.3
 landscapes with parked cars; "bird" (0.71) includes lakes with a distant bird; "horse" (0.60) includes a crowd scene and a
 painting; "bicycle" kept a single photo. So the pick-one number is a LOWER bound under noisy labels; the yes/no question
 matches the tag's meaning and is the cleaner number. Classes are unbalanced because of the 2-per-author cap.
+
+## 2026-09-20 14:25 Entry 32: E11, the same model WRITING structured output as the baseline (owner's request), registered before any code
+
+**Why.** Comparing with a frontier model says little about what the readout itself brings. The right reference is the same
+frozen Qwen3-VL-4B asked the ordinary way: generate a structured (JSON) answer. E6 measured its speed and its agreement
+with the read; it did not measure its ACCURACY against ground truth, nor cost on the same footing.
+**Design, fixed now.** Same images, same question texts, greedy generation of one JSON object per request, token cap, no
+thinking, values validated against the allowed set (an invalid or unparsable answer counts as wrong and is also reported
+separately). Benchmarks with ground truth: (a) the five lab scales, the 200 test images per scale used for the frontier
+head-to-head; (b) `fresh_yesno` and `fresh_choice` (all items); (c) KADID-10k, the first 200 manifest items of each of
+the 23 severity distortions (the E9 subset), test references only. Reported for written vs read, per benchmark:
+accuracy (with bootstrap intervals and the paired difference), seconds per item cold start on an otherwise idle GPU
+for a sample of 40 items, and the same cost model as entry 23 (seconds -> dollar ranges). The written answer has no
+probabilities, so it gets no calibration; the read is reported at 0 labels, with unlabeled images, and with 32 labels.
+- H28: at 0 labels the written answer and the raw read are within 5 points of each other on every benchmark (same
+  model, same knowledge); the read is 2 to 6 times faster.
+- H29: with unlabeled images or 32 labels the read is ahead of the written answer by at least 10 and 25 points on the
+  lab scales; on yes/no and pick-one the two stay within 3 points.
+If H28 fails in the written answer's favour, the paper must say that generation elicits better zero-label grades than
+our raw readout and that Glance's advantage is speed, probabilities and the fitted map.
