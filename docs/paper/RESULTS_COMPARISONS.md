@@ -24,7 +24,14 @@ Pending: registered in `lab/NOTES.md` entry 24, queued on the GPU.
 
 ## 3. Classical no-reference image-quality features with the same labels
 
-Pending: `tools/classical_baselines.py` (CPU). Expected to beat the VLM on simple ladders; that bounds the headroom honestly.
+29 hand-built no-reference features (sharpness, high-frequency energy, noise estimate, 8-px blockiness, luminance and colour statistics, edge density, ...) with a standardized multinomial logistic regression, fit on the same calibration labels and scored once on the same test items (`tools/classical_baselines.py`, `results/lab/classical_baselines.md`; feature extraction about 13 ms per image on the CPU).
+
+| Lab scales (5 scales, 4 levels, 500 test images each) | about 32 labels per scale | all 500 labels per scale |
+| --- | --- | --- |
+| Classical features + logistic regression | 0.752 | **0.979** |
+| Qwen3-VL-4B + Glance `ens4d` | **0.856** | 0.867 |
+
+Reading, stated plainly: with enough labels, features built for exactly these artifacts beat the VLM on every lab scale, by 6 to 22 points. The VLM readout is the more label-efficient one (ahead by about 10 points at 32 labels) and it saturates early: more labels do not help it. So the lab scales do not show that a VLM is the best tool for blur or JPEG grading; they show how much of a described rubric a frozen general model can deliver from a few dozen labels, with no feature engineering. On the 25-distortion benchmarks the classical baseline reaches 0.651 (`distort25`) and 0.620 (KADID-10k; Spearman with human scores 0.629) with all calibration labels and 0.443 / 0.401 with about 30; it is near chance where the distortion is structural rather than statistical (shuffled patches, colour diffusion). The VLM's numbers on those benchmarks are in `RESULTS_GENERALIZATION.md` when that collection finishes.
 
 ## 4. Frontier APIs on the same held-out images
 

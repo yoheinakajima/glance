@@ -839,3 +839,30 @@ absorbs position bias). H17: `poles` with an ordinal map reaches at least 0.70 (
 information, as entry 19b suggested) and stays below `digits`. H18: `ens4d` remains the best row by at least 3 points.
 If H15 holds, the honest statement for the paper is that the per-rubric fitted map, not the choice of answer tokens, is
 the main ingredient, and that the ensemble and the magnified view are what our readout adds on top.
+
+## 2026-09-20 11:45 Entry 25: classical features beat the VLM on the lab scales when labels are plentiful (and what that means)
+
+`tools/classical_baselines.py` (written by a cheaper assistant model from my spec, tests pass, feature list fixed before
+any test number was seen, one run): 29 no-reference features + standardized multinomial logistic regression, same
+calibration labels, same test items. Mean test accuracy: lab scales 0.979 with all 500 labels per scale and 0.752 with
+32; `distort25` 0.651 (150 labels) and 0.443 (30); KADID-10k 0.620 (205 labels) and 0.401 (30), Spearman with human
+scores 0.629. Per lab scale with all labels: blur 0.994, exposure 0.986, jpeg 0.990, noise 0.958, resolution 0.968,
+i.e. ABOVE `ens4d` on every scale (by 6 to 22 points; JPEG 0.990 against 0.772). The VLM's own curve (entry 13's
+learning curve): 0.838 / 0.856 / 0.865 / 0.867 / 0.867 at 16 / 32 / 64 / 128 / 500 labels.
+
+What this says, without spin:
+1. The lab scales are not evidence that a VLM is the right tool for blur or compression grading. Thirty lines of
+   feature code and enough labels do better. The information is in the pixels and mostly NOT in what the token readout
+   of a 196-token image exposes: the VLM saturates at 0.867 however many labels it gets.
+2. What the VLM readout has is label efficiency and zero feature engineering: about 10 points ahead at 32 labels, from
+   a rubric written in words. Classical features fall to chance where the distortion is structural (shuffled patches
+   0.19 to 0.21, colour diffusion 0.21), which is where a general model should earn its keep; the `distort25` and
+   KADID results will show whether it does.
+3. It sharpens E1: if a fitted readout on the VLM's hidden states gets close to 0.98 on these scales, the limit was the
+   token interface; if it stalls near 0.87, the limit is what reaches the language model from the image at this
+   resolution. Either answer is worth having.
+4. On KADID the classical baseline (0.620 exact with 205 labels) is in the same range as my interim look at the VLM
+   (entry 15c). If the final VLM number does not clear it, the paper says so; the VLM's rank correlation with human
+   scores (interim 0.805 against 0.629 here) would then be the part that stands.
+BRISQUE / NIQE / CLIP-IQA were not added: the BRISQUE weights' upstream license is unclear, no permissively licensed
+NIQE was found, and CLIP-IQA proper fails our weights rule (`docs/paper/COMPARABLE_SYSTEMS.md`).
