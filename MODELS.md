@@ -10,6 +10,7 @@ Revisions are pinned in `configs/default.yaml`.
 | VLM, tier `apple_32gb` and `cuda_12gb` (selected on this machine) | `Qwen/Qwen3-VL-4B-Instruct` | Apache-2.0 | `ebb281ec70b05090aa6165b016eac8ec08e71b17` | 8.89 GB | 2026-09-19 | yes |
 | VLM, tier `apple_8gb` | `Qwen/Qwen3-VL-2B-Instruct` | Apache-2.0 | `89644892e4d85e24eaac8bacfd4f463576704203` | 4.27 GB | 2026-09-19 | no (not this machine's tier) |
 | VLM, tier `cuda_24gb` | `Qwen/Qwen3-VL-8B-Instruct` | Apache-2.0 | `0c351dd01ed87e9c1b53cbc748cba10e6187ff3b` | 17.55 GB | 2026-09-19 | no (not this machine's tier) |
+| Lab only: second model family for the replication (`lab/NOTES.md` entries 20 and 22; owner approved 2026-09-20). Not used by the harness. | `HuggingFaceTB/SmolVLM2-2.2B-Instruct` | Apache-2.0 | `482adb537c021c86670beed01cd58990d01e72e4` | 8.99 GB (float32 weights) | 2026-09-20 | yes |
 
 The frontier baseline model is not a local weight. Its LiteLLM id comes from `FRONTIER_MODEL` and is logged per call;
 its outputs are evaluation-only and are never written anywhere they could serve as training labels.
