@@ -1210,3 +1210,12 @@ the order of events is auditable:
   running and the reason will be recorded in 36b. The registered expectations (entry 20) apply to whatever is built;
   the number of rubrics in the mean will be stated.
 - Queued on GPU lane B after the SmolVLM2 replication: `ens4d` members plus the v0 readout on all items.
+
+## 2026-09-20 15:55 Entry 36b: why two of the seven E4 rubrics do not exist
+
+Build attempt on the full pool of 1,988 Pet photos with masks: `subject_size` level 0 (animal = 6% of the frame) has 7
+feasible sources of the 120 needed, and `off_center` level 3 (centroid 0.6 of a half-width from the centre) has 0 of
+120. The Pet photos are portraits: the animal fills the frame, a crop can only zoom in, and a large subject cannot be
+pushed far off-centre without being cut off (which is the `cutoff` rubric). The tolerance is not relaxed and the
+targets are not changed after the fact; E4 is reported over FIVE rubrics, and these two are listed as not buildable
+from this source.
