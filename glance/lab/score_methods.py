@@ -29,6 +29,8 @@ METHODS = ("independent", "cumulative", "digits", "anchors_cumulative", "anchors
 # Round 2: the same three readouts with a second request image, `zoom`, a pixel-magnified crop from the centre of
 # `img0`, so that fine artifacts (grain, compression blocks, lost texture) are large enough for the model to see.
 ZOOM_METHODS = ("zoom_independent", "zoom_cumulative", "zoom_digits")
+# Round 3: the digits readout with the scale listed in reverse (one pass each), as extra members for an ensemble.
+REVERSED_METHODS = ("digitsrev", "zoom_digitsrev")
 ZOOM_FACTOR = 3
 ZOOM_SENTENCE = (
     " `zoom` is a {factor}x pixel-magnified crop from the centre of `img0`: use it to judge fine detail, and "
@@ -97,9 +99,13 @@ def cumulative_statements(instructions: str, levels: list[str]) -> list[Statemen
     ]
 
 
-def digits_block(instructions: str, levels: list[str]) -> tuple[str, list[str]]:
-    """One prompt; the readout is over the digit tokens 0..K-1."""
-    return DIGITS_TEMPLATE.format(instructions=instructions, steps=_steps(levels, start=0)), [str(i) for i in range(len(levels))]
+def digits_block(instructions: str, levels: list[str], reverse: bool = False) -> tuple[str, list[str]]:
+    """One prompt; the readout is over the digit tokens 0..K-1. With `reverse` the scale is listed from the highest
+    level down (digit 0 = highest level); the caller flips the logits back into level order. Same question, opposite
+    list position and digit for every level, so position and digit biases enter with the opposite sign."""
+    shown = list(reversed(levels)) if reverse else levels
+    template = DIGITS_TEMPLATE.replace("from lowest to highest", "from highest to lowest") if reverse else DIGITS_TEMPLATE
+    return template.format(instructions=instructions, steps=_steps(shown, start=0)), [str(i) for i in range(len(levels))]
 
 
 # --- logits -> level distributions ------------------------------------------------------------------
@@ -179,8 +185,16 @@ def fit_matrix_scaling(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float =
         return loss, np.concatenate([(resid.T @ xs / n + 2 * l2 * w).ravel(), resid.mean(axis=0)])
 
     res = minimize(loss_grad, np.zeros(n_classes * f + n_classes), jac=True, method="L-BFGS-B")
-    return {"kind": "matrix", "W": res.x[: n_classes * f].reshape(n_classes, f).tolist(), "b": res.x[n_classes * f:].tolist(),
-            "mean": mean.tolist(), "std": std.tolist()}
+    w = res.x[: n_classes * f].reshape(n_classes, f)
+    b = res.x[n_classes * f:]
+    # The L2 penalty shrinks the logits, which makes the probabilities too timid. One scalar, refit without the
+    # penalty, restores their sharpness. It multiplies every logit alike, so no prediction changes.
+    base = xs @ w.T + b
+    scale = minimize(lambda t: -np.mean(log_softmax(np.exp(t[0]) * base, axis=1)[np.arange(n), y]), np.zeros(1),
+                     method="L-BFGS-B", bounds=[(-3, 3)]).x[0]
+    s_ = float(np.exp(scale))
+    return {"kind": "matrix", "W": (s_ * w).tolist(), "b": (s_ * b).tolist(), "mean": mean.tolist(), "std": std.tolist(),
+            "l2": l2, "rescale": s_}
 
 
 N_LEVELS_ENSEMBLE = 4  # every lab scale has 4 levels; concatenated readouts carry no level count of their own

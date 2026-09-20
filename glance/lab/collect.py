@@ -90,9 +90,10 @@ class Collector:
             out = self.backend.score_statements(images, None, sm.cumulative_statements(instructions, levels))
             logits, off = out.z, out.off_mass
         else:
-            block, labels = sm.digits_block(instructions, levels)
+            reverse = method.endswith("digitsrev")
+            block, labels = sm.digits_block(instructions, levels, reverse=reverse)
             out = self.backend.score_labels(images, None, [block], labels)
-            logits, off = out.logits[0], out.off_mass
+            logits, off = (out.logits[0][::-1] if reverse else out.logits[0]), out.off_mass
         return {
             "logits": [float(v) for v in logits], "off_mass_max": float(np.max(off)),
             "latency_ms": (time.perf_counter() - t0) * 1000, "image_tokens": out.usage.image_tokens,
