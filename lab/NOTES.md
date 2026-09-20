@@ -1157,3 +1157,16 @@ GPT-5.6 0.893 [0.840, 0.939]. Pick-one of 13 (65 test photos): Opus 5 0.908, GPT
 (0.862 on the same 65), SigLIP2 0.855. On uncontaminated photos the local 4B model is level with both frontier models on
 yes/no and within 2 to 5 points on pick-one; intervals overlap everywhere; tag noise applies to all. Gemini 3.1 Pro is
 running through OpenRouter (the owner's AI Studio key is free-tier, which has no quota for that model).
+
+## 2026-09-20 14:47 Entry 34 (interim, DEV only): first look at E1 while validating the tool; and a second GPU lane
+
+While the hidden-state pass was still running I validated `tools/readout_ladder.py` on the two scales already collected
+(blur, noise), CALIBRATION split only (fit on its first half, judged on its second half; no curve; the test split is
+untouched): `ens4d` + matrix 0.870; R4a (fitted readout on the hidden state of ONE `digits` pass) 0.946; R4b (four passes'
+hidden states) 0.958; R5 (logits + hidden states) 0.958; NLL 0.324 / 0.200 / 0.114 / 0.099. If this holds on all five
+scales and on the test split, H12 (>= 0.92) is met, a one-pass hidden-state readout beats the four-pass logit ensemble,
+and the 0.867 ceiling was the token interface, not perception. Not a result yet: two scales, development split, and the
+label curve (H13: is it worse than the logit readout at 32 labels?) has not been run.
+Resources: memory 56% free with one model process, so the SmolVLM2 replication now runs in a second queue lane
+(`$TMPDIR/glance/gpuq_b.sh`, `gpuq_b.txt`, log lines tagged [gpuqB] in the same log); none of the remaining collection
+jobs is a timing benchmark. E11's `write_ms` is therefore contended and must not be quoted as a latency.

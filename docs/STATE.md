@@ -72,6 +72,8 @@ runnable external systems, `AlexWortega/openjev` v2 and `zhangzicheng/q-sit-mini
 - Gemini baselines (owner started them through OpenRouter at 14:36): lab scales `uv run python tools/compare_frontier_lab.py --run 20260920T165748Z-8ff72a --run 20260920T165949Z-8ff72a --run 20260920T170146Z-8ff72a`; fresh photos `uv run python tools/fresh_report.py --run 20260920T205633Z-99f822 --run 20260920T205633Z-99f822-gpt --run 20260920T205633Z-99f822-gemini`.
 After each: notebook entry with verdicts (real clock), regenerate `tools/make_results_comparisons.py` / `make_results_generalization.py`, update `docs/CLAIMS.md`, run `tools/verify_docs_numbers.py`, commit. The owner is away for a few hours from 14:40 and expects unattended progress.
 
+Second lane since 14:50: `$TMPDIR/glance/gpuq_b.sh` + `gpuq_b.txt` runs `smol-lab` in parallel with lane A (log lines tagged `[gpuqB]` in the same log). Add further small-model jobs (external systems) to lane B, not lane A.
+
 ### Machine resources (32 GB Apple M5, one GPU)
 
 One model process at a time is comfortable (56% memory free with the queue job running). The heavy swap use seen on
