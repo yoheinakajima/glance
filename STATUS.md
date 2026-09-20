@@ -423,3 +423,17 @@ suite, and ahead on the relational yes/no suite; (2) the 375M dual encoder beats
 pet breeds (0.956 vs 0.932); (3) the frontier model is also poor at the 4-level blur rating (0.536), so the `score`
 weakness is a property of the task as posed, not only of the small model. That last point is what the score lab
 (branch `score-lab`, `lab/NOTES.md`) goes after.
+
+## Update 2026-09-20 (night): follow-up analyses and the score lab
+
+Documented for the paper in `docs/paper/RESULTS_FOLLOWUP.md`, `lab/NOTES.md` (live notebook) and `docs/RESEARCH_LOG.md`.
+- Yes/no ECE was re-measured at n = 1,000 (500 test items): pope 0.029 with a per-suite isotonic fit (floor 0.027)
+  and 0.049 with a 3-number asymmetric Platt fit; gqa_yesno 0.053-0.056 against a floor of 0.048-0.055. The v0
+  failure of the ECE gate on yes/no questions was mostly the sampling floor of 250 test items.
+- Combining Qwen3-VL-4B and SigLIP2 on multiple choice does not beat SigLIP2 alone (pets37 0.952 vs 0.956) but is
+  calibrated to its floor (ECE 0.015 / 0.026).
+- Rating scales are being worked on in branch `score-lab`: five new 4-level degradation scales on sharper photos,
+  seven zero-training readouts, per-level calibration chosen by cross-validation. Results: `lab/REPORT.md` when the
+  overnight run finishes.
+- Docs for a paper were backfilled under `docs/`; finished runs are snapshotted under `results/`; every 3-decimal
+  number in `docs/` is checked against a committed source by `tools/verify_docs_numbers.py`.
