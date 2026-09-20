@@ -33,6 +33,18 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**Update 15:56 (newest first; the table below is still the order of lane A).** Lane A was stopped from the app and
+resumed at the owner's word (15:27); `lab-hidden` continues (17.5k of 20k rows at 15:55). Lane B
+(`$TMPDIR/glance/gpuq_b.sh` + `gpuq_b.txt`, log lines tagged `[gpuqB]`): `smol-lab` running, then `semantic-ens4d`
+(E4, five rubrics; entries 36 and 36b: caption levels re-tuned by eye before any model output, two rubrics infeasible
+on portrait photos). Two cheaper-model agents are working, files UNCOMMITTED until reviewed: (1) E12 (entry 35), a
+second uncontaminated photo set from iNaturalist with community-verified labels (`tools/fetch_fresh_inat.py`,
+`glance/evals/suites/fresh_inat.py`, `tests/test_fresh_inat.py`; then run
+`uv run glance eval --suite inat_choice --suite inat_yesno --model vlm --model siglip --prefix-cache` on lane B and give
+the owner the one-paste frontier commands); (2) E13 (entry 37), adapters for openjev v2 and q-sit-mini
+(`glance/lab/external_systems.py`, `tools/external_collect.py`, `tools/external_report.py`); the 4B openjev model must
+not be loaded while two lanes are busy. Gemini on the lab scales was at 984 of 1,000 answers at 15:56.
+
 GPU queue runner: `$TMPDIR/glance/gpuq.sh` reads `$TMPDIR/glance/gpuq.txt` one line at a time ("label ::: command"), log
 in `$TMPDIR/glance/queue_big.log`. Edit the txt file to add or reorder jobs (write a temp file, then `mv`); create
 `$TMPDIR/glance/gpuq.stop` to stop after the current job. If the machine rebooted, the queue is gone: restart the runner
