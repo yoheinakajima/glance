@@ -1,0 +1,11 @@
+{
+  "bench": "ladders",
+  "rescale": "train",
+  "l2": 0.05,
+  "ens4d_accuracy": 0.867,
+  "flip_sign_qsit": true,
+  "openjev": null,
+  "qsit": null,
+  "h31": null,
+  "h32": null
+}
