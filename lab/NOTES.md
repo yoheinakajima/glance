@@ -594,3 +594,24 @@ cross-validated with the same nested procedure. A unit test checks that the chan
 longer distinguishable from calibrated at 40 images. Lesson for the paper: "32 labels are enough" was a statement about
 accuracy; for trustworthy probabilities at that size the sharpness has to be estimated out of sample. The lab's
 learning-curve table reports accuracy and MAE, which are unaffected.
+
+## 2026-09-20 09:45 Entry 15c: I looked at partial KADID data; here is exactly what I saw and what I did with it
+
+For the record, because an unrecorded peek is how selection creeps in. While testing `bench_report.py` and the results
+generator I ran them on the fast pass when 6 of 25 distortions had their first 200 items (17 calibration references,
+85 fit / 115 test items each; `color_quantization` only 50 / 75). `ens4d`, matrix calibration, test references:
+mean exact accuracy 0.537, within one level 0.880, MAE 0.597 levels, pooled ECE 0.069 (floor 0.052), mean per-type
+SRCC with DMOS 0.805 against 0.866 for the true level itself. Single pass on the same items: `zoom_digits` 0.465,
+`digits` 0.449. Per distortion: gaussian_blur 0.704, color_diffusion 0.557, lens_blur 0.539, color_quantization 0.520,
+motion_blur 0.496, color_shift 0.409.
+
+What I did with it: nothing that touches the registered test. Method, wording, calibration, report and hypotheses stay
+as registered; the collection continues to all 81 references and the final numbers replace these. Two consequences,
+both already on record: the ECE-criterion flaw (entry 15b), and the expectation, stated now, that H8's numeric targets
+(accuracy >= 0.70, within one >= 0.97, MAE <= 0.40) will fail on KADID. If they do, the follow-up I would register as
+a NEW experiment is a reference-anchored question (the pristine image next to the distorted one, which the API's
+multi-image requests already allow); it would be designed on calibration references only and scored once.
+
+Also for the record, the first real `glance fit` demo (entry 18) was then tried on the 10 held-out CALIBRATION-split
+images of its demo folder (never the benchmark's test split): 6 of 10 exact with 8 labels per level on the 5-level
+JPEG rubric, confidences low (0.07 to 0.55), which is the honest picture of a 40-label fit on the hardest distortion.
