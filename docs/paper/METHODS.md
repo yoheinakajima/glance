@@ -496,7 +496,7 @@ used. This directly shaped v0's dataset choices (`DATASETS.md`):
 
 ## 14. Glance elicitation for `score` questions (`glance/rating.py`; the harness default since the API extension of 2026-09-20)
 
-Source of the design: the score lab (`lab/NOTES.md`, `docs/paper/RESULTS_LAB.md`). Nothing is trained; the method is
+Source of the design: the score lab (`lab/NOTES.md`, `docs/paper/RESULTS_LAB.md`). No VLM parameter is updated; a small readout is fit on labeled examples. The method is
 how the question is asked, how often, and how the logits are mapped to levels.
 
 **Readouts.** For a rubric with instructions `I` and ordered level texts `c_0 .. c_{K-1}` the model is read with up to
@@ -553,5 +553,5 @@ however many rubrics it carries. Measured cost and the check that packing change
 section 9.
 
 **Naming.** In result tables the configuration is written "Qwen3-VL-4B + Glance". Glance is a readout and calibration
-recipe with a runtime, not a model: no weights are trained or distributed, only calibration files of a few hundred
+recipe with a runtime, not a model: no VLM weights are updated or distributed, only fitted readout files of a few hundred
 numbers.

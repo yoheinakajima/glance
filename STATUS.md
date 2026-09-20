@@ -498,7 +498,7 @@ Branch `score-lab`. Notebook entries 14 to 17 in `lab/NOTES.md` have the detail;
   cross-validated quality and the ECE floor at the user's sample size. Calibrations for the five lab rubrics ship in
   `glance/assets/ratings/` (fit on the lab calibration split only).
 - D35. Naming (owner's direction): package and CLI `glance`; method "Glance elicitation"; result rows "Qwen3-VL-4B +
-  Glance"; never a model-style name, because no weights are trained or shipped. No universality claim: one 4B model
+  Glance"; never a model-style name, because no VLM weights are updated or shipped (the fitted readout is the only learned object, and results with it are not zero-shot). No universality claim: one 4B model
   measured; `fit` is the transfer mechanism, not a transfer result.
 - D36. Related work now covers Jev and its open reproductions (`docs/paper/RELATED_WORK.md`), every page fetched on
   2026-09-20; two claims from outside feedback could not be found anywhere and are listed as not verified.

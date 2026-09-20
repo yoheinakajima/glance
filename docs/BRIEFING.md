@@ -10,7 +10,7 @@ Glance is a way to ask a frozen vision-language model for an ordinal score. It r
 complementary prompts (no text is generated), can pack many rubrics behind one image encode, and maps the logits to
 levels with a small per-rubric affine calibration fit on a few dozen labeled images. On Qwen3-VL-4B this moves the
 original yes/no readout from 0.500 exact accuracy (single temperature) to 0.867 on five synthetic 4-level image-quality
-scales, with the same weights and no training. `glance fit` is the product verb. **Glance is how you ask a frozen VLM
+scales, with the VLM's weights frozen. (A small readout IS fit on labeled images: 500 per rubric in that result, about 32 for most of the gain. It is not zero-shot.) `glance fit` is the product verb. **Glance is how you ask a frozen VLM
 for a score. It is not a VLM**, and we do not claim it is faster or cheaper than any hosted model.
 
 ## 2. Where it came from

@@ -1,7 +1,7 @@
 """Glance elicitation for `score` questions: digit readouts, a magnified crop, and a per-rubric matrix calibration.
 
 This is the score lab's winner (`lab/NOTES.md` entries 12 and 13, `docs/paper/RESULTS_LAB.md`) promoted into the harness.
-Nothing is trained. For one rating question the VLM is read four times, one forward pass each:
+The VLM is frozen; only the small per-rubric readout below is fit. For one rating question the VLM is read four times, one forward pass each:
 
     digits          numbered scale shown lowest to highest, logits over the digit tokens
     digitsrev       the same scale listed highest to lowest (position and digit biases enter with the opposite sign)

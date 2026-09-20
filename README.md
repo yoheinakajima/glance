@@ -4,7 +4,7 @@
 
 You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
 rubric) and get probability distributions back, read from the logits of single forward passes of an open model you
-already have (Qwen3-VL-4B by default). No text is generated, no weights are trained or shipped. The request and
+already have (Qwen3-VL-4B by default). No text is generated. The VLM stays frozen: no VLM weights are updated or shipped; what is fit, from a few dozen labeled images, is a small readout on top of its logits. The request and
 response shapes follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar. That is where the
 resemblance ends: Glance is a readout-and-calibration recipe on someone else's frozen weights, the calibration is
 yours to fit, and it makes no speed or cost claim against any hosted model.

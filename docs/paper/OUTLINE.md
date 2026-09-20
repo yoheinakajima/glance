@@ -37,7 +37,7 @@ Word count: approximately 200. Every number is copied from
 > Vision-language models rank images well on graded visual attributes but place the boundaries between levels
 > badly, so zero-shot ratings on a described 4-level scale are poor: 0.500 mean accuracy for a 4B open model read
 > out through yes/no logits, and 0.536 for a frontier model on a comparable task. We show this is a readout and
-> calibration problem, not a perception or training problem. Without any training we (i) read the logits over the
+> calibration problem, not a perception or fine-tuning problem. With the VLM frozen we (i) read the logits over the
 > digits of a numbered scale in one forward pass, (ii) add a pixel-magnified crop as a second image so fine
 > artifacts become visible, (iii) ask the same question with the scale reversed, and (iv) fit a small affine
 > calibration on a few dozen labeled images per scale. On five degradation scales (blur, noise, JPEG artifacts,

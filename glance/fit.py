@@ -2,7 +2,7 @@
 
 You bring a frozen VLM you already have and a rubric (a question plus ordered level descriptions). Glance reads the
 model four times per image (`glance/rating.py`), fits a small affine map from those logits to your levels, reports how
-well it cross-validates at your sample size, and saves a JSON file of a few hundred numbers. No weights are trained.
+well it cross-validates at your sample size, and saves a JSON file of a few hundred numbers. No VLM weights are updated; the fitted readout is the only learned object.
 
 Labels come as a folder with one sub-folder per level (`0/`, `1/`, ... or `0_sharp/`, `1_soft/`, ...), or as a JSONL /
 CSV file with `image` and `level` columns (level = index into the rubric's criteria, lowest first).
