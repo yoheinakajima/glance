@@ -1025,3 +1025,24 @@ never sit next to blind-IQA results, and both framings are reported.
 - Secondary, only if GPU time allows, registered now so it is not a fork in the road later: `ens4d_ref` adds two passes
   with magnified centre crops of BOTH images ([ref, img0, zoom_ref, zoom]); expectation +2 to +4 points over `fast2_ref`.
 If H23 fails, the honest conclusion is that the limit on KADID is perception or wording, not the missing anchor.
+
+## 2026-09-20 13:37 Entry 30: E10, an uncontaminated check of the out-of-the-box claims with labels nobody here made
+
+**Why this design.** The claims ledger says the yes/no and pick-one numbers rest on four old public benchmarks the models
+may have seen. My first fix (the owner labels their own or fetched photos by hand) was the wrong shape for this project:
+the owner's point is to see how far AI-only work goes, and they said so after 36 answers. Replacement: real photos taken
+AFTER the evaluated models were released, with ground truth from Wikimedia Commons structured data ("depicts", set by
+uploaders and editors). Zero labeling by us, zero model-made labels. `tools/fetch_fresh_depicts.py`,
+`glance/evals/suites/fresh_commons.py` (suites `fresh_choice`, 13 classes, and `fresh_yesno`, one yes and one seeded no
+question per photo). Filters: capture date >= 2026-08-15, own work, CC0 / CC BY / CC BY-SA, width >= 1000 px, at most 2
+photos per author and class, photos tagged with two of our classes dropped. The 36 hand answers and the 83 photos fetched
+for hand labeling are kept only as a possible spot-check of tag noise.
+
+**Registered before any model has seen these photos.** Known noise, stated now: a "dog" tag can sit on a dog statue; a
+"no" question can be wrong when the other object happens to be in frame. Same noise for every system.
+- H25: Qwen3-VL-4B out of the box (uncalibrated decisions, all items) reaches at least 0.85 on `fresh_choice`
+  (`independent`) and at least 0.85 on `fresh_yesno`, i.e. no large contamination inflation in the v0 numbers (0.892 /
+  0.919 pick-one, 0.880 POPE).
+- H26: SigLIP2 is within 5 points of the VLM on `fresh_choice` (it beat the VLM on pets).
+- H27 (needs the owner's key): frontier models are ahead of the local VLM by 0 to 6 points on both suites, as on v0.
+Reported with bootstrap intervals; per-class table; the tag-noise caveat travels with every number.
