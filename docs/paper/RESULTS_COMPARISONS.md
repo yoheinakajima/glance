@@ -45,6 +45,18 @@ Pending: registered in `lab/NOTES.md` entries 20, 22 and 22b, queued on the GPU.
 
 Pending: license and feasibility survey in `docs/paper/COMPARABLE_SYSTEMS.md`. Only Apache-2.0 or MIT weights may be run here; the rest are cited with their published numbers and the caveat that blind MOS regression is a different task from level classification with the distortion named.
 
+## 6b. Write the answers or read them? (same frozen VLM, same images, same questions)
+
+`glance/lab/gen_bench.py`: cold start per image, end to end, idle GPU, 40 lab test images. Writing = greedy generation of one JSON object with a token cap (no thinking). Reading = `glance decide`, uncalibrated, which also returns a probability for every answer.
+
+| Request | write p50 ms (tokens written) | read `fast2` p50 ms | read `ens4d` p50 ms | reading is faster by | JSON failures | written = read |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 yes/no | 798 (7) | 338 | - | 2.4x | 0 of 40 | 100.0% |
+| 5 mixed | 3478 (38) | 1001 | 2230 | 3.5x / 1.6x | 0 of 40 | 92.0% |
+| 25 ratings | 20046 (221) | 3261 | 8380 | 6.1x / 2.4x | 0 of 40 | 59.0% |
+
+The single yes/no was written as a small JSON object (7 tokens), not a bare word; a one-token answer would narrow that gap and was not measured. On 25 ratings the written and the read answers differ on four fields in ten; neither is calibrated and there is no ground truth for that request, so this is a difference, not a ranking.
+
 ## 7. Cost of 1,000 ratings
 
 Seconds are measured (`lab/PACKING.json`); dollar figures are arithmetic on stated assumptions (`tools/cost_model.py`), not measurements. API figures are list-price upper estimates from `glance baseline --estimate-only`; no call was made.

@@ -1,0 +1,50 @@
+{
+  "1 yes/no": {
+    "images": 40,
+    "questions": 1,
+    "write_p50_ms": 798.0797283817083,
+    "write_p90_ms": 1027.74617546238,
+    "write_tokens_mean": 7.45,
+    "json_parse_failures": 0,
+    "hit_token_cap": 0,
+    "invalid_field_rate": 0.0,
+    "agreement_with_read_on_valid_fields": 1.0,
+    "read_fast2_p50_ms": 337.71058346610516,
+    "read_fast2_p90_ms": 349.9397335574031,
+    "speedup_vs_write_fast2": 2.363206151819665
+  },
+  "5 mixed": {
+    "images": 40,
+    "questions": 5,
+    "write_p50_ms": 3477.7011040132493,
+    "write_p90_ms": 3611.9150085840374,
+    "write_tokens_mean": 38.0,
+    "json_parse_failures": 0,
+    "hit_token_cap": 0,
+    "invalid_field_rate": 0.0,
+    "agreement_with_read_on_valid_fields": 0.92,
+    "read_fast2_p50_ms": 1001.0039580520242,
+    "read_fast2_p90_ms": 1036.1335420282558,
+    "speedup_vs_write_fast2": 3.4742131397571416,
+    "read_ens4d_p50_ms": 2229.844999848865,
+    "read_ens4d_p90_ms": 2303.9589581778273,
+    "speedup_vs_write_ens4d": 1.55961562541296
+  },
+  "25 ratings": {
+    "images": 40,
+    "questions": 25,
+    "write_p50_ms": 20045.96954199951,
+    "write_p90_ms": 20847.353387787007,
+    "write_tokens_mean": 221.0,
+    "json_parse_failures": 0,
+    "hit_token_cap": 0,
+    "invalid_field_rate": 0.0,
+    "agreement_with_read_on_valid_fields": 0.59,
+    "read_fast2_p50_ms": 3260.6062294216827,
+    "read_fast2_p90_ms": 3355.5486832978204,
+    "speedup_vs_write_fast2": 6.147927143460977,
+    "read_ens4d_p50_ms": 8380.261020502076,
+    "read_ens4d_p90_ms": 8711.494104098529,
+    "speedup_vs_write_ens4d": 2.392045962883209
+  }
+}

@@ -1046,3 +1046,26 @@ for hand labeling are kept only as a possible spot-check of tag noise.
 - H26: SigLIP2 is within 5 points of the VLM on `fresh_choice` (it beat the VLM on pets).
 - H27 (needs the owner's key): frontier models are ahead of the local VLM by 0 to 6 points on both suites, as on v0.
 Reported with bootstrap intervals; per-class table; the tag-noise caveat travels with every number.
+
+## 2026-09-20 13:38 Entry 27c: E6 result, write the answers or read them (idle GPU, 40 images, cold start)
+
+`glance/lab/gen_bench.py`, `lab/GENBENCH.{md,json}`, rows in `lab/runs/gen_bench.jsonl`. Same frozen Qwen3-VL-4B, same
+images and questions; writing = greedy generation of one JSON object; reading = `glance decide`, uncalibrated.
+
+| Request | write p50 (tokens) | read `fast2` p50 | read `ens4d` p50 | reading is faster by | written = read |
+| --- | --- | --- | --- | --- | --- |
+| 1 yes/no | 798 ms (7) | 338 ms | - | 2.4x | 100.0% |
+| 5 mixed (1 yes/no, 1 pick-one, 3 ratings) | 3,478 ms (38) | 1,001 ms | 2,230 ms | 3.5x / 1.6x | 92.0% |
+| 25 ratings | 20,046 ms (221) | 3,261 ms | 8,380 ms | 6.1x / 2.4x | 59.0% |
+
+Verdicts on entry 27's expectations. (a) "About equal for one yes/no": WRONG, reading is 2.4 times faster. Part of that is
+my implementation: the written answer is a JSON object (7 tokens, e.g. {"animal": "Yes"}), not the bare word the
+registration described; a one-token answer would narrow the gap, and I did not measure it. Stated as is. (b) 2 to 4 times
+for five questions: met (3.5). (c) at least 5 times for 25 ratings with `fast2`: met (6.1). Yes/no agreement >= 97%:
+met (100%). "Some JSON will fail to parse at 25 fields": WRONG, 0 of 40 failed and no field was invalid; the model
+writes clean JSON. The speed case for reading does not need the "generation is fragile" argument.
+What I did not expect: on 25 ratings the written and the read answers agree on only 59% of fields. Both are uncalibrated
+and there is no ground truth for these 25 questions on these images, so this says they differ, not which is better; the
+written answers are also conditioned on each other (field 12 sees fields 1 to 11), the reads are independent.
+So the pitch-level claim is supported on this machine: deciding by reading is 2.4 to 6 times faster than the same model
+writing its answers, identical on yes/no, and it returns a probability for every answer at no extra cost.

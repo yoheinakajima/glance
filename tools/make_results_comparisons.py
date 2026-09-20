@@ -77,6 +77,24 @@ out += ["## 6. Open image-capable typed-decision systems and trained image-quali
         "cited with their published numbers and the caveat that blind MOS regression is a different task from level classification with the "
         "distortion named.", ""]
 
+gen = load("lab/GENBENCH.json")
+out += ["## 6b. Write the answers or read them? (same frozen VLM, same images, same questions)", ""]
+if gen:
+    out += ["`glance/lab/gen_bench.py`: cold start per image, end to end, idle GPU, 40 lab test images. Writing = greedy generation of one JSON "
+            "object with a token cap (no thinking). Reading = `glance decide`, uncalibrated, which also returns a probability for every answer.", "",
+            "| Request | write p50 ms (tokens written) | read `fast2` p50 ms | read `ens4d` p50 ms | reading is faster by | JSON failures | written = read |",
+            "| --- | --- | --- | --- | --- | --- | --- |"]
+    for name, e in gen.items():
+        ens = f"{e['read_ens4d_p50_ms']:.0f}" if "read_ens4d_p50_ms" in e else "-"
+        speed = f"{e['speedup_vs_write_fast2']:.1f}x" + (f" / {e['speedup_vs_write_ens4d']:.1f}x" if "speedup_vs_write_ens4d" in e else "")
+        out.append(f"| {name} | {e['write_p50_ms']:.0f} ({e['write_tokens_mean']:.0f}) | {e['read_fast2_p50_ms']:.0f} | {ens} | {speed} | "
+                   f"{e['json_parse_failures']} of {e['images']} | {e['agreement_with_read_on_valid_fields']:.1%} |")
+    out += ["", "The single yes/no was written as a small JSON object (7 tokens), not a bare word; a one-token answer would narrow that gap and was not "
+            "measured. On 25 ratings the written and the read answers differ on four fields in ten; neither is calibrated and there is no ground truth "
+            "for that request, so this is a difference, not a ranking.", ""]
+else:
+    out += ["Pending.", ""]
+
 cost = load("results/lab/cost_model.json")
 out += ["## 7. Cost of 1,000 ratings", ""]
 if cost:
