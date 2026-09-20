@@ -12,3 +12,10 @@ __pycache__/
 lab/runs/main.jsonl
 lab/manifests_kadid/
 /demo/
+# user-fitted rating calibrations are local (the shipped ones live in glance/assets/ratings/)
+/calibration/ratings/
+# growing collection files; frozen snapshots go to lab/data/ when a collection is complete
+lab/runs/kadid.jsonl
+lab/runs/distort25.jsonl
+# KADID-10k content is never redistributed, thumbnails included
+lab/sheets/_kadid_examples.jpg
