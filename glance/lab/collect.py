@@ -79,8 +79,10 @@ class HiddenStore:
 
 
 class Collector:
-    def __init__(self, prefix_cache: bool, keep_hidden: bool = False, second_model: dict[str, Any] | None = None):
-        self.cfg = load_config(overrides={"vlm": {"prefix_cache": prefix_cache}})
+    def __init__(self, prefix_cache: bool, keep_hidden: bool = False, second_model: dict[str, Any] | None = None,
+                 config_path: str | None = None):
+        # `config_path`: another size of the same family through the native backend (E15, tools/make_scaling_configs.py)
+        self.cfg = load_config(config_path, overrides={"vlm": {"prefix_cache": prefix_cache}})
         if second_model:  # replication on another model family (lab/NOTES.md entry 20, E3): plain HF forward passes
             from .generic_vlm import GenericVlm
 
@@ -178,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, help="first N items of each ladder's manifest (after the split filter)")
     parser.add_argument("--prefix-cache", action="store_true", help="use the prefix-cached path (experiments); omit for the reference path")
     parser.add_argument("--save-hidden", action="store_true", help="also log the final hidden state of each digit readout to lab/hidden/ (not in git)")
+    parser.add_argument("--config", help="config yaml (default: configs/default.yaml); e.g. configs/scaling_qwen3vl_8b.yaml for another model size")
     parser.add_argument("--model-id", help="replicate on another Hugging Face image-text-to-text model (generic reference path)")
     parser.add_argument("--revision", help="pinned revision of --model-id")
     parser.add_argument("--image-longest-edge", type=int, help="image size handed to the second model's image processor")
@@ -191,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
         if not args.revision:
             parser.error("--model-id needs a pinned --revision")
         second = {"model_id": args.model_id, "revision": args.revision, "longest_edge": args.image_longest_edge}
-    collector = Collector(prefix_cache=args.prefix_cache, keep_hidden=args.save_hidden, second_model=second)
+    collector = Collector(prefix_cache=args.prefix_cache, keep_hidden=args.save_hidden, second_model=second, config_path=args.config)
     model_tag = f"{collector.backend.model_id}@{collector.backend.revision}"
     hidden = HiddenStore(args.bench, args.model_id.split("/")[-1] if args.model_id else "") if args.save_hidden else None
     ladder_meta = load_ladder_meta(args.bench)
