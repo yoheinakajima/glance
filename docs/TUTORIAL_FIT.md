@@ -83,8 +83,8 @@ g.ask("photo.png", {
 ```
 
 Measured on an idle GPU (`docs/paper/RESULTS_LAB.md`, section 9): one rating of a fresh image about 1.1 s; five
-rubrics about 0.6 s each; 25 about 0.34 s each. Without the magnified crop (`score_method: "digits"` and its reversed
-twin) it is 0.13 to 0.24 s per rubric, at some cost in accuracy on fine-grained artifacts.
+rubrics about 0.6 s each; 25 about 0.34 s each. `score_method: "digits"` (one pass, no magnified crop) costs about
+0.36 s for a fresh image and reached 0.814 mean accuracy on the lab scales against 0.867 for the default `ens4d`.
 
 ## What a calibration is tied to
 
