@@ -915,3 +915,37 @@ with 16 / 32 / 64 unlabeled images, 0.646 with an unbalanced pool of 100; within
   command's output says plainly that it cannot check itself and what a labeled fit would add.
 So, to the owner's question: yes/no and choice are out of the box; `score` is out of the box as a ranking (0.985 within
 one level), 0.558 exact with nothing, 0.697 exact with a few unlabeled images, 0.856 with 32 labels.
+
+## 2026-09-20 12:51 Entry 27: three measurements that match the pitch ("decide without talking"), registered before any code
+
+Outside feedback (relayed by the owner) names the gap between our evidence and the claim people care about: a local VLM
+that DECIDES instead of WRITING should be faster than the same model writing, about as accurate, with a confidence you
+can act on. We have accuracy; we never measured the other two. Three experiments:
+
+**E6. Generate versus read, same frozen Qwen3-VL-4B, same images, same questions.** (a) one yes/no question: greedy
+generation of the answer word versus the logit read; (b) five mixed questions (yes/no, pick-one, rating) answered as one
+generated JSON object versus five packed reads; (c) 25 rating questions as one generated JSON object versus packed reads
+(`fast2` and `ens4d`). Cold start per image, end to end, idle GPU, 40 lab test images, p50 and p90; generation is
+plain greedy decoding with a token cap, no thinking. Also reported: how often the generated answer equals the argmax of
+the logit read, and how often generated JSON fails to parse or names an option that does not exist.
+Expectations: (a) about equal (one decode step is cheap next to the prefill; reading wins by under 15%); (b) reading is
+2 to 4 times faster; (c) reading with `fast2` is at least 5 times faster; agreement on yes/no at least 97%; a nonzero
+JSON failure rate at 25 fields. If (a) shows no advantage, we say so: the saving is in multi-question requests and in
+getting probabilities for free, not in a single yes/no.
+
+**E7. Adaptive compute for ratings (CPU, saved logits).** `fast2`'s two passes are a subset of `ens4d`'s four. Rule:
+answer with the `fast2` map; if its confidence (1 - normalized entropy) is below a threshold, run the two magnified-crop
+passes and answer with the `ens4d` map. Threshold chosen on the lab CALIBRATION split only (out-of-fold predictions of
+both maps; the smallest escalation rate whose cross-validated accuracy is within 0.5 points of always-`ens4d`), then the
+test split is scored once with that threshold. H21: escalating at most 40% of images keeps at least 90% of the
+`ens4d`-over-`fast2` gain on the test split (accuracy at least 0.864).
+
+**E8. Pick-one with many options in a handful of passes (`tournament`).** Options are shuffled with a seed and split
+into chunks of at most 26; each chunk is one option-letter read (single order); the chunk winners plus an explicit
+"none of these" are re-read in a final round averaged over four rotations. Fixed now, nothing tuned: chunk size 26, one
+order in the chunk round, four rotations in the final. Evaluated on the v0 test items of `pets37` (37 options: 2 chunks
++ final) and `caltech101` (101 options: 4 chunks + final), next to the committed `independent` numbers on the same items
+(0.892 and 0.919). H22: accuracy within 3 points of `independent` on both suites with at most 8 forward passes per image
+instead of 37 and 101. Known risk, stated now: the true label can lose inside its chunk, and the result is not
+order-invariant (the seed fixes the order; we report the spread over 3 seeds on `pets37`).
+Also: Brier score is added to `glance fit`'s report and to the benchmark reports (a proper scoring rule next to NLL).
