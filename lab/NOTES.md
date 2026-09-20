@@ -412,3 +412,42 @@ Cached path; K = 5.
 - Known risk, stated now: some KADID distortions may not be monotone in severity across their 5 levels (brightness
   and contrast changes can go both ways). I will check mean DMOS per level from KADID's own file before collecting,
   report such distortions separately, and not drop them after the fact.
+
+## 2026-09-20 08:50 Entry 15: KADID-10k prepared (before any model output on it); fast pass started
+
+**Data.** `kadid10k.zip` from the authors' page, 3.07 GB, sha256
+`fe59ace86a2525d5785ff011a2119fa88839e0329f5029f7b23994727efd185c`, unpacked under `.cache/` (never committed).
+`glance/lab/kadid.py` writes one manifest per distortion to `lab/manifests_kadid/` (10,125 items; 405 per distortion).
+The manifests carry DMOS, so they are gitignored; anyone with the zip regenerates them with
+`uv run python -m glance.lab.kadid`. Split by reference image, seeded: 41 calibration / 40 test references, i.e.
+205 / 200 items per distortion.
+
+**The promised monotonicity check (from KADID's own `dmos.csv`, no model involved).** Mean DMOS per level falls
+steadily for 22 of 25 distortions. Exceptions, recorded now:
+- #18 `mean_shift` and #25 `contrast_change`: not severity scales. Their five levels sweep from one direction through
+  "almost unchanged" to the other, so mean DMOS is not monotone in the level. Kept, asked with the same generic
+  question (which cannot fit them well by construction), and REPORTED SEPARATELY from the 23-distortion mean. Exact
+  accuracy is still meaningful for them (matrix calibration can learn any level-to-logit map); SRCC against DMOS is not.
+- #5 `color_shift`: monotone but saturating (levels 4 and 5 have almost the same DMOS). Kept in the main mean.
+So H8 and H9 are evaluated on 23 distortions, with #18 and #25 shown next to them. This is decided before any model
+output exists, as promised in entry 14.
+
+**Descriptions.** One line per distortion in `glance/lab/kadid.py::DISTORTIONS`, written after looking at one example
+sheet (`lab/sheets/_kadid_examples.jpg`, my own contact sheet of KADID thumbnails, kept out of git) and the KADID paper's
+names. Two were not obvious from the name: `color_saturation_1` reduces saturation (hue goes wrong at the extreme),
+`color_saturation_2` increases it. Descriptions will not be edited after results.
+
+**How the report is computed** (`glance/lab/bench_report.py`, written before the fast pass finished): `ens4d` with
+matrix scaling fit on the calibration references of each distortion. Baselines (`independent`, `zoom_digits`,
+`digits`) get, per distortion, whichever calibration has the lowest 5-fold cross-validated NLL on the calibration
+references (the lab's rule, `select.cv_scores`), so they are not handicapped; `independent (as shipped)` is the raw v0
+readout. Reported per distortion: accuracy, within one level, MAE of the expected level, ECE with its sampling floor,
+accuracy on the most confident 80%, and the Spearman correlation between expected level and -DMOS on test references,
+next to the same correlation for the TRUE level (the ceiling any level predictor can reach, since DMOS also varies with
+image content within a level). Overall SRCC / PLCC use a per-distortion isotonic map from expected level to DMOS, fit
+on calibration references.
+
+**Order of collection.** Fast pass first: the four `ens4d` readouts on the first 200 manifest items of each distortion
+(references I01 to I40, which the seeded split divides into calibration and test), about 1.4 s per item. Then the
+remaining references, then the `independent` baseline on everything. Results are reported when all 81 references are
+in; the fast pass is a progress check, not a separate result.

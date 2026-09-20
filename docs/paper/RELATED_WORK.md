@@ -52,3 +52,95 @@ What it lacks compared with the IQA line of work (Q-Bench, Q-Align, DeQA-Score):
 (KonIQ-10k, SPAQ, KADID-10k), no SRCC/PLCC, one model, one machine, synthetic scales only, and no comparison with
 trained scorers or with classical no-reference metrics, which would solve blur and noise ladders trivially. The rating
 result is a statement about asking and calibrating, not yet about image quality assessment.
+
+## Typed-decision ("System One") models: Jev and open reproductions
+
+Jev is a commercial API from TypeSafe AI, launched in mid-September 2026 (15 or 16 September depending on the
+source), that answers typed questions (Noul, Choice, Score) against a state in one forward pass and returns typed
+answers plus probabilities instead of generated text. glance's interface is modelled on it on purpose: the hand-off
+(`HANDOFF.md`, first section) says "The interface mirrors TypeSafe's Jev, which is text-only today, so results are
+directly comparable." Every page below was fetched and read on 2026-09-20. It is kept apart from the paper list above
+because it is a product plus a fast-moving open-source ecosystem, not a paper; most sources are repositories and blog
+posts, not peer-reviewed work, and should be re-checked before submission.
+
+### Vendor claims (TypeSafe's own docs and posts; not independently checked)
+
+| Claim | Source |
+| --- | --- |
+| Three primitives. Noul: "is this statement true?", returns a probability near 1/0/0.5, no confidence field. Choice: pick from up to 255 options, returns `choice`, `probabilities`, `confidence`. Score: rate on an ordered list of 2 to 10 levels, returns `score`, `legend`, `probabilities`, `confidence`. Request is a `state` (string, JSON object, or JSON array of text) plus one or more questions with `instructions` and `criteria`. | docs.typesafe.ai/introduction, docs.typesafe.ai/primitives |
+| "Jev reads text only ... Images, audio and video are not supported yet." State plus the longest question must fit about 32k tokens; state plus all questions in a request about 64k. (docs.typesafe.ai/limits 404'd today; this is a third-party summary of it, not the page itself.) | flaviocopes.com/jev/ |
+| Calibration method is called RLCD, "Reinforcement Learning for Calibrated Decisions": trained so that among decisions where the model states probability p, about p of them are correct, unlike RLHF (preference) or RLVR (verifiable reward). Third-party reconstruction; the article itself says no independent architecture paper exists. | explainx.ai/blog/how-does-jev-work-rlcd-system-one-model-explained-2026 |
+| Latency 70 to 500 ms end to end; one demo showed 0.114 s vs 8.566 s for a compared frontier model. Price $0.042/MTok input, $0 output, claimed "193.6x faster" and "444.6x cheaper" than a compared GPT model. Architecture, parameter count and weights undisclosed; hosted API in early access behind a waitlist as of 19 Sept 2026. | theregister.com (16 Sept 2026), marktechpost.com (19 Sept 2026) |
+| TypeSafe's own documented failure modes: literal reading, weak counting and date math, indirection, distraction by irrelevant state, adversarial framing, contradictory instructions, no cross-question consistency guarantee, poor generation. No abstain option, no rationale, questions in one batch cannot see each other's answers. | docs.typesafe.ai/model-jaggedness/jev-1.13, reticle.sh/blog/what-jev-cannot-do |
+
+Neither the Register nor MarkTechPost piece independently verified the speed, cost or accuracy numbers; MarkTechPost
+says the figures come from "TypeSafe's own workflow evals."
+
+### Independent and third-party measurements (not run by TypeSafe)
+
+| Measurement | Result | Source |
+| --- | --- | --- |
+| JevBench: 534 text-only decisions (easy/standard/judge/hard tiers), scored on intelligence, calibration, speed and cost. No vision tasks. | Jev 1.13.0 leads at 75.4; open reproduction "SemIf" (Qwen3.5-4B) scores 74.7. | github.com/fstandhartinger/jevbench, benchmarkheaven.com/jev-models |
+| Event-listing validation, 50 held-out cases. Authors call it "a use-case study, not a general model ranking," tuned to their own prompts, so third-party but not neutral. | Jev 96% (48/50) at 0.59 s median, $0.043/1,000 decisions; Gemini 3.5 Flash-Lite 86% at 3.40 s; Mistral Small 4 84% at 2.90 s. | nearhere.events/blog/typesafe-jev-mistral-gemini-event-validation |
+| Prompt-injection detection, 662 labeled messages (deepset/prompt-injections), run on a public corpus, results committed to the repo. | 96.5% accuracy, ROC-AUC 0.9927, ECE 0.0588, latency p50 325 ms. | github.com/Gaurav-Gosain/jev-sec-bench |
+
+### Open reproductions, including two with images
+
+None of these are affiliated with TypeSafe. None claims to reproduce Jev's undisclosed weights or exact RLCD training.
+
+- OpenJev (AlexWortega, HF): Qwen3.5 fine-tuned as an NLI cross-encoder. v2 (4B) is trained and multimodal: ANLI
+  0.42 -> 0.63, image-based claims 0.52 -> 0.84 after tuning, per its model card. Vision: yes (v2, trained).
+  huggingface.co/AlexWortega/openjev
+- open-jev (Dasein Labs): Gemma 3 4B on Apple silicon via MLX, zero-shot or a small trained head. Its "Doom demo"
+  converts game frames to a text description before scoring; the repo states no images are accepted as input, so
+  despite the demo it is text-only. Vision: no, contrary to what the demo name suggests. github.com/daseinlabs/open-jev
+- jev-visual (hr98w): Qwen3.5-0.8B on Apple silicon (MLX), zero-shot, genuinely takes an image and shares one vision
+  prefill across up to 64 question suffixes by forking the KV cache. Reports independent-vs-shared scoring at 64
+  decisions: 37.30 s -> 2.40 s (medians); author calls it "a scaling experiment, not an accuracy evaluation."
+  Vision: yes, training-free. github.com/hr98w/jev-visual
+- OpenJev-Vision (IamBusy): two trained tracks, a small CNN plus prior or frozen DINOv2 features for vision, a
+  Qwen3-0.6B LoRA scorer for text, prefill-once evaluation. Reports "8 questions x 4 candidates, warm median: 0.70 s"
+  against one image, vs "1 question x 4 candidates: 104 ms." Vision: yes, trained. github.com/IamBusy/OpenJev-Vision
+
+Text-only reproductions also checked directly: qwen27b-jev (single-logit read 94.8% accuracy either way; grammar-
+constrained is 15% faster than free generation, plain logit read is 28% slower; github.com/sueszli/qwen27b-jev),
+jev-single-decode (llama.cpp HTTP adapter, `max_tokens=1` plus renormalized logprobs, 88.40% accuracy on 10,000
+samples, p50 537 ms, ECE 0.1067 on Qwen3-4B-Q4_K_M; github.com/siren2345/jev-single-decode), jev-on-a-laptop
+(Qwen2.5/3, 7 to 8x speedup from parallel logit reads vs naive generation on an M5 MacBook Air; github.com/
+rorshopping/jev-on-a-laptop), and Simple Jev (Hugging Face Transformers server; its own README says "text only;
+images, audio, video, and tool calls are unsupported"; github.com/featherless-ai/simple-jev).
+
+### ECE noise floor: an independent re-analysis
+
+An open GitHub issue re-examines several Jev-adjacent benchmarks (jev-benchmark, jev-phishing-bench, jev-spam-eval,
+jev-rerank-bench, openjev) and argues published ECE numbers at small n cannot be told apart from a perfectly
+calibrated model's sampling noise: the noise floor is about 0.061 ECE at n = 60, 0.025 at n = 500, 0.012 at
+n = 2,000, 0.004 at n = 18,514. It reframes a published n = 60 ECE of 0.0505-0.0712 as indistinguishable from
+perfect calibration and proposes recomputing ECE for five repos on one consistent binning alongside each one's own
+noise floor. This is the same failure mode glance's own "ECE sampling floor" targets (the v0 yes/no "failure"
+disappears at n = 1,000, see Honest positioning above); this issue is independent confirmation, from a source with
+no connection to glance, that the same bias affects Jev-adjacent evaluations. github.com/SamuelSacco/jev-exploration/issues/2
+
+### Not verified
+
+- An official `jev` branch or PR in `ggml-org/llama.cpp`: not found. The closest match is a feature request, "Fast
+  Tool Gating & Single-Pass Selection via Prefill Logit Slicing" (issue #29022): prefill-logit tool routing, no
+  vision, not merged, no benchmark numbers. github.com/ggml-org/llama.cpp/issues/29022
+- "8 questions on one photo, 1.6 s vs 4.6 s on Qwen3.5-2B": not found despite targeted search. Closest related
+  numbers: OpenJev-Vision's "8 questions x 4 candidates, warm median 0.70 s" against one image (different model,
+  different numbers, no baseline ratio given) and jev-visual's 37.30 s -> 2.40 s at 64 decisions on Qwen3.5-0.8B
+  (different model, different question count). Neither matches. Treat the 1.6 s / 4.6 s / Qwen3.5-2B figure as
+  unconfirmed.
+
+### How glance relates
+
+glance reads the same three question types (yes/no probability, choice, ordered score) but works on images
+natively, using a frozen open-weights vision-language model with no training of any kind, unlike the Jev ecosystem's
+trained vision entries (OpenJev v2, OpenJev-Vision) and unlike Jev itself, whose docs state text only. glance's
+calibration is post hoc, fit per task on a few dozen to a few hundred labels; a fit on one rating dimension does not
+transfer to another, about 32 labels per scale are enough, and a single temperature is not enough for ordered
+scales. On five synthetic 4-level image-quality rating scales the shipped v0 readout reached mean accuracy 0.500,
+the same readout with a fitted bias and temperature reached 0.810, and a 4-pass ensemble of digit readouts with
+matrix scaling (`ens4d`) reached 0.867, mean ECE about 0.03, at 609 ms per score on an Apple-silicon laptop. The
+multi-question-per-prefill idea that jev-visual and OpenJev-Vision both measure is something glance's own prefix
+cache already supports; a measurement of it is planned but not yet run, so no number is reported here.
