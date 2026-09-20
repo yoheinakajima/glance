@@ -6,6 +6,13 @@ then run this and open the address it prints. Every answer is appended to gold/h
 the frontier baseline refuses these images unless you pass --allow-upload-gold.
 
 uv run python tools/label_gold.py            # then open http://127.0.0.1:8078
+uv run python tools/label_gold.py --proposed gold/proposed_labels.jsonl   # verify mode, see below
+
+Verify mode is for images made by an image generator from a written spec: gold/proposed_labels.jsonl holds one row per
+image, {"image": "gold/photos/x.png", "labels": {"person": false, "indoors": true, "text": null, "subject": "food",
+"light": "artificial"}}, where the labels come FROM THE SPEC the image was generated from, never from a model looking
+at the image. The page highlights the proposed answer; Enter accepts it, any other key corrects it. A null label means
+"no proposal": you answer from scratch. A human confirms every label, so the file stays human-verified ground truth.
 uv run glance eval --suite human_gold --model vlm --model siglip --prefix-cache
 """
 import argparse
@@ -42,11 +49,12 @@ function render(){const a=document.getElementById('app');
  if(state.done){a.innerHTML='<h2>All done. '+state.labeled+' answers saved to gold/human_gold.jsonl.</h2>';return}
  const q=state.question;let opts=q.type==='noul'?[['true','Yes (y)'],['false','No (n)']]:Object.keys(q.criteria).map((k,i)=>[k,(i+1)+'. '+k.replaceAll('_',' ')]);
  a.innerHTML='<img src="/image?path='+encodeURIComponent(state.image)+'"><div id=q>'+q.instructions.replaceAll('`img0`','this photo')+'</div>'+
-  opts.map(o=>'<button onclick="answer(\\''+o[0]+'\\')">'+o[1]+'</button>').join('')+'<button onclick="answer(\\'__skip__\\')">skip (s)</button>'+
+  opts.map(o=>'<button '+(o[0]===state.proposed?'style="background:#ffe9a8;border-color:#b8860b" ':'')+'onclick="answer(\\''+o[0]+'\\')">'+o[1]+(o[0]===state.proposed?' &crarr;':'')+'</button>').join('')+'<button onclick="answer(\\'__skip__\\')">skip (s)</button>'+
   '<div id=meta>'+state.progress+' &middot; '+state.image+'</div>'}
 async function answer(v){await fetch('/answer',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({image:state.image,qid:state.question.id,value:v})});load()}
 document.addEventListener('keydown',e=>{if(!state||state.done)return;const q=state.question;
  if(e.key==='s')return answer('__skip__');
+ if(e.key==='Enter'&&state.proposed!==null&&state.proposed!==undefined)return answer(state.proposed);
  if(q.type==='noul'){if(e.key==='y')answer('true');if(e.key==='n')answer('false')}
  else{const k=Object.keys(q.criteria)[parseInt(e.key)-1];if(k)answer(k)}});
 load();
@@ -58,10 +66,17 @@ def main() -> None:
     parser.add_argument("--photos", default="gold/photos")
     parser.add_argument("--out", default="gold/human_gold.jsonl")
     parser.add_argument("--port", type=int, default=8078)
+    parser.add_argument("--proposed", help="JSONL of spec-derived labels to confirm or correct (verify mode)")
     args = parser.parse_args()
     photos_dir, out_path = ROOT / args.photos, ROOT / args.out
     photos_dir.mkdir(parents=True, exist_ok=True)
     skipped: set[tuple[str, str]] = set()
+    proposed: dict[str, dict] = {}
+    if args.proposed:
+        for line in (ROOT / args.proposed).read_text().splitlines():
+            if line.strip():
+                row = json.loads(line)
+                proposed[row["image"]] = row.get("labels", {})
 
     def photos() -> list[str]:
         return sorted(str(p.relative_to(ROOT)) for p in photos_dir.rglob("*") if p.suffix.lower() in SUFFIXES)
@@ -83,7 +98,10 @@ def main() -> None:
         if not remaining:
             return jsonify({"done": True, "labeled": len(finished - skipped)})
         img, q = remaining[0]
-        return jsonify({"done": False, "image": img, "question": q, "progress": f"{len(todo) - len(remaining) + 1} of {len(todo)}"})
+        guess = proposed.get(img, {}).get(q["id"])
+        guess = None if guess is None else (str(guess).lower() if q["type"] == "noul" else guess)
+        return jsonify({"done": False, "image": img, "question": q, "proposed": guess,
+                        "progress": f"{len(todo) - len(remaining) + 1} of {len(todo)}"})
 
     @app.get("/image")
     def image():
@@ -104,7 +122,11 @@ def main() -> None:
             abort(400)
         question = {k: v for k, v in q.items() if k != "id"}
         with open(out_path, "a") as f:
-            f.write(json.dumps({"image": body["image"], "qid": q["id"], "question": question, "label": label, "annotators": {"owner": label}}) + "\n")
+            row = {"image": body["image"], "qid": q["id"], "question": question, "label": label, "annotators": {"owner": label}}
+            guess = proposed.get(body["image"], {}).get(q["id"])
+            if guess is not None:
+                row["spec_label"] = guess  # what the generation spec said; kept so disagreements can be counted
+            f.write(json.dumps(row) + "\n")
         return jsonify({"ok": True})
 
     n = len(photos())
