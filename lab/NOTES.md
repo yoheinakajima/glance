@@ -1149,3 +1149,11 @@ Fresh photos (entry 30; the frontier baseline sees the test split only): yes/no,
 on the same items 0.931; pick-one, 65 photos: Opus 5 0.908, local VLM 0.862. H27 (frontier ahead by 0 to 6 points): met on
 pick-one (+4.6), and on yes/no the local model is 0.7 points AHEAD (inside the registered band only if read as "about
 equal"; stated as is). Small n; the tag-noise caveat applies to both systems.
+
+## 2026-09-20 14:38 Entry 33b: GPT-5.6 on the fresh photos
+
+Yes/no (131 test questions): local Qwen3-VL-4B 0.931 (all 262: 0.931 [0.901, 0.962]), Opus 5 0.924 [0.878, 0.969],
+GPT-5.6 0.893 [0.840, 0.939]. Pick-one of 13 (65 test photos): Opus 5 0.908, GPT-5.6 0.892, local VLM 0.885 on all 131
+(0.862 on the same 65), SigLIP2 0.855. On uncontaminated photos the local 4B model is level with both frontier models on
+yes/no and within 2 to 5 points on pick-one; intervals overlap everywhere; tag noise applies to all. Gemini 3.1 Pro is
+running through OpenRouter (the owner's AI Studio key is free-tier, which has no quota for that model).

@@ -14,9 +14,11 @@ from glance.logging_utils import read_jsonl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
-parser.add_argument("--run", required=True)
+parser.add_argument("--run", action="append", required=True, help="first run gives the local rows; every run adds its frontier rows")
 args = parser.parse_args()
-rows = read_jsonl(ROOT / "runs" / args.run / "predictions.jsonl")
+rows = read_jsonl(ROOT / "runs" / args.run[0] / "predictions.jsonl")
+for extra in args.run[1:]:
+    rows += [r for r in read_jsonl(ROOT / "runs" / extra / "predictions.jsonl") if r["backend"] == "frontier"]
 rng = np.random.default_rng(7)
 
 
@@ -34,7 +36,7 @@ def ci(a):
     return {"accuracy": float(a.mean()), "ci95": [float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))], "n": int(len(a))}
 
 
-out = {"run": args.run, "suites": {}}
+out = {"runs": args.run, "suites": {}}
 for suite in ("fresh_choice", "fresh_yesno"):
     by_system = collections.defaultdict(list)
     for r in rows:
