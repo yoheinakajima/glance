@@ -44,6 +44,33 @@ def metrics(p: np.ndarray, y: np.ndarray) -> dict[str, float]:
     }
 
 
+def combine_rows(rows: list[dict[str, Any]], spec: str) -> list[dict[str, Any]]:
+    """Synthetic method rows from several collected ones, so combinations go through exactly the same fitting and
+    scoring as single methods. `spec` is "name=key1+key2+...:mean" (average the logits: test-time augmentation over
+    crops of one readout) or "...:concat" (stack them as features: an ensemble of different readouts)."""
+    name, rest = spec.split("=", 1)
+    keys_part, how = rest.rsplit(":", 1)
+    keys = keys_part.split("+")
+    per_key = [{(r["ladder"], r["item_id"]): r for r in rows if r["method_key"] == key} for key in keys]
+    out = []
+    for ident in sorted(set.intersection(*(set(d) for d in per_key))):
+        parts = [d[ident] for d in per_key]
+        logits = [p["logits"] for p in parts]
+        same_readout = len({len(v) for v in logits}) == 1
+        if how == "mean":
+            if not same_readout:
+                raise ValueError("mean needs readouts of the same shape")
+            merged = np.mean(np.array(logits), axis=0).tolist()
+            method = parts[0]["method"]
+        else:
+            merged = sum(logits, [])
+            method = "ensemble"  # level count comes from the labels, calibrated with matrix scaling only
+        out.append({**parts[0], "method_key": name, "method": method, "logits": merged,
+                    "latency_ms": float(sum(p["latency_ms"] for p in parts)),
+                    "forward_passes": int(sum(p["forward_passes"] for p in parts))})
+    return out
+
+
 def analyze(rows: list[dict[str, Any]], dev: bool = False) -> dict[str, Any]:
     grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for r in rows:
@@ -85,7 +112,7 @@ def _confusion(method: str, entry: dict[str, Any], rows: list[dict[str, Any]], d
     eval_rows = [r for r in rows if r["split"] == ("calibration" if dev else "test")]
     z, y = np.array([r["logits"] for r in eval_rows]), np.array([r["level"] for r in eval_rows])
     pred = sm.apply_fit(method, z, entry["variants"][entry["chosen"]]["fit"]).argmax(axis=1)
-    k = z.shape[1] + (1 if "cumulative" in method else 0)
+    k = sm.n_levels(method, z)
     cm = np.zeros((k, k), dtype=int)
     for t, p in zip(y, pred):
         cm[t, p] += 1
@@ -150,8 +177,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", required=True, help="output path without extension (.md and .json are written)")
     parser.add_argument("--dev", action="store_true", help="calibration split only; the test split stays untouched")
     parser.add_argument("--title", default="Score lab")
+    parser.add_argument("--combine", action="append", default=[], help='"name=key1+key2:mean" or "...:concat"; repeatable')
+    parser.add_argument("--only", help="comma-separated method keys to keep in the report (combinations are always kept)")
     args = parser.parse_args(argv)
     rows = read_jsonl(PROJECT_ROOT / args.inp)
+    combined = [r for spec in args.combine for r in combine_rows(rows, spec)]
+    if args.only:
+        keep = set(args.only.split(","))
+        rows = [r for r in rows if r["method_key"] in keep]
+    rows = rows + combined
     results = analyze(rows, dev=args.dev)
     text = render(results, rows, args.dev, args.title)
     out = PROJECT_ROOT / args.out

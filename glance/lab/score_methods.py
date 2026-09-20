@@ -34,6 +34,8 @@ ZOOM_SENTENCE = (
     " `zoom` is a {factor}x pixel-magnified crop from the centre of `img0`: use it to judge fine detail, and "
     "`img0` for the overall picture."
 )
+# The sentence is the same for every crop position on purpose: crops at other positions are test-time augmentation
+# of the same question, and their logits are combined offline.
 
 SCALE_BLOCK = "The answer scale, from lowest to highest:\n{steps}\n"
 CUMULATIVE_TEMPLATE = (
@@ -64,14 +66,20 @@ def with_zoom(instructions: str, factor: int = ZOOM_FACTOR) -> str:
     return instructions + ZOOM_SENTENCE.format(factor=factor)
 
 
-def zoom_crop(image, factor: int = ZOOM_FACTOR):
-    """Centre crop of 1/factor of each side, enlarged back to the full size with nearest-neighbour sampling so that
-    pixel-level structure (noise grain, 8x8 JPEG blocks, resampling steps) is preserved and simply made bigger."""
+ZOOM_POSITIONS = {"c": (0.5, 0.5), "tl": (0.25, 0.25), "tr": (0.75, 0.25), "bl": (0.25, 0.75), "br": (0.75, 0.75)}
+
+
+def zoom_crop(image, factor: int = ZOOM_FACTOR, position: str = "c"):
+    """A crop of 1/factor of each side centred at `position` (centre or a quadrant centre), enlarged back to the full
+    size with nearest-neighbour sampling so that pixel-level structure (noise grain, 8x8 JPEG blocks, resampling
+    steps) is preserved and simply made bigger."""
     from PIL import Image
 
     w, h = image.size
     cw, ch = w // factor, h // factor
-    left, top = (w - cw) // 2, (h - ch) // 2
+    fx, fy = ZOOM_POSITIONS[position]
+    left = min(max(int(round(w * fx - cw / 2)), 0), w - cw)
+    top = min(max(int(round(h * fy - ch / 2)), 0), h - ch)
     return image.crop((left, top, left + cw, top + ch)).resize((cw * factor, ch * factor), Image.NEAREST)
 
 
@@ -175,7 +183,12 @@ def fit_matrix_scaling(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float =
             "mean": mean.tolist(), "std": std.tolist()}
 
 
+N_LEVELS_ENSEMBLE = 4  # every lab scale has 4 levels; concatenated readouts carry no level count of their own
+
+
 def n_levels(method: str, logits: np.ndarray) -> int:
+    if method == "ensemble":
+        return N_LEVELS_ENSEMBLE
     return logits.shape[1] + (1 if "cumulative" in method else 0)
 
 
@@ -210,6 +223,8 @@ def fit_kind(method: str, kind: str, logits: np.ndarray, y: np.ndarray, k: int) 
 
 
 def kinds_for(method: str) -> tuple[str, ...]:
+    if method == "ensemble":
+        return ("matrix",)
     return FIT_KINDS["cumulative" if "cumulative" in method else "level"]
 
 

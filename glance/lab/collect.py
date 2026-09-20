@@ -63,7 +63,8 @@ class Collector:
             out.append(self._anchor_images[key])
         return out
 
-    def run(self, method: str, meta: dict[str, Any], item: dict[str, Any], anchors: list[sm.Anchor]) -> dict[str, Any]:
+    def run(self, method: str, meta: dict[str, Any], item: dict[str, Any], anchors: list[sm.Anchor],
+            position: str | None = None) -> dict[str, Any]:
         levels, instructions = meta["levels"], meta["instructions"]
         target = self._image("img0", item["path"])
         images = [target]
@@ -72,7 +73,7 @@ class Collector:
 
             from ..images import LoadedImage
 
-            crop = sm.zoom_crop(target.image)
+            crop = sm.zoom_crop(target.image, position=position or "c")
             images = [target, LoadedImage(id="zoom", image=crop, sha256=hashlib.sha256(crop.tobytes()).hexdigest(),
                                           width=crop.width, height=crop.height, format="PNG", source="derived:zoom")]
             instructions = sm.with_zoom(instructions)
@@ -105,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--ladders", default="blur,noise,jpeg,exposure,resolution")
     parser.add_argument("--methods", default=",".join(sm.METHODS))
     parser.add_argument("--anchors", default="0:123", help='anchor config "<ref>:<levels>"; comma-separate to run several')
+    parser.add_argument("--zoom-positions", default="c", help="crop positions for zoom_* methods: c,tl,tr,bl,br")
     parser.add_argument("--split", choices=["calibration", "test", "all"], default="all")
     parser.add_argument("--limit", type=int, help="first N items of each ladder's manifest (after the split filter)")
     parser.add_argument("--prefix-cache", action="store_true", help="use the prefix-cached path (experiments); omit for the reference path")
@@ -126,6 +128,9 @@ def main(argv: list[str] | None = None) -> int:
         # Single-image methods first, then both anchor methods per anchor config back to back, so consecutive calls
         # share an image prefix (the backend keeps the last two prefixes).
         jobs = [(m, None, m) for m in methods if not m.startswith("anchors_")]
+        # Extra crop positions for the zoom methods (test-time augmentation). The centre crop keeps the plain key.
+        for pos in [p for p in args.zoom_positions.split(",") if p and p != "c"]:
+            jobs += [(m, f"pos:{pos}", f"{m}@{pos}") for m in methods if m.startswith("zoom_")]
         for config in anchor_configs:
             jobs += [(m, config, f"{m}@{config}") for m in methods if m.startswith("anchors_")]
         t_ladder = time.perf_counter()
@@ -133,8 +138,9 @@ def main(argv: list[str] | None = None) -> int:
             for method, config, key in jobs:
                 if (ladder, item["item_id"], key) in done:
                     continue
-                anchors = anchors_for(ladder, config) if config else []
-                row = collector.run(method, ladder_meta[ladder], item, anchors)
+                position = config.split(":", 1)[1] if config and config.startswith("pos:") else None
+                anchors = anchors_for(ladder, config) if config and not position else []
+                row = collector.run(method, ladder_meta[ladder], item, anchors, position)
                 writer.write({
                     "ladder": ladder, "item_id": item["item_id"], "split": item["split"], "level": item["level"],
                     "method": method, "anchors": config, "method_key": key, "prompt_version": sm.LAB_PROMPT_VERSION,

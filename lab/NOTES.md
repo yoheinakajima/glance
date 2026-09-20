@@ -158,3 +158,44 @@ the gate cannot tell them apart; on gqa_yesno the floor alone is above the gate.
 at the full manifest size (n = 1,000, 500 test items) on the reference path, then repeat this comparison. Pilot 1 was
 stopped at 00:39 to free the GPU (its remaining work was mostly the 1.1 s `anchors_cumulative` variants); pilot 2
 resumes the same file with `independent, cumulative, digits, zoom_*` and `anchors_digits@0:013`.
+
+## 2026-09-20 01:10 Entry 7: pilot 1+2 complete (DEV split only) and what it says about the hypotheses
+
+Data: `lab/runs/pilot.jsonl` (first 160 calibration items per scale; fit on 80, judged on the other 80; test split
+untouched). Tables: `lab/runs/pilot2_dev.md`, `lab/runs/pilot2_dev_ensembles.md`. Accuracy with each method's
+cross-validation-chosen calibration:
+
+| Method (forward passes) | blur | exposure | jpeg | noise | resolution | mean |
+| --- | --- | --- | --- | --- | --- | --- |
+| `independent` (4), the v0 method | 0.900 | 0.850 | 0.550 | 0.675 | 0.812 | 0.757 |
+| `cumulative` (3) | 0.825 | 0.800 | 0.525 | 0.725 | 0.575 | 0.690 |
+| `digits` (1) | 0.838 | 0.887 | 0.613 | 0.675 | 0.800 | 0.762 |
+| `anchors_digits@0:013` (1, 4 images) | 0.887 | 0.738 | 0.550 | 0.738 | 0.713 | 0.725 |
+| `zoom_independent` (4, 2 images) | 0.775 | 0.838 | 0.650 | 0.625 | 0.650 | 0.708 |
+| `zoom_cumulative` (3, 2 images) | 0.700 | 0.887 | 0.613 | 0.775 | 0.725 | 0.740 |
+| `zoom_digits` (1, 2 images) | 0.863 | 0.863 | 0.713 | 0.750 | 0.750 | 0.787 |
+| ensemble A = `digits` + `zoom_digits` (2) | 0.838 | 0.938 | 0.700 | 0.775 | 0.838 | 0.817 |
+| ensemble D = 5 readouts, no `zoom_independent` (12) | 0.900 | 0.925 | 0.725 | 0.800 | 0.875 | 0.845 |
+| ensemble E = all 6 readouts (16) | 0.900 | 0.900 | 0.750 | 0.775 | 0.863 | 0.838 |
+
+Ensembles = matrix scaling on the concatenated logits of the listed readouts. n = 80 judged items per cell, so one
+item is 1.25 points and differences under about 8 points are not reliable.
+
+Verdicts on the registered hypotheses, from DEV data only:
+- H1 (threshold questions beat isolated level questions): NOT supported. `cumulative` is worse than `independent` on 4
+  of 5 scales.
+- H2 (`digits` matches the multi-pass readouts at 1 pass): supported. 0.762 vs 0.757 for `independent` at a quarter
+  of the passes and a third of the latency (159 ms vs 447 ms).
+- H3 (reference images help where wording is vaguest): weak and mixed. +6 points on noise, -6 on jpeg, -15 on exposure
+  against plain `digits`; not worth 4 images. Pilot-only evidence; anchors are dropped from the full run.
+- H4 (per-level calibration is required): supported everywhere; a single temperature never changes accuracy.
+- H5 (a magnified view helps most on fine-detail scales): supported for `digits`: jpeg +10 points, noise +7.5, blur
+  +2.5, exposure -2.5, resolution -5. It hurts `independent` on blur (-12.5).
+- New observation: readouts are complementary. Combining them is worth more than any single change (0.76-0.79 for the
+  best single readouts, 0.82 for two, 0.85 for five), even with only 80 items to fit 22 features.
+
+Full-run design, locked before it starts: all 1,000 items per scale, cached path, methods `independent`,
+`cumulative`, `digits`, `zoom_cumulative`, `zoom_digits` (plus extra `zoom_digits` crop positions if pilot 3 shows
+that test-time augmentation helps). The method that will be called "the winner", and its calibration, will be chosen
+by 5-fold cross-validated NLL on the calibration split of the full run; the test split is scored once for the final
+table. A 500-item test subsample of the winner is then re-scored on the reference (uncached) path.
