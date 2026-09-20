@@ -613,5 +613,5 @@ a NEW experiment is a reference-anchored question (the pristine image next to th
 multi-image requests already allow); it would be designed on calibration references only and scored once.
 
 Also for the record, the first real `glance fit` demo (entry 18) was then tried on the 10 held-out CALIBRATION-split
-images of its demo folder (never the benchmark's test split): 6 of 10 exact with 8 labels per level on the 5-level
+images of its demo folder (never the benchmark's test split): 6 of 10 exact, 10 of 10 within one level, with 8 labels per level on the 5-level
 JPEG rubric, confidences low (0.07 to 0.55), which is the honest picture of a 40-label fit on the hardest distortion.
