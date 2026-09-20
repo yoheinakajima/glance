@@ -64,6 +64,14 @@ def with_anchors(instructions: str, levels: list[str], anchors: list[Anchor], st
     return instructions + ANCHOR_SENTENCE.format(refs=refs)
 
 
+REFERENCE_PREFIX = "Compared with the undistorted reference `ref`, "
+
+
+def with_reference(instructions: str) -> str:
+    """Turns "How strong is X in `img0`?" into a comparison with the pristine reference image `ref` (entry 29)."""
+    return REFERENCE_PREFIX + instructions[0].lower() + instructions[1:]
+
+
 def with_zoom(instructions: str, factor: int = ZOOM_FACTOR) -> str:
     return instructions + ZOOM_SENTENCE.format(factor=factor)
 

@@ -118,6 +118,7 @@ def build() -> dict[str, int]:
                 "item_id": row["dist_img"].removesuffix(".png"), "ladder": key, "source_image_id": ref,
                 "level": int(level) - 1, "split": split[ref], "path": str(path.relative_to(PROJECT_ROOT)),
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "dmos": float(row["dmos"]), "dmos_var": float(row["var"]),
+                "ref_path": str((ROOT / "images" / f"{ref}.png").relative_to(PROJECT_ROOT)),
             })
     for key, rows in rows_by_key.items():
         rows.sort(key=lambda r: r["item_id"])

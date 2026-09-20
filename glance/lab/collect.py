@@ -110,6 +110,15 @@ class Collector:
         self.last_hidden = None
         target = self._image("img0", item["path"])
         images = [target]
+        if method.startswith("ref_"):
+            # E9 (lab/NOTES.md entry 29): the pristine reference goes first, the question becomes a comparison.
+            if not item.get("ref_path"):
+                raise ValueError(f"item {item['item_id']} has no ref_path; reference-anchored readouts need one")
+            images = [self._image("ref", item["ref_path"]), target]
+            instructions = sm.with_reference(instructions)
+            method = method[len("ref_"):]
+            if method.startswith(("zoom_", "anchors_")):
+                raise NotImplementedError("reference-anchored readouts with a magnified crop are registered (entry 29) but not built yet")
         if method.startswith("zoom_"):
             import hashlib
 
