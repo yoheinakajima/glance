@@ -1170,3 +1170,22 @@ label curve (H13: is it worse than the logit readout at 32 labels?) has not been
 Resources: memory 56% free with one model process, so the SmolVLM2 replication now runs in a second queue lane
 (`$TMPDIR/glance/gpuq_b.sh`, `gpuq_b.txt`, log lines tagged [gpuqB] in the same log); none of the remaining collection
 jobs is a timing benchmark. E11's `write_ms` is therefore contended and must not be quoted as a latency.
+
+## 2026-09-20 15:43 Entry 35: E12, a second uncontaminated set with CLEANER labels (iNaturalist), registered before any code
+
+The Commons set (entry 30b) has noisy pick-one labels ("depicts" means "appears", not "main subject"). iNaturalist
+research-grade observations carry an identification that at least two people agreed on, and the photo IS of that
+organism. Source suggested by the owner (relayed review, live-checked 2026-09-20). Design, fixed now:
+- API `https://api.inaturalist.org/v1/observations`: `quality_grade=research`, `photos=true`, observed on or after
+  2026-08-15 (`d1`), `photo_license=cc0,cc-by,cc-by-sa` (no NC, to stay with our license rule), newest first, at most one
+  observation per observer per class, first photo only, medium size (about 500 px) or large if available; at most 1
+  request per second, a descriptive User-Agent, well under the documented 10k requests and 5 GB per day.
+- Labels at the ICONIC-TAXON level, from the API's `iconic_taxon_name`: bird (Aves), insect (Insecta), plant (Plantae),
+  mammal (Mammalia), reptile (Reptilia), amphibian (Amphibia), fish (Actinopterygii), fungus (Fungi), spider or scorpion
+  (Arachnida), mollusc (Mollusca). 20 photos per class, 200 in total. Species-level naming is out of scope.
+- Suites `inat_choice` ("What kind of organism is the main subject of `img0`?", the ten classes with one-line
+  descriptions) and `inat_yesno` (one yes and one seeded no question per photo: "Is the main subject of `img0` a bird?").
+- H30: Qwen3-VL-4B out of the box reaches at least 0.90 on `inat_choice` and at least 0.93 on `inat_yesno`
+  (uncalibrated, all items); SigLIP2 within 5 points on pick-one; frontier models (if the owner runs them) within 5
+  points of the local model either way. Hard cases expected and reported per class: fungus vs plant, amphibian vs reptile,
+  spider vs insect.
