@@ -15,11 +15,23 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
 parser.add_argument("--run", action="append", required=True, help="first run gives the local rows; every run adds its frontier rows")
+parser.add_argument("--set", choices=["commons", "inat"], default="commons", help="which fresh photo set the run holds (E10 Commons, E12 iNaturalist)")
 args = parser.parse_args()
 rows = read_jsonl(ROOT / "runs" / args.run[0] / "predictions.jsonl")
 for extra in args.run[1:]:
     rows += [r for r in read_jsonl(ROOT / "runs" / extra / "predictions.jsonl") if r["backend"] == "frontier"]
 rng = np.random.default_rng(7)
+SETS = {  # suites, output name, title, label-noise note, number of classes
+    "commons": ("fresh_choice", "fresh_yesno", "fresh_commons", "labels from Commons 'depicts' statements",
+                "Label noise, the same for every system: a 'depicts' tag means the thing APPEARS in the photo, not that it is the main subject, so the "
+                "pick-one labels are noisier than the yes/no labels; a 'no' question can be wrong when the other object happens to be in frame.",
+                "Is there a <class> in the photo?", "Pick one of 13: \"What is the main subject?\""),
+    "inat": ("inat_choice", "inat_yesno", "fresh_inat", "labels from iNaturalist research-grade community identifications (iconic taxon)",
+             "Labels are community-verified identifications of the photographed organism. What stays hard, for every system: tiny or camouflaged "
+             "subjects, and evidence photos (tracks, droppings, shells, burrows) that count as the organism on iNaturalist.",
+             "Is the main subject a <class>?", "Pick one of 10: \"What kind of organism is the main subject?\""),
+}
+CHOICE, YESNO, OUT_NAME, LABEL_SOURCE, NOISE_NOTE, YESNO_TITLE, CHOICE_TITLE = SETS[args.set]
 
 
 def correct(r):
@@ -37,7 +49,7 @@ def ci(a):
 
 
 out = {"runs": args.run, "suites": {}}
-for suite in ("fresh_choice", "fresh_yesno"):
+for suite in (CHOICE, YESNO):
     by_system = collections.defaultdict(list)
     for r in rows:
         if r["suite"] == suite:
@@ -46,7 +58,7 @@ for suite in ("fresh_choice", "fresh_yesno"):
     entry = {}
     for name, group in by_system.items():
         e = ci([correct(r) for r in group])
-        if suite == "fresh_yesno":
+        if suite == YESNO:
             e["on_yes_questions"] = float(np.mean([correct(r) for r in group if r["label_index"] == 1]))
             e["on_no_questions"] = float(np.mean([correct(r) for r in group if r["label_index"] == 0]))
         else:
@@ -56,20 +68,18 @@ for suite in ("fresh_choice", "fresh_yesno"):
             e["per_class"] = {k: [float(np.mean(v)), len(v)] for k, v in sorted(per.items())}
         entry[name] = e
     out["suites"][suite] = entry
-(ROOT / "results/lab/fresh_commons.json").write_text(json.dumps(out, indent=2) + "\n")
+(ROOT / f"results/lab/{OUT_NAME}.json").write_text(json.dumps(out, indent=2) + "\n")
 f = lambda e: f"{e['accuracy']:.3f} [{e['ci95'][0]:.3f}, {e['ci95'][1]:.3f}]"  # noqa: E731
-lines = ["# Out of the box on fresh real photos (taken after the models were released; labels from Commons 'depicts' statements)", "",
-         "Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the same for every system: a 'depicts' tag means the thing "
-         "APPEARS in the photo, not that it is the main subject, so the pick-one labels are noisier than the yes/no labels; a 'no' question can be "
-         "wrong when the other object happens to be in frame.", "",
-         "## Yes/no: \"Is there a <class> in the photo?\"", "", "| System | n | accuracy | on yes questions | on no questions |", "| --- | --- | --- | --- | --- |"]
-lines += [f"| {k} | {e['n']} | {f(e)} | {e['on_yes_questions']:.3f} | {e['on_no_questions']:.3f} |" for k, e in out["suites"]["fresh_yesno"].items()]
-lines += ["", "## Pick one of 13: \"What is the main subject?\"", "", "| System | n | accuracy |", "| --- | --- | --- |"]
-lines += [f"| {k} | {e['n']} | {f(e)} |" for k, e in out["suites"]["fresh_choice"].items()]
-first = next(iter(out["suites"]["fresh_choice"].values()), None)
+lines = [f"# Out of the box on fresh real photos (taken after the models were released; {LABEL_SOURCE})", "",
+         "Uncalibrated decisions, all items, bootstrap 95% intervals. " + NOISE_NOTE, "",
+         f"## Yes/no: \"{YESNO_TITLE}\"", "", "| System | n | accuracy | on yes questions | on no questions |", "| --- | --- | --- | --- | --- |"]
+lines += [f"| {k} | {e['n']} | {f(e)} | {e['on_yes_questions']:.3f} | {e['on_no_questions']:.3f} |" for k, e in out["suites"][YESNO].items()]
+lines += ["", "## " + CHOICE_TITLE, "", "| System | n | accuracy |", "| --- | --- | --- |"]
+lines += [f"| {k} | {e['n']} | {f(e)} |" for k, e in out["suites"][CHOICE].items()]
+first = next(iter(out["suites"][CHOICE].values()), None)
 if first:
     classes = list(first["per_class"])
     lines += ["", "Per class (accuracy, photos):", "", "| System | " + " | ".join(classes) + " |", "| --- | " + " | ".join("---" for _ in classes) + " |"]
-    lines += [f"| {k} | " + " | ".join(f"{e['per_class'][c][0]:.2f} ({e['per_class'][c][1]})" if c in e["per_class"] else "-" for c in classes) + " |" for k, e in out["suites"]["fresh_choice"].items()]
-(ROOT / "results/lab/fresh_commons.md").write_text("\n".join(lines) + "\n")
+    lines += [f"| {k} | " + " | ".join(f"{e['per_class'][c][0]:.2f} ({e['per_class'][c][1]})" if c in e["per_class"] else "-" for c in classes) + " |" for k, e in out["suites"][CHOICE].items()]
+(ROOT / f"results/lab/{OUT_NAME}.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))
