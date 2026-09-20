@@ -123,7 +123,7 @@ def _confusion(method: str, entry: dict[str, Any], rows: list[dict[str, Any]], d
     eval_rows = [r for r in rows if r["split"] == ("calibration" if dev else "test")]
     z, y = np.array([r["logits"] for r in eval_rows]), np.array([r["level"] for r in eval_rows])
     pred = sm.apply_fit(method, z, entry["variants"][entry["chosen"]]["fit"]).argmax(axis=1)
-    k = sm.n_levels(method, z)
+    k = sm.n_levels(method, z, y)
     cm = np.zeros((k, k), dtype=int)
     for t, p in zip(y, pred):
         cm[t, p] += 1

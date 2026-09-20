@@ -27,7 +27,7 @@ from .analyze import combine_rows
 
 def cv_scores(method: str, z: np.ndarray, y: np.ndarray, folds: int = 5, seed: int = 7) -> dict[str, Any]:
     """Cross-validated NLL and accuracy for each calibration kind; the kind with the lowest CV NLL represents the method."""
-    k = sm.n_levels(method, z)
+    k = sm.n_levels(method, z, y)
     order = np.random.default_rng(seed).permutation(len(y))
     out = {}
     for kind in sm.kinds_for(method):

@@ -374,3 +374,41 @@ reference images, `zoom` on the multi-pass readouts, averaging crops (small gain
 Housekeeping: the stage A+B logits behind every number above are frozen in `lab/data/main_stagesAB.jsonl.gz`
 (35,000 rows, 2.3 MB); `glance.lab.select` on that file reproduces entry 12 exactly. The live `lab/runs/main.jsonl`
 is ignored by git because stage C is still appending to it.
+
+## 2026-09-20 08:35 Entry 14: generalization test of `ens4d`, registered before any of its data exists
+
+**Why.** The score lab's result (entry 13) is on five scales whose level texts I wrote and tuned by eye, on one kind of
+photo. Related work (`docs/paper/RELATED_WORK.md`) measures on many distortion types and on human opinion scores.
+Two tests, in this order, with the project owner's approval of both on 2026-09-20:
+
+1. **`distort25`** (license-clean): 25 distortion types x 5 severity levels, the design of KADID-10k rebuilt from
+   scratch on our CC BY-SA photo pool, sharing no source image with the five lab scales. 300 items per distortion
+   (30 per split and level). Built by a cheaper assistant model from a written spec (`glance/lab/distort25.py`);
+   I review the contact sheets before anything is collected.
+2. **KADID-10k itself** (81 reference images x 25 distortions x 5 levels, with human DMOS), evaluation only. Its page
+   says "freely available to the research community" and names no license, which the hand-off treats as unclear. The
+   project owner approved an evaluation-only exception; recorded in `DATASETS.md`. Never used for fitting anything that
+   ships, never redistributed. Split by REFERENCE image (seeded, 41 calibration / 40 test), so no test content is seen
+   during calibration.
+
+**What is fixed in advance (no re-selection).** Method: `ens4d` exactly as selected in entry 12 (`digits`,
+`zoom_digits`, `digitsrev`, `zoom_digitsrev`; matrix calibration, L2 0.05 with rescale), fit per distortion on its
+calibration split. Question wording: ONE generic template for all 25 distortions, "How strong is the <one-line
+description> in `img0`?" with the levels "Barely noticeable / Slight / Moderate / Strong / Very strong". No
+per-distortion level prose, no tuning of wording after seeing results. Baselines collected on the same items:
+`independent` (the v0 readout) as shipped and with its best calibration, and single-pass `zoom_digits`.
+Cached path; K = 5.
+
+**Hypotheses.**
+- H7. `ens4d` beats the v0 readout with its best calibration on mean accuracy over the 25 distortions, on both
+  benchmarks.
+- H8. With 5 levels and generic wording accuracy will be clearly lower than the 0.867 of entry 13. Registered
+  expectations for `ens4d`, mean over 25 distortions, test split: exact accuracy >= 0.70, within one level >= 0.97,
+  MAE <= 0.40 levels, ECE <= 0.05 on at least 20 of 25 distortions.
+- H9 (KADID-10k only). Within a distortion type, Spearman correlation between the predicted expected level and human
+  DMOS on the test references is >= 0.85 on average. Overall SRCC / PLCC against DMOS are reported after a per-type
+  monotone map fit on the calibration references; this is a distortion-type-aware setting and is NOT comparable with
+  blind IQA numbers in the literature, which do not know the distortion type.
+- Known risk, stated now: some KADID distortions may not be monotone in severity across their 5 levels (brightness
+  and contrast changes can go both ways). I will check mean DMOS per level from KADID's own file before collecting,
+  report such distortions separately, and not drop them after the fact.

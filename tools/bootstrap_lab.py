@@ -32,7 +32,7 @@ for name, spec in SPECS.items():
         zt, yt = np.array([r["logits"] for r in test]), np.array([r["level"] for r in test])
         method = group[0]["method"]
         kind = cv_scores(method, zf, yf)["kind"]
-        pred = sm.apply_fit(method, zt, sm.fit_kind(method, kind, zf, yf, sm.n_levels(method, zf))).argmax(1)
+        pred = sm.apply_fit(method, zt, sm.fit_kind(method, kind, zf, yf, sm.n_levels(method, zf, yf))).argmax(1)
         correct[name][scale] = (pred == yt).astype(float)
     # v0 as shipped: independent readout with a single temperature (cannot change the argmax)
 correct["v0 as shipped"] = {}

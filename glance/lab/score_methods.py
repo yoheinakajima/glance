@@ -197,12 +197,13 @@ def fit_matrix_scaling(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float =
             "l2": l2, "rescale": s_}
 
 
-N_LEVELS_ENSEMBLE = 4  # every lab scale has 4 levels; concatenated readouts carry no level count of their own
-
-
-def n_levels(method: str, logits: np.ndarray) -> int:
+def n_levels(method: str, logits: np.ndarray, y: np.ndarray | None = None) -> int:
+    """Number of levels K. Level readouts carry it in their width; a combination of readouts does not, so there it is
+    taken from the labels of the (balanced) fit data."""
     if method == "ensemble":
-        return N_LEVELS_ENSEMBLE
+        if y is None:
+            raise ValueError("a combination of readouts needs labels to know its number of levels")
+        return int(np.max(y)) + 1
     return logits.shape[1] + (1 if "cumulative" in method else 0)
 
 
@@ -244,13 +245,13 @@ def kinds_for(method: str) -> tuple[str, ...]:
 
 def candidate_fits(method: str, logits: np.ndarray, y: np.ndarray) -> list[dict[str, Any] | None]:
     """Raw first, then every calibration this readout supports."""
-    k = n_levels(method, logits)
+    k = n_levels(method, logits, y)
     return [fit_kind(method, kind, logits, y, k) for kind in kinds_for(method)]
 
 
 def cv_nll(method: str, kind: str, logits: np.ndarray, y: np.ndarray, folds: int = 5, seed: int = 7) -> float:
     """Cross-validated NLL on the fit data: how a calibration is chosen without ever touching evaluation data."""
-    k = n_levels(method, logits)
+    k = n_levels(method, logits, y)
     order = np.random.default_rng(seed).permutation(len(y))
     total = 0.0
     for fold in range(folds):

@@ -56,7 +56,7 @@ def learning_curve(rows, method_key: str, kind: str, dev: bool, repeats: int = 2
         method = group[0]["method"]
         zf, yf = arrays(fit_rows)
         ze, ye = arrays(eval_rows)
-        k = sm.n_levels(method, zf)
+        k = sm.n_levels(method, zf, yf)
         rng = np.random.default_rng(seed)
         # n = 0 is the uncalibrated readout. A combination of readouts has no uncalibrated form, so it starts at n = 8.
         curve = {} if method == "ensemble" else {
@@ -84,11 +84,11 @@ def transfer(rows, method_key: str, kind: str, dev: bool) -> dict[str, Any]:
     for ladder, group in groups.items():
         fit_rows, eval_rows = split_rows(group, dev)
         zf, yf = arrays(fit_rows)
-        fits[ladder] = sm.fit_kind(method, kind, zf, yf, sm.n_levels(method, zf))
+        fits[ladder] = sm.fit_kind(method, kind, zf, yf, sm.n_levels(method, zf, yf))
         evals[ladder] = arrays(eval_rows)
     pooled_z = np.concatenate([arrays(split_rows(g, dev)[0])[0] for g in groups.values()])
     pooled_y = np.concatenate([arrays(split_rows(g, dev)[0])[1] for g in groups.values()])
-    fits["POOLED"] = sm.fit_kind(method, kind, pooled_z, pooled_y, sm.n_levels(method, pooled_z))
+    fits["POOLED"] = sm.fit_kind(method, kind, pooled_z, pooled_y, sm.n_levels(method, pooled_z, pooled_y))
     fits["NONE (raw)"] = None
     return {src: {dst: metrics(sm.apply_fit(method, z, fit), y)["accuracy"] for dst, (z, y) in evals.items()}
             for src, fit in fits.items()}

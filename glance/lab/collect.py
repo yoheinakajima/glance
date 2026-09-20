@@ -26,14 +26,23 @@ from . import score_methods as sm
 LAB_DIR = PROJECT_ROOT / "lab"
 
 
-def load_ladder_meta() -> dict[str, dict[str, Any]]:
-    from .ladders import LADDERS
+BENCHES = {
+    # name: (module that defines the scales, attribute with {scale: {"instructions", "levels"}}, manifest directory)
+    "ladders": ("glance.lab.ladders", "LADDERS", "manifests"),
+    "distort25": ("glance.lab.distort25", "SCALES", "manifests_distort25"),
+    "kadid": ("glance.lab.kadid", "SCALES", "manifests_kadid"),
+}
 
-    return LADDERS
+
+def load_ladder_meta(bench: str = "ladders") -> dict[str, dict[str, Any]]:
+    import importlib
+
+    module, attr, _ = BENCHES[bench]
+    return getattr(importlib.import_module(module), attr)
 
 
-def load_items(ladder: str) -> list[dict[str, Any]]:
-    return read_jsonl(LAB_DIR / "manifests" / f"{ladder}.jsonl")
+def load_items(ladder: str, bench: str = "ladders") -> list[dict[str, Any]]:
+    return read_jsonl(LAB_DIR / BENCHES[bench][2] / f"{ladder}.jsonl")
 
 
 def anchors_for(ladder: str, config: str) -> list[sm.Anchor]:
@@ -104,7 +113,8 @@ class Collector:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out", required=True, help="JSONL to append to (resumable)")
-    parser.add_argument("--ladders", default="blur,noise,jpeg,exposure,resolution")
+    parser.add_argument("--bench", choices=sorted(BENCHES), default="ladders", help="which set of scales to run")
+    parser.add_argument("--ladders", default=None, help="comma-separated scales (default: every scale of the bench)")
     parser.add_argument("--methods", default=",".join(sm.METHODS))
     parser.add_argument("--anchors", default="0:123", help='anchor config "<ref>:<levels>"; comma-separate to run several')
     parser.add_argument("--zoom-positions", default="c", help="crop positions for zoom_* methods: c,tl,tr,bl,br")
@@ -117,13 +127,15 @@ def main(argv: list[str] | None = None) -> int:
     done = {(r["ladder"], r["item_id"], r["method_key"]) for r in read_jsonl(out_path)}
     writer = JsonlWriter(out_path)
     collector = Collector(prefix_cache=args.prefix_cache)
-    ladder_meta = load_ladder_meta()
+    ladder_meta = load_ladder_meta(args.bench)
+    if not args.ladders:
+        args.ladders = ",".join(ladder_meta)
     methods = [m for m in args.methods.split(",") if m]
     anchor_configs = [c for c in args.anchors.split(",") if c]
 
     started = time.perf_counter()
     for ladder in args.ladders.split(","):
-        items = [i for i in load_items(ladder) if args.split in ("all", i["split"])]
+        items = [i for i in load_items(ladder, args.bench) if args.split in ("all", i["split"])]
         if args.limit:
             items = items[: args.limit]
         # Single-image methods first, then both anchor methods per anchor config back to back, so consecutive calls
@@ -143,7 +155,7 @@ def main(argv: list[str] | None = None) -> int:
                 anchors = anchors_for(ladder, config) if config and not position else []
                 row = collector.run(method, ladder_meta[ladder], item, anchors, position)
                 writer.write({
-                    "ladder": ladder, "item_id": item["item_id"], "split": item["split"], "level": item["level"],
+                    "bench": args.bench, "ladder": ladder, "item_id": item["item_id"], "split": item["split"], "level": item["level"],
                     "method": method, "anchors": config, "method_key": key, "prompt_version": sm.LAB_PROMPT_VERSION,
                     "prefix_cache": args.prefix_cache, **row,
                 })

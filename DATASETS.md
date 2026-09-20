@@ -14,6 +14,7 @@ nothing is trained, and no dataset content is redistributed by this repo (manife
 | `caltech101` | Caltech-101 | https://data.caltech.edu/records/mzrjq-6wc02 (doi:10.22002/D1.20086) | CC BY 4.0 (CaltechDATA record, rights `cc-by-4.0`) | 2026-09-19 | `caltech-101.zip`, md5 `3138e1922a9193bfa496528edbbc45d0` | yes |
 | `blur_ladder` | Synthetic Gaussian blur on Caltech-101 images that `caltech101` does not use | derived locally | CC BY 4.0 (derived from Caltech-101) | 2026-09-19 | blur radii frozen in `glance/evals/suites/blur_ladder.py` | yes |
 | `doctype16` | RVL-CDIP subset (optional suite) | https://huggingface.co/datasets/aharley/rvl_cdip | **Unclear**: the Hub cards (`aharley/rvl_cdip`, `chainyo/rvl-cdip`) list `other`; the source collection (IIT-CDIP) has no clear reuse terms | 2026-09-19 | not downloaded | **no, skipped** |
+| (score lab, evaluation only) | KADID-10k: 81 reference images x 25 distortions x 5 levels with DMOS | https://database.mmsp-kn.de/kadid-10k-database.html (`kadid10k.zip`, 3.07 GB) | **No formal license.** The page says "KADID-10k is freely available to the research community" and asks for citation (Lin, Hosu, Saupe, QoMEX 2019). Unclear under HANDOFF section 11. **Exception approved by the project owner on 2026-09-20: evaluation only**, never used to fit anything that ships, never redistributed; only item ids, levels, DMOS-derived metrics and model logits are committed | 2026-09-20 | zip downloaded 2026-09-20; sha256 recorded in `lab/NOTES.md` | yes, branch `score-lab` only |
 | `human_gold` | Your own hand-labeled images | local `gold/human_gold.jsonl` | Private. Never leaves the machine; `gold/` is gitignored, and the frontier baseline refuses it without `--allow-upload-gold` | n/a | n/a | empty in this run |
 
 Notes:
@@ -22,5 +23,7 @@ Notes:
   MIT-licensed question files plus COCO's own image host.
 - The Hub mirror `flwrlabs/caltech101` lists its license as `unknown`, so it was not used. The official CaltechDATA
   record states CC BY 4.0.
-- ImageNet and other research-only sets are excluded by the hand-off and are not used anywhere.
+- ImageNet and other research-only sets are excluded by the hand-off. The one exception, approved explicitly by the
+  project owner for evaluation only on the research branch, is KADID-10k (row above). It is not part of the v0 harness
+  or of anything meant for commercial reuse.
 - Public suites are likely in every model's training data. `human_gold` is the only uncontaminated check.
