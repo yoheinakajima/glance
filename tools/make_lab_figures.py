@@ -455,15 +455,122 @@ def fig_transfer(extras: dict[str, Any], out_dir: Path, split_label: str) -> dic
     }
 
 
+# --- Figure E: lab_latency_packing -----------------------------------------------------------------------
+
+
+LATENCY_LEFT_ROWS = [
+    # (PACKING.json key, short label, is_ens4d)
+    ("independent, no cache (v0 as shipped)", "v0 readout, no cache", False),
+    ("independent", "v0 readout", False),
+    ("digits", "digits (1 pass)", False),
+    ("zoom_digits", "zoom_digits (1 pass)", False),
+    ("ens4d, no cache, one readout at a time", "ens4d, no cache", True),
+    ("ens4d, cached, one readout at a time", "ens4d, one readout at a time", True),
+    ("ens4d packed, 1 question", "ens4d, packed", True),
+]
+LATENCY_RIGHT_LINES = [
+    # (label, [(n_questions, PACKING.json key), ...], is_ens4d)
+    ("ens4d packed", [(1, "ens4d packed, 1 question"), (5, "ens4d packed, 5 questions"),
+                       (25, "ens4d packed, 25 questions")], True),
+    ("digits + digitsrev packed, no crop", [(5, "digits+digitsrev packed (no zoom), 5 questions"),
+                                             (25, "digits+digitsrev packed (no zoom), 25 questions")], False),
+]
+V0_READOUT_KEY = "independent"
+
+
+def fig_lab_latency_packing(packing: dict[str, Any], out_dir: Path) -> dict[str, Any] | None:
+    needed = [k for k, _, _ in LATENCY_LEFT_ROWS] + [k for _, pts, _ in LATENCY_RIGHT_LINES for _, k in pts] + [V0_READOUT_KEY]
+    missing = sorted({k for k in needed if k not in packing})
+    if missing:
+        warn(f"skip fig_lab_latency_packing: --packing is missing key(s): {missing}")
+        return None
+
+    accent, base = SERIES["calibrated"], INK_MUTED
+    fig, (axl, axr) = plt.subplots(1, 2, figsize=(13.0, 5.2))
+
+    # Left: one rating of a fresh image -- p50 bar, p90 whisker, value label at the end.
+    n = len(LATENCY_LEFT_ROWS)
+    y_pos = np.arange(n)
+    max_p90 = max(packing[k]["p90_ms"] for k, _, _ in LATENCY_LEFT_ROWS)
+    axl.set_xlim(0, max_p90 * 1.30)
+    axl.set_ylim(n - 0.4, -0.6)  # first row at the top
+    for i, (key, label, is_ens4d) in enumerate(LATENCY_LEFT_ROWS):
+        e = packing[key]
+        p50, p90 = e["p50_ms"], e["p90_ms"]
+        y = y_pos[i]
+        color = accent if is_ens4d else base
+        axl.barh(y, p50, height=0.56, color=color, zorder=3)
+        if p90 > p50:
+            axl.plot([p50, p90], [y, y], color=INK_MUTED, linewidth=1.1, zorder=4, solid_capstyle="butt")
+            axl.plot([p90, p90], [y - 0.13, y + 0.13], color=INK_MUTED, linewidth=1.1, zorder=4)
+        axl.annotate(f"{p50:.0f} ms", (max(p50, p90), y), xytext=(6, 0), textcoords="offset points",
+                     fontsize=8.3, color=INK, va="center", ha="left", zorder=5)
+    axl.set_yticks(y_pos)
+    axl.set_yticklabels([label for _, label, _ in LATENCY_LEFT_ROWS], fontsize=9.3)
+    axl.tick_params(axis="y", length=0)
+    axl.set_xlabel("latency (ms)")
+    _titles(axl, "One rating of a fresh image", "p50 bar, p90 whisker; cold start, n=100 images")
+
+    # Right: cost per rating when several ratings share the image's prefill.
+    v0_p50 = packing[V0_READOUT_KEY]["p50_ms"]
+    all_xs = sorted({n for _, pts, _ in LATENCY_RIGHT_LINES for n, _ in pts})
+    axr.set_xscale("log")
+    axr.set_xlim(min(all_xs) * 0.75, max(all_xs) * 2.6)
+    all_ys = [packing[k]["p50_ms_per_question"] for _, pts, _ in LATENCY_RIGHT_LINES for _, k in pts] + [v0_p50]
+    axr.set_ylim(0, max(all_ys) * 1.12)
+    axr.axhline(v0_p50, color=INK_MUTED, linewidth=1, linestyle="--", zorder=1)
+    axr.annotate("v0 readout, one rating", (min(all_xs) * 0.8, v0_p50), xytext=(0, 5), textcoords="offset points",
+                 fontsize=8.3, color=INK_MUTED, va="bottom", ha="left", zorder=2)
+    for label, pts, is_ens4d in LATENCY_RIGHT_LINES:
+        color = accent if is_ens4d else base
+        xs = [n for n, _ in pts]
+        ys = [packing[k]["p50_ms_per_question"] for _, k in pts]
+        axr.plot(xs, ys, color=color, linewidth=2, marker="o", markersize=6, markeredgecolor=SURFACE,
+                 markeredgewidth=1, solid_capstyle="round", zorder=3)
+        lx, ly = xs[-1], ys[-1]
+        va = "bottom" if is_ens4d else "top"
+        dy = 8 if is_ens4d else -8
+        axr.annotate(label, (lx, ly), xytext=(-4, dy), textcoords="offset points", fontsize=8.7, color=INK,
+                     va=va, ha="right", fontweight="bold", zorder=4)
+    axr.xaxis.set_major_locator(FixedLocator(all_xs))
+    axr.xaxis.set_minor_locator(FixedLocator([]))
+    axr.xaxis.set_major_formatter(FuncFormatter(lambda x, _: str(int(round(x)))))
+    axr.set_xlabel("rating questions sharing the image")
+    axr.set_ylabel("p50 latency per rating (ms)")
+    _titles(axr, "Cost per rating when several ratings share the image", "p50 ms per question; cold start")
+
+    fig.tight_layout()
+
+    files = _save(fig, out_dir, "lab_latency_packing")
+    return {
+        "stem": "lab_latency_packing", **files,
+        "description": "Left: p50 latency (bar) with a p90 whisker for one `score` rating of a fresh image, by "
+                        "readout method; gray bars are the v0-family readouts (as shipped, cached, and the "
+                        "`digits`/`zoom_digits` single-pass alternatives), orange bars are `ens4d`. Right: p50 "
+                        "latency per rating question when several rating questions about the same image share its "
+                        "prefill (at most two prefills per request), for `ens4d` packed and for `digits`+`digitsrev` "
+                        "packed with no magnified crop; the dashed line is the v0 readout's single-rating p50 "
+                        "(441 ms). All numbers are cold start (prefix cache cleared before every measurement), "
+                        "timed end to end from the image file, on an idle GPU: 100 images per configuration (25 "
+                        "images for the 25-question configurations), Apple M5, Qwen3-VL-4B, float16. Source: "
+                        "`lab/PACKING.json`; generator: `glance/lab/pack_bench.py`. An earlier latency table "
+                        "(`lab/LATENCY.json`) measured marginal cost on an already-cached image prefix rather than "
+                        "end-to-end cold-start cost, and was corrected in `lab/NOTES.md` entry 16.",
+        "inputs": ["packing"],
+    }
+
+
 # --- README ---------------------------------------------------------------------------------------------
 
 
-def build_readme(records: list[dict[str, Any]], skipped: list[str], cmd: str, report_path: Path, extras_path: Path) -> str:
+def build_readme(records: list[dict[str, Any]], skipped: list[str], cmd: str, report_path: Path, extras_path: Path,
+                  packing_path: Path | None = None) -> str:
+    sources = [f"`{report_path}`", f"`{extras_path}`"] + ([f"`{packing_path}`"] if packing_path is not None else [])
     lines = [
         "# Lab figures",
         "",
-        f"Generated by `tools/make_lab_figures.py` from `{report_path}` and `{extras_path}`.",
-        "Nothing is re-run: every value plotted here is read straight out of those two JSON files.",
+        f"Generated by `tools/make_lab_figures.py` from {', '.join(sources)}.",
+        "Nothing is re-run: every value plotted here is read straight out of those JSON files.",
         "",
         "Regenerate everything with:",
         "",
@@ -500,6 +607,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report", required=True, type=Path, help="Analysis JSON, e.g. lab/runs/pilot2_dev.json")
     parser.add_argument("--extras", required=True, type=Path, help="Follow-up JSON, e.g. lab/runs/pilot_extras_dev.json")
+    parser.add_argument("--packing", default=Path("lab/PACKING.json"), type=Path,
+                         help="Latency/packing JSON written by glance/lab/pack_bench.py, e.g. lab/PACKING.json")
     parser.add_argument("--out", required=True, type=Path, help="Output directory for figures and README.md")
     parser.add_argument("--split-label", default="test split", help="Text used in subtitles, e.g. 'dev split'")
     args = parser.parse_args()
@@ -516,6 +625,14 @@ def main() -> None:
 
     report = load(args.report, "--report")
     extras = load(args.extras, "--extras")
+    try:
+        packing = json.loads(args.packing.read_text())
+    except FileNotFoundError:
+        warn(f"skip fig_lab_latency_packing: --packing file not found: {args.packing}")
+        packing = {}
+    except json.JSONDecodeError as exc:
+        warn(f"skip fig_lab_latency_packing: --packing file is not valid JSON: {args.packing} ({exc})")
+        packing = {}
 
     set_rcparams()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -529,6 +646,7 @@ def main() -> None:
         fig_accuracy_vs_x(report, args.out, args.split_label, x_field="latency_ms_p50", x_label="p50 latency (ms)",
                            stem="fig_accuracy_vs_latency", title="Accuracy vs latency", xscale="log"),
         fig_transfer(extras, args.out, args.split_label),
+        fig_lab_latency_packing(packing, args.out),
     ):
         if result is not None:
             records.append(result)
@@ -536,6 +654,7 @@ def main() -> None:
     input_names = {
         "report": args.report.name,
         "extras": args.extras.name,
+        "packing": args.packing.name,
         "report (for the held-out n in the subtitle)": f"{args.report.name} (for the held-out n in the subtitle)",
     }
     for r in records:
@@ -548,10 +667,12 @@ def main() -> None:
         skipped.append("fig_transfer: --extras has no 'transfer' section")
     if not present_scales(report):
         skipped.append("fig_methods_by_scale, fig_accuracy_vs_cost, fig_accuracy_vs_latency: --report has no usable entries")
+    if not packing:
+        skipped.append("fig_lab_latency_packing: --packing has no usable entries")
 
     cmd = (f"uv run python tools/make_lab_figures.py --report {args.report} --extras {args.extras} "
-           f"--out {args.out} --split-label \"{args.split_label}\"")
-    (args.out / "README.md").write_text(build_readme(records, skipped, cmd, args.report, args.extras))
+           f"--packing {args.packing} --out {args.out} --split-label \"{args.split_label}\"")
+    (args.out / "README.md").write_text(build_readme(records, skipped, cmd, args.report, args.extras, args.packing))
 
     print(f"make_lab_figures: wrote {len(records)} figure(s) to {args.out}", file=sys.stderr)
 
