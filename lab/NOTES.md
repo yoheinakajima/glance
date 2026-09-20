@@ -1002,3 +1002,26 @@ rubric-specific.
 generic wording on 81 diverse references. (2) The defensible claims on a hard benchmark are rank agreement with people
 and label efficiency, not exact grades. (3) The registered follow-up is the reference-anchored question (pristine image
 next to the distorted one); it gets its own registration commit before any code.
+
+## 2026-09-20 13:09 Entry 29: E9, reference-anchored ratings on KADID-10k, registered before any code
+
+**Hypothesis behind it.** On KADID the model ranks like people (Spearman 0.763 against a 0.840 ceiling) but places
+levels badly (0.527 exact). A single distorted image does not say what the scene looked like before; "moderate" has no
+anchor. KADID ships the pristine reference of every item, and real QA gates usually have one too (the original next to
+the compressed or resized output). This is more state, not more model.
+
+**Design, fixed now.** Request images: `ref` (the pristine reference) first, then `img0` (the distorted image).
+Question: "Compared with the undistorted reference `ref`, how strong is the <same one-line description> in `img0`?",
+same five level words, same digit readouts. Primary method `fast2_ref` = `ref_digits` + `ref_digitsrev` (two passes on
+[ref, img0]), matrix calibration per distortion. Items: the first 200 manifest items of every distortion (references
+I01 to I40: 85 calibration / 115 test items per distortion, the fast-pass subset), all 25 distortions, the two
+non-severity ones reported apart as before. Paired comparison on exactly those items with the no-reference `fast2` and
+`ens4d` logits already collected. This changes the task from no-reference to full-reference grading; its numbers must
+never sit next to blind-IQA results, and both framings are reported.
+- H23: `fast2_ref` beats no-reference `fast2` on the same items by at least 10 points of exact accuracy and reaches
+  within-one >= 0.93 and mean per-type Spearman with DMOS >= 0.80.
+- H24: it also beats no-reference `ens4d` (four passes) on the same items, i.e. a reference is worth more than the
+  magnified-crop passes.
+- Secondary, only if GPU time allows, registered now so it is not a fork in the road later: `ens4d_ref` adds two passes
+  with magnified centre crops of BOTH images ([ref, img0, zoom_ref, zoom]); expectation +2 to +4 points over `fast2_ref`.
+If H23 fails, the honest conclusion is that the limit on KADID is perception or wording, not the missing anchor.
