@@ -141,3 +141,20 @@ what `zoom` is. Still zero-training and still inside the existing request format
 gets 384 image tokens). Hypothesis H5: `zoom_*` raises accuracy most on noise and jpeg, a little on blur and
 resolution (the 0 -> 1 boundary), and not at all on exposure. Example: `lab/sheets/_zoom_example.jpg`.
 Pilot 2 runs the three `zoom_*` methods on the same 160 calibration items per scale as pilot 1.
+
+## 2026-09-20 00:50 Entry 6: yes/no calibration is measurement-limited at n = 250 (offline)
+
+Question: the only failing v0 gate is ECE <= 0.05 on the yes/no suites (pope 0.066, gqa_yesno 0.093 with the pooled
+Platt fit). Would a better binary calibrator pass? `tools/analyze_noul_calibration.py` refits five calibrators on the
+saved logits (calibration split) and judges them on the test split (`results/v0/analysis/noul_calibration.md`):
+
+| Suite | Platt pooled (v0) | Platt per suite | asymmetric Platt | isotonic | sampling floor |
+| --- | --- | --- | --- | --- | --- |
+| pope | 0.066 | 0.057 | 0.064 | 0.057 | 0.034-0.041 |
+| gqa_yesno | 0.093 | 0.109 | 0.096 | 0.133 | 0.062-0.074 |
+
+Reading: differences between calibrators (0.01-0.04) are the same size as the sampling floor, so at 250 test items
+the gate cannot tell them apart; on gqa_yesno the floor alone is above the gate. Decision: re-run both yes/no suites
+at the full manifest size (n = 1,000, 500 test items) on the reference path, then repeat this comparison. Pilot 1 was
+stopped at 00:39 to free the GPU (its remaining work was mostly the 1.1 s `anchors_cumulative` variants); pilot 2
+resumes the same file with `independent, cumulative, digits, zoom_*` and `anchors_digits@0:013`.
