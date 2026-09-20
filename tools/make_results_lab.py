@@ -117,5 +117,20 @@ for k in ("ens4d", "ens7"):
 
 out += ["", "## 7. Clean latency of each readout (cached path, one question, one image)", "", "| Readout | p50 ms |", "| --- | --- |"]
 out += [f"| `{k}` | {v:.0f} |" for k, v in latency["p50_ms"].items()]
+boot = J("lab/BOOTSTRAP.json")
+fmt = lambda e: f"{e['point']:.3f} [{e['ci95'][0]:.3f}, {e['ci95'][1]:.3f}]"  # noqa: E731
+out += ["", "## 8. Uncertainty: bootstrap 95% intervals", "",
+        f"{boot['draws']:,} resamples of the {boot['n_test_per_scale']} test items per scale (`tools/bootstrap_lab.py`, `lab/BOOTSTRAP.json`).", "",
+        "| Method | mean accuracy | " + " | ".join(SCALES) + " |", "| --- | --- | " + " | ".join("---" for _ in SCALES) + " |"]
+for name, m in boot["methods"].items():
+    out.append(f"| `{name}` | {fmt(m['mean'])} | " + " | ".join(fmt(m[s]) for s in SCALES) + " |")
+out += ["", "Paired differences in mean accuracy (same resampled items):", "", "| Difference | points | 95% interval |", "| --- | --- | --- |"]
+for k, d in boot["paired_differences"].items():
+    out.append(f"| {k} | {100 * d['point']:+.1f} | [{100 * d['ci95'][0]:+.1f}, {100 * d['ci95'][1]:+.1f}] |")
+below = {k: [sc for sc in SCALES if boot["methods"][k][sc]["point"] >= 0.85 and boot["methods"][k][sc]["ci95"][0] < 0.85] for k in ("ens4d", "ens7")}
+out += ["", "Reading: every listed difference excludes zero. The pre-registered bar is met at the point estimates. Among the "
+        "scales that meet it, the 95% interval reaches below 0.85 for: "
+        + "; ".join(f"`{k}`: {', '.join(v) if v else 'none'}" for k, v in below.items())
+        + ". JPEG artifacts is below the bar for every method."]
 (ROOT / "docs/paper/RESULTS_LAB.md").write_text("\n".join(out) + "\n")
 print("wrote docs/paper/RESULTS_LAB.md,", len(out), "lines")

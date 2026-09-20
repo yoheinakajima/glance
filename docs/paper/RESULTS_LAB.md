@@ -142,3 +142,30 @@ The experiments used the prefix-cached path. The first 100 test items of each sc
 | `zoom_digits` | 153 |
 | `digitsrev` | 151 |
 | `zoom_digitsrev` | 154 |
+
+## 8. Uncertainty: bootstrap 95% intervals
+
+2,000 resamples of the 500 test items per scale (`tools/bootstrap_lab.py`, `lab/BOOTSTRAP.json`).
+
+| Method | mean accuracy | blur | exposure | jpeg | noise | resolution |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ens4d` | 0.867 [0.854, 0.881] | 0.888 [0.858, 0.914] | 0.924 [0.898, 0.946] | 0.772 [0.736, 0.808] | 0.864 [0.834, 0.892] | 0.888 [0.860, 0.916] |
+| `ens7` | 0.876 [0.864, 0.889] | 0.902 [0.874, 0.928] | 0.932 [0.908, 0.952] | 0.776 [0.740, 0.810] | 0.870 [0.840, 0.898] | 0.902 [0.876, 0.928] |
+| `ens2` | 0.858 [0.845, 0.871] | 0.886 [0.856, 0.914] | 0.920 [0.894, 0.942] | 0.746 [0.708, 0.782] | 0.864 [0.834, 0.894] | 0.874 [0.844, 0.902] |
+| `zoom_digits` | 0.838 [0.822, 0.852] | 0.868 [0.836, 0.898] | 0.918 [0.894, 0.940] | 0.740 [0.702, 0.776] | 0.846 [0.814, 0.876] | 0.816 [0.780, 0.852] |
+| `digits` | 0.814 [0.800, 0.829] | 0.840 [0.806, 0.872] | 0.892 [0.866, 0.920] | 0.664 [0.624, 0.706] | 0.836 [0.804, 0.868] | 0.840 [0.806, 0.870] |
+| `independent` | 0.810 [0.796, 0.825] | 0.874 [0.842, 0.902] | 0.898 [0.870, 0.924] | 0.674 [0.632, 0.714] | 0.814 [0.778, 0.846] | 0.792 [0.754, 0.826] |
+| `v0 as shipped` | 0.500 [0.481, 0.519] | 0.586 [0.542, 0.628] | 0.530 [0.488, 0.572] | 0.336 [0.292, 0.378] | 0.560 [0.516, 0.604] | 0.486 [0.444, 0.534] |
+
+Paired differences in mean accuracy (same resampled items):
+
+| Difference | points | 95% interval |
+| --- | --- | --- |
+| ens4d minus v0 as shipped | +36.8 | [+34.7, +38.9] |
+| ens4d minus independent | +5.7 | [+4.4, +7.1] |
+| ens4d minus zoom_digits | +3.0 | [+1.8, +4.1] |
+| ens7 minus ens4d | +0.9 | [+0.4, +1.5] |
+| zoom_digits minus independent | +2.7 | [+1.1, +4.3] |
+| zoom_digits minus digits | +2.3 | [+0.7, +3.9] |
+
+Reading: every listed difference excludes zero. The pre-registered bar is met at the point estimates. Among the scales that meet it, the 95% interval reaches below 0.85 for: `ens4d`: noise; `ens7`: noise. JPEG artifacts is below the bar for every method.

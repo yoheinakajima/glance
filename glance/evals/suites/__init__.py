@@ -4,12 +4,15 @@ from __future__ import annotations
 
 from . import blur_ladder, caltech101, doctype16, gqa_yesno, human_gold, pets37, pets37_openset, pope, pope_injection
 from .base import EvalItem, SuiteInfo, SuiteSkipped, item_to_request
+from .ladders import MODULES as _LADDER_MODULES
 
 SUITES = {
     module.INFO.name: module
     for module in (pope, gqa_yesno, pets37, caltech101, blur_ladder, doctype16, human_gold, pets37_openset, pope_injection)
 }
 DEFAULT_SUITES = ["pope", "gqa_yesno", "pets37", "caltech101", "blur_ladder", "doctype16", "human_gold"]
+SUITES.update(_LADDER_MODULES)
 STRETCH_SUITES = ["pets37_openset", "pope_injection"]  # opt-in: glance eval --suite <name>
+LADDER_SUITES = list(_LADDER_MODULES)  # opt-in: the score lab's five rating scales
 
 __all__ = ["SUITES", "DEFAULT_SUITES", "EvalItem", "SuiteInfo", "SuiteSkipped", "item_to_request"]
