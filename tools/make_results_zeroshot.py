@@ -62,7 +62,9 @@ for path, title, yes_key, choice_key in (("results/lab/fresh_commons.json", "Wik
     rows += [(name, yes.get(key), choice.get(key)) for key, name in FRONTIER.items() if key in yes or key in choice]
     for name, y, c in rows:
         out.append(f"| {name} | {acc(y)} | {y['n'] if y else '-'} | {acc(c)} | {c['n'] if c else '-'} |")
-    out += ["", "The frontier models were scored on the test half only (their n is smaller); intervals overlap everywhere.", ""]
+    has_frontier = any(key in yes or key in choice for key in FRONTIER)
+    out += ["", "The frontier models were scored on the test half only (their n is smaller)." if has_frontier
+            else "Frontier models: pending (the owner runs the paid calls).", ""]
 
 # 3. ratings
 h2h, lf = load("results/lab/frontier_head_to_head.json"), load("results/lab/label_free_test.json")

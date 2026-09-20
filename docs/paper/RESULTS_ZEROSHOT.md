@@ -25,7 +25,7 @@ Mean gap over these four suites: 3.2 points [1.0, 5.4] in the frontier model's f
 | GPT-5.6 | 0.893 [0.840, 0.947] | 131 | 0.892 [0.815, 0.954] | 65 |
 | Gemini 3.1 Pro | 0.947 [0.908, 0.977] | 131 | 0.923 [0.846, 0.985] | 65 |
 
-The frontier models were scored on the test half only (their n is smaller); intervals overlap everywhere.
+The frontier models were scored on the test half only (their n is smaller).
 
 **iNaturalist, 200 photos, labels from research-grade community identifications.**
 
@@ -34,7 +34,7 @@ The frontier models were scored on the test half only (their n is smaller); inte
 | Qwen3-VL-4B + Glance (open, local) | 0.945 [0.922, 0.968] | 400 | 0.940 [0.905, 0.970] | 200 |
 | SigLIP2 (open dual encoder) | - | - | 0.880 [0.835, 0.925] | 200 |
 
-The frontier models were scored on the test half only (their n is smaller); intervals overlap everywhere.
+Frontier models: pending (the owner runs the paid calls).
 
 ## 3. Ratings against a rubric in words, zero-shot (five synthetic 4-level scales, same 1,000 held-out images)
 
