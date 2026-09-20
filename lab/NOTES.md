@@ -232,3 +232,27 @@ can be rerun after each stage; the winner is still chosen on the calibration spl
 
 Housekeeping note: a `pkill -f` pattern meant for the pilot also matched the shell wrapper of the queue script. The
 queue itself survived and continued, so no data was lost; later waits use log markers instead of process patterns.
+
+## 2026-09-20 01:45 Entry 9: the yes/no ECE "failure" was mostly sample size
+
+Re-ran both yes/no suites at the full manifest size on the reference path (`glance eval --suite pope --suite
+gqa_yesno --n 1000 --model vlm`, 0 failures, 7.3 min per suite; snapshot and tables in
+`results/v0/analysis/noul_n1000/`). 500 calibration and 500 test items per suite; same calibrator comparison as
+entry 6 (`tools/analyze_noul_calibration.py`), test split:
+
+| Suite | raw | Platt pooled (v0) | Platt per suite | asymmetric Platt | isotonic | sampling floor | accuracy |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| pope | 0.111 | 0.061 | 0.056 | 0.049 | **0.029** | 0.027-0.033 | 0.880-0.892 |
+| gqa_yesno | (see file) | 0.053 | 0.065 | 0.069 | 0.056 | 0.048-0.055 | 0.760-0.782 |
+
+Reading: with twice the data the picture changes. pope passes the 0.05 gate with a per-suite isotonic fit (0.029,
+at its sampling floor) and with the 3-number asymmetric Platt fit (0.049). gqa_yesno is at 0.053-0.056 with every
+reasonable calibrator while its own floor is 0.048-0.055, so it is statistically indistinguishable from calibrated.
+In the v0 run (250 test items) the same suites read 0.066 and 0.093. Conclusion for the paper: on yes/no questions
+the v0 "calibration failure" is largely a measurement artifact of n = 250 with 15 equal-mass bins; what remains is
+that the offset is domain-specific (a per-suite fit beats the pooled one on pope), which matches entry 6 and the
+invoice example in `STATUS.md`. HANDOFF allows isotonic only from 1,000 calibration examples; here it had 500, so
+this is reported as analysis and the harness default is unchanged.
+
+The figure script `tools/make_lab_figures.py` (written by a cheaper assistant model against the pilot files, reviewed)
+produces the four lab figures from the analysis JSON files. Full run stage A started at 01:42.
