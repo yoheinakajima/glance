@@ -1,0 +1,181 @@
+{
+  "draws": 10000,
+  "suites": {
+    "pope": {
+      "n": 250,
+      "siglip:statement": {
+        "accuracy": 0.588,
+        "ci95": [
+          0.528,
+          0.648
+        ]
+      },
+      "vlm:statement": {
+        "accuracy": 0.88,
+        "ci95": [
+          0.84,
+          0.92
+        ]
+      },
+      "frontier": {
+        "accuracy": 0.92,
+        "ci95": [
+          0.884,
+          0.952
+        ]
+      },
+      "frontier_minus_local": {
+        "points": 4.0,
+        "ci95": [
+          0.4,
+          7.6
+        ]
+      }
+    },
+    "gqa_yesno": {
+      "n": 250,
+      "vlm:statement": {
+        "accuracy": 0.732,
+        "ci95": [
+          0.676,
+          0.784
+        ]
+      },
+      "frontier": {
+        "accuracy": 0.732,
+        "ci95": [
+          0.676,
+          0.784
+        ]
+      },
+      "frontier_minus_local": {
+        "points": 0.0,
+        "ci95": [
+          -6.0,
+          6.0
+        ]
+      }
+    },
+    "pets37": {
+      "n": 250,
+      "siglip:independent": {
+        "accuracy": 0.956,
+        "ci95": [
+          0.928,
+          0.98
+        ]
+      },
+      "vlm:independent": {
+        "accuracy": 0.892,
+        "ci95": [
+          0.852,
+          0.928
+        ]
+      },
+      "vlm:letter": {
+        "accuracy": 0.904,
+        "ci95": [
+          0.864,
+          0.94
+        ]
+      },
+      "frontier": {
+        "accuracy": 0.932,
+        "ci95": [
+          0.9,
+          0.96
+        ]
+      },
+      "frontier_minus_local": {
+        "points": 4.0,
+        "ci95": [
+          0.0,
+          8.0
+        ]
+      }
+    },
+    "caltech101": {
+      "n": 221,
+      "siglip:independent": {
+        "accuracy": 0.9321266968325792,
+        "ci95": [
+          0.8959276018099548,
+          0.9638009049773756
+        ]
+      },
+      "vlm:independent": {
+        "accuracy": 0.918552036199095,
+        "ci95": [
+          0.8823529411764706,
+          0.9547511312217195
+        ]
+      },
+      "vlm:letter": {
+        "accuracy": 0.9773755656108597,
+        "ci95": [
+          0.9547511312217195,
+          0.995475113122172
+        ]
+      },
+      "frontier": {
+        "accuracy": 0.9683257918552036,
+        "ci95": [
+          0.9411764705882353,
+          0.9909502262443439
+        ]
+      },
+      "frontier_minus_local": {
+        "points": 4.97737556561086,
+        "ci95": [
+          1.809954751131222,
+          8.597285067873303
+        ]
+      }
+    },
+    "blur_ladder": {
+      "n": 250,
+      "siglip:statement": {
+        "accuracy": 0.344,
+        "ci95": [
+          0.284,
+          0.404
+        ]
+      },
+      "vlm:statement": {
+        "accuracy": 0.496,
+        "ci95": [
+          0.432,
+          0.556
+        ]
+      },
+      "frontier": {
+        "accuracy": 0.536,
+        "ci95": [
+          0.472,
+          0.596
+        ]
+      },
+      "frontier_minus_local": {
+        "points": 4.0,
+        "ci95": [
+          -4.3999999999999995,
+          12.0
+        ]
+      }
+    }
+  },
+  "mean gap, all five suites": {
+    "points": 3.395475113122172,
+    "ci95": [
+      1.0018280542986429,
+      5.757466063348415
+    ]
+  },
+  "mean gap, yes/no and choice suites only (no blur_ladder)": {
+    "points": 3.244343891402715,
+    "ci95": [
+      1.0443438914027148,
+      5.396832579185521
+    ]
+  }
+}

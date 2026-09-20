@@ -10,6 +10,7 @@ scope notes and any `NOT RECORDED` / `PENDING` markers.
 | File | What it covers |
 | --- | --- |
 | `docs/README.md` | This index, plus the evidence table below. |
+| `docs/CLAIMS.md` | The claims ledger: every claim we might make, its status (supported / with caveats / not supported / pending), the evidence file, intervals where they exist, the caveats that must travel with it, a do-not-say list, and the lessons we consider safe to share. Read this before quoting any number. |
 | `docs/BRIEFING.md` | One self-contained page for outside reviewers (human or AI): what Glance is, the method, the main result, the errata, what is and is not claimed, the partial KADID picture, and the questions we want criticized. Paste it anywhere; it does not need the repository. |
 | `docs/TUTORIAL_FIT.md` | Walk-through of `glance fit` on a license-clean rubric, with the outputs of a real run (40 labels, 84 s) read honestly, then `glance score`, the Python class, and a mixed multi-question request. |
 | `docs/paper/METHODS.md` | Full methods description: question types, statement primitive and logit readout, prompt templates (verbatim), answer assembly formulas, `independent` vs `letter`, the dual-encoder backend, canonical statement ordering, image token budget, prefix cache design, post-hoc calibration, evaluation protocol, metrics formulas, frontier baseline protocol, hardware/software versions, licensing constraints. Detailed enough to re-implement. |
