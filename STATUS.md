@@ -516,3 +516,29 @@ uv run python tools/check_harness_rating.py --n 40
 **In progress (GPU queue, unattended):** KADID-10k `ens4d` readouts on all 81 references, then `distort25`, then the
 `independent` baseline on both. Results and the hypothesis verdicts (H7 to H9) go to `lab/NOTES.md` and
 `docs/paper/RESULTS_GENERALIZATION.md` when the data is complete.
+
+## Update 2026-09-20 (afternoon): comparisons, clean holdout, speed and cost, and a hand-over document
+
+Everything since the midday update is in `lab/NOTES.md` entries 19 to 32 and summarized, with caveats, in
+`docs/CLAIMS.md`. **`docs/STATE.md` is the hand-over**: what is final, what is running right now, what each finished job
+needs next, what is registered but not started.
+
+**Decisions**
+- D37. Every experiment is registered in its own commit before any code or data, with the real clock time; entries whose
+  registration and result share a commit (19, 21) are marked as "stated rule, then result".
+- D38. Comparisons run on identical items: SigLIP2 (0.330 -> 0.588 with the same map), classical features (0.979 with
+  500 labels, 0.752 with 32: they beat the VLM when labels are plentiful), Claude Opus 5 zero-shot (0.550 against 0.570
+  / 0.702 / 0.857 for the local model with 0 labels / unlabeled images / 32 labels), other systems' readouts and a
+  second model family (queued). Trained image-quality VLMs on LLaMA-2-derived bases are cited, not run.
+- D39. Label-free mode for ratings: `glance fit --unlabeled` (z-scored batch calibration), 0.558 -> 0.697. A universal
+  map across rubrics was tested and does not work.
+- D40. `fast2` (two passes, no magnified crop) ships as the cheap rating mode; adaptive `fast2` -> `ens4d` is measured
+  (0.863 at 2.57 passes) but not yet in the harness.
+- D41. The owner does not label by hand. The uncontaminated check uses photos taken after the models' release with
+  labels from Wikimedia Commons structured data: yes/no 0.931, pick-one 0.885.
+- D42. Speed and cost are tracked on the same footing: cold-start latencies (`lab/PACKING.json`), write-versus-read on
+  the same model (`lab/GENBENCH.json`), a cost model with stated assumptions, and, from now on, real output tokens and
+  list-price cost for every frontier call. E11 (the same model writing structured output, accuracy included) is
+  registered and not yet run.
+- D43. KADID-10k final: registered targets missed (0.527 exact); the follow-up with the pristine reference in the
+  request (E9) is registered and queued.
