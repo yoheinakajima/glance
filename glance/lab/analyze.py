@@ -39,6 +39,7 @@ def metrics(p: np.ndarray, y: np.ndarray) -> dict[str, float]:
         "mae": float(np.mean(np.abs(expected - y))),
         "spearman": float(spearmanr(expected, y).statistic),
         "nll": float(-np.mean(np.log(np.clip(p[np.arange(len(y)), y], 1e-12, None)))),
+        "brier": float(np.mean(((p - np.eye(p.shape[1])[y]) ** 2).sum(axis=1))),  # multi-class Brier score, 0 (perfect) to 2
         "ece": ece_equal_mass(conf, pred == y, 15),
         "ece_floor": ece_noise_floor(conf, 15),
     }
