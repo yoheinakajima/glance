@@ -1281,3 +1281,20 @@ so that examples stop being necessary ("nobody wants to prepare labeled examples
 - H34: within-one-level >= 0.97 at 4B and 8B; rank agreement (Spearman with the true level) rises with size.
 - H35: the gain from 32 labels (over zero-shot) shrinks with size but stays >= 15 points at 8B.
 - H36: on fresh-photo yes/no and pick-one, 8B >= 4B >= 2B with overlapping intervals between 4B and 8B.
+
+## 2026-09-20 16:29 Entry 39: E14, a content-free prior for zero-shot ratings (no labels, no images of the task), registered before any code
+
+The only thing so far that lifts ratings without labels needs a pool of unlabeled images of the rubric (entry 26). A
+version that needs NOTHING: contextual calibration (Zhao et al. 2021, for text prompts): read the level logits for
+content-free inputs and subtract them as the readout's prior. Fixed now:
+- Null images, 448 x 448: flat mid-grey, flat black, flat white, and three seeded Gaussian-noise images (mean 128,
+  sd 50). For each rubric and each `ens4d` member the prior is the mean logit vector over the six null images.
+- Corrected answer: subtract the member's prior from the member's logits, average the members, softmax. No scaling, no
+  fitted number. Compared on the lab TEST split with the raw zero-shot answer (0.558) and with self-calibration from 16
+  unlabeled images (0.686). Variants reported, none selected after the fact: all six nulls (the registered one), grey
+  only, noise only.
+- H37: the content-free prior improves mean exact accuracy over raw by at least 3 points (>= 0.588) and stays below
+  self-calibration from 16 unlabeled images. Risk I can see in advance: for quality rubrics a flat image is NOT
+  content-free (it may read as "very blurry" or "no noise at all"), in which case the correction hurts on some scales;
+  a loss on any scale is reported per scale.
+- If it works it ships as the default zero-shot path for `score` (the prior is one tiny batch per rubric, cached).
