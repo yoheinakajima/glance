@@ -33,6 +33,21 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**Update 16:32. READ FIRST: the owner re-framed the project (STATUS D44, D45; `lab/NOTES.md` entry 38).** Headline =
+what the frozen OPEN model does ZERO-SHOT as a general image decision engine: `docs/paper/RESULTS_ZEROSHOT.md`
+(`uv run python tools/make_results_zeroshot.py` after every job below). Labels are a caveat. Lane A order now:
+`inat-eval` (running; then `uv run python tools/fresh_report.py --set inat --run <run id printed in $TMPDIR/glance/inat_eval.out>`
+and give the owner the one-paste `glance baseline --run <id> --model ...` commands for the three frontier models, as for the
+Commons set) -> `null-prior` (E14, entry 39; then `uv run python tools/null_prior.py`) -> `gen-accuracy` (E11) ->
+`semantic-zeroshot-test` (E4 test split, four `ens4d` members; zero-shot numbers need no fit) -> `kadid-ref` -> `letters-lab`
+-> distort25 / baselines. Lane B: `smol-lab` (running) -> `qsit-lab` -> `openjev-lab` (E13, adapters committed, never run on
+the GPU: check the first rows and memory) -> `semantic-ens4d` (full). E15 scaling (entry 38): weights for Qwen3-VL 2B and 8B
+are downloading into `.cache/hf` (cap raised to 80 GB by the owner); run with
+`uv run python -m glance.lab.collect --config configs/scaling_qwen3vl_2b.yaml --bench ladders --split test --out lab/runs/scaling_2b.jsonl --methods "digits,zoom_digits,digitsrev,zoom_digitsrev" --prefix-cache`
+(2B may share the GPU; 8B ONLY when both lanes are idle), plus `uv run glance --config configs/scaling_qwen3vl_8b.yaml eval --suite fresh_choice --suite fresh_yesno --suite inat_choice --suite inat_yesno --model vlm --prefix-cache`;
+the analysis tool (`results/lab/scaling.{json,md}`, H33 to H36) is NOT written yet. E1 is done (entry 40: hidden-state
+readout 0.965 from one pass; label-hungry; "if you have examples" section; harness integration not started).
+
 **Update 15:56 (newest first; the table below is still the order of lane A).** Lane A was stopped from the app and
 resumed at the owner's word (15:27); `lab-hidden` continues (17.5k of 20k rows at 15:55). Lane B
 (`$TMPDIR/glance/gpuq_b.sh` + `gpuq_b.txt`, log lines tagged `[gpuqB]`): `smol-lab` running, then `semantic-ens4d`
