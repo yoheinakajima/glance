@@ -199,3 +199,36 @@ Full-run design, locked before it starts: all 1,000 items per scale, cached path
 that test-time augmentation helps). The method that will be called "the winner", and its calibration, will be chosen
 by 5-fold cross-validated NLL on the calibration split of the full run; the test split is scored once for the final
 table. A 500-item test subsample of the winner is then re-scored on the reference (uncached) path.
+
+## 2026-09-20 01:30 Entry 8: pilot 3 (several magnified crops), a calibration fix, and the overnight GPU queue
+
+**Pilot 3, DEV split, blur / noise / jpeg only** (stopped after three scales to free the GPU;
+`lab/runs/pilot3_dev.md`). `zoom_digits` read at five crop positions (centre + four quadrant centres):
+
+| Combination | blur | jpeg | noise |
+| --- | --- | --- | --- |
+| centre crop only (1 pass) | 0.863 | 0.713 | 0.800 |
+| 3 crops, logits averaged | 0.850 | 0.738 | 0.800 |
+| 5 crops, logits averaged | 0.875 | 0.750 | 0.800 |
+| 5 crops, logits concatenated + matrix scaling | 0.875 | 0.800 | 0.800 |
+
+Reading: more crops only matter on jpeg (+9 points with five, concatenated), the scale with the subtlest artifacts.
+Every extra crop needs its own image prefix (about 0.55 s per crop), so this is the most expensive idea tried. It goes
+last in the queue as an optional stage.
+
+**Calibration fix.** Matrix scaling with an L2 penalty shrinks the logits, which left its probabilities too timid
+(DEV ECE around 0.2 although accuracy was best). `fit_matrix_scaling` now refits one scalar on the fitted logits
+without the penalty. No prediction changes; ensemble DEV ECE fell to 0.06-0.13 with floors of 0.03-0.10 at n = 80.
+
+**One more cheap readout, registered before seeing any of its data:** `digitsrev` / `zoom_digitsrev`, the digits
+question with the scale listed from highest to lowest (so every level gets the opposite list position and digit).
+Hypothesis H6: averaged or stacked with the forward version it cancels position and digit bias and adds a few points
+at one extra pass.
+
+**GPU queue for the night (cached path, all 1,000 items per scale, resumable file `lab/runs/main.jsonl`):**
+yes/no suites at n = 1,000 (reference path) -> stage A `independent, cumulative, digits, zoom_cumulative, zoom_digits`
+-> stage B `digitsrev, zoom_digitsrev` -> stage C four extra `zoom_digits` crops (jpeg and noise first). The analysis
+can be rerun after each stage; the winner is still chosen on the calibration split only.
+
+Housekeeping note: a `pkill -f` pattern meant for the pilot also matched the shell wrapper of the queue script. The
+queue itself survived and continued, so no data was lost; later waits use log markers instead of process patterns.
