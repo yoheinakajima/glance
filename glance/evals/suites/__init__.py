@@ -16,5 +16,6 @@ SUITES.update(_LADDER_MODULES)
 SUITES.update(_FRESH_MODULES)  # opt-in: fresh real photos, labels from Commons structured data
 STRETCH_SUITES = ["pets37_openset", "pope_injection"]  # opt-in: glance eval --suite <name>
 LADDER_SUITES = list(_LADDER_MODULES)  # opt-in: the score lab's five rating scales
+FRESH_SUITES = list(_FRESH_MODULES)  # opt-in: fresh real photos, labels from Commons structured data
 
 __all__ = ["SUITES", "DEFAULT_SUITES", "EvalItem", "SuiteInfo", "SuiteSkipped", "item_to_request"]

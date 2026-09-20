@@ -116,6 +116,8 @@ def run_item(engine: Engine, unit: Unit, item: EvalItem, run_id: str, cfg: Confi
         "image_token_budget": engine.backend(unit.backend).image_token_budget,
         "prompt_version": trace.response.prompt_version,
         "image_tokens": trace.response.usage.image_tokens, "forward_passes": trace.response.usage.forward_passes,
+        "text_tokens": trace.response.usage.text_tokens, "output_tokens": trace.response.usage.output_tokens,
+        "cost_usd": trace.response.usage.cost_usd,
         "latency_ms": latency_ms, "human_disagreement": item.meta.get("human_disagreement"),
     }
     if qs.pick is not None:

@@ -31,11 +31,16 @@ class BackendUsage:
     image_tokens: int = 0
     text_tokens: int = 0
     forward_passes: int = 0
+    output_tokens: int = 0  # frontier API only: tokens the provider billed as output (includes any hidden thinking)
+    cost_usd: float | None = None  # frontier API only: list-price cost of the call as computed by LiteLLM; None when unknown
 
     def add(self, other: "BackendUsage") -> None:
         self.image_tokens = max(self.image_tokens, other.image_tokens)  # same images, encoded once per request
         self.text_tokens += other.text_tokens
         self.forward_passes += other.forward_passes
+        self.output_tokens += other.output_tokens
+        if other.cost_usd is not None:
+            self.cost_usd = (self.cost_usd or 0.0) + other.cost_usd
 
 
 @dataclass

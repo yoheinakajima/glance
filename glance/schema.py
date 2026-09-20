@@ -136,6 +136,8 @@ class Usage(_Strict):
     image_tokens: int = 0
     text_tokens: int = 0
     forward_passes: int = 0
+    output_tokens: int = 0  # frontier baseline only
+    cost_usd: float | None = None  # frontier baseline only: list-price cost of the call
 
 
 class DecideResponse(_Strict):

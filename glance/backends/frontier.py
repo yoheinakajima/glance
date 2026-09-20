@@ -126,9 +126,16 @@ class FrontierBackend:
         except (json.JSONDecodeError, KeyError, TypeError) as exc:
             raise BackendError(f"frontier model did not return the requested JSON: {exc}") from exc
         usage = getattr(response, "usage", None)
+        try:  # token counts and price are accounting data, not model outputs: safe to keep (the pick itself is never stored)
+            import litellm
+
+            cost = float(litellm.completion_cost(completion_response=response))
+        except Exception:  # noqa: BLE001  (unknown model in LiteLLM's price table)
+            cost = None
         return PickResult(
             picks=picks,
-            usage=BackendUsage(image_tokens=0, text_tokens=int(getattr(usage, "prompt_tokens", 0) or 0), forward_passes=1),
+            usage=BackendUsage(image_tokens=0, text_tokens=int(getattr(usage, "prompt_tokens", 0) or 0), forward_passes=1,
+                               output_tokens=int(getattr(usage, "completion_tokens", 0) or 0), cost_usd=cost),
             timing_ms={"score": elapsed_ms},
             warnings=warnings,
         )

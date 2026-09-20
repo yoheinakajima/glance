@@ -170,7 +170,8 @@ def test_pipeline_response_shape_and_call_log(cfg, request_body, png_b64):
     assert payload["model"] == "vlm:fake/model@" + "0" * 40
     assert payload["prompt_version"] == "p1" and payload["calibration_version"] is None
     assert set(payload["timing_ms"]) == {"load", "prefix", "score", "calibrate", "total"}
-    assert payload["usage"] == {"image_tokens": 64, "text_tokens": 70, "forward_passes": 7}
+    # output_tokens and cost_usd are filled by the frontier baseline only (additive, see STATUS.md)
+    assert payload["usage"] == {"image_tokens": 64, "text_tokens": 70, "forward_passes": 7, "output_tokens": 0, "cost_usd": None}
     assert set(payload["answers"]["color"]) == {"type", "choice", "probabilities", "confidence", "margin", "raw"}
     # v0.3 added `method` and `calibration` to score answers (additive; see STATUS.md, "API extension")
     assert set(payload["answers"]["brightness"]) == {"type", "score", "legend", "probabilities", "confidence", "margin", "raw",

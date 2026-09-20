@@ -214,7 +214,8 @@ class Engine:
             answers=answers,
             usage=Usage(
                 image_tokens=scoring.usage.image_tokens, text_tokens=scoring.usage.text_tokens,
-                forward_passes=scoring.usage.forward_passes,
+                forward_passes=scoring.usage.forward_passes, output_tokens=scoring.usage.output_tokens,
+                cost_usd=scoring.usage.cost_usd,
             ),
             timing_ms=timer.result(),
             warnings=warnings,
