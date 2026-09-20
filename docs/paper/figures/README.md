@@ -32,13 +32,6 @@ Accuracy vs cost (forward passes). Diamonds are ensembles; every other method is
 - Input file(s): REPORT.json
 - Files: `fig_accuracy_vs_cost.png`, `fig_accuracy_vs_cost.pdf`
 
-### fig_accuracy_vs_latency
-
-Accuracy vs latency. Diamonds are ensembles; every other method is a circle.
-
-- Input file(s): REPORT.json
-- Files: `fig_accuracy_vs_latency.png`, `fig_accuracy_vs_latency.pdf`
-
 ### fig_transfer
 
 Heatmap of accuracy when a calibration fit on one scale (row) is evaluated on another scale (column); POOLED and NONE (raw) rows are included for reference.

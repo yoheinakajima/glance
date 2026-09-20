@@ -643,8 +643,9 @@ def main() -> None:
         fig_learning_curve(extras, report, args.out, args.split_label),
         fig_accuracy_vs_x(report, args.out, args.split_label, x_field="forward_passes", x_label="forward passes per question",
                            stem="fig_accuracy_vs_cost", title="Accuracy vs cost (forward passes)"),
-        fig_accuracy_vs_x(report, args.out, args.split_label, x_field="latency_ms_p50", x_label="p50 latency (ms)",
-                           stem="fig_accuracy_vs_latency", title="Accuracy vs latency", xscale="log"),
+        # fig_accuracy_vs_latency was WITHDRAWN on 2026-09-20: `latency_ms_p50` in the report is a marginal cost measured on
+        # an already-cached image prefix for most methods and a cold cost for two of them (lab/NOTES.md entry 16), so the
+        # x-axis was not comparable between points. Cold-start latency is in lab_latency_packing.
         fig_transfer(extras, args.out, args.split_label),
         fig_lab_latency_packing(packing, args.out),
     ):
@@ -666,7 +667,7 @@ def main() -> None:
     if not extras.get("transfer"):
         skipped.append("fig_transfer: --extras has no 'transfer' section")
     if not present_scales(report):
-        skipped.append("fig_methods_by_scale, fig_accuracy_vs_cost, fig_accuracy_vs_latency: --report has no usable entries")
+        skipped.append("fig_methods_by_scale, fig_accuracy_vs_cost: --report has no usable entries")
     if not packing:
         skipped.append("fig_lab_latency_packing: --packing has no usable entries")
 

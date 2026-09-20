@@ -513,7 +513,8 @@ of the same 100 test images, gives the same prediction on 100 of 100 (median abs
 
 **Corrected in:** `docs/paper/RESULTS_LAB.md` (column renamed to marginal cost, correction note, new section 9),
 `docs/paper/OUTLINE.md` (abstract B), `STATUS.md` (morning table), `docs/paper/RELATED_WORK.md`, `lab/REPORT.md` (note
-at the top). `lab/LATENCY.json` is kept as is, with its meaning stated.
+at the top). The figure `fig_accuracy_vs_latency` plotted the mixed numbers and is withdrawn; `lab_latency_packing`
+replaces it. `lab/LATENCY.json` is kept as is, with its meaning stated.
 
 ## 2026-09-20 09:20 Entry 17: the lab winner goes into the harness as "Glance elicitation" (`glance/rating.py`)
 
