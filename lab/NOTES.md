@@ -812,3 +812,30 @@ prove: entries 19 / 19b (calibration challengers) and entry 21 (`fast2`) were ea
 step, so the registration and the result share a commit. They were written first and the code then run unchanged, but
 a reader has only my word for that; treat them as "stated rule, then result" rather than as pre-registered in the
 strict sense. From here on a registration gets its own commit before anything is run.
+
+## 2026-09-20 11:30 Entry 24: other systems' readouts on OUR frozen model (E5), registered before implementation
+
+**Why.** The owner asked for a comparison with the open typed-decision (Jev-style) systems. Running those systems as
+shipped depends on licenses and hardware (survey in progress). The comparison that isolates our contribution needs
+neither: put THEIR readouts on the same frozen Qwen3-VL-4B, same images, same labels, same calibration recipe.
+- `letter`: the rubric's levels as options A..D in level order, the v0 template "Answer with the letter of the correct
+  option", logits over the letter tokens, one pass. This is the option-letter readout of mini-Jev,
+  open-alternative-jev and jev-single-decode.
+- `letter4`: the same averaged over four cyclic rotations of the option order (the v0 harness's own `letter` method;
+  the usual position-bias fix), four passes.
+- `poles`: a Q-Bench-style two-pole readout made generic: a two-option letter question whose options are the rubric's
+  own lowest and highest level texts; the readout is the scalar z_B - z_A. One pass. No per-scale word choice.
+- Already collected on the same items: `independent` (yes/no per level: the v0 / P(True) readout), `digits`, `fast2`,
+  `ens4d`. Generating the number as text equals the argmax of the uncalibrated digit logits, also already on disk.
+**Items.** The first 600 manifest items of each lab scale (300 calibration, 300 test), the set used for the SigLIP2
+table (entry 23), cached path.
+**Analysis, one recipe for every readout:** accuracy as shipped (argmax of the raw logits, where that is defined) and
+with `rating.fit_matrix(rescale="cv")` fit on the 300 calibration items; `poles` additionally with the 1-D ordinal map
+of entry 19 (a scalar has no argmax). Test items scored once.
+**Hypotheses.** H15: as shipped, `letter` is below 0.60 mean accuracy, like every other uncalibrated readout; with the
+matrix map it lands within 2 points of `digits` (0.819): letters versus digits is not the choice that matters. H16:
+rotation averaging (`letter4`) helps by more than 3 points before calibration and by less than 2 after it (the map
+absorbs position bias). H17: `poles` with an ordinal map reaches at least 0.70 (one scalar carries most of the
+information, as entry 19b suggested) and stays below `digits`. H18: `ens4d` remains the best row by at least 3 points.
+If H15 holds, the honest statement for the paper is that the per-rubric fitted map, not the choice of answer tokens, is
+the main ingredient, and that the ensemble and the magnified view are what our readout adds on top.
