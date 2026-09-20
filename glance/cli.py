@@ -28,6 +28,8 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
 def _config_overrides(args: argparse.Namespace) -> dict:
     overrides: dict = {}
+    if getattr(args, "prefix_cache", False):
+        overrides.setdefault("vlm", {})["prefix_cache"] = True
     if getattr(args, "no_prefix_cache", False):
         overrides.setdefault("vlm", {})["prefix_cache"] = False
     return overrides
@@ -77,7 +79,7 @@ def _cmd_eval(args: argparse.Namespace) -> int:
         choice_methods=_split(args.choice_method) or ["independent", "letter"], baseline_n=args.baseline_n,
         confirm_spend=args.confirm_spend, allow_upload_gold=args.allow_upload_gold,
         skip_permutation=args.skip_permutation, skip_latency=args.skip_latency, resume=args.resume,
-        calibrate=not args.no_calibrate,
+        calibrate=not args.no_calibrate, permutation_items=args.permutation_items,
     )
     run_dir = run_eval(cfg, run_args)
     print(run_dir)
@@ -132,6 +134,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--calibrated", action=argparse.BooleanOptionalAction, default=None, help="override options.calibrated")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path (every statement a full prompt)")
     p.add_argument("--confirm-spend", action="store_true", help="allow --model frontier: sends the image to a paid API")
+    p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_decide)
 
     p = sub.add_parser("eval", help="run eval suites and write runs/<run_id>/")
@@ -144,10 +147,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--confirm-spend", action="store_true", help="allow paid frontier baseline calls after the cost estimate")
     p.add_argument("--allow-upload-gold", action="store_true", help="allow human_gold images to be sent to the frontier model")
     p.add_argument("--skip-permutation", action="store_true", help="skip the permutation sensitivity pass")
+    p.add_argument("--permutation-items", type=int, help="test items per choice unit in the permutation pass (default: 100)")
     p.add_argument("--skip-latency", action="store_true", help="skip the 1 image + 5 questions latency benchmark")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
     p.add_argument("--no-calibrate", action="store_true", help="report raw probabilities only")
     p.add_argument("--resume", metavar="RUN_ID", help="continue an interrupted run, skipping rows already written")
+    p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_eval)
 
     p = sub.add_parser("calibrate", help="fit calibration params from a finished run's calibration split")
@@ -159,6 +164,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--port", type=int, help="port (default: server.port in the config)")
     p.add_argument("--preload", action="append", help="backends to load at startup: siglip, vlm (default: load on first use)")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
+    p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_serve)
 
     return parser

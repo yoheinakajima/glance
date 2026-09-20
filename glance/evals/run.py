@@ -42,6 +42,7 @@ class RunArgs:
     confirm_spend: bool = False
     allow_upload_gold: bool = False
     skip_permutation: bool = False
+    permutation_items: int | None = None  # default: eval.permutation_items (100)
     skip_latency: bool = False
     calibrate: bool = True  # fit on the calibration split, report raw and calibrated on the test split
     resume: str | None = None
@@ -232,6 +233,8 @@ def _env_snapshot(cfg: Config) -> dict[str, Any]:
 def run_eval(cfg: Config, args: RunArgs) -> Path:
     from . import report as report_module
 
+    if args.permutation_items is not None:
+        cfg.eval.permutation_items = args.permutation_items
     doctor = run_doctor(cfg)
     n = args.n or (cfg.eval.n_cuda if doctor["device"] == "cuda" else cfg.eval.n_apple)
     max_hours = args.max_hours if args.max_hours is not None else cfg.eval.max_hours
@@ -288,51 +291,74 @@ def run_eval(cfg: Config, args: RunArgs) -> Path:
     for unit in units:
         head = unit.items[:warm]
         fresh = [i for i in head if (unit.suite, unit.backend, unit.method, i.item_id) not in done]
+        engine.backend(unit.backend)  # load weights before the clock starts, so the ETA is per-item cost only
         seconds = process(unit, head)
         unit.seconds_per_item = seconds / max(1, len(fresh)) if fresh else 0.0
         log(f"warmup {unit.key}: {unit.seconds_per_item:.2f} s/item")
 
-    def eta_seconds(fraction: float) -> float:
+    def perm_items(unit: Unit, n_suite: int) -> int:
+        if args.skip_permutation or unit.method not in ("independent", "letter"):
+            return 0
+        n_test = sum(i.split == "test" for i in unit.items[:n_suite])
+        return min(n_test, cfg.eval.permutation_items)
+
+    def suite_seconds(suite: str, n_suite: int) -> float:
+        """Remaining cost of one suite at n items: every unit's items past the warmup, plus its permutation pass."""
         total = 0.0
         for unit in units:
-            remaining = max(0, int(len(unit.items) * fraction) - warm)
-            total += remaining * (unit.seconds_per_item or 0.0)
-            if not args.skip_permutation and unit.method in ("independent", "letter"):
-                n_test = sum(i.split == "test" for i in unit.items[: max(warm, int(len(unit.items) * fraction))])
-                perm_items = min(n_test, max(10, int(round(cfg.eval.permutation_items * min(1.0, fraction)))))
-                total += perm_items * cfg.eval.permutation_orders * (unit.seconds_per_item or 0.0)
+            if unit.suite != suite:
+                continue
+            spi = unit.seconds_per_item or 0.0
+            count = len(unit.items) if unit.backend == "frontier" else min(n_suite, len(unit.items))
+            total += max(0, count - warm) * spi + perm_items(unit, n_suite) * cfg.eval.permutation_orders * spi
         return total
 
+    # Trim to fit --max-hours. Every suite gets the same time cap, so cheap suites keep their full n and only the
+    # expensive ones (many options = many forward passes per item) lose items. Trimming takes the first items of the
+    # seeded order, which stay 50/50 calibration/test.
+    suite_names = list(dict.fromkeys(u.suite for u in units))
+    floor_n = min(n, 2 * warm)
     budget = max_hours * 3600 - (time.perf_counter() - started)
-    fraction = 1.0
-    full_eta = eta_seconds(1.0)
+
+    def n_under_cap(suite: str, cap: float) -> int:
+        best = floor_n
+        for candidate in range(floor_n, n + 1, 2):
+            if suite_seconds(suite, candidate) <= cap:
+                best = candidate
+        return best
+
+    final_n = {suite: n for suite in suite_names}
+    full_eta = sum(suite_seconds(suite, n) for suite in suite_names)
     if full_eta > budget:
-        fraction = max(0.05, budget / full_eta)
-    n_final = n if fraction >= 1.0 else max(2 * warm, int(n * fraction) // 2 * 2)
-    fraction = n_final / n
-    trim = {"requested_n": n, "final_n": n_final, "eta_hours_at_requested_n": round(full_eta / 3600, 2),
-            "eta_hours_at_final_n": round(eta_seconds(fraction) / 3600, 2), "max_hours": max_hours,
-            "trimmed": n_final < n}
-    log(f"ETA at n={n}: {trim['eta_hours_at_requested_n']} h; budget {max_hours} h -> n={n_final} "
+        lo, hi = 0.0, max((suite_seconds(suite, n) for suite in suite_names), default=0.0)
+        for _ in range(40):
+            cap = (lo + hi) / 2
+            if sum(suite_seconds(suite, n_under_cap(suite, cap)) for suite in suite_names) <= budget:
+                lo = cap
+            else:
+                hi = cap
+        final_n = {suite: n_under_cap(suite, lo) for suite in suite_names}
+    final_eta = sum(suite_seconds(suite, final_n[suite]) for suite in suite_names)
+    trim = {"requested_n": n, "final_n": final_n, "eta_hours_at_requested_n": round(full_eta / 3600, 2),
+            "eta_hours_at_final_n": round(final_eta / 3600, 2), "max_hours": max_hours,
+            "trimmed": any(v < n for v in final_n.values())}
+    log(f"ETA at n={n}: {trim['eta_hours_at_requested_n']} h; budget {max_hours} h -> n per suite {final_n} "
         f"(ETA {trim['eta_hours_at_final_n']} h){' TRIMMED' if trim['trimmed'] else ''}")
     resolved["trim"] = trim
     resolved["notes"] = notes
     resolved["suites"] = suites_meta
     (run_dir / "config.yaml").write_text(yaml.safe_dump(json.loads(json.dumps(resolved, default=str)), sort_keys=False))
 
-    # Phase B: the rest of every unit. Trimming takes the first items of the seeded order, which stay 50/50.
+    # Phase B: the rest of every unit.
     for unit in units:
-        if unit.backend == "frontier":
-            limit = len(unit.items)
-        else:
-            limit = max(warm, int(round(len(unit.items) * fraction)))
+        limit = len(unit.items) if unit.backend == "frontier" else max(warm, final_n[unit.suite])
         elapsed = process(unit, unit.items[warm:limit])
         unit.items = unit.items[:limit]
         log(f"done {unit.key}: {len(unit.items)} items, {elapsed / 60:.1f} min, {failures.get(unit.key, 0)} failures")
 
     extras: dict[str, Any] = {"permutation": {}, "latency": {}}
     if not args.skip_permutation:
-        extras["permutation"] = permutation_sensitivity(engine, cfg, units, run_dir, run_id, fraction)
+        extras["permutation"] = permutation_sensitivity(engine, cfg, units, run_dir, run_id)
     if not args.skip_latency:
         extras["latency"] = latency_benchmark(engine, cfg, [m for m in args.models if m in LOCAL_BACKENDS])
     extras["failures"] = {u.key: {"failed": failures.get(u.key, 0), "attempted": len(u.items)} for u in units}
@@ -350,12 +376,11 @@ def run_eval(cfg: Config, args: RunArgs) -> Path:
 # --- permutation sensitivity and latency ------------------------------------------------------------------
 
 
-def permutation_sensitivity(engine: Engine, cfg: Config, units: list[Unit], run_dir: Path, run_id: str,
-                            fraction: float) -> dict[str, Any]:
+def permutation_sensitivity(engine: Engine, cfg: Config, units: list[Unit], run_dir: Path, run_id: str) -> dict[str, Any]:
     """Test items x random option orders: the largest shift of any option's raw probability."""
     base_rows = {(r["suite"], r["backend"], r["method"], r["item_id"]): r for r in read_jsonl(run_dir / "predictions.jsonl")}
     out: dict[str, Any] = {}
-    n_items = max(10, int(round(cfg.eval.permutation_items * min(1.0, fraction))))
+    n_items = cfg.eval.permutation_items
     for unit in units:
         if unit.method not in ("independent", "letter"):
             continue

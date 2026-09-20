@@ -293,7 +293,45 @@ def test_trim_to_max_hours(cfg, fake_suite, monkeypatch):
     import yaml
 
     trim = yaml.safe_load((run_dir / "config.yaml").read_text())["trim"]
-    assert trim["trimmed"] and trim["final_n"] < 40 and trim["final_n"] % 2 == 0
+    final_n = trim["final_n"][fake_suite]
+    assert trim["trimmed"] and final_n < 40 and final_n % 2 == 0
     assert "trimmed" in (run_dir / "report.md").read_text()
     rows = read_jsonl(run_dir / "predictions.jsonl")
-    assert len(rows) == trim["final_n"]
+    assert len(rows) == final_n
+
+
+def test_trim_only_cuts_the_expensive_suite(cfg, fake_suite, tmp_path, monkeypatch):
+    import time as _time
+
+    import yaml
+
+    info = SuiteInfo(name="fakenoul", qtype="noul", source="test", license="CC0")
+
+    class CheapModule:
+        INFO = info
+
+        @staticmethod
+        def build(cfg, n):
+            return materialize(cfg, info, _fake_raw_items(40), n, manifest_path=tmp_path / "fakenoul.jsonl")
+
+    monkeypatch.setitem(SUITES, "fakenoul", CheapModule)
+
+    class PerStatementCost(KnowingBackend):
+        def score_statements(self, images, context, statements):
+            _time.sleep(0.004 * len(statements))  # 30 options cost 30x a single noul statement
+            return super().score_statements(images, context, statements)
+
+    monkeypatch.setattr(run, "Engine", lambda cfg, source: __import__("glance.pipeline", fromlist=["Engine"]).Engine(
+        cfg, source=source, backends={"vlm": PerStatementCost()}))
+    args = run.RunArgs(suites=[fake_suite, "fakenoul"], models=["vlm"], n=40, choice_methods=["independent"],
+                       max_hours=2.2 / 3600, skip_permutation=True, skip_latency=True)
+    run_dir = run.run_eval(cfg, args)
+    final_n = yaml.safe_load((run_dir / "config.yaml").read_text())["trim"]["final_n"]
+    assert final_n["fakenoul"] == 40 and final_n[fake_suite] < 40
+
+
+def test_ece_noise_floor_shrinks_with_n():
+    rng = np.random.default_rng(0)
+    small = M.ece_noise_floor(rng.uniform(0.7, 1.0, 100))
+    large = M.ece_noise_floor(rng.uniform(0.7, 1.0, 4000))
+    assert small > 0.04 > large > 0.0  # a perfectly calibrated model still shows ECE ~0.05+ at n=100

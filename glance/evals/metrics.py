@@ -81,6 +81,17 @@ def _views(rows: list[dict[str, Any]], field: str) -> dict[str, np.ndarray]:
     }
 
 
+def ece_noise_floor(top_conf: np.ndarray, n_bins: int = 15, draws: int = 200, seed: int = 7) -> float:
+    """The ECE a perfectly calibrated predictor with these same confidences would show at this sample size.
+
+    Equal-mass ECE is biased upward on small samples: each bin's accuracy is a noisy average of a few outcomes.
+    Drawing correctness ~ Bernoulli(confidence) and re-measuring gives the floor to read a measured ECE against.
+    """
+    rng = np.random.default_rng(seed)
+    conf = np.asarray(top_conf, dtype=np.float64)
+    return float(np.mean([ece_equal_mass(conf, rng.random(len(conf)) < conf, n_bins) for _ in range(draws)]))
+
+
 def probability_metrics(rows: list[dict[str, Any]], field: str, n_bins: int = 15) -> dict[str, Any]:
     """Accuracy, NLL, Brier, ECE, selective accuracy (+ AUROC, macro-F1 or MAE by type) for `raw` or `calibrated`."""
     if not rows:
@@ -103,6 +114,7 @@ def probability_metrics(rows: list[dict[str, Any]], field: str, n_bins: int = 15
             scores = np.array([expected_score(q) for q in v["probs"]])
             out["mae_levels"] = float(np.abs(scores - v["labels"]).mean())
     out["ece"] = ece_equal_mass(v["top_conf"], v["correct"], n_bins)
+    out["ece_floor"] = ece_noise_floor(v["top_conf"], n_bins)
     out["selective_accuracy"] = selective_accuracy(v["rank_conf"], v["correct"])
     return out
 

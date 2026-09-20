@@ -61,6 +61,14 @@ Where the spec was ambiguous, the simpler option was taken and recorded here.
   params fit on a full run.
 - D21. The latency benchmark (1 image + 5 questions = 11 statements) rotates the three sample images and clears the
   prefix cache before every request, so each timed request pays for its own image prefix.
+- D22. `--max-hours` trims per suite, not uniformly: every suite gets the same time cap, so cheap suites keep their
+  full n and only expensive ones (many options = many forward passes per item) lose items. Still "the first items
+  of the seeded order". Model load time is excluded from the warmup timing.
+- D23. The report shows an "ECE floor at this n" next to every ECE: the ECE a perfectly calibrated predictor with
+  the same confidences would measure on that many items (200 simulated draws). Equal-mass ECE with 15 bins is
+  biased upward on small samples, and at a few hundred test items that bias is the same size as the 0.05 gate.
+  The gate itself is unchanged.
+- D24. `glance eval --permutation-items N` overrides the 100-item default of the permutation pass (see M5).
 
 ## Dependencies beyond the HANDOFF list
 
@@ -165,3 +173,54 @@ pytest: 93 passed, 11 skipped (model-gated)
 Deviations: harness version bumped to 0.2.0 because the VLM readout now computes the Yes/No logits through a
 float32 copy of the output head (see M4; float16 quantizes a logit near 20 to steps of 1/64).
 Open questions: `letter` is strongly order-sensitive even with 4 rotations, which is the argument for `independent`.
+
+## M4: calibration fit and apply, prefix cache, Flask server (2026-09-19)
+
+Built: calibration wired into eval runs (fit on the calibration split, pooled per type plus per-suite fits, saved
+per configuration key, applied to the test split, `calibration_mismatch` on any key difference), `glance calibrate
+--run`, the prefix-cached VLM path with mRoPE position continuation and a 2-entry prefix LRU, `glance/server.py`
+(`POST /v1/decide`, `GET /v1/models`, `GET /healthz`, 127.0.0.1 only), `glance serve`.
+
+Check 1, calibration (`glance eval --n 80 --model siglip --model vlm --skip-permutation`,
+run `20260919T234550Z-796ade`, test n=40 per suite, reference path). Calibrated ECE is below raw ECE for every
+suite on both backends; the one unit where it is not is flagged in the report:
+
+```text
+vlm  pope 0.145 -> 0.088 | gqa_yesno 0.241 -> 0.224 | pets37 0.102 -> 0.083 | caltech101 0.015 -> 0.011 | blur_ladder 0.391 -> 0.253
+sig  pope 0.332 -> 0.230 | pets37 0.059 -> 0.035 | caltech101 0.021 -> 0.015 | blur_ladder 0.286 -> 0.268
+FLAGGED caltech101 vlm letter 0.025 -> 0.027
+fitted (vlm): noul Platt a=0.162 b=0.163 (raw logits ~6x too sharp), choice T=2.06 (letter T=3.40), score T=5.92
+```
+
+At n=40 the ECE sampling floor is as large as the measured values (blur_ladder 0.253 vs floor 0.252), so the 0.05
+gate can only be judged on the larger M5 run.
+
+Check 2, prefix cache (`tests/test_m4_prefix_cache.py`, 100 items / 1,685 statements, `logs/cache_check.json`):
+
+```text
+argmax agreement 100/100 | max |dz| 0.075 (limit 0.05) | median |dz| 0.017 | speedup 3.75x (309.7 s -> 82.7 s)
+per suite max |dz|: pope 0.043, gqa_yesno 0.016, blur_ladder 0.052, pets37 0.075, caltech101 0.056
+reference path against itself, batch size 8 vs 4, same 10 items: max |dz| 0.093, median 0.046
+```
+
+**The section 6 acceptance is NOT met** on max |dz|, so per section 6 ("after two failed approaches, ship uncached
+and report") the cache ships **off by default** (`vlm.prefix_cache: false`). It stays available as an opt-in
+(`--prefix-cache`). The two approaches:
+1. Float32 readout head. Float16 quantizes a logit near 20 to steps of 1/64, which alone moved z by up to 0.06.
+   Now the Yes/No logits are computed from the final hidden state through a float32 copy of the head rows, in both
+   paths (kept: it is strictly better). Residual drift stayed at 0.04-0.09.
+2. Eager attention with float32 softmax instead of SDPA. No improvement (0.06-0.11) and slower, so not kept.
+The remaining drift is float16 matmul kernels on MPS changing with batch shape: the reference path disagrees with
+*itself* by more than the cached path disagrees with it. No decision changed on any of the 100 items.
+
+Check 3, server: `tests/test_m4_calibration_server.py` round-trip passes; a real `glance serve --preload siglip`
+process with `HF_HUB_OFFLINE=1` answered `/healthz`, `/v1/models`, `POST /v1/decide` (200 in 200 ms), returned 422
+for a bad body, refused `model: frontier`, and was listening on 127.0.0.1:8077 only.
+
+```text
+pytest: 95 passed, 11 skipped (model-gated)
+```
+
+Deviations: prefix cache shipped off (above). Open questions: whether to accept the cache on this hardware given
+that its drift is inside the oracle's own float16 noise. It would cut eval time 3.7x and the 1 image + 5 questions
+latency from ~8.9 s to roughly 2 s. I did not flip it because the spec's fallback is explicit.

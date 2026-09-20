@@ -98,6 +98,7 @@ class VlmBackend:
         self.no_ids = self._single_token_ids(prompts.NO_VARIANTS)
         self._label_ids = {lab: self._single_token_ids([lab, " " + lab]) for lab in prompts.LETTER_LABELS}
         self._prefix_cache: OrderedDict[str, _PrefixEntry] = OrderedDict()
+        self._reads = 0
 
     # --- prompt building --------------------------------------------------------------------------
 
@@ -315,6 +316,9 @@ class VlmBackend:
         if self.device == "mps":
             torch.mps.synchronize()
         total_ms = (time.perf_counter() - t0) * 1000
+        self._reads += 1
+        if self.device == "mps" and self._reads % 100 == 0:
+            torch.mps.empty_cache()  # batch shapes vary per request; keep the MPS allocator from growing over long runs
         if not np.isfinite(selected).all():
             raise BackendError("non-finite logits from the VLM forward pass")
         return _Readout(selected, log_norm, image_tokens, text_tokens, prefix_ms, total_ms - prefix_ms, hit)

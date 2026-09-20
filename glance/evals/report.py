@@ -184,6 +184,43 @@ def _baseline(grouped: dict[tuple, list[dict[str, Any]]], bins: int) -> dict[str
     return out
 
 
+def error_breakdown(metrics: dict[str, Any]) -> list[dict[str, Any]]:
+    """Per suite, for the primary backend: error rate, calibrated ECE, and the gap to the baseline when there is one.
+    Sorted so the suites that most need v1 data come first."""
+    primary = primary_backend(metrics)
+    rows = []
+    for unit in metrics["units"].values():
+        if unit["backend"] != primary or unit["method"] == "letter" or "raw" not in unit:
+            continue
+        best = unit.get("calibrated") or unit["raw"]
+        base = metrics["baseline"].get(unit["suite"], {})
+        local = (base.get("local") or {}).get(primary) or {}
+        gap = None
+        if base.get("frontier", {}).get("accuracy") is not None and local.get("accuracy_same_items") is not None:
+            gap = 100 * (base["frontier"]["accuracy"] - local["accuracy_same_items"])
+        rows.append({"suite": unit["suite"], "type": unit["type"], "error_rate": 1 - best["accuracy"], "ece": best["ece"],
+                     "ece_over": best["ece"] > GO_THRESHOLDS["ece"], "gap_points": gap, "n": unit["n_test"],
+                     "confusions": unit.get("confusions", [])})
+    return sorted(rows, key=lambda r: (-(r["gap_points"] if r["gap_points"] is not None else -1e9), -r["error_rate"]))
+
+
+def recommended_v1_data(metrics: dict[str, Any]) -> str:
+    rows = error_breakdown(metrics)
+    if not rows:
+        return "not enough results"
+    by_error = sorted(rows, key=lambda r: -r["error_rate"])
+    parts = ["by error rate: " + ", ".join(f"{r['suite']} ({r['type']}) {100 * r['error_rate']:.1f}%" for r in by_error[:3])]
+    over = [r for r in rows if r["ece_over"]]
+    if over:
+        parts.append("calibrated ECE still over 0.05: " + ", ".join(f"{r['suite']} {r['ece']:.3f}" for r in over))
+    gaps = [r for r in rows if r["gap_points"] is not None]
+    if gaps:
+        parts.append("largest gap to baseline: " + ", ".join(f"{r['suite']} {r['gap_points']:+.1f} pts" for r in gaps[:3]))
+    else:
+        parts.append("gap to a frontier baseline not measured")
+    return "; ".join(parts)
+
+
 def primary_backend(metrics: dict[str, Any]) -> str | None:
     backends = {u["backend"] for u in metrics["units"].values()}
     return "vlm" if "vlm" in backends else ("siglip" if "siglip" in backends else None)
@@ -213,8 +250,10 @@ def go_no_go(metrics: dict[str, Any], extras: dict[str, Any]) -> tuple[list[dict
     if eces:
         worst = max(eces, key=lambda t: t[1])
         failing = [s for s, e in eces if e > GO_THRESHOLDS["ece"]]
+        floors = {u["suite"]: u["calibrated"].get("ece_floor") for u in units if "calibrated" in u}
         table.append({"metric": "ECE after calibration", "threshold": "<= 0.05 per suite (15 equal-mass bins)",
-                      "measured": f"worst {worst[1]:.3f} ({worst[0]}); " + (f"over threshold: {', '.join(failing)}" if failing else "all suites under"),
+                      "measured": f"worst {worst[1]:.3f} ({worst[0]}, sampling floor {floors[worst[0]]:.3f}); "
+                                  + (f"over threshold: {', '.join(failing)}" if failing else "all suites under"),
                       "pass": not failing})
     else:
         table.append({"metric": "ECE after calibration", "threshold": "<= 0.05 per suite (15 equal-mass bins)",
@@ -366,10 +405,16 @@ def render_report(cfg: Config, metrics: dict[str, Any], extras: dict[str, Any], 
         dev = extras.get("devices", {}).get(name, {})
         out += [f"- `{name}`: `{model}` ({dev.get('dtype')}, image token budget {dev.get('image_token_budget')})"]
     out += [f"- Harness {run_config.get('harness_version')} at git `{(run_config.get('git_sha') or '')[:10]}`, prompts `p1`, "
-            f"prefix cache {'on' if extras.get('prefix_cache') else 'off'}"]
-    out += [f"- n per suite: requested {trim.get('requested_n')}, used {trim.get('final_n')}"
-            + (f" (**trimmed** to fit --max-hours {trim.get('max_hours')}: ETA at requested n was {trim.get('eta_hours_at_requested_n')} h)" if trim.get("trimmed") else "")
-            + ", seed 7, alternating calibration/test down the seeded order"]
+            f"prefix cache {'on' if extras.get('prefix_cache') else 'off (reference path)'}"]
+    if extras.get("cache_speedup"):
+        out += [f"- Prefix cache check: {extras['cache_speedup']}"]
+    final_n = trim.get("final_n") or {}
+    used = ", ".join(f"{suite} {count}" for suite, count in final_n.items()) if isinstance(final_n, dict) else str(final_n)
+    out += [f"- n per suite: requested {trim.get('requested_n')}; used {used}"
+            + (f" (**trimmed** to fit --max-hours {trim.get('max_hours')}: ETA at the requested n was "
+               f"{trim.get('eta_hours_at_requested_n')} h; each suite got the same time cap, so only expensive suites lost items)"
+               if trim.get("trimmed") else "")
+            + "; seed 7, calibration/test alternate down the seeded order"]
     for note in run_config.get("notes", []):
         out += [f"- Note: {note}"]
     for name, meta in (run_config.get("suites") or {}).items():
@@ -379,12 +424,12 @@ def render_report(cfg: Config, metrics: dict[str, Any], extras: dict[str, Any], 
 
     out += ["## Per-suite results (test split)", ""]
     headers = ["Suite", "Backend", "Method", "n", "Acc", "AUROC / F1 / MAE", "NLL raw→cal", "Brier raw→cal", "ECE raw→cal",
-               "Sel acc 50/80/90/100 (cal)", "Failures", "Valid"]
+               "ECE floor at this n", "Sel acc 50/80/90/100 (cal)", "Failures", "Valid"]
     body = []
     for unit in metrics["units"].values():
         if unit["backend"] == "frontier":
             body.append([unit["suite"], "frontier", "pick", unit["n_test"], _fmt(unit.get("hard_pick", {}).get("accuracy")),
-                         "-", "-", "-", "-", "-", f"{unit['failures']['failed']}/{unit['failures']['attempted']}", _fmt(unit["valid"])])
+                         "-", "-", "-", "-", "-", "-", f"{unit['failures']['failed']}/{unit['failures']['attempted']}", _fmt(unit["valid"])])
             continue
         raw, cal = unit.get("raw", {}), unit.get("calibrated", {})
         extra = raw.get("auroc") if unit["type"] == "noul" else raw.get("macro_f1") if unit["type"] == "choice" else (cal or raw).get("mae_levels")
@@ -393,18 +438,28 @@ def render_report(cfg: Config, metrics: dict[str, Any], extras: dict[str, Any], 
             unit["suite"], unit["backend"], unit["method"], unit["n_test"],
             f"{_fmt(raw.get('accuracy'))}" + (f" → {_fmt(cal.get('accuracy'))}" if cal and cal.get("accuracy") != raw.get("accuracy") else ""),
             _fmt(extra), f"{_fmt(raw.get('nll'))} → {_fmt(cal.get('nll'))}", f"{_fmt(raw.get('brier'))} → {_fmt(cal.get('brier'))}",
-            f"{_fmt(raw.get('ece'))} → {_fmt(cal.get('ece'))}",
+            f"{_fmt(raw.get('ece'))} → {_fmt(cal.get('ece'))}", _fmt((cal or raw).get("ece_floor")),
             " / ".join(_fmt(sel.get(k)) for k in ("50", "80", "90", "100")),
             f"{unit['failures']['failed']}/{unit['failures']['attempted']}", _fmt(unit["valid"]),
         ])
     out += [_table(headers, body), ""]
     out += ["AUROC for noul, macro-F1 for choice, mean absolute error in levels (expected score vs label) for score. "
-            "Selective accuracy ranks by `confidence` (noul: `2·|p − 0.5|`). A suite with more than 2% failed items is invalid.", ""]
+            "Selective accuracy ranks by `confidence` (noul: `2·|p − 0.5|`). A suite with more than 2% failed items is invalid. "
+            "`ECE floor at this n` is the ECE a perfectly calibrated predictor with the same confidences would measure on this "
+            "many items (200 simulated draws): equal-mass ECE is biased upward on small samples, so read each ECE against its floor.", ""]
 
     flagged = [u for u in metrics["units"].values() if "calibrated" in u and u["calibrated"]["ece"] >= u["raw"]["ece"]]
     if flagged:
         out += ["**Flagged: calibrated ECE is not below raw ECE on the test split for:** "
                 + ", ".join(f"`{u['suite']}` ({u['backend']}, {u['method']}: {u['raw']['ece']:.3f} → {u['calibrated']['ece']:.3f})" for u in flagged), ""]
+
+    out += ["## Error breakdown (what v1 data this points to)", ""]
+    out += [_table(["Suite", "Type", "Test n", "Error rate", "ECE (best available)", "Over ECE threshold", "Gap to baseline (points)", "Top confusions"],
+                   [[r["suite"], r["type"], r["n"], f"{100 * r['error_rate']:.1f}%", _fmt(r["ece"]), _fmt(r["ece_over"]),
+                     "-" if r["gap_points"] is None else f"{r['gap_points']:+.1f}",
+                     "; ".join(f"{c['true']} → {c['predicted']} ({c['count']})" for c in r["confusions"]) or "-"]
+                    for r in error_breakdown(metrics)]), ""]
+    out += [f"Primary backend `{primary}`, `independent` for choice. Recommended v1 data: {recommended_v1_data(metrics)}.", ""]
 
     out += ["## Calibration", ""]
     rows = []
@@ -526,10 +581,10 @@ def summary_text(metrics: dict[str, Any], extras: dict[str, Any], run_config: di
         lines += [f"weakest suite:      {weakest['suite']} (acc {(weakest.get('calibrated') or weakest['raw'])['accuracy']:.3f}), top confusions: {conf}"]
         lines += ["calibration gain:   " + "; ".join(
             f"{u['suite']} {u['raw']['ece']:.3f} -> {_fmt(u.get('calibrated', {}).get('ece'))}" for u in units)]
-    lines += [f"cache speedup:      {extras.get('cache_speedup') or 'see STATUS.md (M4)'}"]
+    lines += [f"cache speedup:      {extras.get('cache_speedup') or 'not measured'}"]
     lines += ["failures:           " + "; ".join(f"{k.replace('|', '/')} {v['failed']}/{v['attempted']}" for k, v in extras.get("failures", {}).items())]
     lines += ["deviations:         " + ("; ".join(run_config.get("notes", [])) or "none")]
-    lines += ["recommended v1 data: see report.md and STATUS.md"]
+    lines += [f"recommended v1 data: {recommended_v1_data(metrics)}"]
     return "\n".join(lines)
 
 
@@ -545,6 +600,15 @@ def finalize_run(cfg: Config, run_dir: Path, calibrate: bool = True) -> dict[str
     extras["doctor"] = env.get("doctor")
     run_config = yaml.safe_load((run_dir / "config.yaml").read_text()) if (run_dir / "config.yaml").exists() else {}
     run_config["run_id"] = run_dir.name
+    cache_check = cfg.path("logs") / "cache_check.json"
+    if cache_check.exists():  # written by tests/test_m4_prefix_cache.py, the section 6 acceptance check
+        check = json.loads(cache_check.read_text())
+        met = check["argmax_agree"] == check["items"] and check["max_abs_dz"] <= check["threshold"]
+        extras["cache_speedup"] = (
+            f"{check['speedup']:.2f}x on {check['items']} items ({check['statements']} statements); argmax agreement "
+            f"{check['argmax_agree']}/{check['items']}, max |dz| {check['max_abs_dz']:.3f} vs limit {check['threshold']} -> "
+            f"{'acceptance met' if met else 'acceptance NOT met, shipped uncached'}"
+        )
 
     params_list: list[calibration.CalibrationParams] = []
     if calibrate and any(r["split"] == "calibration" for r in _probability_rows(rows)):
