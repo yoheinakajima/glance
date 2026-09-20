@@ -57,6 +57,17 @@ def test_zoom_crop_and_matrix_fit_are_identical_to_the_lab():
     assert np.allclose(rating.apply_matrix(ours, x), sm.apply_fit("ensemble", x, labs))
 
 
+def test_cv_rescale_is_less_confident_on_tiny_fits_and_changes_no_prediction():
+    rng = np.random.default_rng(1)
+    y = np.arange(24) % 4
+    x = rng.normal(size=(24, 16)) + np.eye(4)[y].repeat(4, axis=1) * 1.5
+    train, cv = rating.fit_matrix(x, y, 4, rescale="train"), rating.fit_matrix(x, y, 4, rescale="cv")
+    fresh = rng.normal(size=(200, 16))
+    assert (rating.apply_matrix(train, fresh).argmax(1) == rating.apply_matrix(cv, fresh).argmax(1)).all()
+    assert cv["rescale"] < train["rescale"] and cv["rescale_mode"] == "cv"
+    assert rating.apply_matrix(cv, fresh).max(1).mean() < rating.apply_matrix(train, fresh).max(1).mean()
+
+
 def test_zoom_sentence_names_the_rated_image():
     assert "`photo`" in rating.with_zoom("How blurry is `photo`?", "photo") and "img0" not in rating.with_zoom("x", "photo")
 

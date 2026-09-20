@@ -548,3 +548,48 @@ contract). Decisions, each made without touching any test split:
 - **Acceptance check** (`tools/check_harness_rating.py`): ordinary `decide` requests with `calibrated: true` on the
   first 40 test images of each lab scale must reproduce the lab's own predictions; result recorded below when it
   finishes.
+
+## 2026-09-20 09:35 Entry 17b: acceptance check of the harness path (passed)
+
+`tools/check_harness_rating.py --n 40` (`results/lab/harness_rating_check.json`): ordinary `Engine.decide` requests with
+`calibrated: true`, default `score_method`, prefix cache on, shipped calibrations, first 40 test images of each lab
+scale, run while the KADID collection shared the GPU. Same prediction as the lab's own `ens4d` on 200 of 200 images;
+accuracy 0.915 by both routes (0.975 / 0.875 / 0.900 / 0.975 / 0.850 for blur / noise / jpeg / exposure / resolution);
+largest logit difference from the lab's stored logits 0.122. One request carrying all five rubrics gave the same
+prediction for the image's own scale on 200 of 200. The promoted method is the lab method.
+
+## 2026-09-20 09:50 Entry 18: small fits were overconfident; the sharpness scalar is now fit on held-out folds
+
+**Trigger.** First real `glance fit` run: the 5-level `distort25` JPEG rubric with the generic wording, 8 labeled
+calibration-split images per level (`tools/make_fit_demo.py`), 84 s for 40 images with the GPU shared. Its own
+cross-validation said accuracy 0.550, within one level 0.850, ECE 0.359 against a floor of 0.179. Accuracy at 8 labels
+per level on the hardest distortion is what it is; the calibration gap is a defect.
+
+**Diagnosis, on the lab calibration split only** (fit on random draws from its first half, judged on its second half,
+five scales, 6 to 10 draws; no test data). Matrix scaling refits one scalar `s` without the L2 penalty to restore
+sharpness. The lab fit `s` on the training data. With a few dozen labels and 16 features the training data is nearly
+separable, so `s` runs to its bound and the probabilities become extreme:
+
+| labels | NLL, `s` fit on training data (lab procedure) | NLL, no `s` | NLL, `s` fit on held-out folds | ECE train / none / held-out |
+| --- | --- | --- | --- | --- |
+| 16 | 1.320 | 0.445 | 0.601 | 0.118 / 0.115 / 0.096 |
+| 32 | 0.749 | 0.432 | 0.478 | 0.089 / 0.115 / 0.081 |
+| 64 | 0.409 | 0.425 | 0.376 | 0.072 / 0.124 / 0.066 |
+| 128 | 0.365 | 0.417 | 0.354 | 0.064 / 0.127 / 0.061 |
+| ~200 | 0.348 | 0.415 | 0.344 | 0.067 / 0.135 / 0.065 |
+
+Accuracy is identical in all three columns by construction (`s` multiplies every logit alike). Dropping `s` is best
+below 32 labels and clearly under-confident above; the held-out `s` is never worse than the lab procedure and much
+better where users will actually be. L2 strength: 0.01 gave slightly better accuracy than the lab's 0.05 at every size
+(0.852 vs 0.847 at 32 labels) and stronger penalties were worse; I keep 0.05, the published recipe, because the
+difference is small and I do not want two recipes.
+
+**Change.** `rating.fit_matrix(..., rescale="cv")` is what `glance fit` uses (5 folds, or as many as the rarest level
+allows; a level with one example gets no rescale). The shipped lab calibrations keep `rescale="train"` so that they
+are exactly the procedure whose held-out results are published, and at 500 labels the two agree. `fit`'s own report is
+cross-validated with the same nested procedure. A unit test checks that the change never alters a prediction.
+
+**Same demo after the change:** accuracy 0.550 (unchanged, as it must be), ECE 0.274 against a floor of 0.237, i.e. no
+longer distinguishable from calibrated at 40 images. Lesson for the paper: "32 labels are enough" was a statement about
+accuracy; for trustworthy probabilities at that size the sharpness has to be estimated out of sample. The lab's
+learning-curve table reports accuracy and MAE, which are unaffected.

@@ -1,0 +1,57 @@
+{
+  "blur": {
+    "n": 40,
+    "calibration": [
+      "rate_e098aa"
+    ],
+    "same_prediction_as_lab": 1.0,
+    "accuracy_harness": 0.975,
+    "accuracy_lab_same_items": 0.975,
+    "max_abs_logit_diff_vs_lab": 0.104888916015625,
+    "five_rubric_request_same_prediction": 1.0
+  },
+  "noise": {
+    "n": 40,
+    "calibration": [
+      "rate_7f5b9c"
+    ],
+    "same_prediction_as_lab": 1.0,
+    "accuracy_harness": 0.875,
+    "accuracy_lab_same_items": 0.875,
+    "max_abs_logit_diff_vs_lab": 0.09506988525390625,
+    "five_rubric_request_same_prediction": 1.0
+  },
+  "jpeg": {
+    "n": 40,
+    "calibration": [
+      "rate_961b81"
+    ],
+    "same_prediction_as_lab": 1.0,
+    "accuracy_harness": 0.9,
+    "accuracy_lab_same_items": 0.9,
+    "max_abs_logit_diff_vs_lab": 0.11202621459960938,
+    "five_rubric_request_same_prediction": 1.0
+  },
+  "exposure": {
+    "n": 40,
+    "calibration": [
+      "rate_f04358"
+    ],
+    "same_prediction_as_lab": 1.0,
+    "accuracy_harness": 0.975,
+    "accuracy_lab_same_items": 0.975,
+    "max_abs_logit_diff_vs_lab": 0.12213134765625,
+    "five_rubric_request_same_prediction": 1.0
+  },
+  "resolution": {
+    "n": 40,
+    "calibration": [
+      "rate_0462f3"
+    ],
+    "same_prediction_as_lab": 1.0,
+    "accuracy_harness": 0.85,
+    "accuracy_lab_same_items": 0.85,
+    "max_abs_logit_diff_vs_lab": 0.10175323486328125,
+    "five_rubric_request_same_prediction": 1.0
+  }
+}

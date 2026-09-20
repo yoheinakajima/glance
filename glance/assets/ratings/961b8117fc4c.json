@@ -147,6 +147,7 @@
   ],
   "l2": 0.05,
   "rescale": 1.9667209171516737,
+  "rescale_mode": "train",
   "cv": {
     "folds": 5,
     "accuracy": 0.798,

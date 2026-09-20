@@ -130,16 +130,12 @@ class RatingCalibration(BaseModel):
     std: list[float]
     l2: float
     rescale: float
+    rescale_mode: str = "train"
     cv: dict[str, Any] = {}  # cross-validated quality on the fit data: accuracy, within_1, mae, nll, ece, ece_floor
     source: str | None = None
 
 
-def fit_matrix(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float = L2) -> dict[str, Any]:
-    """Matrix scaling: p = softmax(W x' + b) on standardized logits x', L2-regularized NLL, then one scalar refit
-    without the penalty to restore sharpness (it multiplies every logit alike, so no prediction changes)."""
-    x = np.asarray(x, dtype=np.float64)
-    mean, std = x.mean(axis=0), x.std(axis=0) + 1e-6
-    xs = (x - mean) / std
+def _penalized_fit(xs: np.ndarray, y: np.ndarray, n_classes: int, l2: float) -> tuple[np.ndarray, np.ndarray]:
     n, f = xs.shape
     onehot = np.eye(n_classes)[y]
 
@@ -152,13 +148,44 @@ def fit_matrix(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float = L2) -> 
         return loss, np.concatenate([(resid.T @ xs / n + 2 * l2 * w).ravel(), resid.mean(axis=0)])
 
     res = minimize(loss_grad, np.zeros(n_classes * f + n_classes), jac=True, method="L-BFGS-B")
-    w = res.x[: n_classes * f].reshape(n_classes, f)
-    b = res.x[n_classes * f:]
-    base = xs @ w.T + b
-    scale = minimize(lambda t: -np.mean(log_softmax(np.exp(t[0]) * base, axis=1)[np.arange(n), y]), np.zeros(1),
+    return res.x[: n_classes * f].reshape(n_classes, f), res.x[n_classes * f:]
+
+
+def _sharpness(logits: np.ndarray, y: np.ndarray) -> float:
+    """The one scalar s that minimizes the NLL of softmax(s * logits); it changes no prediction."""
+    scale = minimize(lambda t: -np.mean(log_softmax(np.exp(t[0]) * logits, axis=1)[np.arange(len(y)), y]), np.zeros(1),
                      method="L-BFGS-B", bounds=[(-3, 3)]).x[0]
-    s = float(np.exp(scale))
-    return {"W": (s * w).tolist(), "b": (s * b).tolist(), "mean": mean.tolist(), "std": std.tolist(), "l2": l2, "rescale": s}
+    return float(np.exp(scale))
+
+
+def fit_matrix(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float = L2, rescale: str = "train", seed: int = 7) -> dict[str, Any]:
+    """Matrix scaling: p = softmax(s (W x' + b)) on standardized logits x'. W and b minimize the L2-regularized NLL; the
+    penalty makes the probabilities too timid, so one scalar s is refit without it (s changes no prediction).
+
+    `rescale="train"` fits s on the same data as W and b: the score lab's procedure, fine with hundreds of labels.
+    `rescale="cv"` fits s on held-out folds (W and b refit without each fold): with a few dozen labels the training data
+    is nearly separable and a train-fit s makes the answers badly overconfident (`lab/NOTES.md`, entry 18)."""
+    x, y = np.asarray(x, dtype=np.float64), np.asarray(y).astype(int)
+    mean, std = x.mean(axis=0), x.std(axis=0) + 1e-6
+    xs = (x - mean) / std
+    w, b = _penalized_fit(xs, y, n_classes, l2)
+    folds = min(5, int(np.bincount(y, minlength=n_classes).min()))
+    if rescale == "cv" and folds >= 2:
+        order = np.random.default_rng(seed).permutation(len(y))
+        held_out = np.zeros((len(y), n_classes))
+        for fold in range(folds):
+            held = order[fold::folds]
+            train = np.setdiff1d(order, held)
+            m, sd = x[train].mean(axis=0), x[train].std(axis=0) + 1e-6
+            wf, bf = _penalized_fit((x[train] - m) / sd, y[train], n_classes, l2)
+            held_out[held] = ((x[held] - m) / sd) @ wf.T + bf
+        s = _sharpness(held_out, y)
+    elif rescale == "cv":
+        s = 1.0  # a level with a single example: nothing to hold out, keep the (timid) penalized probabilities
+    else:
+        s = _sharpness(xs @ w.T + b, y)
+    return {"W": (s * w).tolist(), "b": (s * b).tolist(), "mean": mean.tolist(), "std": std.tolist(), "l2": l2, "rescale": s,
+            "rescale_mode": rescale}
 
 
 def apply_matrix(fit: dict[str, Any] | RatingCalibration, features: np.ndarray) -> np.ndarray:
@@ -167,7 +194,7 @@ def apply_matrix(fit: dict[str, Any] | RatingCalibration, features: np.ndarray) 
     return softmax(xs @ np.array(get("W")).T + np.array(get("b")), axis=-1)
 
 
-def cross_validate(x: np.ndarray, y: np.ndarray, n_classes: int, folds: int = 5, seed: int = 7) -> dict[str, Any]:
+def cross_validate(x: np.ndarray, y: np.ndarray, n_classes: int, folds: int = 5, seed: int = 7, rescale: str = "cv") -> dict[str, Any]:
     """Quality of the calibration on held-out folds of its own fit data. Honest at the sample size the user has."""
     from .calibration import ece_equal_mass
     from .evals.metrics import ece_noise_floor
@@ -178,7 +205,7 @@ def cross_validate(x: np.ndarray, y: np.ndarray, n_classes: int, folds: int = 5,
     for fold in range(folds):
         held = order[fold::folds]
         train = np.setdiff1d(order, held)
-        p[held] = apply_matrix(fit_matrix(x[train], y[train], n_classes), x[held])
+        p[held] = apply_matrix(fit_matrix(x[train], y[train], n_classes, rescale=rescale), x[held])
     pred, conf = p.argmax(1), p.max(1)
     expected = (p * np.arange(n_classes)).sum(1)
     return {
@@ -190,7 +217,7 @@ def cross_validate(x: np.ndarray, y: np.ndarray, n_classes: int, folds: int = 5,
 
 
 def build_calibration(key: RatingKey, features: np.ndarray, levels: np.ndarray, name: str | None = None,
-                      source: str | None = None, with_cv: bool = True) -> RatingCalibration:
+                      source: str | None = None, with_cv: bool = True, rescale: str = "cv") -> RatingCalibration:
     x, y = np.asarray(features, dtype=np.float64), np.asarray(levels).astype(int)
     k = len(key.criteria)
     counts = np.bincount(y, minlength=k)
@@ -198,8 +225,8 @@ def build_calibration(key: RatingKey, features: np.ndarray, levels: np.ndarray, 
         raise ValueError(f"levels must be integers in 0..{k - 1}, one per example")
     if (counts == 0).any():
         raise ValueError(f"every level needs at least one labeled example; counts per level: {counts.tolist()}")
-    fit = fit_matrix(x, y, k)
-    cv = cross_validate(x, y, k) if with_cv and counts.min() >= 2 else {}
+    fit = fit_matrix(x, y, k, rescale=rescale)
+    cv = cross_validate(x, y, k, rescale=rescale) if with_cv and counts.min() >= 2 else {}
     return RatingCalibration(
         key=key, version=key.version(), name=name, fit_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         n=len(y), n_per_level=counts.tolist(), members=list(MEMBERS[key.score_method]), cv=cv, source=source, **fit,

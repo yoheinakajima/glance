@@ -33,7 +33,8 @@ for scale, meta in LADDERS.items():
     key = rating.RatingKey(backend="vlm", model=f"{spec.id}@{spec.revision}", prompt_version=rating.RATING_PROMPT_VERSION,
                            score_method="ens4d", image_token_budget=spec.image_token_budget,
                            instructions=meta["instructions"], criteria=tuple(meta["levels"]))
-    cal = rating.build_calibration(key, x, y, name=f"lab/{scale}",
+    # rescale="train": exactly the procedure whose held-out results are published in docs/paper/RESULTS_LAB.md
+    cal = rating.build_calibration(key, x, y, name=f"lab/{scale}", rescale="train",
                                    source="score lab calibration split (lab/data/main_stagesAB.jsonl.gz), prefix-cached logits")
     path = rating.save_calibration(rating.ASSETS_DIR, cal)
     index.append({"name": cal.name, "version": cal.version, "file": path.name, "n": cal.n, "cv_accuracy": round(cal.cv["accuracy"], 3),
