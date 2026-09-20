@@ -126,6 +126,11 @@ process: it is never written to disk, to a log, or to the shell history. One tes
 estimate is shown and nothing more is sent until you answer `y`. When it finishes, the run's `report.md` is rebuilt
 with the accuracy-gap and selective-accuracy rows filled in.
 
+If the key already sits in a dotenv file of yours, name the file and nothing has to be typed:
+`uv run glance baseline --model anthropic/claude-opus-5 --env-file ~/some/project/.env`. Only the one variable the chosen
+provider needs is read from that file (everything else in it is ignored); it is never printed or stored. Add
+`--estimate-only` to see the plan and the cost estimate without a single API call.
+
 The baseline runs on the test split only, capped by `--baseline-n` (default 300 per suite), never on `human_gold`
 without `--allow-upload-gold`, and its picks are never stored: only whether each one was right. If you would rather
 use environment variables, set `FRONTIER_MODEL` and the provider's key (names in `.env.example`) and the command skips
