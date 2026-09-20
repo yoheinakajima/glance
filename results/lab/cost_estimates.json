@@ -1,0 +1,21 @@
+{
+  "job": "1,000 rating calls (200 held-out images x 5 lab scales), one image per call, constrained single-pick output",
+  "source": "`uv run glance baseline --run 20260920T165748Z-8ff72a --model <id> --baseline-n 200 --estimate-only` on 2026-09-20; LiteLLM list prices; assumes about 1,500 input tokens (image + template) plus the question text twice and 400 output tokens per call; an UPPER estimate; no call was made",
+  "est_usd_per_1000_ratings": {
+    "anthropic/claude-opus-5": 18.7,
+    "openai/gpt-5.6": 14.96,
+    "gemini/gemini-3.1-pro-preview": 8.28,
+    "anthropic/claude-haiku-4-5-20251001": 3.74
+  },
+  "local": {
+    "model": "Qwen3-VL-4B + Glance on an Apple M5 laptop",
+    "seconds_per_1000_ratings": {
+      "ens4d, one rubric per image": 1089,
+      "ens4d, 5 rubrics per image": 584,
+      "ens4d, 25 rubrics per image": 341,
+      "fast2, 5 rubrics per image": 240,
+      "fast2, 25 rubrics per image": 133
+    },
+    "note": "from lab/PACKING.json p50 latencies; marginal cost is electricity; no dollar figure is claimed"
+  }
+}

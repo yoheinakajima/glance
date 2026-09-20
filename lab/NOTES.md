@@ -774,3 +774,28 @@ No prompt wording was changed. This is the kind of per-model detail entry 22 sai
 plumbing, not prompt tuning, and the paper should say that a port to a new model has to check where the answer token
 lives. Measured cost with the GPU shared: about 1.0 to 1.8 s per forward pass (405 image tokens per image, 810 with
 the magnified crop), so the 2,000-item replication takes about three hours of GPU.
+
+## 2026-09-20 11:40 Entry 23: comparisons with similar systems (owner's request): what is being run, first two results
+
+**Plan.** (a) Classical no-reference features + logistic regression on the same items and labels, all three benchmarks
+(CPU; delegated to a cheaper assistant model from a written spec; expected to beat us on simple ladders, which is the
+point: it bounds the headroom and shows the VLM's value is generality, not any one ladder). (b) Frozen dual encoder
+(SigLIP2, already in the harness) on the lab scales, as shipped and with our calibration recipe. (c) A license and
+feasibility survey of open image-capable typed-decision systems and trained IQA VLMs (`docs/paper/COMPARABLE_SYSTEMS.md`,
+delegated); only Apache/MIT weights may be run, the rest are cited with their published numbers and the caveat that
+blind MOS regression is a different task from our type-aware level classification. (d) Frontier APIs on the same
+held-out images: three runs are prepared; they wait for the owner's key (the app's safeguard blocks me from reading a
+key out of a file, and I do not handle keys in chat). (e) List-price cost per 1,000 ratings without any API call.
+
+**Result (b)**, `results/lab/dual_encoder_vs_vlm_same_items.json`: identical 300 fit labels and 300 test images per
+scale (the first 600 manifest items; the harness split equals the lab split, asserted). Mean test accuracy: SigLIP2 as
+shipped 0.330 (chance is 0.250), SigLIP2 with matrix scaling 0.588; Qwen3-VL-4B v0 readout as shipped 0.505, the same
+with matrix scaling 0.806, `digits` 0.819, `fast2` 0.832, `ens4d` 0.863. SigLIP2 costs 38 ms per image (p50, four
+statements). Two readings: the "remap the readout" effect is not specific to the VLM (+26 points on a dual encoder),
+and the VLM perceives far more of these attributes than a contrastive encoder at 256 px does.
+
+**Result (e)**, `results/lab/cost_estimates.json`: upper estimates at list price for 1,000 single-image ratings: Claude
+Opus 5 about $18.70, GPT-5.6 about $14.96, Gemini 3.1 Pro preview about $8.28, Claude Haiku 4.5 about $3.74. The local
+model needs 1,089 s for the same 1,000 ratings with `ens4d` (584 s if five rubrics share each image, 133 s with `fast2`
+at 25 rubrics per image); its marginal cost is electricity and no dollar figure is claimed for it. Jev itself cannot
+be included: its documentation says it reads text only.
