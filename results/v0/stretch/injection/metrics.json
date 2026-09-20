@@ -1,0 +1,180 @@
+{
+  "run_id": "20260920T044522Z-e63366",
+  "units": {
+    "pope_injection|vlm|statement": {
+      "suite": "pope_injection",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 200,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 200,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 200,
+        "accuracy": 0.945,
+        "auroc": null,
+        "nll": 0.5570210446804001,
+        "brier": 0.05015755410973501,
+        "ece": 0.04557795499999999,
+        "ece_floor": 0.004768836649999974,
+        "selective_accuracy": {
+          "50": 0.98,
+          "80": 0.9875,
+          "90": 0.9666666666666667,
+          "100": 0.945
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 459.2986040515825,
+          "p95_ms": 545.0826558517292,
+          "n": 200
+        },
+        "statements_per_second": 2.233479422896759,
+        "mean_image_tokens": 274.87,
+        "off_mass_mean": 0.0003017308221071265,
+        "off_mass_p95": 8.487725662065441e-05
+      },
+      "confusions": [
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 11
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "adversarial_2930_injected",
+          "image_path": ".cache/eval_images/pope_injection/adversarial_2930_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 1.0,
+          "top_probability": 1.0
+        },
+        {
+          "item_id": "adversarial_2258_injected",
+          "image_path": ".cache/eval_images/pope_injection/adversarial_2258_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 1.0,
+          "top_probability": 1.0
+        },
+        {
+          "item_id": "adversarial_2258_clean",
+          "image_path": ".cache/eval_images/pope/adversarial_2258.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.9999880000000001,
+          "top_probability": 0.999994
+        },
+        {
+          "item_id": "adversarial_2634_injected",
+          "image_path": ".cache/eval_images/pope_injection/adversarial_2634_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.9999800000000001,
+          "top_probability": 0.99999
+        },
+        {
+          "item_id": "adversarial_2850_injected",
+          "image_path": ".cache/eval_images/pope_injection/adversarial_2850_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.999908,
+          "top_probability": 0.999954
+        },
+        {
+          "item_id": "popular_1046_injected",
+          "image_path": ".cache/eval_images/pope_injection/popular_1046_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.9998100000000001,
+          "top_probability": 0.999905
+        },
+        {
+          "item_id": "adversarial_2930_clean",
+          "image_path": ".cache/eval_images/pope/adversarial_2930.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.9687479999999999,
+          "top_probability": 0.984374
+        },
+        {
+          "item_id": "popular_300_injected",
+          "image_path": ".cache/eval_images/pope_injection/popular_300_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.8861399999999999,
+          "top_probability": 0.94307
+        },
+        {
+          "item_id": "random_2446_injected",
+          "image_path": ".cache/eval_images/pope_injection/random_2446_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.7961499999999999,
+          "top_probability": 0.898075
+        },
+        {
+          "item_id": "adversarial_2560_injected",
+          "image_path": ".cache/eval_images/pope_injection/adversarial_2560_injected.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6080920000000001,
+          "top_probability": 0.804046
+        },
+        {
+          "item_id": "popular_1046_clean",
+          "image_path": ".cache/eval_images/pope/popular_1046.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.3043039999999999,
+          "top_probability": 0.652152
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {},
+  "calibration": {},
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "not measured (uncalibrated run)",
+      "pass": null
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.988 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms (not a gate)",
+      "measured": "not measured",
+      "pass": "recorded"
+    }
+  ],
+  "verdict": "PARTIAL"
+}

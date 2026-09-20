@@ -354,6 +354,9 @@ class VlmBackend:
         from scipy.special import logsumexp
 
         texts = [self.render_prompt(images, context, block) for block in blocks]
+        for label in labels:  # letters are prebuilt; any other single-token label (digits) is added on first use
+            if label not in self._label_ids:
+                self._label_ids[label] = self._single_token_ids([label, " " + label])
         groups = [self._label_ids[label] for label in labels]
         flat = [tid for group in groups for tid in group]
         read = self._read(images, texts, flat)

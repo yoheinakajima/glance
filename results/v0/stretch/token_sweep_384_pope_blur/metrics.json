@@ -1,0 +1,573 @@
+{
+  "run_id": "20260920T045619Z-74b02b",
+  "units": {
+    "blur_ladder|vlm|statement": {
+      "suite": "blur_ladder",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "score",
+      "n_test": 100,
+      "n_calibration": 100,
+      "failures": {
+        "failed": 0,
+        "attempted": 200,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 100,
+        "accuracy": 0.5,
+        "nll": 2.7702443626184907,
+        "brier": 0.7913799321431201,
+        "mae_levels": 0.49596327,
+        "ece": 0.35732579,
+        "ece_floor": 0.0668546531,
+        "selective_accuracy": {
+          "50": 0.64,
+          "80": 0.5,
+          "90": 0.5,
+          "100": 0.5
+        }
+      },
+      "calibrated": {
+        "n": 100,
+        "accuracy": 0.5,
+        "nll": 1.0690470848589775,
+        "brier": 0.597036697080156,
+        "mae_levels": 0.6200253135293506,
+        "ece": 0.19291263491721,
+        "ece_floor": 0.15546787027396544,
+        "selective_accuracy": {
+          "50": 0.54,
+          "80": 0.5375,
+          "90": 0.5222222222222223,
+          "100": 0.5
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 100,
+        "accuracy": 0.5,
+        "nll": 1.0690470848589775,
+        "brier": 0.597036697080156,
+        "mae_levels": 0.6200253135293506,
+        "ece": 0.19291263491721,
+        "ece_floor": 0.15546787027396544,
+        "selective_accuracy": {
+          "50": 0.54,
+          "80": 0.5375,
+          "90": 0.5222222222222223,
+          "100": 0.5
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 679.4808126287535,
+          "p95_ms": 899.6484830277041,
+          "n": 200
+        },
+        "statements_per_second": 5.545701599452657,
+        "mean_image_tokens": 104.715,
+        "off_mass_mean": 3.7834554364709657e-07,
+        "off_mass_p95": 1.6116320724526843e-06
+      },
+      "confusions": [
+        {
+          "true": "2",
+          "predicted": "3",
+          "count": 21
+        },
+        {
+          "true": "0",
+          "predicted": "1",
+          "count": 17
+        },
+        {
+          "true": "1",
+          "predicted": "2",
+          "count": 4
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "bass/image_0008_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/bass_image_0008_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2102982481034522,
+          "top_probability": 0.4857661472868232
+        },
+        {
+          "item_id": "cup/image_0025_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/cup_image_0025_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.20903507589941128,
+          "top_probability": 0.4956220524324836
+        },
+        {
+          "item_id": "airplanes/image_0379_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0379_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.19615324965667014,
+          "top_probability": 0.4524653148741217
+        },
+        {
+          "item_id": "dolphin/image_0026_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/dolphin_image_0026_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.19452960986050205,
+          "top_probability": 0.44323824096814884
+        },
+        {
+          "item_id": "crayfish/image_0002_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/crayfish_image_0002_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.1851168511843555,
+          "top_probability": 0.42966474836150687
+        },
+        {
+          "item_id": "Faces/image_0167_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0167_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.18147024871456585,
+          "top_probability": 0.4175653382853361
+        },
+        {
+          "item_id": "metronome/image_0009_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/metronome_image_0009_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.18112207184094054,
+          "top_probability": 0.4482616121587784
+        },
+        {
+          "item_id": "Faces/image_0321_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0321_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.1802941268485162,
+          "top_probability": 0.421701845731537
+        },
+        {
+          "item_id": "butterfly/image_0040_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/butterfly_image_0040_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.17997425662889266,
+          "top_probability": 0.3940747358514104
+        },
+        {
+          "item_id": "crocodile_head/image_0019_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/crocodile_head_image_0019_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.17925049384732306,
+          "top_probability": 0.40405037688059364
+        },
+        {
+          "item_id": "Faces/image_0191_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0191_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.17863181778309956,
+          "top_probability": 0.4068324717125198
+        },
+        {
+          "item_id": "menorah/image_0028_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/menorah_image_0028_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.17627804129922553,
+          "top_probability": 0.39993891765756934
+        },
+        {
+          "item_id": "rhino/image_0005_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/rhino_image_0005_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.1742547974774482,
+          "top_probability": 0.5284968252303519
+        },
+        {
+          "item_id": "airplanes/image_0467_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0467_blur1.jpg",
+          "true": "1",
+          "predicted": "3",
+          "confidence": 0.16829696205596656,
+          "top_probability": 0.3916271172937147
+        },
+        {
+          "item_id": "cougar_face/image_0012_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/cougar_face_image_0012_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.16432697135850194,
+          "top_probability": 0.381147343628901
+        },
+        {
+          "item_id": "Motorbikes/image_0209_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0209_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.1616349569423502,
+          "top_probability": 0.3843917418530435
+        },
+        {
+          "item_id": "airplanes/image_0717_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0717_blur1.jpg",
+          "true": "1",
+          "predicted": "3",
+          "confidence": 0.15668536443857917,
+          "top_probability": 0.35608103568455685
+        },
+        {
+          "item_id": "Motorbikes/image_0045_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0045_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.15489141679344165,
+          "top_probability": 0.35666379638520695
+        },
+        {
+          "item_id": "Faces/image_0239_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0239_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.15472751528397155,
+          "top_probability": 0.37145656438918934
+        },
+        {
+          "item_id": "chandelier/image_0042_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/chandelier_image_0042_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.15352370119090675,
+          "top_probability": 0.3934658590229032
+        }
+      ]
+    },
+    "pope|vlm|statement": {
+      "suite": "pope",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 100,
+      "n_calibration": 100,
+      "failures": {
+        "failed": 0,
+        "attempted": 200,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 100,
+        "accuracy": 0.89,
+        "auroc": 0.9299999999999999,
+        "nll": 1.7875414784263355,
+        "brier": 0.1075325400676,
+        "ece": 0.10198188000000001,
+        "ece_floor": 0.0078155802,
+        "selective_accuracy": {
+          "50": 0.98,
+          "80": 0.925,
+          "90": 0.9111111111111111,
+          "100": 0.89
+        }
+      },
+      "calibrated": {
+        "n": 100,
+        "accuracy": 0.86,
+        "auroc": 0.9627999999999999,
+        "nll": 0.2661559744865677,
+        "brier": 0.08463817563196736,
+        "ece": 0.08441623345207538,
+        "ece_floor": 0.07451469524336513,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9625,
+          "90": 0.9222222222222223,
+          "100": 0.86
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 100,
+        "accuracy": 0.86,
+        "auroc": 0.9627999999999999,
+        "nll": 0.2661559744865677,
+        "brier": 0.08463817563196736,
+        "ece": 0.08441623345207538,
+        "ece_floor": 0.07451469524336513,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9625,
+          "90": 0.9222222222222223,
+          "100": 0.86
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 452.6447504758835,
+          "p95_ms": 518.8056145096198,
+          "n": 200
+        },
+        "statements_per_second": 2.289676228048982,
+        "mean_image_tokens": 275.565,
+        "off_mass_mean": 1.2816329261916476e-07,
+        "off_mass_p95": 1.2808284677201518e-06
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 8
+        },
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 6
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "adversarial_1113",
+          "image_path": ".cache/eval_images/pope/adversarial_1113.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8229017956274741,
+          "top_probability": 0.911450897813737
+        },
+        {
+          "item_id": "random_2269",
+          "image_path": ".cache/eval_images/pope/random_2269.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8117441471612714,
+          "top_probability": 0.9058720735806357
+        },
+        {
+          "item_id": "popular_179",
+          "image_path": ".cache/eval_images/pope/popular_179.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8027520168603411,
+          "top_probability": 0.9013760084301705
+        },
+        {
+          "item_id": "popular_779",
+          "image_path": ".cache/eval_images/pope/popular_779.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6419943306009764,
+          "top_probability": 0.8209971653004882
+        },
+        {
+          "item_id": "random_2417",
+          "image_path": ".cache/eval_images/pope/random_2417.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6257303762442805,
+          "top_probability": 0.8128651881221403
+        },
+        {
+          "item_id": "popular_121",
+          "image_path": ".cache/eval_images/pope/popular_121.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5995263108400543,
+          "top_probability": 0.7997631554200271
+        },
+        {
+          "item_id": "adversarial_2634",
+          "image_path": ".cache/eval_images/pope/adversarial_2634.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.39392158163917124,
+          "top_probability": 0.6969607908195856
+        },
+        {
+          "item_id": "random_2446",
+          "image_path": ".cache/eval_images/pope/random_2446.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.3464814990168239,
+          "top_probability": 0.673240749508412
+        },
+        {
+          "item_id": "adversarial_1887",
+          "image_path": ".cache/eval_images/pope/adversarial_1887.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.25326485521355246,
+          "top_probability": 0.6266324276067763
+        },
+        {
+          "item_id": "adversarial_1186",
+          "image_path": ".cache/eval_images/pope/adversarial_1186.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.23810369138986154,
+          "top_probability": 0.6190518456949308
+        },
+        {
+          "item_id": "popular_300",
+          "image_path": ".cache/eval_images/pope/popular_300.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.16516407801802813,
+          "top_probability": 0.5825820390090141
+        },
+        {
+          "item_id": "adversarial_2506",
+          "image_path": ".cache/eval_images/pope/adversarial_2506.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.03919012668276789,
+          "top_probability": 0.519595063341384
+        },
+        {
+          "item_id": "random_1292",
+          "image_path": ".cache/eval_images/pope/random_1292.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.022993220567363748,
+          "top_probability": 0.5114966102836819
+        },
+        {
+          "item_id": "adversarial_2707",
+          "image_path": ".cache/eval_images/pope/adversarial_2707.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.010926408368611695,
+          "top_probability": 0.5054632041843059
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {
+    "vlm": {
+      "p50_ms": 5390.268542105332,
+      "p95_ms": 5518.224293459207,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "calibration": {
+    "cal_830f74": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 384
+      },
+      "version": "cal_830f74",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T045619Z-74b02b",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.17163606259870967,
+            "b": 1.0590401600826083
+          },
+          "n": 100,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.0353596497854527,
+          "nll_after": 0.24743098745180492,
+          "ece_before": 0.09817966882948827,
+          "ece_after": 0.060739830032557014
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 8.90720347839959
+          },
+          "n": 100,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.573013587406391,
+          "nll_after": 1.1518648604451138,
+          "ece_before": 0.35758698292422075,
+          "ece_after": 0.21042637628359187
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 8.90720347839959
+          },
+          "n": 100,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.573013587406391,
+          "nll_after": 1.1518648604451138,
+          "ece_before": 0.35758698292422075,
+          "ece_after": 0.21042637628359187
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.17163606259870967,
+            "b": 1.0590401600826083
+          },
+          "n": 100,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.0353596497854527,
+          "nll_after": 0.24743098745180492,
+          "ece_before": 0.09817966882948827,
+          "ece_after": 0.060739830032557014
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.193 (blur_ladder, sampling floor 0.155); over threshold: blur_ladder, pope",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.750 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms on mps (not a gate)",
+      "measured": "p50 5390 ms, p95 5518 ms",
+      "pass": "recorded",
+      "within_target": false
+    }
+  ],
+  "verdict": "NO-GO"
+}

@@ -1,0 +1,187 @@
+{
+  "run_id": "20260920T043928Z-080b13",
+  "units": {
+    "pope|vlm|statement": {
+      "suite": "pope",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 10,
+      "n_calibration": 10,
+      "failures": {
+        "failed": 0,
+        "attempted": 20,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 10,
+        "accuracy": 1.0,
+        "auroc": 1.0,
+        "nll": 0.003440705673466071,
+        "brier": 0.000114365714,
+        "ece": 0.003382200000000002,
+        "ece_floor": 0.006179292000000002,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 1.0
+        }
+      },
+      "calibrated": {
+        "n": 10,
+        "accuracy": 0.9,
+        "auroc": 1.0,
+        "nll": 0.169336600857069,
+        "brier": 0.04568428886273338,
+        "ece": 0.13177397035332883,
+        "ece_floor": 0.16694403506221103,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.9
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 10,
+        "accuracy": 0.9,
+        "auroc": 1.0,
+        "nll": 0.169336600857069,
+        "brier": 0.04568428886273338,
+        "ece": 0.13177397035332883,
+        "ece_floor": 0.16694403506221103,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.9
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 528.7729793926701,
+          "p95_ms": 608.2227931008675,
+          "n": 20
+        },
+        "statements_per_second": 1.884056608968927,
+        "mean_image_tokens": 285.65,
+        "off_mass_mean": 0.004531217309223203,
+        "off_mass_p95": 0.012134810087484361
+      },
+      "confusions": [
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "adversarial_1186",
+          "image_path": ".cache/eval_images/pope/adversarial_1186.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.21234087378526367,
+          "top_probability": 0.6061704368926318
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {
+    "vlm": {
+      "p50_ms": 1265.0532498955727,
+      "p95_ms": 1461.8383332621306,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "calibration": {
+    "cal_1d9418": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 768
+      },
+      "version": "cal_1d9418",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T043928Z-080b13",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.132378964028773,
+            "b": 0.8750252574429864
+          },
+          "n": 10,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.8820028885884512,
+          "nll_after": 0.38139879632313045,
+          "ece_before": 0.23654772187581166,
+          "ece_after": 0.2482271955470628
+        }
+      },
+      "per_suite": {
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.132378964028773,
+            "b": 0.8750252574429864
+          },
+          "n": 10,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.8820028885884512,
+          "nll_after": 0.38139879632313045,
+          "ece_before": 0.23654772187581166,
+          "ece_after": 0.2482271955470628
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.132 (pope, sampling floor 0.167); over threshold: pope",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "1.000 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms on mps (not a gate)",
+      "measured": "p50 1265 ms, p95 1462 ms",
+      "pass": "recorded",
+      "within_target": true
+    }
+  ],
+  "verdict": "NO-GO"
+}

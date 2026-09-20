@@ -1,0 +1,337 @@
+{
+  "run_id": "20260920T054245Z-9b6a43",
+  "units": {
+    "pets37_openset|vlm|independent": {
+      "suite": "pets37_openset",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 100,
+      "n_calibration": 100,
+      "failures": {
+        "failed": 0,
+        "attempted": 200,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 100,
+        "accuracy": 0.77,
+        "nll": 1.4635640707810202,
+        "brier": 0.36418683536233,
+        "macro_f1": 0.7948304383788255,
+        "ece": 0.17233395000000007,
+        "ece_floor": 0.026771711100000012,
+        "selective_accuracy": {
+          "50": 0.98,
+          "80": 0.8875,
+          "90": 0.8333333333333334,
+          "100": 0.77
+        }
+      },
+      "calibrated": {
+        "n": 100,
+        "accuracy": 0.77,
+        "nll": 0.6727718950339847,
+        "brier": 0.29056536427990687,
+        "macro_f1": 0.7948304383788255,
+        "ece": 0.07913118354623692,
+        "ece_floor": 0.06501878138569961,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9125,
+          "90": 0.8333333333333334,
+          "100": 0.77
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 100,
+        "accuracy": 0.77,
+        "nll": 0.6727718950339847,
+        "brier": 0.29056536427990687,
+        "macro_f1": 0.7948304383788255,
+        "ece": 0.07913118354623692,
+        "ece_floor": 0.06501878138569961,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9125,
+          "90": 0.8333333333333334,
+          "100": 0.77
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 7639.355499995872,
+          "p95_ms": 9991.341635782737,
+          "n": 200
+        },
+        "statements_per_second": 4.070654085294538,
+        "mean_image_tokens": 176.64,
+        "off_mass_mean": 7.904678951395349e-08,
+        "off_mass_p95": 7.55649406958267e-07
+      },
+      "confusions": [
+        {
+          "true": "other",
+          "predicted": "bengal",
+          "count": 6
+        },
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "other",
+          "predicted": "keeshond",
+          "count": 2
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Egyptian_Mau_83",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_83.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.9020771797984757,
+          "top_probability": 0.9490005404893735
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.827897370851221,
+          "top_probability": 0.8638293632521439
+        },
+        {
+          "item_id": "Egyptian_Mau_87",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_87.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.7943347440384194,
+          "top_probability": 0.87183400791237
+        },
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7442227703194871,
+          "top_probability": 0.6012499447337036
+        },
+        {
+          "item_id": "Egyptian_Mau_7",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_7.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.7372042069912037,
+          "top_probability": 0.8294256530643197
+        },
+        {
+          "item_id": "Ragdoll_224",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_224.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7025501464331726,
+          "top_probability": 0.5109536451298224
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.5936604507046883,
+          "top_probability": 0.4588690266148836
+        },
+        {
+          "item_id": "Egyptian_Mau_27",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_27.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.5811539807046273,
+          "top_probability": 0.6974707737322325
+        },
+        {
+          "item_id": "saint_bernard_5",
+          "image_path": ".cache/eval_images/pets37/saint_bernard_5.jpg",
+          "true": "other",
+          "predicted": "great_pyrenees",
+          "confidence": 0.556003898606205,
+          "top_probability": 0.6104654968940346
+        },
+        {
+          "item_id": "Egyptian_Mau_214",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_214.jpg",
+          "true": "other",
+          "predicted": "siamese",
+          "confidence": 0.5216180103282115,
+          "top_probability": 0.5909193526992889
+        },
+        {
+          "item_id": "Abyssinian_87",
+          "image_path": ".cache/eval_images/pets37/Abyssinian_87.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.42042653394144225,
+          "top_probability": 0.4399588930344516
+        },
+        {
+          "item_id": "yorkshire_terrier_191",
+          "image_path": ".cache/eval_images/pets37/yorkshire_terrier_191.jpg",
+          "true": "other",
+          "predicted": "english_cocker_spaniel",
+          "confidence": 0.4157114480341022,
+          "top_probability": 0.4359811792460628
+        },
+        {
+          "item_id": "Abyssinian_4",
+          "image_path": ".cache/eval_images/pets37/Abyssinian_4.jpg",
+          "true": "other",
+          "predicted": "siamese",
+          "confidence": 0.35450440161282504,
+          "top_probability": 0.29928748109933007
+        },
+        {
+          "item_id": "Egyptian_Mau_213",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_213.jpg",
+          "true": "other",
+          "predicted": "bengal",
+          "confidence": 0.3326617769624628,
+          "top_probability": 0.3000579219516849
+        },
+        {
+          "item_id": "Maine_Coon_244",
+          "image_path": ".cache/eval_images/pets37/Maine_Coon_244.jpg",
+          "true": "maine_coon",
+          "predicted": "other",
+          "confidence": 0.30954644738798853,
+          "top_probability": 0.2715256234845288
+        },
+        {
+          "item_id": "havanese_71",
+          "image_path": ".cache/eval_images/pets37/havanese_71.jpg",
+          "true": "other",
+          "predicted": "japanese_chin",
+          "confidence": 0.30866004161477745,
+          "top_probability": 0.3791078242282203
+        },
+        {
+          "item_id": "havanese_19",
+          "image_path": ".cache/eval_images/pets37/havanese_19.jpg",
+          "true": "other",
+          "predicted": "japanese_chin",
+          "confidence": 0.29516033578937484,
+          "top_probability": 0.32713693777981295
+        },
+        {
+          "item_id": "beagle_198",
+          "image_path": ".cache/eval_images/pets37/beagle_198.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.2557776378327562,
+          "top_probability": 0.26240632556528526
+        },
+        {
+          "item_id": "British_Shorthair_248",
+          "image_path": ".cache/eval_images/pets37/British_Shorthair_248.jpg",
+          "true": "other",
+          "predicted": "ragdoll",
+          "confidence": 0.2299280940745836,
+          "top_probability": 0.1500859418085981
+        },
+        {
+          "item_id": "wheaten_terrier_80",
+          "image_path": ".cache/eval_images/pets37/wheaten_terrier_80.jpg",
+          "true": "other",
+          "predicted": "keeshond",
+          "confidence": 0.2075817165809295,
+          "top_probability": 0.17407559410248824
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {},
+  "calibration": {
+    "cal_1d9418": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 768
+      },
+      "version": "cal_1d9418",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T054245Z-9b6a43",
+      "types": {
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.696161072410579
+          },
+          "n": 100,
+          "suite_ids": [
+            "pets37_openset"
+          ],
+          "nll_before": 1.6092526739120223,
+          "nll_after": 0.7016542937333794,
+          "ece_before": 0.18200144861597425,
+          "ece_after": 0.07598031809928303
+        }
+      },
+      "per_suite": {
+        "pets37_openset": {
+          "method": "temperature",
+          "params": {
+            "T": 3.696161072410579
+          },
+          "n": 100,
+          "suite_ids": [
+            "pets37_openset"
+          ],
+          "nll_before": 1.6092526739120223,
+          "nll_after": 0.7016542937333794,
+          "ece_before": 0.18200144861597425,
+          "ece_after": 0.07598031809928303
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.079 (pets37_openset, sampling floor 0.065); over threshold: pets37_openset",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.912 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms (not a gate)",
+      "measured": "not measured",
+      "pass": "recorded"
+    }
+  ],
+  "verdict": "NO-GO"
+}

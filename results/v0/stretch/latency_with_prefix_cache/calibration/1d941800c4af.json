@@ -1,0 +1,46 @@
+{
+  "key": {
+    "backend": "vlm",
+    "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+    "prompt_version": "p1",
+    "choice_method": "independent",
+    "image_token_budget": 768
+  },
+  "version": "cal_1d9418",
+  "fit_date": "2026-09-20",
+  "source_run": "20260920T043928Z-080b13",
+  "types": {
+    "noul": {
+      "method": "platt",
+      "params": {
+        "a": 0.132378964028773,
+        "b": 0.8750252574429864
+      },
+      "n": 10,
+      "suite_ids": [
+        "pope"
+      ],
+      "nll_before": 1.8820028885884512,
+      "nll_after": 0.38139879632313045,
+      "ece_before": 0.23654772187581166,
+      "ece_after": 0.2482271955470628
+    }
+  },
+  "per_suite": {
+    "pope": {
+      "method": "platt",
+      "params": {
+        "a": 0.132378964028773,
+        "b": 0.8750252574429864
+      },
+      "n": 10,
+      "suite_ids": [
+        "pope"
+      ],
+      "nll_before": 1.8820028885884512,
+      "nll_after": 0.38139879632313045,
+      "ece_before": 0.23654772187581166,
+      "ece_after": 0.2482271955470628
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "permutation": {},
+  "latency": {
+    "siglip": {
+      "p50_ms": 23.294458049349487,
+      "p95_ms": 23.847994243260473,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    },
+    "vlm": {
+      "p50_ms": 8875.843416433781,
+      "p95_ms": 11191.221697197761,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "failures": {
+    "pope|siglip|statement": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "pope|vlm|statement": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "gqa_yesno|vlm|statement": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "pets37|siglip|independent": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "pets37|vlm|independent": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "pets37|vlm|letter": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "caltech101|siglip|independent": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "caltech101|vlm|independent": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "caltech101|vlm|letter": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "blur_ladder|siglip|statement": {
+      "failed": 0,
+      "attempted": 80
+    },
+    "blur_ladder|vlm|statement": {
+      "failed": 0,
+      "attempted": 80
+    }
+  },
+  "models": {
+    "siglip": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+    "vlm": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17"
+  },
+  "devices": {
+    "siglip": {
+      "device": "mps",
+      "dtype": "float32",
+      "image_token_budget": null
+    },
+    "vlm": {
+      "device": "mps",
+      "dtype": "float16",
+      "image_token_budget": 768
+    }
+  },
+  "prefix_cache": false
+}

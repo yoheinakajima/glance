@@ -1,0 +1,225 @@
+{
+  "run_id": "20260920T050215Z-c69a81",
+  "units": {
+    "pets37|vlm|independent": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 50,
+      "n_calibration": 50,
+      "failures": {
+        "failed": 0,
+        "attempted": 100,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 50,
+        "accuracy": 0.88,
+        "nll": 0.5807072245455585,
+        "brier": 0.21018223532779998,
+        "macro_f1": 0.7741935483870968,
+        "ece": 0.09054816000000003,
+        "ece_floor": 0.023518826200000006,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.975,
+          "90": 0.9333333333333333,
+          "100": 0.88
+        }
+      },
+      "calibrated": {
+        "n": 50,
+        "accuracy": 0.88,
+        "nll": 0.3454799512407303,
+        "brier": 0.16523446782325635,
+        "macro_f1": 0.7741935483870968,
+        "ece": 0.04567944317058366,
+        "ece_floor": 0.05141198085818713,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.975,
+          "90": 0.9333333333333333,
+          "100": 0.88
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 50,
+        "accuracy": 0.88,
+        "nll": 0.3454799512407303,
+        "brier": 0.16523446782325635,
+        "macro_f1": 0.7741935483870968,
+        "ece": 0.04567944317058366,
+        "ece_floor": 0.05141198085818713,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.975,
+          "90": 0.9333333333333333,
+          "100": 0.88
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 6576.83531253133,
+          "p95_ms": 6708.809210162144,
+          "n": 100
+        },
+        "statements_per_second": 5.7434485366043155,
+        "mean_image_tokens": 113.71,
+        "off_mass_mean": 7.770690167519193e-08,
+        "off_mass_p95": 7.184182069130946e-07
+      },
+      "confusions": [
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "count": 1
+        },
+        {
+          "true": "german_shorthaired",
+          "predicted": "basset_hound",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.8832032516056594,
+          "top_probability": 0.8674973516743398
+        },
+        {
+          "item_id": "german_shorthaired_2",
+          "image_path": ".cache/eval_images/pets37/german_shorthaired_2.jpg",
+          "true": "german_shorthaired",
+          "predicted": "basset_hound",
+          "confidence": 0.7962421780017753,
+          "top_probability": 0.7502108147227686
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.791210753390303,
+          "top_probability": 0.6297397645310491
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7780928712764179,
+          "top_probability": 0.704769519141706
+        },
+        {
+          "item_id": "Russian_Blue_253",
+          "image_path": ".cache/eval_images/pets37/Russian_Blue_253.jpg",
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "confidence": 0.4038258436947453,
+          "top_probability": 0.300669272597478
+        },
+        {
+          "item_id": "beagle_198",
+          "image_path": ".cache/eval_images/pets37/beagle_198.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.3878061206847939,
+          "top_probability": 0.4024585548483059
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {},
+  "calibration": {
+    "cal_589d48": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 128
+      },
+      "version": "cal_589d48",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T050215Z-c69a81",
+      "types": {
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 2.3616899603915726
+          },
+          "n": 50,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.38030764560174296,
+          "nll_after": 0.2510112955356375,
+          "ece_before": 0.07697872076437012,
+          "ece_after": 0.0760522606070292
+        }
+      },
+      "per_suite": {
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 2.3616899603915726
+          },
+          "n": 50,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.38030764560174296,
+          "nll_after": 0.2510112955356375,
+          "ece_before": 0.07697872076437012,
+          "ece_after": 0.0760522606070292
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.046 (pets37, sampling floor 0.051); all suites under",
+      "pass": true
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.975 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms (not a gate)",
+      "measured": "not measured",
+      "pass": "recorded"
+    }
+  ],
+  "verdict": "PARTIAL"
+}

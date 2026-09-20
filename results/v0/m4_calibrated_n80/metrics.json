@@ -1,0 +1,2182 @@
+{
+  "run_id": "20260919T234550Z-796ade",
+  "units": {
+    "blur_ladder|siglip|statement": {
+      "suite": "blur_ladder",
+      "backend": "siglip",
+      "method": "statement",
+      "type": "score",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.325,
+        "nll": 1.484905739217482,
+        "brier": 0.766343560020825,
+        "mae_levels": 0.85119105,
+        "ece": 0.28607350000000004,
+        "ece_floor": 0.239935842,
+        "selective_accuracy": {
+          "50": 0.45,
+          "80": 0.3125,
+          "90": 0.3333333333333333,
+          "100": 0.325
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.325,
+        "nll": 1.2909293331549734,
+        "brier": 0.7070970156853214,
+        "mae_levels": 0.9041514952638657,
+        "ece": 0.2678992748506611,
+        "ece_floor": 0.23143084714036705,
+        "selective_accuracy": {
+          "50": 0.35,
+          "80": 0.3125,
+          "90": 0.3333333333333333,
+          "100": 0.325
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.325,
+        "nll": 1.2909293331549734,
+        "brier": 0.7070970156853214,
+        "mae_levels": 0.9041514952638657,
+        "ece": 0.2678992748506611,
+        "ece_floor": 0.23143084714036705,
+        "selective_accuracy": {
+          "50": 0.35,
+          "80": 0.3125,
+          "90": 0.3333333333333333,
+          "100": 0.325
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 21.608395967632532,
+          "p95_ms": 24.717759084887803,
+          "n": 80
+        },
+        "statements_per_second": 167.0056867280094,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "3",
+          "predicted": "2",
+          "count": 9
+        },
+        {
+          "true": "1",
+          "predicted": "2",
+          "count": 8
+        },
+        {
+          "true": "0",
+          "predicted": "1",
+          "count": 4
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "airplanes/image_0400_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0400_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.10056617030841675,
+          "top_probability": 0.4238152878667286
+        },
+        {
+          "item_id": "Faces_easy/image_0059_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_easy_image_0059_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.07743928741593742,
+          "top_probability": 0.36597903615521166
+        },
+        {
+          "item_id": "Faces/image_0233_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0233_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.07623522717727915,
+          "top_probability": 0.3538535545863451
+        },
+        {
+          "item_id": "elephant/image_0013_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/elephant_image_0013_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.07359696173683283,
+          "top_probability": 0.43644139041054125
+        },
+        {
+          "item_id": "Faces_easy/image_0431_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_easy_image_0431_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.0707550839725456,
+          "top_probability": 0.34489407568963265
+        },
+        {
+          "item_id": "minaret/image_0021_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/minaret_image_0021_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.04874136470851442,
+          "top_probability": 0.36132005382034327
+        },
+        {
+          "item_id": "Leopards/image_0192_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Leopards_image_0192_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.04429337647916565,
+          "top_probability": 0.33731083885478524
+        },
+        {
+          "item_id": "revolver/image_0070_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/revolver_image_0070_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.04404016004065603,
+          "top_probability": 0.3233607156911394
+        },
+        {
+          "item_id": "ant/image_0008_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/ant_image_0008_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.03761488583015382,
+          "top_probability": 0.3221608716829466
+        },
+        {
+          "item_id": "cannon/image_0024_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/cannon_image_0024_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.035000436391842915,
+          "top_probability": 0.35664518940191575
+        },
+        {
+          "item_id": "Motorbikes/image_0178_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0178_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.03279469867191809,
+          "top_probability": 0.3202667691620817
+        },
+        {
+          "item_id": "airplanes/image_0471_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0471_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.03262031174222524,
+          "top_probability": 0.3274747631261566
+        },
+        {
+          "item_id": "Leopards/image_0077_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Leopards_image_0077_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.032034417079334854,
+          "top_probability": 0.30726098800062795
+        },
+        {
+          "item_id": "starfish/image_0005_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/starfish_image_0005_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.02743699670056665,
+          "top_probability": 0.33781305639316406
+        },
+        {
+          "item_id": "hawksbill/image_0030_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/hawksbill_image_0030_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.025647926303694835,
+          "top_probability": 0.32848924865034107
+        },
+        {
+          "item_id": "Faces_easy/image_0148_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_easy_image_0148_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.024511982530839527,
+          "top_probability": 0.31967189287148984
+        },
+        {
+          "item_id": "Motorbikes/image_0266_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0266_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.021960832630416816,
+          "top_probability": 0.30343581008278653
+        },
+        {
+          "item_id": "scorpion/image_0081_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/scorpion_image_0081_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.01718443318844265,
+          "top_probability": 0.31897982502784145
+        },
+        {
+          "item_id": "Motorbikes/image_0148_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0148_blur0.jpg",
+          "true": "0",
+          "predicted": "2",
+          "confidence": 0.016335535046785865,
+          "top_probability": 0.317194142560462
+        },
+        {
+          "item_id": "octopus/image_0010_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/octopus_image_0010_blur2.jpg",
+          "true": "2",
+          "predicted": "1",
+          "confidence": 0.01500702295772871,
+          "top_probability": 0.3113451417458665
+        }
+      ]
+    },
+    "blur_ladder|vlm|statement": {
+      "suite": "blur_ladder",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "score",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.525,
+        "nll": 3.1650349358573124,
+        "brier": 0.82954879328065,
+        "mae_levels": 0.47800932499999993,
+        "ece": 0.39136765,
+        "ece_floor": 0.08274377449999999,
+        "selective_accuracy": {
+          "50": 0.55,
+          "80": 0.53125,
+          "90": 0.5,
+          "100": 0.525
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.525,
+        "nll": 1.065929603345072,
+        "brier": 0.5846479432877929,
+        "mae_levels": 0.6209701572315527,
+        "ece": 0.25295091633927175,
+        "ece_floor": 0.2518753023956252,
+        "selective_accuracy": {
+          "50": 0.65,
+          "80": 0.59375,
+          "90": 0.5555555555555556,
+          "100": 0.525
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.525,
+        "nll": 1.065929603345072,
+        "brier": 0.5846479432877929,
+        "mae_levels": 0.6209701572315527,
+        "ece": 0.25295091633927175,
+        "ece_floor": 0.2518753023956252,
+        "selective_accuracy": {
+          "50": 0.65,
+          "80": 0.59375,
+          "90": 0.5555555555555556,
+          "100": 0.525
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 728.5594999557361,
+          "p95_ms": 906.0644465382211,
+          "n": 80
+        },
+        "statements_per_second": 5.435328325782174,
+        "mean_image_tokens": 107.125,
+        "off_mass_mean": 0.0035742716240374168,
+        "off_mass_p95": 0.013899042836697191
+      },
+      "confusions": [
+        {
+          "true": "0",
+          "predicted": "1",
+          "count": 10
+        },
+        {
+          "true": "2",
+          "predicted": "3",
+          "count": 6
+        },
+        {
+          "true": "1",
+          "predicted": "2",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "airplanes/image_0288_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0288_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.2831623947262917,
+          "top_probability": 0.6360347761385554
+        },
+        {
+          "item_id": "dolphin/image_0026_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/dolphin_image_0026_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2649812688650349,
+          "top_probability": 0.5046650966948981
+        },
+        {
+          "item_id": "strawberry/image_0008_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/strawberry_image_0008_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.25316708844728864,
+          "top_probability": 0.5805159414063771
+        },
+        {
+          "item_id": "metronome/image_0009_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/metronome_image_0009_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.251456833573688,
+          "top_probability": 0.5182183524011902
+        },
+        {
+          "item_id": "Faces/image_0167_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0167_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.24131263265265246,
+          "top_probability": 0.46703059015278614
+        },
+        {
+          "item_id": "crocodile_head/image_0019_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/crocodile_head_image_0019_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.23608602624809483,
+          "top_probability": 0.44555473394238637
+        },
+        {
+          "item_id": "Motorbikes/image_0189_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0189_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.2143556725038016,
+          "top_probability": 0.5945597645711883
+        },
+        {
+          "item_id": "strawberry/image_0022_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/strawberry_image_0022_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.20687814402229332,
+          "top_probability": 0.5586789339216912
+        },
+        {
+          "item_id": "ketch/image_0056_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/ketch_image_0056_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.20042291251953548,
+          "top_probability": 0.5825826143722255
+        },
+        {
+          "item_id": "cellphone/image_0046_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/cellphone_image_0046_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.19480115171683987,
+          "top_probability": 0.40980837449805224
+        },
+        {
+          "item_id": "octopus/image_0010_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/octopus_image_0010_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.19367839764772377,
+          "top_probability": 0.41377374871131917
+        },
+        {
+          "item_id": "wrench/image_0037_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/wrench_image_0037_blur1.jpg",
+          "true": "1",
+          "predicted": "3",
+          "confidence": 0.18764084572778272,
+          "top_probability": 0.3917208707093316
+        },
+        {
+          "item_id": "minaret/image_0021_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/minaret_image_0021_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.1847385747985889,
+          "top_probability": 0.3739723726799821
+        },
+        {
+          "item_id": "Motorbikes/image_0148_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/Motorbikes_image_0148_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.17399590374434915,
+          "top_probability": 0.5409114389482834
+        },
+        {
+          "item_id": "hedgehog/image_0052_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/hedgehog_image_0052_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.16956162707756695,
+          "top_probability": 0.5516644335940372
+        },
+        {
+          "item_id": "elephant/image_0013_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/elephant_image_0013_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.14788085440223087,
+          "top_probability": 0.516712811708907
+        },
+        {
+          "item_id": "anchor/image_0039_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/anchor_image_0039_blur2.jpg",
+          "true": "2",
+          "predicted": "1",
+          "confidence": 0.13792405076551795,
+          "top_probability": 0.4589005808312171
+        },
+        {
+          "item_id": "camera/image_0021_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/camera_image_0021_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.13397754426523445,
+          "top_probability": 0.5135285423727608
+        },
+        {
+          "item_id": "trilobite/image_0003_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/trilobite_image_0003_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.12429394271390304,
+          "top_probability": 0.43948947052709214
+        }
+      ]
+    },
+    "caltech101|siglip|independent": {
+      "suite": "caltech101",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.06402197083107788,
+        "brier": 0.027367382262849998,
+        "macro_f1": 0.96415770609319,
+        "ece": 0.020598925,
+        "ece_floor": 0.04479910374999999,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.03848566635195015,
+        "brier": 0.025540604881376223,
+        "macro_f1": 0.96415770609319,
+        "ece": 0.015110571157970846,
+        "ece_floor": 0.018982434430171124,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.041454763377055906,
+        "brier": 0.03185276932989843,
+        "macro_f1": 0.96415770609319,
+        "ece": 0.01907117824524097,
+        "ece_floor": 0.010107912323819565,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 22.18987501692027,
+          "p95_ms": 33.31147646531462,
+          "n": 80
+        },
+        "statements_per_second": 3550.2637550092268,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Faces/image_0176",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0176.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8483324023385466,
+          "top_probability": 0.6922492882246492
+        }
+      ]
+    },
+    "caltech101|vlm|independent": {
+      "suite": "caltech101",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.09813558026796478,
+        "brier": 0.07064512187230002,
+        "macro_f1": 0.9731182795698924,
+        "ece": 0.014627050000000006,
+        "ece_floor": 0.031950477,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9722222222222222,
+          "100": 0.95
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.09558276888961137,
+        "brier": 0.06667921627131004,
+        "macro_f1": 0.9731182795698924,
+        "ece": 0.01121108382477663,
+        "ece_floor": 0.03379417946100368,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9722222222222222,
+          "100": 0.95
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.09985449569183437,
+        "brier": 0.06729852675586173,
+        "macro_f1": 0.9731182795698924,
+        "ece": 0.014040583610523094,
+        "ece_floor": 0.03855853721643185,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9722222222222222,
+          "100": 0.95
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 12568.145812489092,
+          "p95_ms": 14762.252860621082,
+          "n": 80
+        },
+        "statements_per_second": 7.622056154732069,
+        "mean_image_tokens": 76.7125,
+        "off_mass_mean": 0.00389536958905531,
+        "off_mass_p95": 0.014045702420287775
+      },
+      "confusions": [
+        {
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "count": 2
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Faces_easy/image_0081",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0081.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8599417387599712,
+          "top_probability": 0.6559563844681355
+        },
+        {
+          "item_id": "Faces_easy/image_0046",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0046.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8504808960671506,
+          "top_probability": 0.549985366129348
+        }
+      ]
+    },
+    "caltech101|vlm|letter": {
+      "suite": "caltech101",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.34538776394910686,
+        "brier": 0.049999900000049995,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.024999974999999997,
+        "ece_floor": 2.5000000003494456e-08,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.10615492312956236,
+        "brier": 0.047993055574149665,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.02733880008330328,
+        "ece_floor": 0.00770757207714924,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.10409142962613893,
+        "brier": 0.04520709362846148,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.04053437722716892,
+        "ece_floor": 0.040283056825418634,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 985.3749589528888,
+          "p95_ms": 1038.7084485497326,
+          "n": 80
+        },
+        "statements_per_second": 4.159896403540536,
+        "mean_image_tokens": 76.7125,
+        "off_mass_mean": 0.0034562303096452147,
+        "off_mass_p95": 0.013649390775098393
+      },
+      "confusions": [
+        {
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Faces_easy/image_0046",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0046.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.9526532644333336,
+          "top_probability": 0.9756657880408237
+        }
+      ]
+    },
+    "gqa_yesno|vlm|statement": {
+      "suite": "gqa_yesno",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.725,
+        "auroc": 0.7760416666666666,
+        "nll": 1.3882202344987848,
+        "brier": 0.2182434910085,
+        "ece": 0.24064699999999994,
+        "ece_floor": 0.06234356250000002,
+        "selective_accuracy": {
+          "50": 0.75,
+          "80": 0.78125,
+          "90": 0.8055555555555556,
+          "100": 0.725
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.8,
+        "auroc": 0.7760416666666666,
+        "nll": 0.554837876898233,
+        "brier": 0.18961028316399958,
+        "ece": 0.22431514295856533,
+        "ece_floor": 0.20009408920419344,
+        "selective_accuracy": {
+          "50": 0.7,
+          "80": 0.78125,
+          "90": 0.7777777777777778,
+          "100": 0.8
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.75,
+        "auroc": 0.7760416666666666,
+        "nll": 0.5961684932401077,
+        "brier": 0.1993185217772116,
+        "ece": 0.20160079820205784,
+        "ece_floor": 0.18009577444581878,
+        "selective_accuracy": {
+          "50": 0.8,
+          "80": 0.75,
+          "90": 0.7222222222222222,
+          "100": 0.75
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 436.1183955334127,
+          "p95_ms": 480.642680870369,
+          "n": 80
+        },
+        "statements_per_second": 2.420946910254784,
+        "mean_image_tokens": 259.325,
+        "off_mass_mean": 0.004519165084374969,
+        "off_mass_p95": 0.014519184434511228
+      },
+      "confusions": [
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 5
+        },
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 3
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "20611590",
+          "image_path": ".cache/eval_images/gqa_yesno/20611590.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6716008670651891,
+          "top_probability": 0.8358004335325946
+        },
+        {
+          "item_id": "201879811",
+          "image_path": ".cache/eval_images/gqa_yesno/201879811.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6394315002135258,
+          "top_probability": 0.8197157501067629
+        },
+        {
+          "item_id": "20621841",
+          "image_path": ".cache/eval_images/gqa_yesno/20621841.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5990297470892191,
+          "top_probability": 0.7995148735446096
+        },
+        {
+          "item_id": "202100299",
+          "image_path": ".cache/eval_images/gqa_yesno/202100299.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.5079008513830132,
+          "top_probability": 0.7539504256915066
+        },
+        {
+          "item_id": "201428716",
+          "image_path": ".cache/eval_images/gqa_yesno/201428716.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.46449557125285224,
+          "top_probability": 0.7322477856264261
+        },
+        {
+          "item_id": "201360614",
+          "image_path": ".cache/eval_images/gqa_yesno/201360614.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4323356931538195,
+          "top_probability": 0.7161678465769097
+        },
+        {
+          "item_id": "202119775",
+          "image_path": ".cache/eval_images/gqa_yesno/202119775.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.34670108530823085,
+          "top_probability": 0.6733505426541154
+        },
+        {
+          "item_id": "20710438",
+          "image_path": ".cache/eval_images/gqa_yesno/20710438.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.09631261333546903,
+          "top_probability": 0.5481563066677345
+        }
+      ]
+    },
+    "pets37|siglip|independent": {
+      "suite": "pets37",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.11930241520341714,
+        "brier": 0.05625402198037499,
+        "macro_f1": 0.9333333333333335,
+        "ece": 0.05876935,
+        "ece_floor": 0.07415569775,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.95
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.07577623477187098,
+        "brier": 0.04883389265294151,
+        "macro_f1": 0.9333333333333335,
+        "ece": 0.034868093506852736,
+        "ece_floor": 0.031030115721230114,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.95
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.07982208397455932,
+        "brier": 0.04850004884424845,
+        "macro_f1": 0.9333333333333335,
+        "ece": 0.03649771503021991,
+        "ece_floor": 0.03669989299494692,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.95
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 22.428728989325464,
+          "p95_ms": 25.56524657411499,
+          "n": 80
+        },
+        "statements_per_second": 1394.8460975702267,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "siamese",
+          "predicted": "birman",
+          "count": 1
+        },
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8161858882143412,
+          "top_probability": 0.6541499125364966
+        },
+        {
+          "item_id": "Siamese_78",
+          "image_path": ".cache/eval_images/pets37/Siamese_78.jpg",
+          "true": "siamese",
+          "predicted": "birman",
+          "confidence": 0.7758361882611053,
+          "top_probability": 0.6367912740921177
+        }
+      ]
+    },
+    "pets37|vlm|independent": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.6120293091557194,
+        "brier": 0.2087898793679,
+        "macro_f1": 0.7435897435897435,
+        "ece": 0.10219860000000001,
+        "ece_floor": 0.030852237749999983,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.387727879119015,
+        "brier": 0.17336239855032512,
+        "macro_f1": 0.7435897435897435,
+        "ece": 0.08320421872580426,
+        "ece_floor": 0.05897556847449028,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9444444444444444,
+          "100": 0.875
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.4484340015279761,
+        "brier": 0.1847792345007348,
+        "macro_f1": 0.7435897435897435,
+        "ece": 0.08916014981085951,
+        "ece_floor": 0.04506813071923511,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9444444444444444,
+          "100": 0.875
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 8788.175854599103,
+          "p95_ms": 12091.4436545223,
+          "n": 80
+        },
+        "statements_per_second": 4.026147149840897,
+        "mean_image_tokens": 173.6,
+        "off_mass_mean": 0.0038729941093442904,
+        "off_mass_p95": 0.013834579045908546
+      },
+      "confusions": [
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "count": 1
+        },
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.9763443348818459,
+          "top_probability": 0.9868092969808703
+        },
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.8279837633383105,
+          "top_probability": 0.7261774298391502
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7285739035231122,
+          "top_probability": 0.6360121744509651
+        },
+        {
+          "item_id": "beagle_198",
+          "image_path": ".cache/eval_images/pets37/beagle_198.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.5562298378640365,
+          "top_probability": 0.5694324641595764
+        },
+        {
+          "item_id": "Russian_Blue_253",
+          "image_path": ".cache/eval_images/pets37/Russian_Blue_253.jpg",
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "confidence": 0.445252154339561,
+          "top_probability": 0.3414771003942554
+        }
+      ]
+    },
+    "pets37|vlm|letter": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 1.6962258726149702,
+        "brier": 0.2375896495988,
+        "macro_f1": 0.7365079365079364,
+        "ece": 0.1146953,
+        "ece_floor": 0.013233054250000004,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.5101634331822323,
+        "brier": 0.20353440566766384,
+        "macro_f1": 0.7365079365079364,
+        "ece": 0.10544579775827584,
+        "ece_floor": 0.07123172236355492,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9375,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.679507082917251,
+        "brier": 0.2228165319978534,
+        "macro_f1": 0.7365079365079364,
+        "ece": 0.10866330851755955,
+        "ece_floor": 0.026486060395937146,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 1802.447333582677,
+          "p95_ms": 2128.341429226566,
+          "n": 80
+        },
+        "statements_per_second": 2.201116180296861,
+        "mean_image_tokens": 173.6,
+        "off_mass_mean": 0.003716524514378801,
+        "off_mass_p95": 0.014076111878100163
+      },
+      "confusions": [
+        {
+          "true": "egyptian_mau",
+          "predicted": "abyssinian",
+          "count": 1
+        },
+        {
+          "true": "german_shorthaired",
+          "predicted": "basset_hound",
+          "count": 1
+        },
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.86860441815002,
+          "top_probability": 0.9264647429352623
+        },
+        {
+          "item_id": "german_shorthaired_2",
+          "image_path": ".cache/eval_images/pets37/german_shorthaired_2.jpg",
+          "true": "german_shorthaired",
+          "predicted": "basset_hound",
+          "confidence": 0.8276297294268988,
+          "top_probability": 0.9069738193766803
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8050409839327862,
+          "top_probability": 0.888711129368659
+        },
+        {
+          "item_id": "Egyptian_Mau_213",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_213.jpg",
+          "true": "egyptian_mau",
+          "predicted": "abyssinian",
+          "confidence": 0.5314302104829418,
+          "top_probability": 0.5992087240615618
+        },
+        {
+          "item_id": "beagle_198",
+          "image_path": ".cache/eval_images/pets37/beagle_198.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.40340248050100125,
+          "top_probability": 0.40542822836849773
+        }
+      ]
+    },
+    "pope|siglip|statement": {
+      "suite": "pope",
+      "backend": "siglip",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.6,
+        "auroc": 0.7675000000000001,
+        "nll": 1.0207706528671596,
+        "brier": 0.292563391855725,
+        "ece": 0.33208692500000003,
+        "ece_floor": 0.122469903,
+        "selective_accuracy": {
+          "50": 0.7,
+          "80": 0.6875,
+          "90": 0.6666666666666666,
+          "100": 0.6
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.75,
+        "auroc": 0.7675000000000001,
+        "nll": 0.5918894361950271,
+        "brier": 0.19483085350130908,
+        "ece": 0.2301438641024175,
+        "ece_floor": 0.19566481753537984,
+        "selective_accuracy": {
+          "50": 0.8,
+          "80": 0.78125,
+          "90": 0.75,
+          "100": 0.75
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.75,
+        "auroc": 0.7675000000000001,
+        "nll": 0.5918894361950271,
+        "brier": 0.19483085350130908,
+        "ece": 0.2301438641024175,
+        "ece_floor": 0.19566481753537984,
+        "selective_accuracy": {
+          "50": 0.8,
+          "80": 0.78125,
+          "90": 0.75,
+          "100": 0.75
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 23.281645961105824,
+          "p95_ms": 35.768824990373076,
+          "n": 80
+        },
+        "statements_per_second": 34.49665116608133,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 7
+        },
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 3
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "random_135",
+          "image_path": ".cache/eval_images/pope/random_135.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8890014598254388,
+          "top_probability": 0.9445007299127194
+        },
+        {
+          "item_id": "popular_1255",
+          "image_path": ".cache/eval_images/pope/popular_1255.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8415162088977781,
+          "top_probability": 0.9207581044488891
+        },
+        {
+          "item_id": "popular_779",
+          "image_path": ".cache/eval_images/pope/popular_779.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5955150035611023,
+          "top_probability": 0.7977575017805512
+        },
+        {
+          "item_id": "adversarial_1637",
+          "image_path": ".cache/eval_images/pope/adversarial_1637.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4906694497105796,
+          "top_probability": 0.7453347248552897
+        },
+        {
+          "item_id": "popular_121",
+          "image_path": ".cache/eval_images/pope/popular_121.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4325803432573334,
+          "top_probability": 0.7162901716286667
+        },
+        {
+          "item_id": "adversarial_1887",
+          "image_path": ".cache/eval_images/pope/adversarial_1887.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4069731785769769,
+          "top_probability": 0.7034865892884885
+        },
+        {
+          "item_id": "adversarial_2880",
+          "image_path": ".cache/eval_images/pope/adversarial_2880.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.16430584119423353,
+          "top_probability": 0.5821529205971168
+        },
+        {
+          "item_id": "adversarial_267",
+          "image_path": ".cache/eval_images/pope/adversarial_267.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.09976499276402884,
+          "top_probability": 0.5498824963820144
+        },
+        {
+          "item_id": "random_2330",
+          "image_path": ".cache/eval_images/pope/random_2330.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.09192215023561934,
+          "top_probability": 0.5459610751178097
+        },
+        {
+          "item_id": "adversarial_2296",
+          "image_path": ".cache/eval_images/pope/adversarial_2296.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.07048309628263194,
+          "top_probability": 0.535241548141316
+        }
+      ]
+    },
+    "pope|vlm|statement": {
+      "suite": "pope",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 40,
+      "n_calibration": 40,
+      "failures": {
+        "failed": 0,
+        "attempted": 80,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 40,
+        "accuracy": 0.85,
+        "auroc": 0.9575,
+        "nll": 1.577901730693616,
+        "brier": 0.1422360063359,
+        "ece": 0.14471315,
+        "ece_floor": 0.008242965000000012,
+        "selective_accuracy": {
+          "50": 0.95,
+          "80": 0.90625,
+          "90": 0.8888888888888888,
+          "100": 0.85
+        }
+      },
+      "calibrated": {
+        "n": 40,
+        "accuracy": 0.85,
+        "auroc": 0.98,
+        "nll": 0.3027873184141195,
+        "brier": 0.09741089179167475,
+        "ece": 0.08789669782446023,
+        "ece_floor": 0.11081593337959852,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9375,
+          "90": 0.9166666666666666,
+          "100": 0.85
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 40,
+        "accuracy": 0.9,
+        "auroc": 0.98,
+        "nll": 0.23170114603879238,
+        "brier": 0.07135113670659117,
+        "ece": 0.09332105405892627,
+        "ece_floor": 0.12275230331333478,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9166666666666666,
+          "100": 0.9
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 456.35879156179726,
+          "p95_ms": 545.3282688977197,
+          "n": 80
+        },
+        "statements_per_second": 1.8789695691826978,
+        "mean_image_tokens": 284.5875,
+        "off_mass_mean": 0.004931237562759677,
+        "off_mass_p95": 0.013486587563516162
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 6
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "popular_779",
+          "image_path": ".cache/eval_images/pope/popular_779.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8142454161272699,
+          "top_probability": 0.9071227080636349
+        },
+        {
+          "item_id": "popular_121",
+          "image_path": ".cache/eval_images/pope/popular_121.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.790999594442015,
+          "top_probability": 0.8954997972210075
+        },
+        {
+          "item_id": "adversarial_1887",
+          "image_path": ".cache/eval_images/pope/adversarial_1887.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5810781357274235,
+          "top_probability": 0.7905390678637118
+        },
+        {
+          "item_id": "adversarial_2707",
+          "image_path": ".cache/eval_images/pope/adversarial_2707.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.40495389701401263,
+          "top_probability": 0.7024769485070064
+        },
+        {
+          "item_id": "random_1219",
+          "image_path": ".cache/eval_images/pope/random_1219.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.2559643543803992,
+          "top_probability": 0.6279821771901997
+        },
+        {
+          "item_id": "adversarial_941",
+          "image_path": ".cache/eval_images/pope/adversarial_941.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.05840615977099317,
+          "top_probability": 0.5292030798854965
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {
+    "pets37|vlm": {
+      "n": 40,
+      "options_letter": 26,
+      "options_full": 37,
+      "letter_raw": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 1.6962258726149702,
+        "brier": 0.2375896495988,
+        "macro_f1": 0.7365079365079364,
+        "ece": 0.1146953,
+        "ece_floor": 0.013233054250000004,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 40,
+        "accuracy": 0.9,
+        "nll": 0.5296638654656568,
+        "brier": 0.15683150948006652,
+        "macro_f1": 0.7787878787878788,
+        "ece": 0.07455690501989316,
+        "ece_floor": 0.024328373963790985,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9444444444444444,
+          "100": 0.9
+        }
+      },
+      "independent_full_raw": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.6120293091557194,
+        "brier": 0.2087898793679,
+        "macro_f1": 0.7435897435897435,
+        "ece": 0.10219860000000001,
+        "ece_floor": 0.030852237749999983,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 1779.8326460178941,
+        "p95_ms": 2094.1325649037026,
+        "n": 40
+      },
+      "independent_latency": {
+        "p50_ms": 8694.82314598281,
+        "p95_ms": 11847.614287119359,
+        "n": 40
+      },
+      "letter_calibrated": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.5101634331822323,
+        "brier": 0.20353440566766384,
+        "macro_f1": 0.7365079365079364,
+        "ece": 0.10544579775827584,
+        "ece_floor": 0.07123172236355492,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9375,
+          "90": 0.9166666666666666,
+          "100": 0.875
+        }
+      },
+      "independent_full_calibrated": {
+        "n": 40,
+        "accuracy": 0.875,
+        "nll": 0.387727879119015,
+        "brier": 0.17336239855032512,
+        "macro_f1": 0.7435897435897435,
+        "ece": 0.08320421872580426,
+        "ece_floor": 0.05897556847449028,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.96875,
+          "90": 0.9444444444444444,
+          "100": 0.875
+        }
+      }
+    },
+    "caltech101|vlm": {
+      "n": 40,
+      "options_letter": 26,
+      "options_full": 101,
+      "letter_raw": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.34538776394910686,
+        "brier": 0.049999900000049995,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.024999974999999997,
+        "ece_floor": 2.5000000003494456e-08,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.023047856922127897,
+        "brier": 0.018133757945572718,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.015055102616837832,
+        "ece_floor": 0.01198933970919846,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "independent_full_raw": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.09813558026796478,
+        "brier": 0.07064512187230002,
+        "macro_f1": 0.9731182795698924,
+        "ece": 0.014627050000000006,
+        "ece_floor": 0.031950477,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9722222222222222,
+          "100": 0.95
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 907.4740209616721,
+        "p95_ms": 1054.6690790564753,
+        "n": 40
+      },
+      "independent_latency": {
+        "p50_ms": 12553.375583025627,
+        "p95_ms": 14810.739160573572,
+        "n": 40
+      },
+      "letter_calibrated": {
+        "n": 40,
+        "accuracy": 0.975,
+        "nll": 0.10615492312956236,
+        "brier": 0.047993055574149665,
+        "macro_f1": 0.9854545454545456,
+        "ece": 0.02733880008330328,
+        "ece_floor": 0.00770757207714924,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.975
+        }
+      },
+      "independent_full_calibrated": {
+        "n": 40,
+        "accuracy": 0.95,
+        "nll": 0.09558276888961137,
+        "brier": 0.06667921627131004,
+        "macro_f1": 0.9731182795698924,
+        "ece": 0.01121108382477663,
+        "ece_floor": 0.03379417946100368,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9722222222222222,
+          "100": 0.95
+        }
+      }
+    }
+  },
+  "baseline": {},
+  "permutation": {},
+  "latency": {
+    "siglip": {
+      "p50_ms": 23.294458049349487,
+      "p95_ms": 23.847994243260473,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    },
+    "vlm": {
+      "p50_ms": 8875.843416433781,
+      "p95_ms": 11191.221697197761,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "calibration": {
+    "cal_8edfd9": {
+      "key": {
+        "backend": "siglip",
+        "model": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": null
+      },
+      "version": "cal_8edfd9",
+      "fit_date": "2026-09-20",
+      "source_run": "20260919T234550Z-796ade",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.819607423604629,
+            "b": 1.6520326033463275
+          },
+          "n": 40,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 0.8315258955893917,
+          "nll_after": 0.5246643474005686,
+          "ece_before": 0.331337295783823,
+          "ece_after": 0.23611736803625194
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 0.5657501627116073
+          },
+          "n": 80,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.10258033581942963,
+          "nll_after": 0.07737985708889589,
+          "ece_before": 0.038704951368729444,
+          "ece_after": 0.021304174789870126
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 4.716719465051708
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 1.698273958087507,
+          "nll_after": 1.330004986566676,
+          "ece_before": 0.34462989149649587,
+          "ece_after": 0.29933667497713046
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 4.716719465051708
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 1.698273958087507,
+          "nll_after": 1.330004986566676,
+          "ece_before": 0.34462989149649587,
+          "ece_after": 0.29933667497713046
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 0.3642105995260617
+          },
+          "n": 40,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.07328931456723929,
+          "nll_after": 0.0416745208765153,
+          "ece_before": 0.03092184243542586,
+          "ece_after": 0.008264447553956427
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 0.6367315614453506
+          },
+          "n": 40,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.13187135707161995,
+          "nll_after": 0.10751299654762966,
+          "ece_before": 0.05911407412018761,
+          "ece_after": 0.03638249755967881
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.819607423604629,
+            "b": 1.6520326033463275
+          },
+          "n": 40,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 0.8315258955893917,
+          "nll_after": 0.5246643474005686,
+          "ece_before": 0.331337295783823,
+          "ece_after": 0.23611736803625194
+        }
+      }
+    },
+    "cal_1d9418": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 768
+      },
+      "version": "cal_1d9418",
+      "fit_date": "2026-09-20",
+      "source_run": "20260919T234550Z-796ade",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.16233131499490067,
+            "b": 0.16317546390450643
+          },
+          "n": 80,
+          "suite_ids": [
+            "gqa_yesno",
+            "pope"
+          ],
+          "nll_before": 1.1007999429072726,
+          "nll_after": 0.4053539119386282,
+          "ece_before": 0.1626045908407006,
+          "ece_after": 0.10909441392716959
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 2.0625535129826993
+          },
+          "n": 80,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.212929874337914,
+          "nll_after": 0.15977923082420492,
+          "ece_before": 0.042669231996244214,
+          "ece_after": 0.03478672947176153
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 5.924005726860951
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 2.449421412655583,
+          "nll_after": 1.002909817172276,
+          "ece_before": 0.26451090608539646,
+          "ece_after": 0.32844934559614997
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 5.924005726860951
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 2.449421412655583,
+          "nll_after": 1.002909817172276,
+          "ece_before": 0.26451090608539646,
+          "ece_after": 0.32844934559614997
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 2.530078407446393
+          },
+          "n": 40,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.2989323259920824,
+          "nll_after": 0.1908296626650688,
+          "ece_before": 0.0925177189043413,
+          "ece_after": 0.058777487436584806
+        },
+        "gqa_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.226463993591276,
+            "b": -0.2535835135243055
+          },
+          "n": 40,
+          "suite_ids": [
+            "gqa_yesno"
+          ],
+          "nll_before": 0.8158961753928924,
+          "nll_after": 0.4373086989362779,
+          "ece_before": 0.21118186618861925,
+          "ece_after": 0.19571443093538785
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 1.5228230967839251
+          },
+          "n": 40,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.12692742268374552,
+          "nll_after": 0.11569013603301817,
+          "ece_before": 0.041417386590915824,
+          "ece_after": 0.04382640826844921
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.172645046777203,
+            "b": 1.2802400667313523
+          },
+          "n": 40,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.3857037104216527,
+          "nll_after": 0.29532483333629245,
+          "ece_before": 0.1340427794145221,
+          "ece_after": 0.14030364190542238
+        }
+      }
+    },
+    "cal_eac746": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "letter",
+        "image_token_budget": 768
+      },
+      "version": "cal_eac746",
+      "fit_date": "2026-09-20",
+      "source_run": "20260919T234550Z-796ade",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.16233131499490067,
+            "b": 0.16317546390450643
+          },
+          "n": 80,
+          "suite_ids": [
+            "gqa_yesno",
+            "pope"
+          ],
+          "nll_before": 1.1007999429072726,
+          "nll_after": 0.4053539119386282,
+          "ece_before": 0.1626045908407006,
+          "ece_after": 0.10909441392716959
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.395542233994399
+          },
+          "n": 80,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.400860614480516,
+          "nll_after": 0.14511627292274767,
+          "ece_before": 0.03611396227585246,
+          "ece_after": 0.034498056355216716
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 5.924005726860951
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 2.449421412655583,
+          "nll_after": 1.002909817172276,
+          "ece_before": 0.26451090608539646,
+          "ece_after": 0.32844934559614997
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 5.924005726860951
+          },
+          "n": 40,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 2.449421412655583,
+          "nll_after": 1.002909817172276,
+          "ece_before": 0.26451090608539646,
+          "ece_after": 0.32844934559614997
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 4.253832351200816
+          },
+          "n": 40,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.7458259380930936,
+          "nll_after": 0.20713006612787677,
+          "ece_before": 0.049974913863342095,
+          "ece_after": 0.05723983202481069
+        },
+        "gqa_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.226463993591276,
+            "b": -0.2535835135243055
+          },
+          "n": 40,
+          "suite_ids": [
+            "gqa_yesno"
+          ],
+          "nll_before": 0.8158961753928924,
+          "nll_after": 0.4373086989362779,
+          "ece_before": 0.21118186618861925,
+          "ece_after": 0.19571443093538785
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 2.1961998681262718
+          },
+          "n": 40,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.05589529086793843,
+          "nll_after": 0.03562867721192879,
+          "ece_before": 0.0222532052602511,
+          "ece_after": 0.01694651610415635
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.172645046777203,
+            "b": 1.2802400667313523
+          },
+          "n": 40,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.3857037104216527,
+          "nll_after": 0.29532483333629245,
+          "ece_before": 0.1340427794145221,
+          "ece_after": 0.14030364190542238
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.253 (blur_ladder, sampling floor 0.252); over threshold: blur_ladder, gqa_yesno, pets37, pope",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.856 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms on mps (not a gate)",
+      "measured": "p50 8876 ms, p95 11191 ms",
+      "pass": "recorded",
+      "within_target": false
+    }
+  ],
+  "verdict": "NO-GO"
+}

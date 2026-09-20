@@ -1,0 +1,44 @@
+{
+  "key": {
+    "backend": "vlm",
+    "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+    "prompt_version": "p1",
+    "choice_method": "independent",
+    "image_token_budget": 384
+  },
+  "version": "cal_830f74",
+  "fit_date": "2026-09-20",
+  "source_run": "20260920T052754Z-f692b7",
+  "types": {
+    "choice": {
+      "method": "temperature",
+      "params": {
+        "T": 2.525200926731333
+      },
+      "n": 50,
+      "suite_ids": [
+        "pets37"
+      ],
+      "nll_before": 0.4085425478264673,
+      "nll_after": 0.25562154868823606,
+      "ece_before": 0.057365982800142656,
+      "ece_after": 0.06339201183735488
+    }
+  },
+  "per_suite": {
+    "pets37": {
+      "method": "temperature",
+      "params": {
+        "T": 2.525200926731333
+      },
+      "n": 50,
+      "suite_ids": [
+        "pets37"
+      ],
+      "nll_before": 0.4085425478264673,
+      "nll_after": 0.25562154868823606,
+      "ece_before": 0.057365982800142656,
+      "ece_after": 0.06339201183735488
+    }
+  }
+}

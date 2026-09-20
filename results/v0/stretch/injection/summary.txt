@@ -1,0 +1,21 @@
+GLANCE v0 SUMMARY
+run_id:             20260920T044522Z-e63366
+machine:            Apple M5, 32.0 GB RAM, mps, float16
+models:             none, Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17, none
+go/no-go:           PARTIAL
+
+| metric | threshold | measured | pass |
+| --- | --- | --- | --- |
+| Accuracy gap vs frontier baseline | <= 5 points, macro-averaged over suites | not measured (no frontier baseline run) | not measured |
+| ECE after calibration | <= 0.05 per suite (15 equal-mass bins) | not measured (uncalibrated run) | not measured |
+| Selective accuracy at 80% coverage | >= baseline full-coverage accuracy | 0.988 local (macro); baseline not measured | not measured |
+| Permutation invariance (choice) | max probability shift <= 1e-3 (independent) | not measured | not measured |
+| Latency, 1 image + 5 questions | recorded; target <= 2000 ms (not a gate) | not measured | recorded |
+
+choice method:      independent vs letter: not measured
+weakest suite:      pope_injection (acc 0.945), top confusions: no -> yes (11)
+calibration gain:   pope_injection 0.046 -> -
+cache speedup:      3.75x on 100 items (1685 statements); argmax agreement 100/100, max |dz| 0.075 vs limit 0.05 -> acceptance NOT met, shipped uncached
+failures:           pope_injection/vlm/statement 0/200
+deviations:         none
+recommended v1 data: by error rate: pope_injection (noul) 5.5%; gap to a frontier baseline not measured

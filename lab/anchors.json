@@ -1,0 +1,162 @@
+{
+  "blur": [
+    {
+      "ref": 0,
+      "source_image_id": "english_setter_27",
+      "paths": [
+        ".cache/lab_images/blur/anchors/ref0_L0.jpg",
+        ".cache/lab_images/blur/anchors/ref0_L1.jpg",
+        ".cache/lab_images/blur/anchors/ref0_L2.jpg",
+        ".cache/lab_images/blur/anchors/ref0_L3.jpg"
+      ]
+    },
+    {
+      "ref": 1,
+      "source_image_id": "shiba_inu_90",
+      "paths": [
+        ".cache/lab_images/blur/anchors/ref1_L0.jpg",
+        ".cache/lab_images/blur/anchors/ref1_L1.jpg",
+        ".cache/lab_images/blur/anchors/ref1_L2.jpg",
+        ".cache/lab_images/blur/anchors/ref1_L3.jpg"
+      ]
+    },
+    {
+      "ref": 2,
+      "source_image_id": "miniature_pinscher_1",
+      "paths": [
+        ".cache/lab_images/blur/anchors/ref2_L0.jpg",
+        ".cache/lab_images/blur/anchors/ref2_L1.jpg",
+        ".cache/lab_images/blur/anchors/ref2_L2.jpg",
+        ".cache/lab_images/blur/anchors/ref2_L3.jpg"
+      ]
+    }
+  ],
+  "noise": [
+    {
+      "ref": 0,
+      "source_image_id": "Bengal_45",
+      "paths": [
+        ".cache/lab_images/noise/anchors/ref0_L0.jpg",
+        ".cache/lab_images/noise/anchors/ref0_L1.jpg",
+        ".cache/lab_images/noise/anchors/ref0_L2.jpg",
+        ".cache/lab_images/noise/anchors/ref0_L3.jpg"
+      ]
+    },
+    {
+      "ref": 1,
+      "source_image_id": "scottish_terrier_25",
+      "paths": [
+        ".cache/lab_images/noise/anchors/ref1_L0.jpg",
+        ".cache/lab_images/noise/anchors/ref1_L1.jpg",
+        ".cache/lab_images/noise/anchors/ref1_L2.jpg",
+        ".cache/lab_images/noise/anchors/ref1_L3.jpg"
+      ]
+    },
+    {
+      "ref": 2,
+      "source_image_id": "american_bulldog_70",
+      "paths": [
+        ".cache/lab_images/noise/anchors/ref2_L0.jpg",
+        ".cache/lab_images/noise/anchors/ref2_L1.jpg",
+        ".cache/lab_images/noise/anchors/ref2_L2.jpg",
+        ".cache/lab_images/noise/anchors/ref2_L3.jpg"
+      ]
+    }
+  ],
+  "jpeg": [
+    {
+      "ref": 0,
+      "source_image_id": "scottish_terrier_30",
+      "paths": [
+        ".cache/lab_images/jpeg/anchors/ref0_L0.jpg",
+        ".cache/lab_images/jpeg/anchors/ref0_L1.jpg",
+        ".cache/lab_images/jpeg/anchors/ref0_L2.jpg",
+        ".cache/lab_images/jpeg/anchors/ref0_L3.jpg"
+      ]
+    },
+    {
+      "ref": 1,
+      "source_image_id": "Sphynx_80",
+      "paths": [
+        ".cache/lab_images/jpeg/anchors/ref1_L0.jpg",
+        ".cache/lab_images/jpeg/anchors/ref1_L1.jpg",
+        ".cache/lab_images/jpeg/anchors/ref1_L2.jpg",
+        ".cache/lab_images/jpeg/anchors/ref1_L3.jpg"
+      ]
+    },
+    {
+      "ref": 2,
+      "source_image_id": "shiba_inu_68",
+      "paths": [
+        ".cache/lab_images/jpeg/anchors/ref2_L0.jpg",
+        ".cache/lab_images/jpeg/anchors/ref2_L1.jpg",
+        ".cache/lab_images/jpeg/anchors/ref2_L2.jpg",
+        ".cache/lab_images/jpeg/anchors/ref2_L3.jpg"
+      ]
+    }
+  ],
+  "exposure": [
+    {
+      "ref": 0,
+      "source_image_id": "leonberger_91",
+      "paths": [
+        ".cache/lab_images/exposure/anchors/ref0_L0.jpg",
+        ".cache/lab_images/exposure/anchors/ref0_L1.jpg",
+        ".cache/lab_images/exposure/anchors/ref0_L2.jpg",
+        ".cache/lab_images/exposure/anchors/ref0_L3.jpg"
+      ]
+    },
+    {
+      "ref": 1,
+      "source_image_id": "scottish_terrier_49",
+      "paths": [
+        ".cache/lab_images/exposure/anchors/ref1_L0.jpg",
+        ".cache/lab_images/exposure/anchors/ref1_L1.jpg",
+        ".cache/lab_images/exposure/anchors/ref1_L2.jpg",
+        ".cache/lab_images/exposure/anchors/ref1_L3.jpg"
+      ]
+    },
+    {
+      "ref": 2,
+      "source_image_id": "american_bulldog_33",
+      "paths": [
+        ".cache/lab_images/exposure/anchors/ref2_L0.jpg",
+        ".cache/lab_images/exposure/anchors/ref2_L1.jpg",
+        ".cache/lab_images/exposure/anchors/ref2_L2.jpg",
+        ".cache/lab_images/exposure/anchors/ref2_L3.jpg"
+      ]
+    }
+  ],
+  "resolution": [
+    {
+      "ref": 0,
+      "source_image_id": "Sphynx_67",
+      "paths": [
+        ".cache/lab_images/resolution/anchors/ref0_L0.jpg",
+        ".cache/lab_images/resolution/anchors/ref0_L1.jpg",
+        ".cache/lab_images/resolution/anchors/ref0_L2.jpg",
+        ".cache/lab_images/resolution/anchors/ref0_L3.jpg"
+      ]
+    },
+    {
+      "ref": 1,
+      "source_image_id": "Persian_62",
+      "paths": [
+        ".cache/lab_images/resolution/anchors/ref1_L0.jpg",
+        ".cache/lab_images/resolution/anchors/ref1_L1.jpg",
+        ".cache/lab_images/resolution/anchors/ref1_L2.jpg",
+        ".cache/lab_images/resolution/anchors/ref1_L3.jpg"
+      ]
+    },
+    {
+      "ref": 2,
+      "source_image_id": "havanese_36",
+      "paths": [
+        ".cache/lab_images/resolution/anchors/ref2_L0.jpg",
+        ".cache/lab_images/resolution/anchors/ref2_L1.jpg",
+        ".cache/lab_images/resolution/anchors/ref2_L2.jpg",
+        ".cache/lab_images/resolution/anchors/ref2_L3.jpg"
+      ]
+    }
+  ]
+}

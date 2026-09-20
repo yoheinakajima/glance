@@ -1,0 +1,325 @@
+{
+  "run_id": "20260919T230914Z-dac969",
+  "units": {
+    "pets37|siglip|independent": {
+      "suite": "pets37",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 25,
+      "n_calibration": 25,
+      "failures": {
+        "failed": 0,
+        "attempted": 50,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 25,
+        "accuracy": 0.96,
+        "nll": 0.10004928102444094,
+        "brier": 0.04359382831144,
+        "macro_f1": 0.9166666666666666,
+        "ece": 0.040644240000000005,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.96
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 22.01320801395923,
+          "p95_ms": 32.585100061260164,
+          "n": 50
+        },
+        "statements_per_second": 417.90158276880646,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "siamese",
+          "predicted": "birman",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Siamese_78",
+          "image_path": ".cache/eval_images/pets37/Siamese_78.jpg",
+          "true": "siamese",
+          "predicted": "birman",
+          "confidence": 0.7261923838039976,
+          "top_probability": 0.521562
+        }
+      ]
+    },
+    "pets37|vlm|independent": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 25,
+      "n_calibration": 25,
+      "failures": {
+        "failed": 0,
+        "attempted": 50,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 25,
+        "accuracy": 0.92,
+        "nll": 0.18349785815684566,
+        "brier": 0.11416756568396004,
+        "macro_f1": 0.7647058823529411,
+        "ece": 0.0509014,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.92
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 9620.661541353911,
+          "p95_ms": 12316.790691169444,
+          "n": 50
+        },
+        "statements_per_second": 3.988123604736343,
+        "mean_image_tokens": 173.4,
+        "off_mass_mean": 0.003944955706407955,
+        "off_mass_p95": 0.013920799176092786
+      },
+      "confusions": [
+        {
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "count": 1
+        },
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.9024871584745593,
+          "top_probability": 0.887565
+        },
+        {
+          "item_id": "Russian_Blue_253",
+          "image_path": ".cache/eval_images/pets37/Russian_Blue_253.jpg",
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "confidence": 0.6758820796545435,
+          "top_probability": 0.627139
+        }
+      ]
+    },
+    "pets37|vlm|letter": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 25,
+      "n_calibration": 25,
+      "failures": {
+        "failed": 0,
+        "attempted": 50,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 25,
+        "accuracy": 0.96,
+        "nll": 0.14196700919417413,
+        "brier": 0.07543489338604,
+        "macro_f1": 0.8823529411764706,
+        "ece": 0.038547,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.96
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 1858.1682079238817,
+          "p95_ms": 2138.666710036341,
+          "n": 50
+        },
+        "statements_per_second": 2.191874273922226,
+        "mean_image_tokens": 173.4,
+        "off_mass_mean": 0.0037956571074529055,
+        "off_mass_p95": 0.013420586577080047
+      },
+      "confusions": [
+        {
+          "true": "egyptian_mau",
+          "predicted": "abyssinian",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Egyptian_Mau_213",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_213.jpg",
+          "true": "egyptian_mau",
+          "predicted": "abyssinian",
+          "confidence": 0.9596492122663458,
+          "top_probability": 0.971006
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {
+    "pets37|vlm": {
+      "n": 25,
+      "options_letter": 26,
+      "options_full": 37,
+      "letter_raw": {
+        "n": 25,
+        "accuracy": 0.96,
+        "nll": 0.14196700919417413,
+        "brier": 0.07543489338604,
+        "macro_f1": 0.8823529411764706,
+        "ece": 0.038547,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.96
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 25,
+        "accuracy": 0.96,
+        "nll": 0.0524096659806417,
+        "brier": 0.030385983297541486,
+        "macro_f1": 0.9215686274509803,
+        "ece": 0.012211979367035953,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.96
+        }
+      },
+      "independent_full_raw": {
+        "n": 25,
+        "accuracy": 0.92,
+        "nll": 0.18349785815684566,
+        "brier": 0.11416756568396004,
+        "macro_f1": 0.7647058823529411,
+        "ece": 0.0509014,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.92
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 1798.4359578695148,
+        "p95_ms": 2125.153716886416,
+        "n": 25
+      },
+      "independent_latency": {
+        "p50_ms": 8718.836291925982,
+        "p95_ms": 12230.087091028689,
+        "n": 25
+      }
+    }
+  },
+  "baseline": {},
+  "permutation": {
+    "pets37|siglip|independent": {
+      "items": 25,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 75
+    },
+    "pets37|vlm|independent": {
+      "items": 25,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 75
+    },
+    "pets37|vlm|letter": {
+      "items": 25,
+      "orders": 3,
+      "max_abs_dp": 0.971019,
+      "mean_abs_dp": 0.04086517333333333,
+      "choice_flips": 3,
+      "requests": 75
+    }
+  },
+  "latency": {
+    "siglip": {
+      "p50_ms": 23.28352036420256,
+      "p95_ms": 24.74296874133871,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    },
+    "vlm": {
+      "p50_ms": 8958.336229086854,
+      "p95_ms": 11247.018677147571,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "calibration": {},
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "not measured (uncalibrated run)",
+      "pass": null
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "1.000 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "0.0e+00 (pets37)",
+      "pass": true
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms on mps (not a gate)",
+      "measured": "p50 8958 ms, p95 11247 ms",
+      "pass": "recorded",
+      "within_target": false
+    }
+  ],
+  "verdict": "PARTIAL"
+}

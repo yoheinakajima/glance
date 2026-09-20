@@ -1,0 +1,21 @@
+{
+  "permutation": {},
+  "latency": {},
+  "failures": {
+    "pope_injection|vlm|statement": {
+      "failed": 0,
+      "attempted": 200
+    }
+  },
+  "models": {
+    "vlm": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17"
+  },
+  "devices": {
+    "vlm": {
+      "device": "mps",
+      "dtype": "float16",
+      "image_token_budget": 768
+    }
+  },
+  "prefix_cache": false
+}

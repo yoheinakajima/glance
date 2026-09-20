@@ -1,0 +1,133 @@
+{
+  "key": {
+    "backend": "vlm",
+    "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+    "prompt_version": "p1",
+    "choice_method": "independent",
+    "image_token_budget": 768
+  },
+  "version": "cal_1d9418",
+  "fit_date": "2026-09-20",
+  "source_run": "20260919T234550Z-796ade",
+  "types": {
+    "noul": {
+      "method": "platt",
+      "params": {
+        "a": 0.16233131499490067,
+        "b": 0.16317546390450643
+      },
+      "n": 80,
+      "suite_ids": [
+        "gqa_yesno",
+        "pope"
+      ],
+      "nll_before": 1.1007999429072726,
+      "nll_after": 0.4053539119386282,
+      "ece_before": 0.1626045908407006,
+      "ece_after": 0.10909441392716959
+    },
+    "choice": {
+      "method": "temperature",
+      "params": {
+        "T": 2.0625535129826993
+      },
+      "n": 80,
+      "suite_ids": [
+        "caltech101",
+        "pets37"
+      ],
+      "nll_before": 0.212929874337914,
+      "nll_after": 0.15977923082420492,
+      "ece_before": 0.042669231996244214,
+      "ece_after": 0.03478672947176153
+    },
+    "score": {
+      "method": "temperature",
+      "params": {
+        "T": 5.924005726860951
+      },
+      "n": 40,
+      "suite_ids": [
+        "blur_ladder"
+      ],
+      "nll_before": 2.449421412655583,
+      "nll_after": 1.002909817172276,
+      "ece_before": 0.26451090608539646,
+      "ece_after": 0.32844934559614997
+    }
+  },
+  "per_suite": {
+    "blur_ladder": {
+      "method": "temperature",
+      "params": {
+        "T": 5.924005726860951
+      },
+      "n": 40,
+      "suite_ids": [
+        "blur_ladder"
+      ],
+      "nll_before": 2.449421412655583,
+      "nll_after": 1.002909817172276,
+      "ece_before": 0.26451090608539646,
+      "ece_after": 0.32844934559614997
+    },
+    "caltech101": {
+      "method": "temperature",
+      "params": {
+        "T": 2.530078407446393
+      },
+      "n": 40,
+      "suite_ids": [
+        "caltech101"
+      ],
+      "nll_before": 0.2989323259920824,
+      "nll_after": 0.1908296626650688,
+      "ece_before": 0.0925177189043413,
+      "ece_after": 0.058777487436584806
+    },
+    "gqa_yesno": {
+      "method": "platt",
+      "params": {
+        "a": 0.226463993591276,
+        "b": -0.2535835135243055
+      },
+      "n": 40,
+      "suite_ids": [
+        "gqa_yesno"
+      ],
+      "nll_before": 0.8158961753928924,
+      "nll_after": 0.4373086989362779,
+      "ece_before": 0.21118186618861925,
+      "ece_after": 0.19571443093538785
+    },
+    "pets37": {
+      "method": "temperature",
+      "params": {
+        "T": 1.5228230967839251
+      },
+      "n": 40,
+      "suite_ids": [
+        "pets37"
+      ],
+      "nll_before": 0.12692742268374552,
+      "nll_after": 0.11569013603301817,
+      "ece_before": 0.041417386590915824,
+      "ece_after": 0.04382640826844921
+    },
+    "pope": {
+      "method": "platt",
+      "params": {
+        "a": 0.172645046777203,
+        "b": 1.2802400667313523
+      },
+      "n": 40,
+      "suite_ids": [
+        "pope"
+      ],
+      "nll_before": 1.3857037104216527,
+      "nll_after": 0.29532483333629245,
+      "ece_before": 0.1340427794145221,
+      "ece_after": 0.14030364190542238
+    }
+  }
+}

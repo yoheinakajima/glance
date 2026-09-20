@@ -1,0 +1,217 @@
+{
+  "run_id": "20260920T051308Z-5a7ce6",
+  "units": {
+    "pets37|vlm|independent": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 50,
+      "n_calibration": 50,
+      "failures": {
+        "failed": 0,
+        "attempted": 100,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 50,
+        "accuracy": 0.9,
+        "nll": 0.49046395293915196,
+        "brier": 0.16708844175368004,
+        "macro_f1": 0.7849462365591398,
+        "ece": 0.07864420000000001,
+        "ece_floor": 0.022910435399999998,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.975,
+          "90": 0.9555555555555556,
+          "100": 0.9
+        }
+      },
+      "calibrated": {
+        "n": 50,
+        "accuracy": 0.9,
+        "nll": 0.3046478212650439,
+        "brier": 0.13928857719456297,
+        "macro_f1": 0.7849462365591398,
+        "ece": 0.06256989373749906,
+        "ece_floor": 0.052200419758442126,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.95,
+          "90": 0.9555555555555556,
+          "100": 0.9
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 50,
+        "accuracy": 0.9,
+        "nll": 0.3046478212650439,
+        "brier": 0.13928857719456297,
+        "macro_f1": 0.7849462365591398,
+        "ece": 0.06256989373749906,
+        "ece_floor": 0.052200419758442126,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.95,
+          "90": 0.9555555555555556,
+          "100": 0.9
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 8391.932458500378,
+          "p95_ms": 11428.977788903283,
+          "n": 100
+        },
+        "statements_per_second": 4.213445856163976,
+        "mean_image_tokens": 170.07,
+        "off_mass_mean": 7.775125193187517e-08,
+        "off_mass_p95": 7.618272289566795e-07
+      },
+      "confusions": [
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "count": 1
+        },
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.9458279627352143,
+          "top_probability": 0.9646814534152961
+        },
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.8081461540257482,
+          "top_probability": 0.6826012932401105
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.6952831661189225,
+          "top_probability": 0.5708322662215414
+        },
+        {
+          "item_id": "beagle_198",
+          "image_path": ".cache/eval_images/pets37/beagle_198.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.44342433353230093,
+          "top_probability": 0.4527758804983306
+        },
+        {
+          "item_id": "Russian_Blue_253",
+          "image_path": ".cache/eval_images/pets37/Russian_Blue_253.jpg",
+          "true": "russian_blue",
+          "predicted": "abyssinian",
+          "confidence": 0.38278149506884995,
+          "top_probability": 0.2819896989780665
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {},
+  "baseline": {},
+  "permutation": {},
+  "latency": {},
+  "calibration": {
+    "cal_c69580": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 256
+      },
+      "version": "cal_c69580",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T051308Z-5a7ce6",
+      "types": {
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 2.525426548168592
+          },
+          "n": 50,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.40854254781746346,
+          "nll_after": 0.2556170289676909,
+          "ece_before": 0.057365982791138845,
+          "ece_after": 0.06339217980779564
+        }
+      },
+      "per_suite": {
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 2.525426548168592
+          },
+          "n": 50,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.40854254781746346,
+          "nll_after": 0.2556170289676909,
+          "ece_before": 0.057365982791138845,
+          "ece_after": 0.06339217980779564
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.063 (pets37, sampling floor 0.052); over threshold: pets37",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.950 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms (not a gate)",
+      "measured": "not measured",
+      "pass": "recorded"
+    }
+  ],
+  "verdict": "NO-GO"
+}

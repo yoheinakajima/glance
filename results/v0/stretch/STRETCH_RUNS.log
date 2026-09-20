@@ -1,0 +1,17 @@
+=== --suite pope_injection --model vlm --skip-permutation --skip-latency
+runs/20260920T044522Z-e63366
+=== --suite pope --suite blur_ladder --n 200 --model vlm --image-token-budget 128 --skip-permutation
+runs/20260920T044701Z-8d8d3c
+=== --suite pope --suite blur_ladder --n 200 --model vlm --image-token-budget 256 --skip-permutation
+runs/20260920T045103Z-d90900
+=== --suite pope --suite blur_ladder --n 200 --model vlm --image-token-budget 384 --skip-permutation
+runs/20260920T045619Z-74b02b
+=== --suite pets37 --n 100 --model vlm --choice-method independent --image-token-budget 128 --skip-permutation --skip-latency
+runs/20260920T050215Z-c69a81
+=== --suite pets37 --n 100 --model vlm --choice-method independent --image-token-budget 256 --skip-permutation --skip-latency
+runs/20260920T051308Z-5a7ce6
+=== --suite pets37 --n 100 --model vlm --choice-method independent --image-token-budget 384 --skip-permutation --skip-latency
+runs/20260920T052754Z-f692b7
+=== --suite pets37_openset --n 200 --model vlm --choice-method independent --skip-permutation --skip-latency
+runs/20260920T054245Z-9b6a43
+=== ALL DONE

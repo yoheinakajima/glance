@@ -1,0 +1,51 @@
+{
+  "items": 100,
+  "statements": 1685,
+  "argmax_agree": 100,
+  "max_abs_dz": 0.07498550586628738,
+  "median_abs_dz": 0.017484665014414702,
+  "threshold": 0.05,
+  "per_suite": {
+    "pope": {
+      "items": 40,
+      "statements_per_item": 1,
+      "max_abs_dz": 0.04253387449674051,
+      "argmax_agree": 40
+    },
+    "gqa_yesno": {
+      "items": 20,
+      "statements_per_item": 1,
+      "max_abs_dz": 0.015972108258587525,
+      "argmax_agree": 20
+    },
+    "blur_ladder": {
+      "items": 15,
+      "statements_per_item": 4,
+      "max_abs_dz": 0.05195999254020478,
+      "argmax_agree": 15
+    },
+    "pets37": {
+      "items": 15,
+      "statements_per_item": 37,
+      "max_abs_dz": 0.07498550586628738,
+      "argmax_agree": 15
+    },
+    "caltech101": {
+      "items": 10,
+      "statements_per_item": 101,
+      "max_abs_dz": 0.05634308245510056,
+      "argmax_agree": 10
+    }
+  },
+  "reference_seconds": 309.65977841685526,
+  "cached_seconds": 82.6642155831214,
+  "speedup": 3.745995485863927,
+  "reference_self_noise_bs8_vs_bs4": {
+    "items": 10,
+    "max_abs_dz": 0.09298324605521202,
+    "median_abs_dz": 0.045951843546603754
+  },
+  "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+  "device": "mps",
+  "dtype": "float16"
+}
