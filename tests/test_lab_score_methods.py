@@ -208,7 +208,7 @@ def test_candidate_fits_level_logit_methods():
     z, y = _make_level_logits(rng, 60, K)
     for method in ("independent", "digits", "anchors_digits"):
         fits = sm.candidate_fits(method, z, y)
-        assert [sm.fit_name(f) for f in fits] == ["raw", "T", "bias+T"]
+        assert [sm.fit_name(f) for f in fits] == ["raw", "T", "bias+T", "matrix"]
         assert fits[0] is None
         assert fits[1]["kind"] == "T"
         assert fits[2]["kind"] == "bias+T"
@@ -220,7 +220,7 @@ def test_candidate_fits_cumulative_methods():
     c, y = _make_cumulative_logits(rng, 60, K)
     for method in ("cumulative", "anchors_cumulative"):
         fits = sm.candidate_fits(method, c, y)
-        assert [sm.fit_name(f) for f in fits] == ["raw", "platt/threshold"]
+        assert [sm.fit_name(f) for f in fits] == ["raw", "platt/threshold", "matrix"]
         assert fits[0] is None
         assert fits[1]["kind"] == "platt/threshold"
 

@@ -85,3 +85,30 @@ Rules:
    check, but max |dz| 0.075 vs the 0.05 limit, see `STATUS.md` M4). The winning method is then re-run on the
    reference path and both numbers are reported.
 5. Logits are saved per item and method (`lab/runs/*.jsonl`), so every number can be recomputed offline.
+
+## 2026-09-20 00:30 Entry 4: first pilot reading (blur only, DEV split, n = 80 judged) and two additions
+
+Pilot command: `python -m glance.lab.collect --out lab/runs/pilot.jsonl --split calibration --limit 160
+--anchors "0:123,0:012,0:013" --prefix-cache` (calibration split only; 160 items per scale; fit on the first 80,
+judged on the last 80). Measured cost per item on the cached path: `independent` 0.46 s, `cumulative` 0.35 s,
+`digits` 0.16 s, `anchors_cumulative` 1.1 s, `anchors_digits` 0.21 s (4 images, 555 image tokens).
+
+Blur, DEV, after the first analysis (`lab/runs/pilot_partial_blur.md`):
+- Every readout ranks images almost perfectly whatever its accuracy: Spearman between expected score and true level
+  is 0.84-0.96 for all nine method variants, raw or calibrated.
+- Raw accuracy is poor everywhere (0.46-0.66) and a single temperature never changes it (it cannot move an argmax).
+  Per-level calibration is what moves accuracy: `independent` 0.662 -> 0.900 (MAE 0.13, ECE 0.031, floor 0.052),
+  `cumulative` 0.575 -> 0.787, `digits` 0.463 -> 0.600, best anchor variant `anchors_digits@0:013` 0.650 -> 0.887.
+- So on blur H1 is NOT supported: showing the scale and asking threshold questions did not beat the v0 readout once
+  both get per-level calibration. H4 is supported. The v0 failure on `blur_ladder` (0.496) now looks like two things
+  stacked: soft source images that made "level 0 = sharp" partly wrong, and a missing per-level offset.
+- Caveat: n = 80, one scale. No conclusion yet; four scales still running.
+
+Additions made after this reading (both zero-training, both standard calibration practice):
+1. `matrix` calibration (matrix scaling: softmax(W x' + b) on standardized logits, L2 = 0.05), for every readout.
+2. The calibration variant for each method is now chosen by 5-fold cross-validated NLL on the fit data instead of
+   plain fit-data NLL, so a more flexible calibration cannot win by overfitting. The evaluation data still plays no
+   part in the choice.
+Follow-up analyses added in `glance/lab/extras.py`: learning curve (labeled examples needed), cross-scale transfer of
+a calibration, and an ensemble of readouts. Early blur learning curve on DEV: 8 labeled examples 0.75, 16 -> 0.84,
+32 -> 0.87 (mean of 20 random draws).

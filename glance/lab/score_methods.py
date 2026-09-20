@@ -130,7 +130,36 @@ def fit_threshold_platt(c: np.ndarray, y: np.ndarray) -> dict[str, Any]:
     return {"kind": "platt/threshold", "a": a, "b": b}
 
 
+def fit_matrix_scaling(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float = 0.05) -> dict[str, Any]:
+    """Matrix scaling: p = softmax(W x' + b) on standardized logits x'. A full affine map on the readout, fit by
+    L2-regularized NLL. Still post-hoc calibration on frozen logits; the VLM is never touched. Works for any readout
+    (x can be K level logits, K - 1 threshold logits, or several readouts concatenated)."""
+    mean, std = x.mean(axis=0), x.std(axis=0) + 1e-6
+    xs = (x - mean) / std
+    n, f = xs.shape
+    onehot = np.eye(n_classes)[y]
+
+    def loss_grad(theta):
+        w = theta[: n_classes * f].reshape(n_classes, f)
+        b = theta[n_classes * f:]
+        logp = log_softmax(xs @ w.T + b, axis=1)
+        resid = np.exp(logp) - onehot
+        loss = -np.mean(logp[np.arange(n), y]) + l2 * np.sum(w * w)
+        return loss, np.concatenate([(resid.T @ xs / n + 2 * l2 * w).ravel(), resid.mean(axis=0)])
+
+    res = minimize(loss_grad, np.zeros(n_classes * f + n_classes), jac=True, method="L-BFGS-B")
+    return {"kind": "matrix", "W": res.x[: n_classes * f].reshape(n_classes, f).tolist(), "b": res.x[n_classes * f:].tolist(),
+            "mean": mean.tolist(), "std": std.tolist()}
+
+
+def n_levels(method: str, logits: np.ndarray) -> int:
+    return logits.shape[1] + (1 if "cumulative" in method else 0)
+
+
 def apply_fit(method: str, logits: np.ndarray, fit: dict[str, Any] | None) -> np.ndarray:
+    if fit is not None and fit["kind"] == "matrix":
+        xs = (np.asarray(logits, dtype=np.float64) - np.array(fit["mean"])) / np.array(fit["std"])
+        return softmax(xs @ np.array(fit["W"]).T + np.array(fit["b"]), axis=1)
     if "cumulative" in method:
         if fit is None:
             return dist_from_cumulative(logits)
@@ -140,11 +169,44 @@ def apply_fit(method: str, logits: np.ndarray, fit: dict[str, Any] | None) -> np
     return dist_from_level_logits(logits, None if fit["bias"] is None else np.array(fit["bias"]), fit["T"])
 
 
+FIT_KINDS = {"level": ("raw", "T", "bias+T", "matrix"), "cumulative": ("raw", "platt/threshold", "matrix")}
+
+
+def fit_kind(method: str, kind: str, logits: np.ndarray, y: np.ndarray, k: int) -> dict[str, Any] | None:
+    if kind == "raw":
+        return None
+    if kind == "T":
+        return fit_temperature(logits, y)
+    if kind == "bias+T":
+        return fit_vector_scaling(logits, y)
+    if kind == "platt/threshold":
+        return fit_threshold_platt(logits, y)
+    if kind == "matrix":
+        return fit_matrix_scaling(logits, y, k)
+    raise ValueError(kind)
+
+
+def kinds_for(method: str) -> tuple[str, ...]:
+    return FIT_KINDS["cumulative" if "cumulative" in method else "level"]
+
+
 def candidate_fits(method: str, logits: np.ndarray, y: np.ndarray) -> list[dict[str, Any] | None]:
     """Raw first, then every calibration this readout supports."""
-    if "cumulative" in method:
-        return [None, fit_threshold_platt(logits, y)]
-    return [None, fit_temperature(logits, y), fit_vector_scaling(logits, y)]
+    k = n_levels(method, logits)
+    return [fit_kind(method, kind, logits, y, k) for kind in kinds_for(method)]
+
+
+def cv_nll(method: str, kind: str, logits: np.ndarray, y: np.ndarray, folds: int = 5, seed: int = 7) -> float:
+    """Cross-validated NLL on the fit data: how a calibration is chosen without ever touching evaluation data."""
+    k = n_levels(method, logits)
+    order = np.random.default_rng(seed).permutation(len(y))
+    total = 0.0
+    for fold in range(folds):
+        held = order[fold::folds]
+        train = np.setdiff1d(order, held)
+        p = apply_fit(method, logits[held], fit_kind(method, kind, logits[train], y[train], k))
+        total += -np.sum(np.log(np.clip(p[np.arange(len(held)), y[held]], 1e-12, None)))
+    return float(total / len(y))
 
 
 def fit_name(fit: dict[str, Any] | None) -> str:

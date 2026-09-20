@@ -1,7 +1,7 @@
 """Score lab, step 2 (CPU): fit calibrations on the calibration split, judge on the test split, write the table.
 
-The calibration for each method is CHOSEN on the calibration split (lowest NLL there); the test split is only ever
-used to report. `--dev` restricts everything to the calibration split (fit on its first half, report on its second
+The calibration for each method is CHOSEN on the calibration split (lowest 5-fold cross-validated NLL there); the
+test split is only ever used to report. `--dev` restricts everything to the calibration split (fit on its first half, report on its second
 half), which is what pilots and design choices must use so the test split stays untouched until the end.
 
 uv run python -m glance.lab.analyze --in lab/runs/main.jsonl --out lab/REPORT
@@ -67,8 +67,11 @@ def analyze(rows: list[dict[str, Any]], dev: bool = False) -> dict[str, Any]:
         for fit in sm.candidate_fits(method, zf, yf):
             name = sm.fit_name(fit)
             variants[name] = {"fit": fit, "fit_split_nll": metrics(sm.apply_fit(method, zf, fit), yf)["nll"],
+                              "cv_nll": sm.cv_nll(method, name, zf, yf),
                               "eval": metrics(sm.apply_fit(method, ze, fit), ye)}
-        chosen = min(variants, key=lambda name: variants[name]["fit_split_nll"])  # never chosen on the eval split
+        # Chosen by 5-fold cross-validated NLL on the fit data, so flexible calibrations cannot win by overfitting
+        # and the evaluation data plays no part in the choice.
+        chosen = min(variants, key=lambda name: variants[name]["cv_nll"])
         out[f"{ladder}|{key}"] = {
             "ladder": ladder, "method_key": key, "method": method, "chosen": chosen, "variants": variants,
             "latency_ms_p50": float(np.median([r["latency_ms"] for r in group])),
