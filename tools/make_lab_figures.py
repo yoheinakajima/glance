@@ -202,7 +202,7 @@ def fig_methods_by_scale(report: dict[str, Any], out_dir: Path, split_label: str
             ax.annotate(f"{chosen_acc:.3f}", (chosen_acc, y), xytext=(6, 0), textcoords="offset points",
                         fontsize=7.3, color=INK, va="center", ha="left", zorder=4)
         ax.axvline(TARGET_ACCURACY, color=INK_MUTED, linewidth=1, linestyle="--", zorder=0)
-        ax.set_xlim(0, 1.2)
+        ax.set_xlim(0, 1.12)  # room for the value label right of a marker at 1.0
         ax.set_ylim(n_methods - 0.4, -0.6)  # inverted: rank 0 (best) at the top
         _titles(ax, scale, f"{split_label}, n={n}" if n is not None else split_label)
         ax.set_xlabel("accuracy")
