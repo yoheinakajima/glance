@@ -760,3 +760,17 @@ The owner approved E3 (a second model family) and, if it earns it, shipping a fi
   Registered guess for `ens4d`: 0.70 to 0.80 mean accuracy. If the digit readout is near chance (the model does not
   put its answer on the digit tokens), that is reported as "the recipe needs per-model prompt work", which weakens
   the generality claim.
+
+## 2026-09-20 11:00 Entry 22b: one mechanical fix to the second model's readout position, made at the smoke test
+
+Smoke test on 8 blur items (no analysis): the digit readouts had `off_mass` 1.000, i.e. no probability on any digit
+token. Cause, checked directly: SmolVLM2's chat template ends at `Assistant:` and its tokenizer splits " 3" into a bare
+space token plus `3`, so the first generated token is always the space (p = 0.997) and the digit comes second (0.909 on
+one digit once the space is supplied). Qwen's template ends with a newline and its answer starts with the digit itself.
+Rule added to `generic_vlm.py`, decided by the tokenizer alone: if " 0" encodes as [space, "0"], label readouts append
+that space token and read at the next position; otherwise nothing changes. After the fix `off_mass` is 0.000 to 0.002.
+The yes/no readout is untouched (" Yes" is a single token for this tokenizer and carried most of the mass already).
+No prompt wording was changed. This is the kind of per-model detail entry 22 said could appear; I count it as readout
+plumbing, not prompt tuning, and the paper should say that a port to a new model has to check where the answer token
+lives. Measured cost with the GPU shared: about 1.0 to 1.8 s per forward pass (405 image tokens per image, 810 with
+the magnified crop), so the 2,000-item replication takes about three hours of GPU.

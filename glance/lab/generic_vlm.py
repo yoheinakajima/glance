@@ -48,6 +48,12 @@ class GenericVlm:
         self.yes_ids = self._single_token_ids(prompts.YES_VARIANTS)
         self.no_ids = self._single_token_ids(prompts.NO_VARIANTS)
         self._label_ids: dict[str, list[int]] = {}
+        # Where the answer token lives. Some tokenizers split " 0" into a bare space token plus the digit, and their chat
+        # template ends right after "Assistant:"; the model then always emits the space first and the digit second. For
+        # those, label readouts append that one space token and read at the next position (decided by the tokenizer
+        # alone, never by results; lab/NOTES.md entry 22b). Tokenizers with a single " 0" token need nothing.
+        spaced, bare = self.tokenizer.encode(" 0", add_special_tokens=False), self.tokenizer.encode("0", add_special_tokens=False)
+        self.label_prefix_ids: list[int] = spaced[:1] if len(spaced) == 2 and len(bare) == 1 and spaced[1] == bare[0] else []
         self.keep_hidden = False
         self.last_hidden: np.ndarray | None = None
         self._checked_head = False
@@ -70,7 +76,7 @@ class GenericVlm:
         content.append({"type": "text", "text": prompts.context_block(context) + block})
         return [{"role": "user", "content": content}]
 
-    def _forward(self, images: list[LoadedImage], context, block: str, token_ids: list[int]):
+    def _forward(self, images: list[LoadedImage], context, block: str, token_ids: list[int], suffix_ids: list[int] | None = None):
         """One prompt -> (selected logits [len(token_ids)], log-normalizer, image tokens, text tokens, prompt hash, hidden)."""
         import torch
 
@@ -79,6 +85,10 @@ class GenericVlm:
         for key, value in inputs.items():
             if torch.is_floating_point(value):
                 inputs[key] = value.to(getattr(torch, self.dtype))
+        if suffix_ids:
+            extra = torch.tensor([suffix_ids], device=self.device, dtype=inputs["input_ids"].dtype)
+            inputs["input_ids"] = torch.cat([inputs["input_ids"], extra], dim=1)
+            inputs["attention_mask"] = torch.cat([inputs["attention_mask"], torch.ones_like(extra)], dim=1)
         with torch.no_grad():
             out = self.model(**inputs, output_hidden_states=True)
             hidden = out.hidden_states[-1][0, -1]
@@ -127,7 +137,7 @@ class GenericVlm:
                 self._label_ids[label] = self._single_token_ids([label, " " + label])
         groups = [self._label_ids[label] for label in labels]
         flat = [tid for group in groups for tid in group]
-        rows = [self._forward(images, context, block, flat) for block in blocks]
+        rows = [self._forward(images, context, block, flat, suffix_ids=self.label_prefix_ids) for block in blocks]
         logits = np.zeros((len(blocks), len(labels)))
         for i, row in enumerate(rows):
             cursor = 0

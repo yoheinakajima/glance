@@ -27,6 +27,11 @@ dependencies = [
 [project.scripts]
 glance = "glance.cli:main"
 
+[project.optional-dependencies]
+lab = [
+    "num2words>=0.5.14",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
