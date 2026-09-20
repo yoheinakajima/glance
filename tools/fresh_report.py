@@ -68,6 +68,6 @@ first = next(iter(out["suites"]["fresh_choice"].values()), None)
 if first:
     classes = list(first["per_class"])
     lines += ["", "Per class (accuracy, photos):", "", "| System | " + " | ".join(classes) + " |", "| --- | " + " | ".join("---" for _ in classes) + " |"]
-    lines += [f"| {k} | " + " | ".join(f"{e['per_class'][c][0]:.2f} ({e['per_class'][c][1]})" for c in classes) + " |" for k, e in out["suites"]["fresh_choice"].items()]
+    lines += [f"| {k} | " + " | ".join(f"{e['per_class'][c][0]:.2f} ({e['per_class'][c][1]})" if c in e["per_class"] else "-" for c in classes) + " |" for k, e in out["suites"]["fresh_choice"].items()]
 (ROOT / "results/lab/fresh_commons.md").write_text("\n".join(lines) + "\n")
 print("\n".join(lines))

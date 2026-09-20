@@ -1137,3 +1137,15 @@ probabilities, so it gets no calibration; the read is reported at 0 labels, with
   lab scales; on yes/no and pick-one the two stay within 3 points.
 If H28 fails in the written answer's favour, the paper must say that generation elicits better zero-label grades than
 our raw readout and that Glance's advantage is speed, probabilities and the fitted map.
+
+## 2026-09-20 14:32 Entry 33: GPT-5.6 on the lab scales, and Opus 5 on the fresh photos (the owner ran both)
+
+Lab scales, same 1,000 held-out images (`results/lab/frontier_head_to_head.{md,json}`): GPT-5.6 zero-shot 0.597 (blur
+0.645, exposure 0.610, jpeg 0.555, noise 0.670, resolution 0.505); Opus 5 0.550. Local Qwen3-VL-4B + Glance against
+GPT-5.6, paired: 0 labels -2.7 points [-7.1, +1.8] (a tie), unlabeled images +10.5 [+6.1, +14.9], 32 labels +26.0
+[+22.6, +29.4]. Entry 20's expectations hold for the second frontier model too (frontier 0.45 to 0.70; zero-label within
+10 points; 32 labels ahead on 5 of 5 scales).
+Fresh photos (entry 30; the frontier baseline sees the test split only): yes/no, 131 questions: Opus 5 0.924, local VLM
+on the same items 0.931; pick-one, 65 photos: Opus 5 0.908, local VLM 0.862. H27 (frontier ahead by 0 to 6 points): met on
+pick-one (+4.6), and on yes/no the local model is 0.7 points AHEAD (inside the registered band only if read as "about
+equal"; stated as is). Small n; the tag-noise caveat applies to both systems.

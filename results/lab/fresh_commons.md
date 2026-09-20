@@ -7,6 +7,7 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the sam
 | System | n | accuracy | on yes questions | on no questions |
 | --- | --- | --- | --- | --- |
 | vlm:statement | 262 | 0.931 [0.901, 0.962] | 0.908 | 0.954 |
+| anthropic/claude-opus-5 | 131 | 0.924 [0.878, 0.962] | 0.894 | 0.954 |
 
 ## Pick one of 13: "What is the main subject?"
 
@@ -15,6 +16,7 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the sam
 | vlm:independent | 131 | 0.885 [0.824, 0.939] |
 | vlm:letter | 131 | 0.885 [0.832, 0.939] |
 | siglip:independent | 131 | 0.855 [0.794, 0.908] |
+| anthropic/claude-opus-5 | 65 | 0.908 [0.831, 0.969] |
 
 Per class (accuracy, photos):
 
@@ -23,3 +25,4 @@ Per class (accuracy, photos):
 | vlm:independent | 0.92 (12) | 0.00 (1) | 0.71 (7) | 1.00 (12) | 0.92 (12) | 0.58 (12) | 1.00 (10) | 0.92 (12) | 0.92 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |
 | vlm:letter | 0.75 (12) | 0.00 (1) | 0.71 (7) | 1.00 (12) | 0.92 (12) | 0.75 (12) | 1.00 (10) | 0.92 (12) | 0.92 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |
 | siglip:independent | 0.83 (12) | 0.00 (1) | 0.57 (7) | 1.00 (12) | 1.00 (12) | 0.33 (12) | 1.00 (10) | 1.00 (12) | 0.83 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |
+| anthropic/claude-opus-5 | 1.00 (5) | - | 0.50 (4) | 1.00 (5) | 1.00 (6) | 0.71 (7) | 1.00 (4) | 0.88 (8) | 1.00 (6) | 1.00 (5) | 1.00 (2) | 0.86 (7) | 1.00 (6) |
