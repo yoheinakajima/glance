@@ -12,18 +12,25 @@ venue and claims before citing. Nothing here is a claim of novelty; it is a map 
 | Kadavath et al., "Language Models (Mostly) Know What They Know", 2022. https://arxiv.org/abs/2207.05221 | Asks a model whether a proposed answer is true and reads P(True); finds large models well calibrated on multiple choice and true/false in the right format. | glance's candidate template ("Candidate answer: X. Is this candidate the correct answer? Yes/No") is P(True) applied per option to images. Their finding is for large text models; on a 4B VLM glance found raw P(True) far too sharp (Platt slope 0.18). |
 | Zheng et al., "Large Language Models Are Not Robust Multiple Choice Selectors", ICLR 2024 (spotlight). https://arxiv.org/abs/2309.03882 | Shows option-ID token bias makes lettered multiple choice sensitive to option order; proposes PriDe, a label-free prior debiasing estimated from permutations. | Explains glance's `letter` result (probability shifts up to 0.97 under reordering, even with 4 cyclic rotations). glance's alternative is to avoid option IDs altogether (`independent`), which is invariant by construction at the cost of one pass per option. A VLM-specific follow-up exists (arXiv 2509.16805, not read). |
 | Q-Bench: Wu et al., ICLR 2024 (spotlight). https://arxiv.org/abs/2309.14181 | Benchmark of MLLM low-level vision. Introduces a softmax over the logits of "good" and "poor" as a zero-shot quality score; reports SRCC against human opinion on 7 IQA datasets (up to 0.541 in the wild per the summary read today). | The closest precedent for reading quality from logits without training. glance's `digits` readout generalizes the two-word softmax to a described K-level scale and adds calibration; Q-Bench measures rank correlation with human scores on real IQA data, which glance has not done. |
-| Q-Align: Wu et al., "Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels", ICML 2024. https://proceedings.mlr.press/v235/wu24ah.html | Fine-tunes an LMM on rating levels (text words), then at inference takes the closed-set probabilities of the level tokens and their weighted average as the score. State of the art on IQA, aesthetics and video quality. | Same inference-time readout idea as glance's `digits` + expected score, but TRAINED on human-rated datasets. glance is the training-free counterpart with a few dozen labels per scale; it has not been compared with Q-Align on any shared benchmark. |
+| Q-Align: Wu et al., "Teaching LMMs for Visual Scoring via Discrete Text-Defined Levels", ICML 2024. https://proceedings.mlr.press/v235/wu24ah.html | Fine-tunes an LMM on rating levels (text words), then at inference takes the closed-set probabilities of the level tokens and their weighted average as the score. State of the art on IQA, aesthetics and video quality. | Same inference-time readout idea as glance's `digits` + expected score, but TRAINED on human-rated datasets. glance's base VLM is frozen instead; a small readout (matrix-scaling calibration) is fit on a few dozen labels per scale. It has not been compared with Q-Align on any shared benchmark. |
 | DeQA-Score: You et al., "Teaching Large Language Models to Regress Accurate Image Quality Scores using Score Distribution", CVPR 2025. https://openaccess.thecvf.com/content/CVPR2025/papers/You_Teaching_Large_Language_Models_to_Regress_Accurate_Image_Quality_Scores_CVPR_2025_paper.pdf | Trains with soft labels over level tokens so the predicted distribution matches the human score distribution. | Trained; distribution-aware. glance's matrix calibration is a tiny post-hoc version of "make the level distribution right". |
 | DistortBench, arXiv 2604.19966 (April 2026). https://arxiv.org/abs/2604.19966 | 13,500 four-choice questions on 27 distortion types and 5 severity levels (KADID-10k calibrations) for 18 VLMs. Best VLM 61.9%; human majority vote 65.7%; average individual human 60.2%. | The nearest benchmark to the score lab's scales. It shows distortion judgments are hard for VLMs and for people. NOT comparable to glance's numbers: their task is a 4-choice question across 27 distortions without calibration data; glance rates the severity of one known distortion on 4 levels with a per-scale calibration fit on labels. Running glance's method on DistortBench (or directly on KADID-10k levels) is the obvious next experiment. |
 | Zhang et al., "MLLMs Know Where to Look: Training-free Perception of Small Visual Details", ICLR 2025. https://arxiv.org/abs/2502.17422 | Training-free automatic cropping (from attention / gradients) improves MLLM accuracy on small details. | glance's `zoom` (a fixed, pixel-magnified centre crop as a second image) is a cruder, question-agnostic relative of this. Their attention-guided crop could replace the fixed one. |
 | Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference", 2025. https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/ | Shows inference kernels are not batch-invariant: the same request gives numerically different outputs at different batch sizes; provides batch-invariant kernels at a throughput cost. | Exactly the effect behind glance's failed prefix-cache acceptance: on MPS float16 the reference path differs from itself by up to 0.093 in z when only its batch size changes. glance's workaround for decisions is canonical statement ordering, not invariant kernels. |
+| G-Eval: Liu, Iter, Xu, Wang, Xu, Zhu, "G-Eval: NLG Evaluation using GPT-4 with Better Human Alignment", EMNLP 2023 (main conference, pp. 2511-2522). https://arxiv.org/abs/2303.16634 | Scores text on a 1-5 (etc.) rubric by asking GPT-4 for a rating, then takes "score = sum_i p(s_i) * s_i", the probability-weighted summation over the rating-token probabilities, as the final score instead of the raw generated number. DeepEval's docs describe this as G-Eval's default scoring mode: "take the probabilities of the output tokens from the LLM to normalize the score and take their weighted summation as the final result" (https://deepeval.com/docs/metrics-llm-evals, fetched today). | Direct precedent, in the text domain, for reading score-token probabilities instead of trusting a generated number. glance's `digits` readout is the same primitive on images, plus matrix-scaling calibration fit on labels and an evaluation harness; G-Eval reports correlation with human judges on summarization/dialogue, not calibration, and uses the raw softmax weighting with no fitted map. |
+| Q-Bench+: Zhang, Wu, Zhang, Zhai, Lin, "Q-Bench+: A Benchmark for Multi-modal Foundation Models on Low-level Vision from Single Images to Pairs", TPAMI (arXiv 2402.07116, Feb 2024). https://arxiv.org/abs/2402.07116 | Extends Q-Bench's good/poor softmax with a prompt ensemble (Section II-D3): positive token set {good, fine, high}, negative set {poor, bad, low}, summed into the softmax instead of one word per side. Reports up to 5% accuracy improvement, 1.7% on average (SRCC+PLCC)/2, across 7 quality datasets and the top MLLMs tested. | Confirms the reviewer's claim: this is exactly a prompt ensemble, and it is not new. glance's own ensemble (`ens4d`) varies scale direction (forward/reversed) and view (plain image / magnified crop) rather than synonym sets at a fixed prompt; the two ideas are compatible and neither has been tried combined. |
+| Guo, Pleiss, Sun, Weinberger, "On Calibration of Modern Neural Networks", ICML 2017. https://arxiv.org/abs/1706.04599 | Defines temperature scaling (one scalar T), vector scaling (diagonal W) and matrix scaling (full "Wz+b" before softmax) as extensions of Platt scaling. States plainly that matrix scaling's parameter count grows quadratically with class count K, reports it performing poorly on hundreds of classes (Birds, Cars, CIFAR-100) and failing to converge on 1000-class ImageNet, and concludes "any calibration model with tens of thousands (or more) parameters will overfit to a small validation set." | glance's calibration IS matrix scaling, unchanged, on a 4K-dimensional logit feature ("W" of shape K x 4K, fit by L2-regularized NLL: `docs/paper/METHODS.md`). This is exactly the small-data overfitting regime the paper warns about, which is why glance fits the softmax temperature separately on held-out folds rather than the training fold, and why per-rubric calibrations are never pooled (see Honest positioning). |
+| Kull, Perello-Nieto, Kangsepp, de Menezes e Silva Filho, Song, Flach, "Beyond Temperature Scaling: Obtaining Well-Calibrated Multi-Class Probabilities with Dirichlet Calibration", NeurIPS 2019. https://arxiv.org/abs/1910.12656 | Dirichlet calibration is matrix scaling on log-probabilities (log-transform, one linear layer, softmax). Proposes ODIR (off-diagonal and intercept regularization): penalize the off-diagonal and bias terms of that matrix more than the diagonal, specifically to fight matrix scaling's overfitting on many classes or little data ("L = logloss + lambda * mean(off-diagonal w_ij^2) + mu * mean(b_j^2)"). | A more targeted regularizer than glance's flat L2 penalty on the whole W and b. glance has not tried ODIR-style differential regularization on its 4K-dimensional matrix; it is a plausible next step, not something already done here. |
+| CLIP-IQA: Wang, Chan, Loy, "Exploring CLIP for Assessing the Look and Feel of Images", AAAI 2023. https://arxiv.org/abs/2207.12396 | Frozen CLIP, antonym prompt pairs ("Good photo." / "Bad photo."), softmax over the two cosine similarities as the score. Swaps in other antonym pairs for abstract attributes: brightness ("Bright"/"Dark"), noisiness ("Clean"/"Noisy"), sharpness ("Sharp"/"Blurry"), colorfulness ("Colorful"/"Dull"). | Precedent for frozen-encoder, prompt-pair attribute scoring with no labels at all. glance differs in three ways: a VLM that attends over image and text jointly rather than a dual-encoder cosine similarity; a described K-level digit scale rather than a 2-way antonym softmax; and a fitted matrix-scaling map rather than a raw softmax. CLIP-IQA needs zero labels; glance needs a few dozen per rubric, which is a real cost CLIP-IQA does not have. |
+| Dog-IQA: Liu, Zhang, Li, Pei, Song, Liu, Kong, Zhang, "Dog-IQA: Standard-guided Zero-shot MLLM for Mix-grained Image Quality Assessment", arXiv 2410.02505 (Oct 2024). https://arxiv.org/abs/2410.02505 | Training-free MLLM IQA with explicit rating standards written into the prompt, plus local (segment-level) and global (whole-image) analysis aggregated into one score. The MLLM is prompted to "score in [1, 2, ..., 7]" and the number is read off its generated text; the paper reports under 0.1% of outputs come back as words instead of a number, handled by a fallback. | Not a probability-reading precedent, despite being training-free: Dog-IQA generates the score as text, the exact free-generation approach glance's `digits` readout is built to avoid. Its local/global segment aggregation is a different idea from anything glance does, which scores one image (or image plus one fixed centre crop) per rating. |
+| McCullagh, "Regression Models for Ordinal Data", Journal of the Royal Statistical Society: Series B (Methodological), vol. 42(2), 1980, pp. 109-127. https://academic.oup.com/jrsssb/article/42/2/109/7027621 | Introduces the proportional-odds (cumulative-link) model for ordinal regression. | Background for the cumulative-link idea behind the `cumulative` readout glance tried (see OrdinalCLIP/CORAL/CORN below), which did not help here. |
+| Alain & Bengio, "Understanding Intermediate Layers Using Linear Classifier Probes", arXiv 1610.01644 (2016, rev. 2018); and Hu, Ding, Wang, Liu, Wang, Li, Wu, Sun, "Knowledgeable Prompt-tuning: Incorporating Knowledge into Prompt Verbalizer for Text Classification", ACL 2022. https://arxiv.org/abs/1610.01644 , https://arxiv.org/abs/2108.02035 | Alain & Bengio: train a small linear classifier on a frozen network's intermediate activations to read out what is already represented, without touching the network's weights. Hu et al.: the "verbalizer" (the mapping from class labels to output vocabulary words in prompt-based classification) can be built or expanded from a knowledge base instead of hand-picked. | Both are the same shape of idea as glance's calibration: fit a small readout on top of a frozen model instead of touching its weights. Neither is about VLMs, ordinal scales, or images. glance's W/b matrix is closer to a linear probe (it reads a 4K-dimensional logit vector) than to a verbalizer (which picks single label words); we found no VLM-specific ordinal-rubric verbalizer paper to cite instead. |
+| vLLM, "Automatic Prefix Caching", project docs. https://docs.vllm.ai/en/stable/design/prefix_caching/ | Standard serving optimization: KV-cache blocks are content-hashed and reused across requests sharing a prefix. For multimodal inputs, the frontend image processor's hash is folded into the block hash as an extra key, "we encode the image hash generated by the frontend image processor," so the cache tells two different images apart even when surrounding text tokens match. | Confirms glance's prefix cache is infrastructure, not a contribution: vLLM (and Kwon et al./Zheng et al./Juravsky et al. below) do this in production for many concurrent requests and images. What this doc does not measure, and glance did: exact prediction invariance under packing (0 of 100 predictions changed, `docs/paper/RESULTS_LAB.md` section 9) and the wall-clock cost of one rating with and without a shared image prefill. |
+| VL-Calibration: Xiao, Xu, Gan, "VL-Calibration: Decoupled Confidence Calibration for Large Vision-Language Models Reasoning", ACL 2026 (arXiv 2604.09529, April 2026). https://arxiv.org/abs/2604.09529 | Calibrates VLM reasoning confidence on Qwen3-VL-4B-Instruct, Qwen3-VL-8B-Instruct, Qwen3-VL-30B and InternVL3.5-4B-MPO; reports ECE falling from 0.421 to 0.098 on the 4B model while accuracy improves, and similar gains at 8B and 30B. | A reviewer named this as prior VLM-calibration work on the same base-model family; confirmed, it exists and does use Qwen3-VL-4B. Different problem: it calibrates whether a multi-step reasoning answer is correct on math/knowledge benchmarks (DynaMath, MathVerse, MMMU-Pro), not an ordinal rating scale, and its calibration method is decoupled confidence estimation, not matrix scaling on rating-token logits. |
 
 ## From memory, to verify before citing
 
-- Guo et al., "On Calibration of Modern Neural Networks", ICML 2017: temperature, vector and matrix scaling; ECE. glance's calibrations are these, unchanged.
 - Zhao et al., "Calibrate Before Use", ICML 2021, and later batch/prototypical calibration: affine correction of label-token probabilities in few-shot prompting. Closest text-LLM precedent for glance's per-level bias.
-- Liu et al., "G-Eval", 2023: probability-weighted score over rating tokens for text evaluation. Text-domain precedent for the expected-score readout.
-- Wang et al., "Exploring CLIP for Assessing the Look and Feel of Images" (CLIP-IQA), AAAI 2023: antonym prompt pairs with a dual encoder. Precedent for glance's SigLIP `noul` with true/false criteria.
 - Compare2Score (NeurIPS 2024) and other comparison-to-anchor IQA methods: related to glance's `anchors_*` readouts, which did not help here.
 - OrdinalCLIP (NeurIPS 2022), CORAL/CORN ordinal regression: related to the `cumulative` readout, which did not help here.
 - Wang et al., "Large Language Models are not Fair Evaluators", and MT-Bench position-bias analyses: swapping positions and averaging, the judge-model analogue of glance's forward + reversed scale.
@@ -35,18 +42,44 @@ venue and claims before citing. Nothing here is a claim of novelty; it is a map 
 
 ## Honest positioning
 
-What is NOT new: reading Yes/No or level-token logits instead of generating; independent per-option scoring; temperature,
-vector and matrix scaling; position-swap debiasing; cropping to help perception; prefix caching.
+### What is not new, stated plainly
 
-What this project adds, as far as the checked literature goes:
-1. One typed interface (yes/no, choice, rating) over the same logit primitive, with calibration, logging and an
-   evaluation harness, measured against a frontier model on identical items (within 3.1 points on average; selective
-   accuracy at 80% coverage above the frontier model's full accuracy).
-2. A training-free recipe for described rating scales: digit-logit readout, forward and reversed, with and without a
-   magnified crop, plus matrix calibration from about 32 labels per scale: 0.500 -> 0.867 on five synthetic scales at
-   equal forward passes, selected before the test split was scored.
-3. Measurement care that changes conclusions: the ECE sampling floor (the v0 yes/no "failure" disappears at n = 1,000),
-   exact permutation invariance including numerical noise, and the batch-shape noise analysis of the cache.
+- Token-probability scoring instead of generating an answer: G-Eval (rating tokens, text) and Q-Bench (good/poor
+  tokens, images).
+- Prompt ensembling to steady that readout: Q-Bench+.
+- Matrix scaling as the calibration map, and its tendency to overfit with little data: Guo et al.
+- Frozen-encoder attribute scoring from antonym or described prompts, no labels needed: CLIP-IQA.
+- Sharing an image prefill across requests: vLLM's automatic prefix caching (and Kwon et al./Zheng et al./Juravsky
+  et al. below).
+
+All five predate this project. Also not new on their own: independent per-option scoring; position-swap debiasing;
+cropping to help perception; the base model being frozen while a small map is fit on top (linear probes,
+verbalizers).
+
+### What this project adds, as far as the checked literature goes
+
+1. The composition for K-level ordinal rubrics on a frozen VLM: a digit readout counter-biased by asking the scale
+   forward and reversed, a magnified-crop view alongside the plain image, and a matrix-scaling map fit per rubric on
+   labeled examples. The base VLM is never updated; only this small readout is fit.
+2. A pre-registered measurement of how much each step is worth, on five synthetic 4-level scales: mean accuracy
+   0.500 with the shipped v0 readout, 0.810 with a fitted bias and temperature on that same readout, 0.867 with the
+   four-pass ensemble and matrix scaling (`ens4d`).
+3. The small-n probability failure and its fix: fitting the softmax temperature on the same data used to fit the
+   matrix `W` and bias `b` makes the model overconfident once labels are scarce (NLL 0.749 vs. 0.478 at 32 labels
+   per rubric); estimating that temperature on held-out folds instead removes the effect, and the gap closes by
+   about 128 labels (`docs/paper/METHODS.md`).
+4. The finding that calibrations do not transfer between rubrics: a matrix fit on one rating dimension does not work
+   on another, so there is no pooled fallback (`docs/paper/RESULTS_LAB.md` section 5).
+5. The packing-invariance check: packing several rating questions into one request against a shared image prefix
+   changed 0 of 100 checked predictions (`docs/paper/RESULTS_LAB.md` section 9). This is worth stating because a
+   related open project found in-sequence question packing moves 6-9% of answers (see "How glance relates" below).
+6. Published errata: the project's own latency and small-n sharpness claims were wrong at one point and were
+   corrected in the open (`docs/BRIEFING.md`) rather than left standing.
+7. Also carried over from the "Verified today" table: one typed interface (yes/no, choice, rating) over the same
+   logit primitive, with calibration, logging and an evaluation harness, measured against a frontier model on
+   identical items (within 3.1 points on average; selective accuracy at 80% coverage above the frontier model's full
+   accuracy); the ECE sampling floor (the v0 yes/no "failure" disappears at n = 1,000); exact permutation invariance
+   including numerical noise; and the batch-shape noise analysis of the cache.
 
 What it lacks compared with the IQA line of work (Q-Bench, Q-Align, DeQA-Score): no standard human-opinion benchmarks
 (KonIQ-10k, SPAQ, KADID-10k), no SRCC/PLCC, one model, one machine, synthetic scales only, and no comparison with
@@ -84,7 +117,7 @@ says the figures come from "TypeSafe's own workflow evals."
 | Event-listing validation, 50 held-out cases. Authors call it "a use-case study, not a general model ranking," tuned to their own prompts, so third-party but not neutral. | Jev 96% (48/50) at 0.59 s median, $0.043/1,000 decisions; Gemini 3.5 Flash-Lite 86% at 3.40 s; Mistral Small 4 84% at 2.90 s. | nearhere.events/blog/typesafe-jev-mistral-gemini-event-validation |
 | Prompt-injection detection, 662 labeled messages (deepset/prompt-injections), run on a public corpus, results committed to the repo. | 96.5% accuracy, ROC-AUC 0.9927, ECE 0.0588, latency p50 325 ms. | github.com/Gaurav-Gosain/jev-sec-bench |
 
-### Open reproductions, including two with images
+### Open reproductions, including several with images
 
 None of these are affiliated with TypeSafe. None claims to reproduce Jev's undisclosed weights or exact RLCD training.
 
@@ -101,6 +134,31 @@ None of these are affiliated with TypeSafe. None claims to reproduce Jev's undis
 - OpenJev-Vision (IamBusy): two trained tracks, a small CNN plus prior or frozen DINOv2 features for vision, a
   Qwen3-0.6B LoRA scorer for text, prefill-once evaluation. Reports "8 questions x 4 candidates, warm median: 0.70 s"
   against one image, vs "1 question x 4 candidates: 104 ms." Vision: yes, trained. github.com/IamBusy/OpenJev-Vision
+- LitJev (zhengxuyu): serves Jev's own `/v1/systemone` request/response schema (choice, score, noul) from a local
+  Hugging Face checkpoint, reading option logits instead of generating. README says "the full Qwen family is
+  supported (Qwen3.x text and vision checkpoints, any size)"; its own benchmark section pairs MMLU-Pro direct-answer
+  scoring with "Doom and chess played from screenshots." Vision: yes, when a vision checkpoint is loaded; no default
+  checkpoint is pinned in the README. github.com/zhengxuyu/litjev
+- mini-jev (r-ms): frozen Qwen3-4B, text-only. Turns each field into a lettered multiple-choice question and reads
+  the chosen letter's logit at the answer position instead of generating; the text's KV cache is reused across a
+  request's fields. Preregistered (`PREREG.md`, amendments v1.1-v1.3, "every number below is recomputed from the
+  stored run records"). CLINC150 intent classification, 6,750 paired observations: JSON 0.909 accuracy vs.
+  letter-reading 0.907 (-0.22 pp), 4x faster than JSON on 32-token text via the shared prefix, 1.4-2.4x on
+  2048-token text. Vision: no. github.com/r-ms/mini-jev
+- open-alternative-jev (ikermoel): typed, calibrated decisions from any open-weights LLM (HF or vLLM backend),
+  text-only, one forward pass. Two packing modes: "packed" puts every question for one state into one attention
+  sequence (fastest); "separate" gives each question its own sequence over the same state ("no interference between
+  questions"). The README reports packing changes 6-9% of answers relative to padding-only noise (2.7%), and that
+  reordering the questions changes 8% of MMLU answers and 2.4% of RACE-H answers; a fitted temperature brings MMLU
+  ECE from 5.4% to 2.1%. Vision: no. github.com/ikermoel/open-alternative-jev
+
+Two more third-party entries are not Qwen reproductions at all, but small encoders trained from scratch for typed
+decisions, text-only, no image input: Laya (Convai Innovations), 421M parameters, Apache 2.0, non-autoregressive,
+ModernBERT-large (395M) backbone plus a small decision head for choice/score/noul with calibrated probabilities (a
+322M multilingual variant uses mmBERT-base), huggingface.co/convaiinnovations/laya; and openJev-verdict-2.0
+(Heman10x-NGU), a 149.6M-parameter non-autoregressive ModernBERT-base decision engine, about 20-25 ms per decision,
+reporting 77.10% accuracy / 0.0636 Brier / 1.44% ECE (confidence head) on a `LocalLLaMA/typed-decisions` set of
+2,000 held-out decisions against Laya's 76.60% / 0.0660 and a claimed Jev 72.70%, github.com/Heman10x-NGU/openJev-verdict-2.0.
 
 Text-only reproductions also checked directly: qwen27b-jev (single-logit read 94.8% accuracy either way; grammar-
 constrained is 15% faster than free generation, plain logit read is 28% slower; github.com/sueszli/qwen27b-jev),
@@ -135,15 +193,32 @@ no connection to glance, that the same bias affects Jev-adjacent evaluations. gi
 ### How glance relates
 
 glance reads the same three question types (yes/no probability, choice, ordered score) but works on images
-natively, using a frozen open-weights vision-language model with no training of any kind, unlike the Jev ecosystem's
-trained vision entries (OpenJev v2, OpenJev-Vision) and unlike Jev itself, whose docs state text only. glance's
-calibration is post hoc, fit per task on a few dozen to a few hundred labels; a fit on one rating dimension does not
-transfer to another, about 32 labels per scale are enough, and a single temperature is not enough for ordered
-scales. On five synthetic 4-level image-quality rating scales the shipped v0 readout reached mean accuracy 0.500,
-the same readout with a fitted bias and temperature reached 0.810, and a 4-pass ensemble of digit readouts with
-matrix scaling (`ens4d`) reached 0.867, mean ECE about 0.03. On an Apple-silicon laptop one such rating of a fresh
-image takes 1.09 s (the v0 readout: 0.44 s); when five ratings share the image prefill it is 0.58 s per rating, and
-0.34 s with 25 (`docs/paper/RESULTS_LAB.md`, section 9). The multi-question-per-prefill idea that jev-visual and
-OpenJev-Vision both measure is what glance's prefix cache does; packing changed none of 100 checked predictions. The
-saving is smaller here than in their settings because a 196-token image is short next to a 100-token rating prompt
-that has to be read once per readout.
+natively. The base VLM is frozen; unlike the Jev ecosystem's trained vision entries (OpenJev v2, OpenJev-Vision,
+which fine-tune or train a scorer on top of vision features) and unlike Jev itself (whose docs state text only),
+glance trains nothing beyond a small per-rubric readout fit on labeled examples. glance's calibration is post hoc,
+fit per task on a few dozen to a few hundred labels; a fit on one rating dimension does not transfer to another,
+about 32 labels per scale are enough, and a single temperature is not enough for ordered scales. On five synthetic
+4-level image-quality rating scales the shipped v0 readout reached mean accuracy 0.500, the same readout with a
+fitted bias and temperature reached 0.810, and a 4-pass ensemble of digit readouts with matrix scaling (`ens4d`)
+reached 0.867, mean ECE about 0.03. On an Apple-silicon laptop one such rating of a fresh image takes 1.09 s (the v0
+readout: 0.44 s); when five ratings share the image prefill it is 0.58 s per rating, and 0.34 s with 25
+(`docs/paper/RESULTS_LAB.md`, section 9).
+
+The multi-question-per-prefill idea that jev-visual, OpenJev-Vision and mini-jev all measure is what glance's prefix
+cache does, and it is not a glance contribution (see vLLM's own docs above, which do this for any request shape).
+The saving is smaller here than in their settings because a 196-token image is short next to a 100-token rating
+prompt that has to be read once per readout. What glance measured that they did not is exact prediction invariance:
+packing changed 0 of 100 checked predictions in glance's lab, because each packed rating question is sent as its own
+sequence that reuses the image prefix's KV cache: the questions never see each other, or each other's answers, in
+the attention pattern. That is a different mechanism from open-alternative-jev's "packed" mode, which puts several
+questions inside one shared attention sequence and reports that this changes 6-9% of answers versus answering them
+separately. Independent branches off one cached prefix and several questions packed into one sequence are not the
+same claim, and only the first is invariant by construction.
+
+## Naming
+
+A reviewer flagged that `pip install glance` already installs something else. Confirmed by reading
+https://pypi.org/project/glance/ today: PyPI's `glance` (v32.0.0, released Apr 1, 2026) is OpenStack's Glance Image
+Service, "an OpenStack project that provides services and associated libraries to store, browse, share, distribute
+and manage bootable disk images." Unrelated to this project. `glance-vlm` is unclaimed on PyPI (404 as of today).
+This project does not publish to PyPI yet; a different package name will be needed before it does.
