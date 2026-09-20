@@ -180,8 +180,8 @@ def fit_matrix(x: np.ndarray, y: np.ndarray, n_classes: int, l2: float = L2, res
             wf, bf = _penalized_fit((x[train] - m) / sd, y[train], n_classes, l2)
             held_out[held] = ((x[held] - m) / sd) @ wf.T + bf
         s = _sharpness(held_out, y)
-    elif rescale == "cv":
-        s = 1.0  # a level with a single example: nothing to hold out, keep the (timid) penalized probabilities
+    elif rescale in ("cv", "none"):
+        s = 1.0  # "cv" with a single example of some level: nothing to hold out, keep the (timid) penalized probabilities
     else:
         s = _sharpness(xs @ w.T + b, y)
     return {"W": (s * w).tolist(), "b": (s * b).tolist(), "mean": mean.tolist(), "std": std.tolist(), "l2": l2, "rescale": s,
