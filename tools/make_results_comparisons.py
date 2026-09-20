@@ -66,8 +66,14 @@ else:
 
 out += ["## 4. Frontier APIs on the same held-out images", ""]
 frontier = load("results/lab/frontier_head_to_head.json")
-out += (["See `results/lab/frontier_head_to_head.md`.", ""] if frontier and frontier.get("runs")
-        else ["Pending: the three eval runs exist; the paid calls need the project owner's API key (`glance baseline --run <id> --env-file <path>`).", ""])
+if frontier and frontier.get("runs"):
+    body = (ROOT / "results/lab/frontier_head_to_head.md").read_text().split("\n", 2)[2]
+    out += [body.strip(), "",
+            "Caveats that travel with this table: the frontier model is zero-shot and cannot be calibrated through a hard pick; a few-shot prompt "
+            "for it was not tried; the scales are synthetic single-factor rubrics with hand-written level texts; with hundreds of labels "
+            "classical features beat both systems (section 3). The paid calls were run by the project owner with their own key.", ""]
+else:
+    out += ["Pending: the three eval runs exist; the paid calls need the project owner's API key (`glance baseline --run <id> --env-file <path>`).", ""]
 
 out += ["## 5. A second model family (SmolVLM2-2.2B), same prompts and recipe", "",
         "Pending: registered in `lab/NOTES.md` entries 20, 22 and 22b, queued on the GPU.", ""]

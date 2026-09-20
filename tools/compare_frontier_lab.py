@@ -41,6 +41,8 @@ def features(ladder, ids):
 
 result = {"runs": {}, "local": {}}
 frontier_items = collections.defaultdict(set)
+frontier_correct = {}
+local_correct = collections.defaultdict(dict)  # system -> (scale, item_id) -> correctness (a fraction for the 32-label row: mean over draws)
 for run_id in args.run:
     run_dir = ROOT / "runs" / run_id
     model = (yaml.safe_load((run_dir / "config.yaml").read_text()).get("models") or {}).get("frontier")
@@ -55,11 +57,13 @@ for run_id in args.run:
                     seen[scale] += 1
                     frontier_items[scale].add(r["item_id"])
         continue
+    model = model or str(picks[0].get("model", "")).removeprefix("frontier:") or run_id
     per = collections.defaultdict(list)
     for r in picks:
         scale = r["suite"].removeprefix("ladder_")
         per[scale].append(bool(r["correct"]))
         frontier_items[scale].add(r["item_id"])
+        frontier_correct[(run_id, scale, r["item_id"])] = bool(r["correct"])
     result["runs"][run_id] = {"model": model, "n": {s: len(v) for s, v in per.items()},
                               "accuracy": {s: float(np.mean(v)) for s, v in per.items()},
                               "mean_accuracy": float(np.mean([np.mean(v) for v in per.values()]))}
@@ -77,15 +81,21 @@ if frontier_items:
         zi_c = np.array([by[(scale, i)]["independent"]["logits"] for i in cal_ids])
         zi_t = np.array([by[(scale, i)]["independent"]["logits"] for i in ids])
         k = int(yc.max()) + 1
-        local["v0 readout as shipped (single temperature), 0 rubric labels"][scale] = float(np.mean(
-            sm.apply_fit("independent", zi_t, sm.fit_temperature(zi_c, yc)).argmax(1) == y))
-        local["+ Glance ens4d, 0 labels"][scale] = float(np.mean(xt.reshape(len(y), len(MEMBERS), k).mean(1).argmax(1) == y))
+        def record(name, hits):
+            local[name][scale] = float(np.mean(hits))
+            for i, h in zip(ids, np.asarray(hits, dtype=float)):
+                local_correct[name][(scale, i)] = float(h)
+
+        record("v0 readout as shipped (single temperature), 0 rubric labels", sm.apply_fit("independent", zi_t, sm.fit_temperature(zi_c, yc)).argmax(1) == y)
+        record("+ Glance ens4d, 0 labels", xt.reshape(len(y), len(MEMBERS), k).mean(1).argmax(1) == y)
+        zt = ((xt - xc.mean(0)) / (xc.std(0) + 1e-6)).reshape(len(y), len(MEMBERS), k).mean(1)  # unlabeled pool = calibration images, labels unused
+        record("+ Glance ens4d, 0 labels + unlabeled images", zt.argmax(1) == y)
         draws = []
         for _ in range(20):
             idx = np.concatenate([rng.choice(np.flatnonzero(yc == lvl), 32 // k, replace=False) for lvl in range(k)])
-            draws.append(np.mean(rating.apply_matrix(rating.fit_matrix(xc[idx], yc[idx], k, rescale="cv"), xt).argmax(1) == y))
-        local["+ Glance ens4d, 32 labels"][scale] = float(np.mean(draws))
-        local["+ Glance ens4d, 500 labels"][scale] = float(np.mean(rating.apply_matrix(rating.fit_matrix(xc, yc, k), xt).argmax(1) == y))
+            draws.append(rating.apply_matrix(rating.fit_matrix(xc[idx], yc[idx], k, rescale="cv"), xt).argmax(1) == y)
+        record("+ Glance ens4d, 32 labels", np.mean(draws, axis=0))
+        record("+ Glance ens4d, 500 labels", rating.apply_matrix(rating.fit_matrix(xc, yc, k), xt).argmax(1) == y)
     result["local"] = {name: {"accuracy": per, "mean_accuracy": float(np.mean(list(per.values())))} for name, per in local.items()}
     scales = sorted(frontier_items)
     lines = ["# Frontier models vs Qwen3-VL-4B on the lab scales, same held-out images", "",
@@ -96,8 +106,23 @@ if frontier_items:
     for run_id, r in result["runs"].items():
         lines.append(f"| {r['model']} | 0 | " + " | ".join(f"{r['accuracy'].get(s, float('nan')):.3f}" for s in scales) + f" | **{r['mean_accuracy']:.3f}** |")
     for name, r in result["local"].items():
-        labels = "500" if "500 labels" in name else ("32" if "32 labels" in name else "0")
+        labels = "500" if "500 labels" in name else ("32" if "32 labels" in name else ("0 (plus unlabeled images)" if "unlabeled" in name else "0"))
         lines.append(f"| Qwen3-VL-4B, {name.split(',')[0]} | {labels} | " + " | ".join(f"{r['accuracy'][s]:.3f}" for s in scales) + f" | **{r['mean_accuracy']:.3f}** |")
+    # paired bootstrap over items: local minus frontier, mean over scales
+    boot_rng, paired = np.random.default_rng(7), {}
+    for run_id, r in result["runs"].items():
+        for name in result["local"]:
+            diffs = []
+            for sc in scales:
+                keys = sorted(i for i in frontier_items[sc] if (run_id, sc, i) in frontier_correct and (sc, i) in local_correct[name])
+                d = np.array([local_correct[name][(sc, i)] - float(frontier_correct[(run_id, sc, i)]) for i in keys])
+                diffs.append(d[boot_rng.integers(0, len(d), size=(5000, len(d)))].mean(1))
+            mean_boot = np.mean(diffs, axis=0)
+            paired[f"{name} minus {r['model']}"] = {"points": float(100 * (result["local"][name]["mean_accuracy"] - r["mean_accuracy"])),
+                                                   "ci95": [float(100 * np.percentile(mean_boot, 2.5)), float(100 * np.percentile(mean_boot, 97.5))]}
+    result["paired_differences"] = paired
+    lines += ["", "Paired differences in mean accuracy, same images (bootstrap 95% interval over items):", "", "| Difference | points | 95% interval |", "| --- | --- | --- |"]
+    lines += [f"| {k} | {v['points']:+.1f} | [{v['ci95'][0]:+.1f}, {v['ci95'][1]:+.1f}] |" for k, v in paired.items()]
     lines += ["", "n per scale: " + ", ".join(f"{s} {len(frontier_items[s])}" for s in scales) + "."]
     out = ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)

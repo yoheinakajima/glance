@@ -1069,3 +1069,34 @@ and there is no ground truth for these 25 questions on these images, so this say
 written answers are also conditioned on each other (field 12 sees fields 1 to 11), the reads are independent.
 So the pitch-level claim is supported on this machine: deciding by reading is 2.4 to 6 times faster than the same model
 writing its answers, identical on yes/no, and it returns a probability for every answer at no extra cost.
+
+## 2026-09-20 13:50 Entry 31: E2 result, Claude Opus 5 on the same held-out lab images (the owner ran the paid calls)
+
+`glance baseline --run 20260920T165748Z-8ff72a --model anthropic/claude-opus-5 --baseline-n 200` (1,000 calls, run by
+the owner with their key; only whether each pick was right is stored). `tools/compare_frontier_lab.py`,
+`results/lab/frontier_head_to_head.{md,json}`. Five lab scales, the same 200 test images per scale for every row.
+
+| System | labels for the rubric | blur | exposure | jpeg | noise | resolution | mean |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Claude Opus 5, zero-shot, constrained pick | 0 | 0.560 | 0.750 | 0.285 | 0.525 | 0.630 | 0.550 |
+| Qwen3-VL-4B, v0 readout as shipped | 0 | 0.625 | 0.530 | 0.365 | 0.550 | 0.480 | 0.510 |
+| Qwen3-VL-4B + Glance `ens4d` | 0 | 0.470 | 0.700 | 0.450 | 0.575 | 0.655 | 0.570 |
+| Qwen3-VL-4B + Glance `ens4d` | 0, plus unlabeled images | 0.610 | 0.840 | 0.565 | 0.740 | 0.755 | 0.702 |
+| Qwen3-VL-4B + Glance `ens4d` | 32 | 0.906 | 0.921 | 0.738 | 0.850 | 0.871 | 0.857 |
+| Qwen3-VL-4B + Glance `ens4d` | 500 | 0.910 | 0.935 | 0.745 | 0.875 | 0.875 | 0.868 |
+
+Paired differences against Opus 5 (bootstrap over items, 95%): v0 readout -4.0 points [-8.0, +0.0]; Glance with 0 labels
++2.0 [-2.1, +6.0]; with unlabeled images +15.2 [+10.8, +19.5]; with 32 labels +30.7 [+27.3, +34.2]; with 500 labels
++31.8 [+28.2, +35.4].
+
+**Verdicts on entry 20 (E2), all three met:** the frontier model lands between 0.45 and 0.70 (0.550); the zero-label
+local readout is within 10 points of it (a statistical tie, 2 points ahead); with 32 labels the local model is ahead on
+at least 4 of 5 scales (5 of 5). Opus 5 is worst exactly where the local zero-label readout is worst (JPEG, 0.285): the
+weak point is the rubric's level boundaries, not the size of the model.
+
+**What this does and does not show.** It shows that a frozen 4B model on a laptop, asked through Glance, matches a
+frontier model at zero labels on these rubrics and is 15 to 31 points ahead once it has unlabeled or 32 labeled images
+of the rubric, at a small fraction of the cost per rating (entry 23). It does NOT show that the 4B model "sees better":
+Opus got no examples, cannot be calibrated through a hard pick, and a few-shot prompt for it was not tried; these are
+synthetic single-factor scales with hand-written level texts; and with hundreds of labels classical features beat both
+(entry 25). GPT and Gemini runs are prepared (`...165949Z`, `...170146Z`); no rows yet.

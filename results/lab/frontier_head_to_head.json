@@ -1,0 +1,111 @@
+{
+  "runs": {
+    "20260920T165748Z-8ff72a": {
+      "model": "anthropic/claude-opus-5",
+      "n": {
+        "blur": 200,
+        "noise": 200,
+        "jpeg": 200,
+        "exposure": 200,
+        "resolution": 200
+      },
+      "accuracy": {
+        "blur": 0.56,
+        "noise": 0.525,
+        "jpeg": 0.285,
+        "exposure": 0.75,
+        "resolution": 0.63
+      },
+      "mean_accuracy": 0.55
+    }
+  },
+  "local": {
+    "v0 readout as shipped (single temperature), 0 rubric labels": {
+      "accuracy": {
+        "blur": 0.625,
+        "exposure": 0.53,
+        "jpeg": 0.365,
+        "noise": 0.55,
+        "resolution": 0.48
+      },
+      "mean_accuracy": 0.51
+    },
+    "+ Glance ens4d, 0 labels": {
+      "accuracy": {
+        "blur": 0.47,
+        "exposure": 0.7,
+        "jpeg": 0.45,
+        "noise": 0.575,
+        "resolution": 0.655
+      },
+      "mean_accuracy": 0.57
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images": {
+      "accuracy": {
+        "blur": 0.61,
+        "exposure": 0.84,
+        "jpeg": 0.565,
+        "noise": 0.74,
+        "resolution": 0.755
+      },
+      "mean_accuracy": 0.702
+    },
+    "+ Glance ens4d, 32 labels": {
+      "accuracy": {
+        "blur": 0.9059999999999999,
+        "exposure": 0.92125,
+        "jpeg": 0.73775,
+        "noise": 0.8502500000000001,
+        "resolution": 0.87125
+      },
+      "mean_accuracy": 0.8573000000000001
+    },
+    "+ Glance ens4d, 500 labels": {
+      "accuracy": {
+        "blur": 0.91,
+        "exposure": 0.935,
+        "jpeg": 0.745,
+        "noise": 0.875,
+        "resolution": 0.875
+      },
+      "mean_accuracy": 0.868
+    }
+  },
+  "paired_differences": {
+    "v0 readout as shipped (single temperature), 0 rubric labels minus anthropic/claude-opus-5": {
+      "points": -4.0000000000000036,
+      "ci95": [
+        -8.0025,
+        0.0
+      ]
+    },
+    "+ Glance ens4d, 0 labels minus anthropic/claude-opus-5": {
+      "points": 1.9999999999999907,
+      "ci95": [
+        -2.0999999999999996,
+        6.000000000000001
+      ]
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images minus anthropic/claude-opus-5": {
+      "points": 15.199999999999992,
+      "ci95": [
+        10.8,
+        19.5
+      ]
+    },
+    "+ Glance ens4d, 32 labels minus anthropic/claude-opus-5": {
+      "points": 30.73,
+      "ci95": [
+        27.314874999999994,
+        34.150000000000006
+      ]
+    },
+    "+ Glance ens4d, 500 labels minus anthropic/claude-opus-5": {
+      "points": 31.799999999999994,
+      "ci95": [
+        28.199999999999996,
+        35.4
+      ]
+    }
+  }
+}
