@@ -1330,3 +1330,12 @@ approved by the owner in principle and is NOT started; it waits behind the zero-
 - The owner approved raising the model-download cap from the hand-off's 30 GB to 80 GB (16:29) for E13 (openjev v2 9.1 GB,
   q-sit-mini 1.9 GB, already fetched; my brief to the assistant model had not checked the cap) and E15 (Qwen3-VL 2B
   4.3 GB and 8B 17.6 GB, downloading). Disk free: 1.2 TB.
+
+## 2026-09-20 16:48 Entry 38b: E15 item subset and run plan, fixed before any 2B or 8B output
+
+Cost-driven narrowing of entry 38, decided before collection: per lab scale, the FIRST 200 test items (exactly the 1,000
+images the three frontier models were scored on, so every size is paired with them) and the first 100 calibration items
+(balanced, 25 per level; used unlabeled for the self-calibration row and with 32 labels, 20 seeded draws, for H35). The
+creative-QA rubrics: first 100 test items each. The two fresh photo sets in full through `glance eval`. The 4B rows come
+from the existing collection restricted to the same items. The 8B model runs with the other GPU lane held idle.
+Weights are downloaded (2B 4.3 GB, 8B 17.6 GB; Apache-2.0; revisions as in MODELS.md).
