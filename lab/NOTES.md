@@ -1256,3 +1256,28 @@ on the fresh photos Gemini $3.03 and GPT-5.6 $7.64 per 1,000 questions, medians 
 The earlier Opus 5 and GPT-5.6 lab runs predate cost logging (latency medians 2.4 s and 1.1 s). These are within the
 cost model's estimated range ($3.74 to $18.70 per 1,000), which stays labeled as an estimate for the models without
 measured rows.
+
+## 2026-09-20 16:24 Entry 38: the owner's framing, and E15 (does zero-shot get better with model size?), registered before any code
+
+Owner's direction (16:20): the claim is about what is possible with an OPEN model used ZERO-SHOT as a general image
+decision engine. That labeled examples help is a caveat and an optional extension, not the headline; a few-shot control
+for the frontier models is low priority. Their next question: does the zero-shot readout improve with larger open models
+so that examples stop being necessary ("nobody wants to prepare labeled examples today")? Consequences, fixed now:
+- The headline comparison is ZERO-SHOT on every row: the open model read with Glance; the same model writing structured
+  output (E11); frontier models zero-shot; SigLIP2; other open systems (E13). Accuracy, speed, cost. Label-based rows
+  move to a separate "if you do have examples" section. The GPU queue is reordered to serve that table first.
+- Zero-shot ratings are reported with exact-level accuracy AND within-one-level and rank agreement, because where a
+  rubric draws its level boundaries is a convention the model cannot know (on the lab test split the 4B model is within
+  one level on 0.987 of images while exact is 0.558). Zero-LABEL self-calibration from unlabeled traffic (0.686 from 16
+  unlabeled images, entry 26) is the no-effort path and is reported as its own row, never folded into "zero-shot".
+- E15, scaling inside one open family, identical prompts, readout and settings (float16, 768 image-token budget, the
+  native backend): Qwen3-VL-2B-Instruct @ 8964489, 4B @ ebb281e (have), 8B @ 0c351dd, all Apache-2.0 (checked today).
+  Items: lab scales test split (1,000 images per scale pair of splits as built; zero-shot rows need no fit), the creative-
+  QA test split, the two fresh photo sets. The 8B model (17.5 GB) runs alone on this 32 GB machine; 32B does not fit and
+  would need a rented GPU (owner's decision, not taken).
+- H33: zero-shot exact accuracy on the lab scales rises with size, 2B < 4B (0.558) < 8B, but 8B stays BELOW 0.70, the
+  level the 4B model reaches from 16 unlabeled images. If 8B reaches 0.70 zero-shot, my "boundaries are conventions"
+  reading is wrong and the owner's hope is supported.
+- H34: within-one-level >= 0.97 at 4B and 8B; rank agreement (Spearman with the true level) rises with size.
+- H35: the gain from 32 labels (over zero-shot) shrinks with size but stays >= 15 points at 8B.
+- H36: on fresh-photo yes/no and pick-one, 8B >= 4B >= 2B with overlapping intervals between 4B and 8B.
