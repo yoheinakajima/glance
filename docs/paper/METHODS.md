@@ -493,3 +493,60 @@ used. This directly shaped v0's dataset choices (`DATASETS.md`):
 - Because the public suites are very likely present in every frontier and open model's training data,
   `human_gold` is called out as "the only uncontaminated check" (`DATASETS.md`, `STATUS.md` Final summary,
   "Open inputs from you").
+
+## 14. Glance elicitation for `score` questions (`glance/rating.py`; the harness default since the API extension of 2026-09-20)
+
+Source of the design: the score lab (`lab/NOTES.md`, `docs/paper/RESULTS_LAB.md`). Nothing is trained; the method is
+how the question is asked, how often, and how the logits are mapped to levels.
+
+**Readouts.** For a rubric with instructions `I` and ordered level texts `c_0 .. c_{K-1}` the model is read with up to
+four prompts, one forward pass each, logits taken over the single-token digits `0 .. K-1` at the empty assistant turn
+(same float32 readout head as section 2):
+
+```
+Question: {I}
+The answer scale, from lowest to highest:
+0. {c_0}
+1. {c_1}
+...
+Answer with the number of the correct step.
+```
+
+| Member | Scale order shown | Images in the request | Extra sentence appended to `I` |
+| --- | --- | --- | --- |
+| `digits` | lowest to highest | the request's images | none |
+| `digitsrev` | highest to lowest ("from highest to lowest"; digit 0 = highest level) | the request's images | none |
+| `zoom_digits` | lowest to highest | the request's images plus `zoom` | see below |
+| `zoom_digitsrev` | highest to lowest | the request's images plus `zoom` | see below |
+
+`zoom` is the central third of each side of the rated image, enlarged 3x with nearest-neighbour sampling so that
+pixel-level structure (grain, 8 x 8 compression blocks, resampling steps) is kept and made larger. The appended
+sentence is: `` `zoom` is a 3x pixel-magnified crop from the centre of `img0`: use it to judge fine detail, and `img0`
+for the overall picture.`` (with the rated image's id). Reversed members have their logits flipped back into level
+order, so position and digit biases enter the combination with opposite signs. `score_method: "ens4d"` uses all four
+members; `"digits"` only the first; `"statements"` is the v0 method of section 2. Rating prompt version: `s1`.
+
+**Without a calibration** the answer is `softmax(mean of the members' level logits)`. Chosen on the lab calibration
+split over the mean of probabilities (`lab/NOTES.md` entry 17).
+
+**With a calibration** the `4K` member logits `x` are standardized with the fit data's mean and standard deviation and
+mapped by `p = softmax(W x' + b)`, `W` of shape `K x 4K`: matrix scaling, fit by L2-regularized negative log
+likelihood (`l2 = 0.05`, L-BFGS), followed by one scalar `s` refit without the penalty (`p = softmax(s (W x' + b))`)
+because the penalty makes the probabilities too timid; `s` multiplies every logit alike, so no prediction changes.
+`score` = expected level, `confidence` = 1 - H(p) / ln K, as for every other answer.
+
+**A calibration belongs to one rubric and one configuration.** Key: backend, model id @ revision, rating prompt
+version, method, image-token budget, instructions text, criteria texts. The lab measured that a calibration fit on one
+rating dimension does not work on another (`RESULTS_LAB.md` section 5), so there is no pooled fallback:
+`calibrated: true` without a matching file is `409 calibration_mismatch`; `calibrated: "auto"` calibrates what it can
+and warns about the rest. `glance fit` builds one from labeled images and reports 5-fold cross-validated accuracy,
+within-one-level rate, MAE, NLL, ECE and the ECE sampling floor at that sample size.
+
+**Packing.** All rating questions of a request are sent to the backend in one call per view (images alone; images
+plus `zoom`) and per number of levels. With the prefix cache a request therefore pays at most two image prefills
+however many rubrics it carries. Measured cost and the check that packing changes no prediction: `RESULTS_LAB.md`
+section 9.
+
+**Naming.** In result tables the configuration is written "Qwen3-VL-4B + Glance". Glance is a readout and calibration
+recipe with a runtime, not a model: no weights are trained or distributed, only calibration files of a few hundred
+numbers.

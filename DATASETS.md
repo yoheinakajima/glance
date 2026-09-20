@@ -15,6 +15,7 @@ nothing is trained, and no dataset content is redistributed by this repo (manife
 | `blur_ladder` | Synthetic Gaussian blur on Caltech-101 images that `caltech101` does not use | derived locally | CC BY 4.0 (derived from Caltech-101) | 2026-09-19 | blur radii frozen in `glance/evals/suites/blur_ladder.py` | yes |
 | `doctype16` | RVL-CDIP subset (optional suite) | https://huggingface.co/datasets/aharley/rvl_cdip | **Unclear**: the Hub cards (`aharley/rvl_cdip`, `chainyo/rvl-cdip`) list `other`; the source collection (IIT-CDIP) has no clear reuse terms | 2026-09-19 | not downloaded | **no, skipped** |
 | (score lab, evaluation only) | KADID-10k: 81 reference images x 25 distortions x 5 levels with DMOS | https://database.mmsp-kn.de/kadid-10k-database.html (`kadid10k.zip`, 3.07 GB) | **No formal license.** The page says "KADID-10k is freely available to the research community" and asks for citation (Lin, Hosu, Saupe, QoMEX 2019). Unclear under HANDOFF section 11. **Exception approved by the project owner on 2026-09-20: evaluation only**, never used to fit anything that ships, never redistributed; only item ids, levels, DMOS-derived metrics and model logits are committed | 2026-09-20 | zip downloaded 2026-09-20; sha256 recorded in `lab/NOTES.md` | yes, branch `score-lab` only |
+| `distort25` | 25 synthetic distortions x 5 levels, generated locally by `glance/lab/distort25.py`, applied to Oxford-IIIT Pet **train**-split photos | https://huggingface.co/datasets/timm/oxford-iiit-pet (train split parquet) | CC BY-SA 4.0 (same Hub card as `pets37`) | 2026-09-19 | same repo and revision as `pets37`, `089695c834a7deb60505b7cc506672db1c31a6aa` | yes |
 | `human_gold` | Your own hand-labeled images | local `gold/human_gold.jsonl` | Private. Never leaves the machine; `gold/` is gitignored, and the frontier baseline refuses it without `--allow-upload-gold` | n/a | n/a | empty in this run |
 
 Notes:
@@ -27,3 +28,14 @@ Notes:
   project owner for evaluation only on the research branch, is KADID-10k (row above). It is not part of the v0 harness
   or of anything meant for commercial reuse.
 - Public suites are likely in every model's training data. `human_gold` is the only uncontaminated check.
+- To reproduce the KADID-10k benchmark, get the data yourself and run `glance.lab.kadid` as a CLI: either
+  `uv run python -m glance.lab.kadid --zip PATH/TO/kadid10k.zip` with a copy you downloaded from the authors'
+  page, or `uv run python -m glance.lab.kadid --download --accept-evaluation-only` to have it fetched for you.
+  Either way the zip's sha256 is checked against `fe59ace86a2525d5785ff011a2119fa88839e0329f5029f7b23994727efd185c`
+  before anything is unpacked. Nothing from the database is in this repo; only item ids, distortion levels,
+  DMOS-derived metrics, and model logits are committed.
+- `distort25` needs no external data beyond the same pets37 Hub repo and revision: run
+  `uv run python -m glance.lab.distort25` to regenerate the distorted images and manifests locally. Of the
+  train-split photos, 1,988 pass the same filters as `pets37` (minimum size, sharpness, luminance); no
+  train-split photo is used anywhere else in the project, since `pets37` and the 4-level ladders only ever
+  draw from the test split.

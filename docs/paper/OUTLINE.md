@@ -103,7 +103,26 @@ calibrated, so it is context, not a head-to-head comparison.
    being the exception (0.772 / 0.776). 32 labeled images per scale suffice; calibrations do not transfer across
    scales; the result holds on the uncached reference path (same prediction on 499 of 500 and 500 of 500 items).
    Hypotheses were registered before each experiment and one of them (threshold questions beat isolated level
-   questions) was not supported. Figures: `docs/paper/figures/`.
+   questions) was not supported. Figures: `docs/paper/figures/`. Cost, stated plainly: the same number of forward
+   passes is not the same latency. One rating of a fresh image costs 1.09 s against 0.44 s for the baseline readout
+   (`RESULTS_LAB.md` section 9).
+
+9. **An honest cost model for multi-readout elicitation, including a published correction.** Cold-start cost, the
+   marginal cost of one more readout on a prefilled image, and the per-question cost when several rating questions
+   share the image prefill are three different numbers (1,089 ms; about 150 ms; 584 ms at five questions, 341 ms at
+   25). Our first latency table mixed the first two; the erratum is in `lab/NOTES.md` entry 16 and every derived
+   document. Packing changed 0 of 100 predictions. With a 196-token image and 100-token rating prompts, prefill
+   sharing saves less than it does for long text states, and the question text becomes the dominant cost.
+
+10. **A runtime and a `fit` verb instead of a model** (`glance/rating.py`, `glance/fit.py`, `METHODS.md` section 14):
+    the method ships as an additive extension of a Jev-shaped API (`score_method`, `calibrated: "auto"`), calibrations
+    are per rubric by construction because the lab showed they do not transfer, and the five lab calibrations are
+    distributed as 4 KB files. Framing for the paper: vision-native typed decisions on a frozen open model, where the
+    user's one-time cost is a few dozen labels per rubric.
+
+11. **Generalization without re-selection** (pending: `docs/paper/RESULTS_GENERALIZATION.md`). The fixed method and one
+    generic question wording on 25 distortion types x 5 levels, on license-clean photos and on KADID-10k with human
+    opinion scores (evaluation only), hypotheses H7 to H9 registered beforehand, including the parts that fail.
 
 ## Section outline with figures/tables
 
