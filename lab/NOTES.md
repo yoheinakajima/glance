@@ -1352,3 +1352,15 @@ research-grade community identifications; zero labels by us; the photos postdate
   at list price for Opus 5 by the tool's estimate; per-model copies of the run exist with suffixes `-gpt`, `-gemini`).
 - Speed, same run: pick-one of ten 1.4 s per photo (ten statements in one packed pass), yes/no under 1 s, on a laptop
   with a second GPU job running (contended, so an upper figure).
+
+## 2026-09-20 16:53 Entry 39b: E14 result: the content-free prior FAILS (a null image is not content-free for an image rubric)
+
+`results/lab/null_prior.md`, lab test split, scored once. Raw zero-shot 0.558; with the registered prior from six null
+images 0.400 (-15.8 points); grey only 0.426; noise only 0.389; it hurts on four of five scales (blur +3.0). H37: NOT
+SUPPORTED. Why, as the registration feared: the model reads a flat or noise image as the WORST level of almost every
+rubric (prior argmax = level 3 for blur and resolution, 2 or 3 for JPEG and noise), so subtracting that "prior" pushes
+every real image toward the mild levels. For text prompts a content-free input ("N/A") carries no evidence; for an image
+rubric there is no such input: every image is evidence about blur, noise or exposure. The reference row, self-calibration
+from 16 UNLABELED REAL images of the rubric, is 0.679 here (0.686 in entry 26, different draws). It does not ship.
+What this leaves for true zero-shot ratings: the raw read (exact 0.558, within one level 0.987, rank agreement 0.93), a
+better rubric text, or bigger models (E15, running next).

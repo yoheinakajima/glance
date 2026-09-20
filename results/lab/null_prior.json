@@ -1,0 +1,107 @@
+{
+ "table": {
+  "raw zero-shot": {
+   "accuracy": 0.5576000000000001,
+   "mae": 0.4695630510172283,
+   "within_1": 0.9872,
+   "per_scale_accuracy": {
+    "blur": 0.462,
+    "exposure": 0.68,
+    "jpeg": 0.412,
+    "noise": 0.574,
+    "resolution": 0.66
+   }
+  },
+  "content-free prior, all six null images (registered)": {
+   "accuracy": 0.3996,
+   "mae": 0.6064517622950998,
+   "within_1": 0.9976,
+   "per_scale_accuracy": {
+    "blur": 0.492,
+    "exposure": 0.404,
+    "jpeg": 0.358,
+    "noise": 0.326,
+    "resolution": 0.418
+   }
+  },
+  "content-free prior, flat grey only": {
+   "accuracy": 0.42560000000000003,
+   "mae": 0.5896229074297936,
+   "within_1": 0.998,
+   "per_scale_accuracy": {
+    "blur": 0.412,
+    "exposure": 0.414,
+    "jpeg": 0.412,
+    "noise": 0.472,
+    "resolution": 0.418
+   }
+  },
+  "content-free prior, three noise images only": {
+   "accuracy": 0.3887999999999999,
+   "mae": 0.6768461335530639,
+   "within_1": 0.9172,
+   "per_scale_accuracy": {
+    "blur": 0.492,
+    "exposure": 0.368,
+    "jpeg": 0.3,
+    "noise": 0.37,
+    "resolution": 0.414
+   }
+  },
+  "self-calibration from 16 unlabeled images (reference, entry 26)": {
+   "accuracy": 0.6794399999999999,
+   "mae": 0.4592862184523813,
+   "within_1": 0.9837599999999999,
+   "per_scale_accuracy": {
+    "blur": 0.6029,
+    "exposure": 0.7897000000000001,
+    "jpeg": 0.5602999999999999,
+    "noise": 0.7151,
+    "resolution": 0.7291999999999998
+   }
+  }
+ },
+ "verdict": {
+  "H37: gain over raw >= 3 points": false,
+  "H37: stays below self-calibration from 16 unlabeled images": true,
+  "gain_points": -15.8,
+  "scales_where_it_hurts": [
+   "exposure",
+   "jpeg",
+   "noise",
+   "resolution"
+  ]
+ },
+ "prior_argmax_level": {
+  "blur": {
+   "digits": 3,
+   "zoom_digits": 3,
+   "digitsrev": 3,
+   "zoom_digitsrev": 3
+  },
+  "exposure": {
+   "digits": 3,
+   "zoom_digits": 0,
+   "digitsrev": 3,
+   "zoom_digitsrev": 0
+  },
+  "jpeg": {
+   "digits": 3,
+   "zoom_digits": 3,
+   "digitsrev": 3,
+   "zoom_digitsrev": 2
+  },
+  "noise": {
+   "digits": 3,
+   "zoom_digits": 2,
+   "digitsrev": 3,
+   "zoom_digitsrev": 3
+  },
+  "resolution": {
+   "digits": 3,
+   "zoom_digits": 3,
+   "digitsrev": 3,
+   "zoom_digitsrev": 3
+  }
+ }
+}

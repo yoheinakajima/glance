@@ -96,6 +96,13 @@ if h2h:
                 "[+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`). Sixteen unlabeled images already give most of that gain; that row is "
                 "on the full test split and was not tested pairwise against the frontier models. The pool has to cover the range of the rubric: a badly "
                 "unbalanced pool gives back part of the gain.", ""]
+    nullp = load("results/lab/null_prior.json")
+    if nullp:
+        t = nullp["table"]
+        out += [f"A correction that needs nothing at all does NOT work: subtracting the model's reading of content-free images (flat grey, black, white, noise) as "
+                f"its prior takes exact accuracy from {t['raw zero-shot']['accuracy']:.3f} to "
+                f"{t['content-free prior, all six null images (registered)']['accuracy']:.3f}, because a blank image is read as the worst level of most rubrics "
+                "(`results/lab/null_prior.md`, `lab/NOTES.md` entry 39b). For an image rubric there is no content-free image.", ""]
     kadid = load("results/lab/loro_kadid.json")
     if kadid:
         k = {name: e for name, e in kadid.items()}

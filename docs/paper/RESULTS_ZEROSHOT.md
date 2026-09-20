@@ -62,6 +62,8 @@ Exact level is a hard target zero-shot because where a rubric draws its boundari
 
 With the full unlabeled pool the open model is ahead of all three frontier models' zero-shot picks on the same 1,000 images (paired: +5.2 points [+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`). Sixteen unlabeled images already give most of that gain; that row is on the full test split and was not tested pairwise against the frontier models. The pool has to cover the range of the rubric: a badly unbalanced pool gives back part of the gain.
 
+A correction that needs nothing at all does NOT work: subtracting the model's reading of content-free images (flat grey, black, white, noise) as its prior takes exact accuracy from 0.558 to 0.400, because a blank image is read as the worst level of most rubrics (`results/lab/null_prior.md`, `lab/NOTES.md` entry 39b). For an image rubric there is no content-free image.
+
 On KADID-10k (23 distortion types at 5 severity levels, human-scored, chance 0.200) the zero-shot read is weak: 0.328 exact, 0.738 within one level (`results/lab/loro_kadid.md`). Zero-shot rating of fine severity levels is NOT solved.
 
 ## 4. The same open model, reading the answer against writing it as structured output
