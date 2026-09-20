@@ -416,7 +416,7 @@ Cached path; K = 5.
   and contrast changes can go both ways). I will check mean DMOS per level from KADID's own file before collecting,
   report such distortions separately, and not drop them after the fact.
 
-## 2026-09-20 08:50 Entry 15: KADID-10k prepared (before any model output on it); fast pass started
+## 2026-09-20 08:46 Entry 15: KADID-10k prepared (before any model output on it); fast pass started
 
 **Data.** `kadid10k.zip` from the authors' page, 3.07 GB, sha256
 `fe59ace86a2525d5785ff011a2119fa88839e0329f5029f7b23994727efd185c`, unpacked under `.cache/` (never committed).
@@ -455,7 +455,7 @@ on calibration references.
 remaining references, then the `independent` baseline on everything. Results are reported when all 81 references are
 in; the fast pass is a progress check, not a separate result.
 
-## 2026-09-20 08:55 Entry 15b: a flaw in H8's ECE criterion, recorded before the results exist
+## 2026-09-20 09:10 Entry 15b: a flaw in H8's ECE criterion, recorded before the results exist
 
 While checking that the report tool runs (on the first two distortions of the fast pass, 85 calibration / 115 test
 items each, far from final) I saw that the ECE sampling floor at that size is about 0.10, and it will still be about
@@ -516,7 +516,7 @@ of the same 100 test images, gives the same prediction on 100 of 100 (median abs
 at the top). The figure `fig_accuracy_vs_latency` plotted the mixed numbers and is withdrawn; `lab_latency_packing`
 replaces it. `lab/LATENCY.json` is kept as is, with its meaning stated.
 
-## 2026-09-20 09:20 Entry 17: the lab winner goes into the harness as "Glance elicitation" (`glance/rating.py`)
+## 2026-09-20 09:10 Entry 17: the lab winner goes into the harness as "Glance elicitation" (`glance/rating.py`)
 
 Approved by the project owner on 2026-09-20 (promotion into `glance decide` and an additive change to the section 5
 contract). Decisions, each made without touching any test split:
@@ -550,7 +550,7 @@ contract). Decisions, each made without touching any test split:
   first 40 test images of each lab scale must reproduce the lab's own predictions; result recorded below when it
   finishes.
 
-## 2026-09-20 09:35 Entry 17b: acceptance check of the harness path (passed)
+## 2026-09-20 09:34 Entry 17b: acceptance check of the harness path (passed)
 
 `tools/check_harness_rating.py --n 40` (`results/lab/harness_rating_check.json`): ordinary `Engine.decide` requests with
 `calibrated: true`, default `score_method`, prefix cache on, shipped calibrations, first 40 test images of each lab
@@ -559,7 +559,7 @@ accuracy 0.915 by both routes (0.975 / 0.875 / 0.900 / 0.975 / 0.850 for blur / 
 largest logit difference from the lab's stored logits 0.122. One request carrying all five rubrics gave the same
 prediction for the image's own scale on 200 of 200. The promoted method is the lab method.
 
-## 2026-09-20 09:50 Entry 18: small fits were overconfident; the sharpness scalar is now fit on held-out folds
+## 2026-09-20 09:34 Entry 18: small fits were overconfident; the sharpness scalar is now fit on held-out folds
 
 **Trigger.** First real `glance fit` run: the 5-level `distort25` JPEG rubric with the generic wording, 8 labeled
 calibration-split images per level (`tools/make_fit_demo.py`), 84 s for 40 images with the GPU shared. Its own
@@ -616,7 +616,7 @@ Also for the record, the first real `glance fit` demo (entry 18) was then tried 
 images of its demo folder (never the benchmark's test split): 6 of 10 exact, 10 of 10 within one level, with 8 labels per level on the 5-level
 JPEG rubric, confidences low (0.07 to 0.55), which is the honest picture of a 40-label fit on the hardest distortion.
 
-## 2026-09-20 10:00 Entry 19: outside reviews, and two calibration challengers registered before they are run
+## 2026-09-20 09:55 Entry 19: outside reviews, and two calibration challengers registered before they are run
 
 Five outside reviews of `docs/BRIEFING.md` (relayed by the project owner) agree on the weak points: the +36.8 headline
 is mostly "the shipped calibration was badly specified" (+5.7 over the best-calibrated naive readout is the method's own
@@ -644,7 +644,7 @@ Hypotheses: H10, C1 beats the current recipe on dev accuracy and NLL at n <= 32 
 better NLL than the current recipe at n <= 32 (fewer parameters) but lower accuracy at n = 240 (one projection cannot
 represent level-specific evidence such as "both extremes look alike").
 
-## 2026-09-20 10:15 Entry 19b: result of the two calibration challengers (dev only; nothing ships, test split untouched)
+## 2026-09-20 09:55 Entry 19b: result of the two calibration challengers (dev only; nothing ships, test split untouched)
 
 `tools/dev_calibration_challengers.py`, `lab/dev/calibration_challengers.{md,json}`. Mean over five scales and 10 draws,
 second half of the calibration split:
@@ -670,7 +670,7 @@ second half of the calibration split:
   paper: matrix scaling is kept as the recipe, the ordinal readout is reported as an equivalent with a quarter of the
   parameters, and "8 labels" is below what either can use.
 
-## 2026-09-20 10:30 Entry 20: a bigger claim, and the experiments that would earn it (registered before their data exists)
+## 2026-09-20 10:07 Entry 20: a bigger claim, and the experiments that would earn it (registered before their data exists)
 
 **Why.** The owner asked whether the project can be more than what the outside reviews describe ("a careful recipe,
 +5.7 points over a well-calibrated baseline, one model, one task family"). The stronger claim worth testing is about
@@ -718,7 +718,7 @@ by the frame, off-centre, occlusion, tilt, caption legibility, watermark intrusi
 calibration on the calibration split, test scored once. Registered expectation: `ens4d` + matrix >= 0.75 mean accuracy
 with >= 0.95 within one level, and the v0 readout as shipped below 0.55; tilt is the rubric I expect to be worst.
 
-## 2026-09-20 10:40 Entry 21: a cheap two-pass member set for many-rubric requests (`fast2`), registered then scored once
+## 2026-09-20 10:10 Entry 21: a cheap two-pass member set for many-rubric requests (`fast2`), registered then scored once
 
 Three reviewers independently suggested making `digits` + `digitsrev` WITHOUT the magnified crop the cheap default for
 requests with many rubrics (measured cost 240 ms per rating at 5 rubrics, 133 ms at 25, against 584 / 341 ms for
@@ -737,7 +737,7 @@ Expectation: about 0.83 (between `digits` 0.814 and `ens2` 0.858), JPEG the weak
 the magnified crop earns its cost: 0.674 without it, 0.772 with it; on the other four scales the two-pass readout is
 within 0.1 to 4.4 points of `ens4d`. Guidance for users: `fast2` for many cheap rubrics, `ens4d` when fine detail matters.
 
-## 2026-09-20 10:50 Entry 22: E3 configuration, fixed before the second model has produced a single logit
+## 2026-09-20 10:26 Entry 22: E3 configuration, fixed before the second model has produced a single logit
 
 The owner approved E3 (a second model family) and, if it earns it, shipping a fitted hidden-state readout (E1).
 - Model: `HuggingFaceTB/SmolVLM2-2.2B-Instruct` at revision `482adb537c021c86670beed01cd58990d01e72e4`, Apache-2.0
@@ -761,7 +761,7 @@ The owner approved E3 (a second model family) and, if it earns it, shipping a fi
   put its answer on the digit tokens), that is reported as "the recipe needs per-model prompt work", which weakens
   the generality claim.
 
-## 2026-09-20 11:00 Entry 22b: one mechanical fix to the second model's readout position, made at the smoke test
+## 2026-09-20 10:40 Entry 22b: one mechanical fix to the second model's readout position, made at the smoke test
 
 Smoke test on 8 blur items (no analysis): the digit readouts had `off_mass` 1.000, i.e. no probability on any digit
 token. Cause, checked directly: SmolVLM2's chat template ends at `Assistant:` and its tokenizer splits " 3" into a bare
@@ -775,7 +775,7 @@ plumbing, not prompt tuning, and the paper should say that a port to a new model
 lives. Measured cost with the GPU shared: about 1.0 to 1.8 s per forward pass (405 image tokens per image, 810 with
 the magnified crop), so the 2,000-item replication takes about three hours of GPU.
 
-## 2026-09-20 11:40 Entry 23: comparisons with similar systems (owner's request): what is being run, first two results
+## 2026-09-20 11:16 Entry 23: comparisons with similar systems (owner's request): what is being run, first two results
 
 **Plan.** (a) Classical no-reference features + logistic regression on the same items and labels, all three benchmarks
 (CPU; delegated to a cheaper assistant model from a written spec; expected to beat us on simple ladders, which is the
@@ -799,3 +799,16 @@ Opus 5 about $18.70, GPT-5.6 about $14.96, Gemini 3.1 Pro preview about $8.28, C
 model needs 1,089 s for the same 1,000 ratings with `ens4d` (584 s if five rubrics share each image, 133 s with `fast2`
 at 25 rubrics per image); its marginal cost is electricity and no dollar figure is claimed for it. Jev itself cannot
 be included: its documentation says it reads text only.
+
+## 2026-09-20 11:20 Note on timestamps and on what git can and cannot prove
+
+Until now I wrote entry times from my own sense of the clock, which ran up to 25 minutes fast. All headers from entry
+15 on are now set to the time of the git commit that first contained the entry; the commit history is the
+authoritative record. What it proves: entries 14, 15 and 15b (KADID / distort25 registration, the two non-severity
+distortions, the ECE-criterion flaw) were committed before any of that data was analyzed; entry 20 (readout ladder,
+frontier comparison, second family, non-quality rubrics) and entry 22 (second-model configuration) were committed before
+a hidden state or a second-model logit existed (the first second-model smoke test ran at 10:38). What it does NOT
+prove: entries 19 / 19b (calibration challengers) and entry 21 (`fast2`) were each written, run and committed in one
+step, so the registration and the result share a commit. They were written first and the code then run unchanged, but
+a reader has only my word for that; treat them as "stated rule, then result" rather than as pre-registered in the
+strict sense. From here on a registration gets its own commit before anything is run.
