@@ -867,7 +867,7 @@ What this says, without spin:
 BRISQUE / NIQE / CLIP-IQA were not added: the BRISQUE weights' upstream license is unclear, no permissively licensed
 NIQE was found, and CLIP-IQA proper fails our weights rule (`docs/paper/COMPARABLE_SYSTEMS.md`).
 
-## 2026-09-20 12:00 Entry 26: can `score` work out of the box? Two label-free calibrations, registered before they are run
+## 2026-09-20 11:38 Entry 26: can `score` work out of the box? Two label-free calibrations, registered before they are run
 
 **Why.** The owner's question: Jev's point is that it needs no per-task fitting; does ours? For yes/no and choice,
 yes (v0 results). For `score`, no: the zero-label readout is about 0.57 exact on the lab scales (0.97 within one level)
@@ -895,3 +895,23 @@ LORO + BC, and the per-rubric fit (205 labels). Repeated on `distort25` when it 
   the best zero-label row.
 If H19 or H20 holds, the harness gets a documented zero-label mode for `score` (BC needs only unlabeled images, which
 every user has); if neither holds, the honest statement stays "ratings need about 32 labels per rubric".
+
+## 2026-09-20 11:55 Entry 26b: batch calibration from unlabeled images, result (LORO still waits for KADID)
+
+`tools/label_free_calibration.py`. Dev (calibration split, pool = first half without labels, judged on the second half):
+raw 0.552; BC (mean-centred) 0.627 with all 250 pool images, 0.632 / 0.635 / 0.628 with 16 / 32 / 64; BCz (z-scored)
+0.689, and 0.680 / 0.693 / 0.691 with 16 / 32 / 64; with a pool that is 70% one level BC 0.606, BCz 0.646. BCz chosen.
+Test split, scored once (`results/lab/label_free_test.json`): raw 0.558; **BCz 0.697** with the 500 calibration images
+as the unlabeled pool (blur 0.594, exposure 0.832, jpeg 0.542, noise 0.750, resolution 0.768), 0.686 / 0.694 / 0.693
+with 16 / 32 / 64 unlabeled images, 0.646 with an unbalanced pool of 100; within one level 0.985.
+- **H19, first half, narrowly NOT met:** 0.697 against the registered 0.70. Second half met: the unbalanced pool keeps
+  63% of the gain (0.646 - 0.558 of 0.697 - 0.558).
+- Reading: about 14 of the 30 points between the zero-label readout and the 32-label fit (0.856) are pure readout bias
+  that a handful of UNLABELED domain images removes. The rest needs labels. MAE does not improve (0.458 against 0.470):
+  z-scored logits give soft distributions and there is no label to set their sharpness; use the top level or a rank,
+  not the expected value, in this mode.
+- Shipped as `glance fit --unlabeled` / `Glance.fit(..., unlabeled=True)`: in the matrix form used everywhere else it is
+  the pool's mean and standard deviation with the member-averaging matrix, so nothing else in the harness changes. The
+  command's output says plainly that it cannot check itself and what a labeled fit would add.
+So, to the owner's question: yes/no and choice are out of the box; `score` is out of the box as a ranking (0.985 within
+one level), 0.558 exact with nothing, 0.697 exact with a few unlabeled images, 0.856 with 32 labels.

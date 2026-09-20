@@ -55,6 +55,12 @@ def read_labels(path: str | Path) -> list[tuple[str, int]]:
     return out
 
 
+def read_unlabeled(path: str | Path) -> list[tuple[str, int]]:
+    """Every image under a folder, labels ignored (level -1): for `glance fit --unlabeled`."""
+    files = sorted(f for f in Path(path).rglob("*") if f.is_file() and f.suffix.lower() in IMAGE_SUFFIXES)
+    return [(str(f), -1) for f in files]
+
+
 def collect_features(engine: Engine, instructions: str, criteria: list[str], examples: Iterable[tuple[str, int]],
                      method: str = "ens4d", model: str = "vlm", image_id: str = "img0",
                      progress: Callable[[int, int], None] | None = None) -> tuple[np.ndarray, np.ndarray]:
@@ -77,7 +83,8 @@ def collect_features(engine: Engine, instructions: str, criteria: list[str], exa
 
 def fit_rubric(engine: Engine, instructions: str, criteria: list[str], examples: Iterable[tuple[str, int]],
                method: str = "ens4d", model: str = "vlm", name: str | None = None, save: bool = True,
-               progress: Callable[[int, int], None] | None = None) -> tuple[rating.RatingCalibration, Path | None]:
+               progress: Callable[[int, int], None] | None = None, unlabeled: bool = False,
+               ) -> tuple[rating.RatingCalibration, Path | None]:
     if method not in rating.MEMBERS:
         raise ValueError(f"method must be one of {sorted(rating.MEMBERS)}")
     features, levels = collect_features(engine, instructions, criteria, examples, method, model, progress=progress)
@@ -85,13 +92,24 @@ def fit_rubric(engine: Engine, instructions: str, criteria: list[str], examples:
 
     question = ScoreQuestion(type="score", instructions=instructions, criteria=criteria)
     key = engine.rating_key(engine.backend(model), method, question)
-    cal = rating.build_calibration(key, features, levels, name=name, source=f"glance fit, {len(levels)} labeled images")
+    if unlabeled:
+        cal = rating.build_unlabeled_calibration(key, features, name=name, source=f"glance fit --unlabeled, {len(levels)} unlabeled images")
+    else:
+        cal = rating.build_calibration(key, features, levels, name=name, source=f"glance fit, {len(levels)} labeled images")
     path = rating.save_calibration(engine.cfg.path("calibration") / "ratings", cal) if save else None
     return cal, path
 
 
 def describe(cal: rating.RatingCalibration, path: Path | None) -> str:
     k = len(cal.key.criteria)
+    if cal.kind == "unlabeled_zscore":
+        lines = [f"{cal.version}: label-free {cal.key.score_method} calibration for a {k}-level rubric from {cal.n} UNLABELED images.",
+                 "  It removes the readout's systematic bias and cannot check itself (no labels). On our lab scales this took exact",
+                 "  accuracy from 0.558 to 0.697; a fit on about 32 labeled images reached 0.856. Label a few dozen when it matters."]
+        if path:
+            lines.append(f"  saved to {path}")
+        lines.append('  use it: send the same instructions and criteria with "options": {"calibrated": "auto"}')
+        return "\n".join(lines)
     lines = [f"{cal.version}: {cal.key.score_method} calibration for a {k}-level rubric, fit on {cal.n} labeled images "
              f"(per level: {cal.n_per_level})"]
     if cal.cv:
@@ -120,7 +138,7 @@ def main_fit(args: Any) -> int:
         print("give the rubric as --rubric file.json, or as --instructions \"...\" --criteria \"lowest\" ... \"highest\"", file=sys.stderr)
         return 2
     try:
-        examples = read_labels(args.data)
+        examples = read_unlabeled(args.data) if args.unlabeled else read_labels(args.data)
     except (OSError, ValueError, KeyError) as exc:
         print(f"could not read labels from {args.data}: {exc}", file=sys.stderr)
         return 2
@@ -134,7 +152,8 @@ def main_fit(args: Any) -> int:
 
     engine = Engine(cfg, source="fit")
     try:
-        cal, path = fit_rubric(engine, instructions, criteria, examples, method=args.method, name=args.name, progress=progress)
+        cal, path = fit_rubric(engine, instructions, criteria, examples, method=args.method, name=args.name, progress=progress,
+                               unlabeled=args.unlabeled)
     except ValueError as exc:
         print(f"cannot fit: {exc}", file=sys.stderr)
         return 2

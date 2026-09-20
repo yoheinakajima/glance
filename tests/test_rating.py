@@ -212,6 +212,30 @@ def _label_folder(tmp_path, per_level=3):
     return tmp_path / "labels"
 
 
+def test_unlabeled_calibration_equals_zscore_then_average(cfg, tmp_path):
+    from scipy.special import softmax
+
+    from glance.api import Glance
+
+    rng = np.random.default_rng(3)
+    key = rating.RatingKey(backend="vlm", model="m@1", prompt_version="s1", score_method="ens4d", image_token_budget=64,
+                           instructions=QUESTION, criteria=tuple(LEVELS))
+    pool, fresh = rng.normal(2.0, 3.0, size=(40, 16)), rng.normal(2.0, 3.0, size=(5, 16))
+    cal = rating.build_unlabeled_calibration(key, pool)
+    expected = softmax(((fresh - pool.mean(0)) / (pool.std(0) + 1e-6)).reshape(5, 4, 4).mean(1), axis=1)
+    assert cal.kind == "unlabeled_zscore" and cal.n_per_level == [] and np.allclose(rating.apply_matrix(cal, fresh), expected)
+    with pytest.raises(ValueError, match="at least 8"):
+        rating.build_unlabeled_calibration(key, pool[:5])
+
+    g = Glance(config=cfg)
+    g.engine._backends["vlm"] = CountingBackend()
+    folder = _label_folder(tmp_path)  # level folders are ignored in unlabeled mode
+    cal = g.fit(QUESTION, LEVELS, folder, unlabeled=True, name="no-labels")
+    assert cal.kind == "unlabeled_zscore" and cal.n == 12
+    answer = g.score(str(next(folder.rglob("*.png"))), QUESTION, LEVELS)
+    assert answer["calibration"] == cal.version
+
+
 def test_read_labels_from_folder_jsonl_and_csv(tmp_path):
     from glance.fit import read_labels
 

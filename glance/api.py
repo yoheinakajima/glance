@@ -73,13 +73,16 @@ class Glance:
         return self._one(images, {"type": "choice", "instructions": instructions, "criteria": options_map}, **options)
 
     def fit(self, instructions: str, criteria: list[str], labels: Any, method: str = "ens4d", name: str | None = None,
-            save: bool = True):
+            save: bool = True, unlabeled: bool = False):
         """Fit a calibration for this rubric. `labels` is a folder-per-level directory, a JSONL/CSV file, or a list of
         (image path, level index) pairs. Returns the calibration; it is saved under calibration/ratings/ and picked up
         by later calls with the same instructions and criteria."""
         from . import fit as fit_module
 
-        examples = fit_module.read_labels(labels) if isinstance(labels, (str, Path)) else list(labels)
+        if unlabeled:  # any folder or list of images from your domain, no levels needed
+            examples = fit_module.read_unlabeled(labels) if isinstance(labels, (str, Path)) else [(str(i), -1) for i in labels]
+        else:
+            examples = fit_module.read_labels(labels) if isinstance(labels, (str, Path)) else list(labels)
         cal, _ = fit_module.fit_rubric(self.engine, instructions, list(criteria), examples, method=method,
-                                       model=self.model, name=name, save=save)
+                                       model=self.model, name=name, save=save, unlabeled=unlabeled)
         return cal

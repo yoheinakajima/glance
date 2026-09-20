@@ -134,6 +134,7 @@ class RatingCalibration(BaseModel):
     l2: float
     rescale: float
     rescale_mode: str = "train"
+    kind: str = "matrix"  # "matrix": fit on labeled images; "unlabeled_zscore": bias removal from unlabeled images only
     cv: dict[str, Any] = {}  # cross-validated quality on the fit data: accuracy, within_1, mae, nll, ece, ece_floor
     source: str | None = None
 
@@ -233,6 +234,26 @@ def build_calibration(key: RatingKey, features: np.ndarray, levels: np.ndarray, 
     return RatingCalibration(
         key=key, version=key.version(), name=name, fit_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         n=len(y), n_per_level=counts.tolist(), members=list(MEMBERS[key.score_method]), cv=cv, source=source, **fit,
+    )
+
+
+def build_unlabeled_calibration(key: RatingKey, features: np.ndarray, name: str | None = None,
+                                source: str | None = None) -> RatingCalibration:
+    """A calibration that needs NO labels: every member logit is z-scored with its mean and standard deviation over a
+    pool of unlabeled images of the user's domain, then the members are averaged. It removes the readout's systematic
+    digit / position / middle-level bias and knows nothing about the levels themselves. On the lab scales it lifts
+    zero-label accuracy from 0.558 to 0.697 with as few as 16 to 32 unlabeled images (`lab/NOTES.md` entry 26); a labeled
+    fit reaches 0.856 with 32 labels. It assumes the pool is not wildly unbalanced across levels. In the matrix form used
+    everywhere else this is mean/std from the pool, W = the member-averaging matrix, b = 0."""
+    x = np.asarray(features, dtype=np.float64)
+    k, members = len(key.criteria), MEMBERS[key.score_method]
+    if x.ndim != 2 or x.shape[1] != k * len(members) or len(x) < 8:
+        raise ValueError(f"need at least 8 unlabeled images with {k * len(members)} member logits each")
+    w = np.hstack([np.eye(k)] * len(members)) / len(members)
+    return RatingCalibration(
+        key=key, version=key.version(), name=name, fit_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"), n=len(x),
+        n_per_level=[], members=list(members), W=w.tolist(), b=[0.0] * k, mean=x.mean(axis=0).tolist(),
+        std=(x.std(axis=0) + 1e-6).tolist(), l2=0.0, rescale=1.0, rescale_mode="none", kind="unlabeled_zscore", source=source,
     )
 
 

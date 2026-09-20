@@ -242,6 +242,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--data", required=True, help="folder with one sub-folder per level (0/, 1/, ...), or a JSONL/CSV with image,level")
     _rubric_args(p)
     p.add_argument("--name", help="a label stored in the calibration file")
+    p.add_argument("--unlabeled", action="store_true", help="no labels: --data is any folder of images from your domain (16 or more); "
+                   "removes the readout's systematic bias only (weaker than a labeled fit)")
     p.set_defaults(func=_cmd_fit)
 
     p = sub.add_parser("eval", help="run eval suites and write runs/<run_id>/")

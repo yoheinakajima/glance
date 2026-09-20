@@ -70,6 +70,11 @@ g.ask("photo.jpg", {"blur": {...}, "noise": {...}, "usable": {...}})   # many qu
 g.fit("How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"], "labels/")
 ```
 
+How much setup a rating needs (five lab scales, exact-level accuracy; within one level is 0.985 or better in every row):
+nothing at all 0.558; `glance fit --unlabeled --data any_folder_of_your_images/` (16 or more images, no labels; removes
+the readout's systematic bias) 0.697; `glance fit` with about 32 labeled images 0.856. Yes/no and pick-one questions
+need no setup.
+
 Three rating modes (`options.score_method`, or `--method`): `ens4d` (default; 4 passes, 0.867 on the lab scales, about
 1.1 s for one rating), `fast2` (2 passes, no magnified crop; 0.833, and 133 to 240 ms per rating when a request carries
 5 to 25 rubrics; weak on compression artifacts, 0.674), `digits` (1 pass; 0.814).

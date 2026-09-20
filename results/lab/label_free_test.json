@@ -1,0 +1,74 @@
+{
+  "raw (0 labels, no pool)": {
+    "accuracy": 0.5576000000000001,
+    "mae": 0.4695630510172283,
+    "within_1": 0.9872,
+    "per_scale_accuracy": {
+      "blur": 0.462,
+      "exposure": 0.68,
+      "jpeg": 0.412,
+      "noise": 0.574,
+      "resolution": 0.66
+    }
+  },
+  "BCz, pool = all 500 unlabeled": {
+    "accuracy": 0.6971999999999999,
+    "mae": 0.45781775109540945,
+    "within_1": 0.9852000000000001,
+    "per_scale_accuracy": {
+      "blur": 0.594,
+      "exposure": 0.832,
+      "jpeg": 0.542,
+      "noise": 0.75,
+      "resolution": 0.768
+    }
+  },
+  "BCz, pool = 16 unlabeled (20 draws)": {
+    "accuracy": 0.68566,
+    "mae": 0.45257605582068033,
+    "within_1": 0.9842400000000001,
+    "per_scale_accuracy": {
+      "blur": 0.6029,
+      "exposure": 0.8211999999999999,
+      "jpeg": 0.5541,
+      "noise": 0.724,
+      "resolution": 0.7261
+    }
+  },
+  "BCz, pool = 32 unlabeled (20 draws)": {
+    "accuracy": 0.6941799999999999,
+    "mae": 0.45441082898509644,
+    "within_1": 0.98428,
+    "per_scale_accuracy": {
+      "blur": 0.6035999999999999,
+      "exposure": 0.8058,
+      "jpeg": 0.5429999999999999,
+      "noise": 0.7563,
+      "resolution": 0.7622
+    }
+  },
+  "BCz, pool = 64 unlabeled (20 draws)": {
+    "accuracy": 0.69338,
+    "mae": 0.46068336492082523,
+    "within_1": 0.9850399999999999,
+    "per_scale_accuracy": {
+      "blur": 0.5899999999999999,
+      "exposure": 0.8212999999999999,
+      "jpeg": 0.5486000000000002,
+      "noise": 0.7457,
+      "resolution": 0.7613
+    }
+  },
+  "BCz, unbalanced pool of 100 (70% one level)": {
+    "accuracy": 0.64648,
+    "mae": 0.4929214982908653,
+    "within_1": 0.97636,
+    "per_scale_accuracy": {
+      "blur": 0.6198,
+      "exposure": 0.7080000000000001,
+      "jpeg": 0.5471999999999999,
+      "noise": 0.6983000000000001,
+      "resolution": 0.6590999999999999
+    }
+  }
+}
