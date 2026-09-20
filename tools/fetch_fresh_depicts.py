@@ -9,6 +9,7 @@ URLs: glance/evals/manifests/fresh_commons_source.jsonl (committed, so anyone ca
 uv run python tools/fetch_fresh_depicts.py --taken-after 2026-08-15 --per-class 12
 """
 import argparse
+import hashlib
 import json
 import pathlib
 import re
@@ -44,13 +45,25 @@ def get(url, tries=6):
             wait *= 2
 
 
-def candidates(qid, taken_after):
-    data = json.loads(get(API + "?" + urllib.parse.urlencode({
-        "action": "query", "format": "json", "generator": "search", "gsrnamespace": 6, "gsrlimit": 50, "gsrsort": "create_timestamp_desc",
-        "gsrsearch": f"haswbstatement:P180={qid} filetype:bitmap filemime:image/jpeg",
-        "prop": "imageinfo", "iiprop": "url|timestamp|extmetadata|size", "iiurlwidth": 1280})))
+def candidates(qid, taken_after, pages=6):
     out = []
-    for page in sorted((data.get("query") or {}).get("pages", {}).values(), key=lambda p: p.get("index", 0)):
+    for offset in range(0, 50 * pages, 50):  # newest first; stop paging once the results are older than the cut-off
+        data = json.loads(get(API + "?" + urllib.parse.urlencode({
+            "action": "query", "format": "json", "generator": "search", "gsrnamespace": 6, "gsrlimit": 50, "gsroffset": offset,
+            "gsrsort": "create_timestamp_desc", "gsrsearch": f"haswbstatement:P180={qid} filetype:bitmap filemime:image/jpeg",
+            "prop": "imageinfo", "iiprop": "url|timestamp|extmetadata|size", "iiurlwidth": 1280})))
+        batch = sorted((data.get("query") or {}).get("pages", {}).values(), key=lambda p: p.get("index", 0))
+        out += _filter(batch, taken_after)
+        uploaded = [((p.get("imageinfo") or [{}])[0].get("timestamp") or "")[:10] for p in batch]
+        if not batch or (uploaded and max(uploaded) < taken_after):
+            break
+        time.sleep(4)
+    return out
+
+
+def _filter(batch, taken_after):
+    out = []
+    for page in batch:
         info = (page.get("imageinfo") or [{}])[0]
         meta = {k: re.sub(r"<[^>]+>", "", str(v.get("value", ""))).strip() for k, v in (info.get("extmetadata") or {}).items()}
         taken, lic = (meta.get("DateTimeOriginal") or "")[:10], (meta.get("LicenseShortName") or "").lower()
@@ -85,7 +98,7 @@ def main():
         for c in pool:
             if len(seen_in[c["title"]]) > 1 or per_author.get(c["author"], 0) >= args.per_author:
                 continue  # tagged with two of our classes, or a near-duplicate series
-            name = f"{key}_{kept + 1:02d}.jpg"
+            name = f"{key}_{hashlib.sha1(c['title'].encode()).hexdigest()[:8]}.jpg"  # stable across re-runs
             path = images / name
             if not path.exists():
                 path.write_bytes(get(c["thumb"]))
