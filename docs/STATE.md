@@ -63,6 +63,15 @@ commit, then queue `--bench semantic` with the four `ens4d` readouts + `independ
 runnable external systems, `AlexWortega/openjev` v2 and `zhangzicheng/q-sit-mini` (`glance/lab/external_systems.py`,
 `tools/external_report.py`): smoke tests only; the lead queues the full runs on `--bench ladders --limit 600`.
 
+### Analysis tools already written for the queued jobs (run them when the job's DONE line appears in the queue log)
+
+- `lab-hidden` -> `uv run python tools/readout_ladder.py --bench ladders --logits lab/runs/lab_hidden.jsonl --out lab/READOUT_LADDER --dev`, then once without `--dev`.
+- `kadid-ref` -> `uv run python tools/kadid_ref_report.py` (prints the H23 / H24 verdicts; check the first rows of `lab/runs/kadid_ref.jsonl` first).
+- `gen-accuracy` -> `uv run python tools/gen_accuracy_report.py` (H28 / H29; timings there are contended unless the GPU was idle).
+- `letters-lab` -> `uv run python tools/readout_baselines.py` then `uv run python tools/make_results_comparisons.py`.
+- Gemini baselines (owner started them through OpenRouter at 14:36): lab scales `uv run python tools/compare_frontier_lab.py --run 20260920T165748Z-8ff72a --run 20260920T165949Z-8ff72a --run 20260920T170146Z-8ff72a`; fresh photos `uv run python tools/fresh_report.py --run 20260920T205633Z-99f822 --run 20260920T205633Z-99f822-gpt --run 20260920T205633Z-99f822-gemini`.
+After each: notebook entry with verdicts (real clock), regenerate `tools/make_results_comparisons.py` / `make_results_generalization.py`, update `docs/CLAIMS.md`, run `tools/verify_docs_numbers.py`, commit. The owner is away for a few hours from 14:40 and expects unattended progress.
+
 ## 4. Registered but not started
 
 - **E11 (entry 32, owner's request): the same Qwen3-VL-4B WRITING structured JSON as the baseline for accuracy, speed
