@@ -1,0 +1,12 @@
+{
+  "p50_ms": {
+    "independent": 432.3634789325297,
+    "cumulative": 317.2594375209883,
+    "digits": 151.16087556816638,
+    "zoom_cumulative": 621.342791360803,
+    "zoom_digits": 153.09489611536264,
+    "digitsrev": 150.60920803807676,
+    "zoom_digitsrev": 154.02558306232095
+  },
+  "note": "cached path, uncontended GPU, 40 test items per scale"
+}

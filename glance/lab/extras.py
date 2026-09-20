@@ -25,7 +25,7 @@ from ..logging_utils import read_jsonl
 from . import score_methods as sm
 from .analyze import metrics
 
-SIZES = (8, 16, 32, 64, 125, 250, 500)
+SIZES = (8, 16, 32, 64, 128, 250, 500)
 
 
 def split_rows(rows: list[dict[str, Any]], dev: bool) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -58,7 +58,9 @@ def learning_curve(rows, method_key: str, kind: str, dev: bool, repeats: int = 2
         ze, ye = arrays(eval_rows)
         k = sm.n_levels(method, zf)
         rng = np.random.default_rng(seed)
-        curve = {"0": {key: [metrics(sm.apply_fit(method, ze, None), ye)[key]] for key in ("accuracy", "mae", "ece")}}
+        # n = 0 is the uncalibrated readout. A combination of readouts has no uncalibrated form, so it starts at n = 8.
+        curve = {} if method == "ensemble" else {
+            "0": {key: [metrics(sm.apply_fit(method, ze, None), ye)[key]] for key in ("accuracy", "mae", "ece")}}
         for n in SIZES:
             per_level = n // k
             if per_level < 1 or any((yf == lvl).sum() < per_level for lvl in range(k)):
@@ -118,7 +120,7 @@ def render(method_key: str, kind: str, dev: bool, curve, xfer, ens, ens_keys) ->
     out += ["| Scale | " + " | ".join(f"n={s}" for s in sizes) + " |", "| --- | " + " | ".join("---" for _ in sizes) + " |"]
     for ladder, c in curve.items():
         out += [f"| {ladder} | " + " | ".join(f"{c[str(s)]['accuracy'][0]:.3f} ± {c[str(s)]['accuracy'][1]:.3f}" if str(s) in c else "-" for s in sizes) + " |"]
-    out += ["", "n=0 is the raw readout. Mean absolute error in levels:", ""]
+    out += ["", "n=0 (single readouts only) is the raw, uncalibrated readout. Mean absolute error in levels:", ""]
     out += ["| Scale | " + " | ".join(f"n={s}" for s in sizes) + " |", "| --- | " + " | ".join("---" for _ in sizes) + " |"]
     for ladder, c in curve.items():
         out += [f"| {ladder} | " + " | ".join(f"{c[str(s)]['mae'][0]:.3f}" if str(s) in c else "-" for s in sizes) + " |"]
@@ -143,8 +145,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--kind", default="bias+T")
     parser.add_argument("--ensemble", default="independent,cumulative,digits")
     parser.add_argument("--dev", action="store_true")
+    parser.add_argument("--combine", action="append", default=[], help='"name=key1+key2:concat"; lets --method name a combination')
     args = parser.parse_args(argv)
     rows = read_jsonl(PROJECT_ROOT / args.inp)
+    from .analyze import combine_rows
+
+    rows += [r for spec in args.combine for r in combine_rows(rows, spec)]
     ens_keys = [k for k in args.ensemble.split(",") if k]
     curve = learning_curve(rows, args.method, args.kind, args.dev)
     xfer = transfer(rows, args.method, args.kind, args.dev)

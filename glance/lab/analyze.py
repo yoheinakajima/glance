@@ -65,7 +65,7 @@ def combine_rows(rows: list[dict[str, Any]], spec: str) -> list[dict[str, Any]]:
         else:
             merged = sum(logits, [])
             method = "ensemble"  # level count comes from the labels, calibrated with matrix scaling only
-        out.append({**parts[0], "method_key": name, "method": method, "logits": merged,
+        out.append({**parts[0], "method_key": name, "method": method, "logits": merged, "members": keys,
                     "latency_ms": float(sum(p["latency_ms"] for p in parts)),
                     "forward_passes": int(sum(p["forward_passes"] for p in parts))})
     return out
@@ -104,8 +104,19 @@ def analyze(rows: list[dict[str, Any]], dev: bool = False) -> dict[str, Any]:
             "latency_ms_p50": float(np.median([r["latency_ms"] for r in group])),
             "forward_passes": int(group[0]["forward_passes"]), "image_tokens": float(np.mean([r["image_tokens"] for r in group])),
             "off_mass_max": float(np.max([r["off_mass_max"] for r in group])),
+            "members": group[0].get("members"),
         }
     return out
+
+
+def apply_clean_latency(results: dict[str, Any], p50_by_method: dict[str, float]) -> None:
+    """Replace per-method latency with a separately measured, uncontended benchmark (lab/LATENCY.json). A combination
+    costs the sum of its members: they are separate forward passes on the same image."""
+    for entry in results.values():
+        members = entry.get("members") or [entry["method_key"]]
+        if all(m in p50_by_method for m in members):
+            entry["latency_ms_p50"] = float(sum(p50_by_method[m] for m in members))
+            entry["latency_source"] = "lab/LATENCY.json"
 
 
 def _confusion(method: str, entry: dict[str, Any], rows: list[dict[str, Any]], dev: bool) -> np.ndarray:
@@ -178,6 +189,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dev", action="store_true", help="calibration split only; the test split stays untouched")
     parser.add_argument("--title", default="Score lab")
     parser.add_argument("--combine", action="append", default=[], help='"name=key1+key2:mean" or "...:concat"; repeatable')
+    parser.add_argument("--latency", help="JSON with clean per-method p50 latencies (overrides latencies logged during collection)")
     parser.add_argument("--only", help="comma-separated method keys to keep in the report (combinations are always kept)")
     args = parser.parse_args(argv)
     rows = read_jsonl(PROJECT_ROOT / args.inp)
@@ -187,6 +199,8 @@ def main(argv: list[str] | None = None) -> int:
         rows = [r for r in rows if r["method_key"] in keep]
     rows = rows + combined
     results = analyze(rows, dev=args.dev)
+    if args.latency:
+        apply_clean_latency(results, json.loads((PROJECT_ROOT / args.latency).read_text())["p50_ms"])
     text = render(results, rows, args.dev, args.title)
     out = PROJECT_ROOT / args.out
     out.parent.mkdir(parents=True, exist_ok=True)

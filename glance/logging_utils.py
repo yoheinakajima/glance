@@ -5,6 +5,7 @@ Imports nothing from glance except config, so every module can use it.
 
 from __future__ import annotations
 
+import gzip
 import json
 import os
 import re
@@ -90,10 +91,12 @@ def call_log_writer(logs_dir: str | Path) -> JsonlWriter:
 
 
 def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
+    """Rows of a JSONL file, or of a gzipped one (`.gz`). A missing file is an empty list."""
     p = Path(path)
     if not p.exists():
         return []
-    with open(p, encoding="utf-8") as f:
+    opener = gzip.open if p.suffix == ".gz" else open
+    with opener(p, "rt", encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
 
 

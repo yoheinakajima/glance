@@ -9,3 +9,4 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 .DS_Store
+lab/runs/main.jsonl

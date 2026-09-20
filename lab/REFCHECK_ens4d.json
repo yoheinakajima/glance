@@ -1,0 +1,47 @@
+{
+  "blur": {
+    "n": 100,
+    "max_abs_diff": 0.1294841766357422,
+    "median_abs_diff": 0.01597309112548828,
+    "same_prediction": 1.0,
+    "accuracy_cached": 0.91,
+    "accuracy_reference": 0.91,
+    "calibration": "matrix"
+  },
+  "exposure": {
+    "n": 100,
+    "max_abs_diff": 0.1097564697265625,
+    "median_abs_diff": 0.013035774230957031,
+    "same_prediction": 1.0,
+    "accuracy_cached": 0.94,
+    "accuracy_reference": 0.94,
+    "calibration": "matrix"
+  },
+  "jpeg": {
+    "n": 100,
+    "max_abs_diff": 0.11581039428710938,
+    "median_abs_diff": 0.014598846435546875,
+    "same_prediction": 1.0,
+    "accuracy_cached": 0.8,
+    "accuracy_reference": 0.8,
+    "calibration": "matrix"
+  },
+  "noise": {
+    "n": 100,
+    "max_abs_diff": 0.10630035400390625,
+    "median_abs_diff": 0.016767501831054688,
+    "same_prediction": 1.0,
+    "accuracy_cached": 0.9,
+    "accuracy_reference": 0.9,
+    "calibration": "matrix"
+  },
+  "resolution": {
+    "n": 100,
+    "max_abs_diff": 0.11751174926757812,
+    "median_abs_diff": 0.0158538818359375,
+    "same_prediction": 0.99,
+    "accuracy_cached": 0.91,
+    "accuracy_reference": 0.92,
+    "calibration": "matrix"
+  }
+}

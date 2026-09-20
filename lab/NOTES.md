@@ -335,3 +335,42 @@ cross-validated accuracy and beats the 12-pass `ens5` on NLL at a third of the c
 Next, in this order: (1) score every method once on the test split (`glance.lab.analyze` without `--dev`);
 (2) compare cached and reference-path logits for the two winners on the 500-item test subsample; (3) learning curve
 and transfer for `ens4d`; (4) figures and `docs/paper/RESULTS_LAB.md`.
+
+## 2026-09-20 06:30 Entry 13: FINAL RESULTS on the held-out test split (scored once, after entry 12 was committed)
+
+Command: `python -m glance.lab.analyze --in lab/runs/main.jsonl --out lab/REPORT --latency lab/LATENCY.json` with the
+six `--combine` specs of entry 11. Full tables: `lab/REPORT.md`, generated summary `docs/paper/RESULTS_LAB.md`,
+figures `docs/paper/figures/`. n = 500 test items per scale.
+
+| Method | Passes | p50 ms | blur | exposure | jpeg | noise | resolution | mean |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| v0 as shipped (`independent`, single temperature) | 4 | 432 | 0.586 | 0.530 | 0.336 | 0.560 | 0.486 | 0.500 |
+| v0 readout, best calibration | 4 | 432 | 0.874 | 0.898 | 0.674 | 0.814 | 0.792 | 0.810 |
+| `zoom_digits` | 1 | 153 | 0.868 | 0.918 | 0.740 | 0.846 | 0.816 | 0.838 |
+| `ens2` | 2 | 304 | 0.886 | 0.920 | 0.746 | 0.864 | 0.874 | 0.858 |
+| **`ens4d`** (winner within 4 passes) | 4 | 609 | 0.888 | 0.924 | 0.772 | 0.864 | 0.888 | **0.867** |
+| **`ens7`** (winner at any cost) | 14 | 1,980 | 0.902 | 0.932 | 0.776 | 0.870 | 0.902 | **0.876** |
+
+- **The bar of entry 1 is met.** Both winners reach accuracy >= 0.85, MAE <= 0.25 and ECE <= 0.05 on four of five
+  scales (blur, exposure, noise, resolution). jpeg misses on accuracy (0.772 / 0.776) and MAE (0.276 / 0.275) but not on
+  ECE (0.048 / 0.041). ECE for `ens4d`: 0.023, 0.018, 0.048, 0.036, 0.027, each at or under its sampling floor + 0.01.
+- Cross-validation on the calibration split predicted the test numbers within a point (`ens7` 0.884 predicted,
+  0.876 measured; `ens4d` 0.875 and 0.867), so the selection did not overfit.
+- At the same four forward passes as the v0 method, `ens4d` is +36.7 points over v0 as shipped and +5.7 over the v0
+  readout with its best calibration. One pass of `zoom_digits` already beats the four-pass v0 readout.
+- **Labels needed** (`lab/EXTRAS_ens4d.md`): with 8 labeled items (two per level) `ens4d` reaches 0.849 / 0.894 / 0.674 /
+  0.762 / 0.809; with 32 it reaches 0.882 / 0.911 / 0.752 / 0.850 / 0.885; the curve is flat from about 64.
+- **Calibration is scale-specific**: fit on blur and used on jpeg it gives 0.262; one calibration pooled over all scales
+  gives 0.43-0.83. Every rating question needs its own few dozen labels.
+- **Reference path** (`lab/REFCHECK_*.md`, 100 test items per scale): `ens4d` makes the same prediction on 499 of 500
+  items (accuracy 0.892 cached, 0.894 reference); `ens7` on 500 of 500 (0.902 both). Max logit difference 0.13.
+- **Latency**: stage B ran while the reference collection shared the GPU, which inflated its logged latencies. A
+  separate uncontended benchmark (`lab/LATENCY.json`, 40 test items per scale) gives 151-154 ms for each digits-style
+  readout, 609 ms per question for `ens4d` and 1,980 ms for `ens7`. The report uses these.
+
+Verdicts: H1 not supported; H2, H4, H5, H6 supported; H3 weak (pilot only). What did not work: threshold questions,
+reference images, `zoom` on the multi-pass readouts, averaging crops (small gain for 5x cost, stage C will say more).
+
+Housekeeping: the stage A+B logits behind every number above are frozen in `lab/data/main_stagesAB.jsonl.gz`
+(35,000 rows, 2.3 MB); `glance.lab.select` on that file reproduces entry 12 exactly. The live `lab/runs/main.jsonl`
+is ignored by git because stage C is still appending to it.

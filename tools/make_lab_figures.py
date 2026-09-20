@@ -277,13 +277,20 @@ def fig_learning_curve(extras: dict[str, Any], report: dict[str, Any], out_dir: 
         ax.annotate(scale, (x, y), xytext=(8, dy * 260), textcoords="offset points", fontsize=9,
                     color=INK, va="center", ha="left", fontweight="bold")
 
-    ax.set_xscale("symlog", linthresh=linthresh, linscale=1.0)
+    has_zero = 0 in all_ns
+    if has_zero:
+        ax.set_xscale("symlog", linthresh=linthresh, linscale=1.0)
+        ax.set_xlim(-linthresh * 0.6, max(all_ns) * 2.2)
+        ax.set_xlabel("labeled examples used to fit calibration (n); n=0 is the raw, uncalibrated readout")
+    else:  # a combination of readouts has no uncalibrated form: plain log axis from the smallest n
+        ax.set_xscale("log")
+        ax.set_xlim(min(all_ns) * 0.8, max(all_ns) * 2.4)
+        ax.set_xlabel("labeled examples used to fit calibration (n, equal per level)")
     ax.xaxis.set_major_locator(FixedLocator(all_ns))
     ax.xaxis.set_minor_locator(FixedLocator([]))
     ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: str(int(x))))
-    ax.set_xlim(-linthresh * 0.6, max(all_ns) * 2.2)
-    ax.set_ylim(0, 1.02)
-    ax.set_xlabel("labeled examples used to fit calibration (n); n=0 is the raw, uncalibrated readout")
+    lowest = min(curve[str(n)]["accuracy"][0] - curve[str(n)]["accuracy"][1] for curve in lc.values() for n in map(int, curve))
+    ax.set_ylim(0 if has_zero else max(0.0, np.floor((lowest - 0.03) * 10) / 10), 1.0)
     ax.set_ylabel("accuracy")
 
     test_n = report_test_n(report)
