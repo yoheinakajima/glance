@@ -128,6 +128,42 @@ itself; single-pass readouts 0.465 and 0.449 on the same items. Our registered t
 look like the parts that survive. The correlation numbers are type-aware (the question names the distortion) and
 are not comparable with blind IQA results. Full results replace these when collection ends.
 
+## 7b. Update, 2026-09-20 midday: comparisons run since the first version of this briefing
+
+All on identical images and labels per table (`docs/paper/RESULTS_COMPARISONS.md`, `lab/NOTES.md` entries 19 to 25).
+
+1. **Classical features beat us when labels are plentiful.** 29 hand-built no-reference features (sharpness, noise
+   estimate, 8-px blockiness, luminance and colour statistics) + logistic regression, same labels, same test images:
+   lab scales 0.979 mean accuracy with all 500 labels per scale, above `ens4d` (0.867) on every scale (JPEG 0.990
+   against 0.772). With 32 labels it is 0.752 against 0.856 for `ens4d`: the VLM readout is label-efficient and
+   saturates early. On the 25-distortion sets the classical baseline scores 0.651 (`distort25`) and 0.620 (KADID-10k,
+   Spearman with human scores 0.629), near chance on structural distortions (shuffled patches, colour diffusion). So the
+   lab scales do NOT show a VLM is the best tool for blur or JPEG grading; they show what a frozen general model
+   delivers from a rubric in words and a few dozen labels, with no feature engineering.
+2. **The "remap the readout" effect is not VLM-specific.** SigLIP2 (frozen dual encoder, 38 ms per image): 0.330 as
+   shipped (chance 0.250), 0.588 with the same matrix map. Same items: v0 VLM readout 0.505 -> 0.806, `ens4d` 0.863.
+3. **Two calibration challengers reviewers asked for lose or tie** (calibration split only): shrinking toward the
+   uncalibrated answer is worse at every label count; a 19-parameter ordinal (cumulative-link) readout ties the
+   68-parameter matrix up to 64 labels (NLL 0.403 against 0.423 at 32 labels) and is slightly behind at 240. The
+   evidence in the member logits is essentially one-dimensional.
+4. **`fast2`** (digits + reversed digits, no crop; 133 to 240 ms per rating at 5 to 25 rubrics per image): 0.833 on the
+   held-out split, JPEG 0.674 (so the magnified crop is what helps compression artifacts: 0.772 with it).
+5. **Cost** (`results/lab/cost_model.md`; seconds measured, dollars are arithmetic on stated assumptions): 1,000
+   ratings cost $0.159 to $0.243 on a rented cloud GPU no faster than the laptop ($0.019 to $0.030 with `fast2` at 25
+   rubrics per image), against list-price upper estimates of $3.74 to $18.70 for frontier APIs. Electricity alone is
+   under a cent.
+6. **Running now or queued:** a fitted readout on the VLM's final hidden states (is the 0.867 ceiling the token
+   interface or the 196-token image?); other systems' readouts on our model (option letters, rotated letters, two
+   poles); a second model family (SmolVLM2-2.2B, Apache-2.0); two runnable external systems (`openjev` v2, `q-sit-mini`);
+   a non-quality rubric benchmark with exact ground truth (cut-off, occlusion, tilt, caption legibility, watermark);
+   frontier APIs on the same images (needs the owner's key). Most trained IQA VLMs (Q-Align, DeQA-Score, ...) sit on
+   LLaMA-2-derived bases and cannot be run under our Apache/MIT-weights rule; they are cited, not run
+   (`docs/paper/COMPARABLE_SYSTEMS.md`).
+
+New question for reviewers: given item 1, is the right headline "label-efficient, rubric-in-words grading from a frozen
+general model" with classical features as the honest ceiling for low-level artifacts, and should the paper's main
+benchmark move to rubrics where no classical feature exists (framing, occlusion, legibility)?
+
 ## 8. What we claim and what we do not
 
 Claim: on a frozen 4B VLM, how you ask and how you remap the logits is worth +37 points on described rating scales
@@ -141,7 +177,7 @@ than anything hosted (no dollar numbers); "works on any VLM" (one model measured
 a transfer result); "0.87 on image quality assessment" (five synthetic single-factor scales with hand-written level
 texts; KADID is harder). Naming: result rows read "Qwen3-VL-4B + Glance", never a model-style name.
 
-Known limits: one model, one machine, synthetic degradations for the headline, level texts tuned by eye on the
+Known limits: task-specific classical features beat the method on the lab scales when hundreds of labels are available (section 7b); one model, one machine, synthetic degradations for the headline, level texts tuned by eye on the
 calibration split, no comparison with trained IQA scorers (Q-Align, DeQA-Score) or classical no-reference metrics
 (which would solve blur and noise ladders trivially), no second VLM family yet, prefix-cached path fails the spec's
 strict logit-equality acceptance (|dz| 0.075 > 0.05) although it changes no decision, DistortBench could not be run
