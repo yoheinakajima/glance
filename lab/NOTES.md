@@ -256,3 +256,38 @@ this is reported as analysis and the harness default is unchanged.
 
 The figure script `tools/make_lab_figures.py` (written by a cheaper assistant model against the pilot files, reviewed)
 produces the four lab figures from the analysis JSON files. Full run stage A started at 01:42.
+
+## 2026-09-20 04:10 Entry 10: full run stage A done; selection rule made explicit; first calibration-split numbers
+
+Stage A finished at 04:02: 5 readouts x 5,000 items = 25,000 rows in `lab/runs/main.jsonl`, 139.9 min on the cached
+path (1.64-1.72 s per item), no errors. Stage B (`digitsrev`, `zoom_digitsrev`) started at 04:02 and runs at about
+1 s per item.
+
+**Selection rule, written down before any test-split number exists.** `glance/lab/select.py` reads only
+calibration-split rows. For each candidate and scale it runs 5-fold cross-validation inside the calibration split and
+ranks candidates by mean cross-validated NLL over the five scales. Two winners are named: best at any cost, and best
+within 4 forward passes per question (the cost of the v0 method). Candidate combinations are fixed by name in the
+command line before running it. The final table will show every method on the test split; "winner" means chosen by
+this rule, never by a test number.
+
+**Trial selection on stage A candidates** (`lab/runs/selection_stageA.md`, calibration split only, n = 500 per scale):
+
+| Rank | Candidate | Passes | Mean CV NLL | Mean CV acc | blur | exposure | jpeg | noise | resolution |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | ens5 (all five readouts) | 12 | 0.3227 | 0.866 | 0.888 | 0.930 | 0.762 | 0.874 | 0.876 |
+| 2 | ens3 (independent + digits + zoom_digits) | 6 | 0.3412 | 0.859 | 0.882 | 0.926 | 0.754 | 0.838 | 0.894 |
+| 3 | ens2 (digits + zoom_digits) | 2 | 0.3440 | 0.857 | 0.874 | 0.916 | 0.770 | 0.838 | 0.888 |
+| 5 | zoom_digits | 1 | 0.3832 | 0.841 | 0.868 | 0.912 | 0.772 | 0.842 | 0.812 |
+| 6 | digits | 1 | 0.4558 | 0.817 | 0.848 | 0.896 | 0.656 | 0.820 | 0.864 |
+| 8 | independent (v0 method) | 4 | 0.4846 | 0.806 | 0.872 | 0.920 | 0.626 | 0.790 | 0.822 |
+| 9 | cumulative | 3 | 0.5464 | 0.756 | 0.806 | 0.826 | 0.586 | 0.836 | 0.728 |
+
+Reading (calibration data only): with 500 labeled items per scale the five-readout ensemble is at or above 0.85 on
+four of five scales in cross-validation; jpeg is the exception (0.76), where the errors are between the two middle
+levels (quality 25 vs quality 10). A single pass of `zoom_digits` (0.841) beats the four-pass v0 method (0.806).
+The half-split DEV run (`lab/runs/main_stageA_dev.md`) shows the ensembles' ECE at 0.03-0.07, at their sampling
+floors, after the matrix-calibration rescale of entry 8.
+
+**Reference-path check started** (collection only): the first 100 test items per scale are being re-collected
+without the prefix cache into `lab/runs/reference_check.jsonl` for all seven readouts; compared with the cached
+logits by `glance/lab/refcheck.py` once the winner is fixed.
