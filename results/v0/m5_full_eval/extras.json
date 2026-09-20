@@ -1,0 +1,154 @@
+{
+  "permutation": {
+    "pets37|siglip|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "pets37|vlm|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "pets37|vlm|letter": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.971019,
+      "mean_abs_dp": 0.03409614444444444,
+      "choice_flips": 3,
+      "requests": 90
+    },
+    "caltech101|siglip|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "caltech101|vlm|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "caltech101|vlm|letter": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    }
+  },
+  "latency": {
+    "siglip": {
+      "p50_ms": 22.975416970439255,
+      "p95_ms": 23.501875484362245,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    },
+    "vlm": {
+      "p50_ms": 8604.29627110716,
+      "p95_ms": 10816.806343733333,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "failures": {
+    "pope|siglip|statement": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "pope|vlm|statement": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "gqa_yesno|vlm|statement": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "pets37|siglip|independent": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "pets37|vlm|independent": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "pets37|vlm|letter": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "caltech101|siglip|independent": {
+      "failed": 0,
+      "attempted": 442
+    },
+    "caltech101|vlm|independent": {
+      "failed": 0,
+      "attempted": 442
+    },
+    "caltech101|vlm|letter": {
+      "failed": 0,
+      "attempted": 442
+    },
+    "blur_ladder|siglip|statement": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "blur_ladder|vlm|statement": {
+      "failed": 0,
+      "attempted": 500
+    },
+    "pope|frontier|pick": {
+      "failed": 0,
+      "attempted": 250
+    },
+    "gqa_yesno|frontier|pick": {
+      "failed": 0,
+      "attempted": 250
+    },
+    "pets37|frontier|pick": {
+      "failed": 0,
+      "attempted": 250
+    },
+    "caltech101|frontier|pick": {
+      "failed": 0,
+      "attempted": 221
+    },
+    "blur_ladder|frontier|pick": {
+      "failed": 0,
+      "attempted": 250
+    }
+  },
+  "models": {
+    "siglip": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+    "vlm": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+    "frontier": "anthropic/claude-opus-5"
+  },
+  "devices": {
+    "siglip": {
+      "device": "mps",
+      "dtype": "float32",
+      "image_token_budget": null
+    },
+    "vlm": {
+      "device": "mps",
+      "dtype": "float16",
+      "image_token_budget": 768
+    }
+  },
+  "prefix_cache": false
+}

@@ -1,0 +1,3317 @@
+{
+  "run_id": "20260920T002639Z-2091d3",
+  "units": {
+    "blur_ladder|frontier|pick": {
+      "suite": "blur_ladder",
+      "backend": "frontier",
+      "method": "pick",
+      "type": "score",
+      "n_test": 250,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 250,
+        "rate": 0.0
+      },
+      "valid": true,
+      "hard_pick": {
+        "n": 250,
+        "accuracy": 0.536
+      }
+    },
+    "blur_ladder|siglip|statement": {
+      "suite": "blur_ladder",
+      "backend": "siglip",
+      "method": "statement",
+      "type": "score",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.344,
+        "nll": 1.5674276047301137,
+        "brier": 0.785852115161816,
+        "mae_levels": 0.8556658440000001,
+        "ece": 0.22355881600000002,
+        "ece_floor": 0.09365094904000001,
+        "selective_accuracy": {
+          "50": 0.432,
+          "80": 0.37,
+          "90": 0.36444444444444446,
+          "100": 0.344
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.344,
+        "nll": 1.2992757602833112,
+        "brier": 0.7110324860524078,
+        "mae_levels": 0.8367718281866439,
+        "ece": 0.09872648172603968,
+        "ece_floor": 0.09283988324108532,
+        "selective_accuracy": {
+          "50": 0.4,
+          "80": 0.38,
+          "90": 0.3688888888888889,
+          "100": 0.344
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.344,
+        "nll": 1.2992757602833112,
+        "brier": 0.7110324860524078,
+        "mae_levels": 0.8367718281866439,
+        "ece": 0.09872648172603968,
+        "ece_floor": 0.09283988324108532,
+        "selective_accuracy": {
+          "50": 0.4,
+          "80": 0.38,
+          "90": 0.3688888888888889,
+          "100": 0.344
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 21.09329157974571,
+          "p95_ms": 21.54023937182501,
+          "n": 500
+        },
+        "statements_per_second": 187.03623128897033,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "3",
+          "predicted": "2",
+          "count": 49
+        },
+        {
+          "true": "1",
+          "predicted": "2",
+          "count": 39
+        },
+        {
+          "true": "0",
+          "predicted": "2",
+          "count": 24
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "airplanes/image_0467_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0467_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.1765972615385909,
+          "top_probability": 0.4657046419143911
+        },
+        {
+          "item_id": "airplanes/image_0463_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0463_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.1385979869335341,
+          "top_probability": 0.45259153253030354
+        },
+        {
+          "item_id": "airplanes/image_0400_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0400_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.12793909535787695,
+          "top_probability": 0.45074694203630905
+        },
+        {
+          "item_id": "joshua_tree/image_0038_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/joshua_tree_image_0038_blur1.jpg",
+          "true": "1",
+          "predicted": "3",
+          "confidence": 0.12793119657107344,
+          "top_probability": 0.4102912033876429
+        },
+        {
+          "item_id": "umbrella/image_0073_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/umbrella_image_0073_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.12408636090646086,
+          "top_probability": 0.38670860464367407
+        },
+        {
+          "item_id": "airplanes/image_0373_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0373_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.12233557418591201,
+          "top_probability": 0.4306225628546776
+        },
+        {
+          "item_id": "ferry/image_0057_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/ferry_image_0057_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.11445455011505146,
+          "top_probability": 0.40597392702983154
+        },
+        {
+          "item_id": "airplanes/image_0553_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0553_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.11425151117648691,
+          "top_probability": 0.4288267613995638
+        },
+        {
+          "item_id": "Faces/image_0239_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0239_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.10918639552964504,
+          "top_probability": 0.38136270371550807
+        },
+        {
+          "item_id": "electric_guitar/image_0042_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/electric_guitar_image_0042_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.10132465193515194,
+          "top_probability": 0.3902433904224046
+        },
+        {
+          "item_id": "Faces/image_0111_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0111_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.10041101744178937,
+          "top_probability": 0.37433860329204754
+        },
+        {
+          "item_id": "elephant/image_0013_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/elephant_image_0013_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.09919693685463427,
+          "top_probability": 0.4694657715621737
+        },
+        {
+          "item_id": "Faces_easy/image_0059_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_easy_image_0059_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.09783936954038308,
+          "top_probability": 0.3821726425218659
+        },
+        {
+          "item_id": "airplanes/image_0742_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0742_blur0.jpg",
+          "true": "0",
+          "predicted": "2",
+          "confidence": 0.09704120464391497,
+          "top_probability": 0.4128721514401528
+        },
+        {
+          "item_id": "Faces/image_0233_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0233_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.09599170867116325,
+          "top_probability": 0.36757332696773953
+        },
+        {
+          "item_id": "joshua_tree/image_0010_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/joshua_tree_image_0010_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.09491866227360468,
+          "top_probability": 0.38752429186314397
+        },
+        {
+          "item_id": "Faces_easy/image_0431_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_easy_image_0431_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.0897431512765765,
+          "top_probability": 0.3572245339474403
+        },
+        {
+          "item_id": "airplanes/image_0717_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0717_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.08915895797223139,
+          "top_probability": 0.3839992437078911
+        },
+        {
+          "item_id": "elephant/image_0052_blur3",
+          "image_path": ".cache/eval_images/blur_ladder/elephant_image_0052_blur3.jpg",
+          "true": "3",
+          "predicted": "2",
+          "confidence": 0.08795395563142527,
+          "top_probability": 0.39425133569880083
+        },
+        {
+          "item_id": "airplanes/image_0061_blur1",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0061_blur1.jpg",
+          "true": "1",
+          "predicted": "2",
+          "confidence": 0.08525458969619593,
+          "top_probability": 0.361211621063544
+        }
+      ]
+    },
+    "blur_ladder|vlm|statement": {
+      "suite": "blur_ladder",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "score",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.496,
+        "nll": 3.4262586580268843,
+        "brier": 0.8468637669940322,
+        "mae_levels": 0.511787832,
+        "ece": 0.39162859599999994,
+        "ece_floor": 0.03961809152,
+        "selective_accuracy": {
+          "50": 0.6,
+          "80": 0.525,
+          "90": 0.49777777777777776,
+          "100": 0.496
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.496,
+        "nll": 1.118597738296882,
+        "brier": 0.613586101865345,
+        "mae_levels": 0.670042443764947,
+        "ece": 0.1491720891338252,
+        "ece_floor": 0.0969536402236968,
+        "selective_accuracy": {
+          "50": 0.552,
+          "80": 0.535,
+          "90": 0.5111111111111111,
+          "100": 0.496
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.496,
+        "nll": 1.118597738296882,
+        "brier": 0.613586101865345,
+        "mae_levels": 0.670042443764947,
+        "ece": 0.1491720891338252,
+        "ece_floor": 0.0969536402236968,
+        "selective_accuracy": {
+          "50": 0.552,
+          "80": 0.535,
+          "90": 0.5111111111111111,
+          "100": 0.496
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 669.2628539167345,
+          "p95_ms": 899.9373441562057,
+          "n": 500
+        },
+        "statements_per_second": 5.550516782825764,
+        "mean_image_tokens": 104.95,
+        "off_mass_mean": 0.003638842667270288,
+        "off_mass_p95": 0.0138536173533499
+      },
+      "confusions": [
+        {
+          "true": "2",
+          "predicted": "3",
+          "count": 51
+        },
+        {
+          "true": "0",
+          "predicted": "1",
+          "count": 49
+        },
+        {
+          "true": "1",
+          "predicted": "2",
+          "count": 10
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "gerenuk/image_0018_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/gerenuk_image_0018_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2560201609333329,
+          "top_probability": 0.560067497827529
+        },
+        {
+          "item_id": "airplanes/image_0442_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0442_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.24409963856224526,
+          "top_probability": 0.5295172261153294
+        },
+        {
+          "item_id": "helicopter/image_0082_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/helicopter_image_0082_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.23806941181218588,
+          "top_probability": 0.5231927153367829
+        },
+        {
+          "item_id": "airplanes/image_0604_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0604_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.23511367595558608,
+          "top_probability": 0.5128433710986657
+        },
+        {
+          "item_id": "beaver/image_0026_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/beaver_image_0026_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2332941745319873,
+          "top_probability": 0.5377349968525361
+        },
+        {
+          "item_id": "airplanes/image_0060_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0060_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.23120982562079395,
+          "top_probability": 0.5745003398953133
+        },
+        {
+          "item_id": "sea_horse/image_0048_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/sea_horse_image_0048_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2271975256945491,
+          "top_probability": 0.5145188069985797
+        },
+        {
+          "item_id": "bass/image_0008_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/bass_image_0008_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.22553479879082383,
+          "top_probability": 0.49919868332433986
+        },
+        {
+          "item_id": "garfield/image_0018_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/garfield_image_0018_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.22539793410993492,
+          "top_probability": 0.4900024915157767
+        },
+        {
+          "item_id": "cup/image_0025_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/cup_image_0025_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2239870118787206,
+          "top_probability": 0.5101728259380034
+        },
+        {
+          "item_id": "Faces/image_0295_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0295_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.22211480879320278,
+          "top_probability": 0.4880331079727108
+        },
+        {
+          "item_id": "ceiling_fan/image_0029_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/ceiling_fan_image_0029_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.21760504358252342,
+          "top_probability": 0.47964714229458816
+        },
+        {
+          "item_id": "helicopter/image_0036_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/helicopter_image_0036_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.216180734850709,
+          "top_probability": 0.49040965206298304
+        },
+        {
+          "item_id": "airplanes/image_0681_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0681_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.21569075223139955,
+          "top_probability": 0.47601996003549557
+        },
+        {
+          "item_id": "accordion/image_0021_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/accordion_image_0021_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.2142581843192426,
+          "top_probability": 0.48804721210086727
+        },
+        {
+          "item_id": "Faces/image_0250_blur0",
+          "image_path": ".cache/eval_images/blur_ladder/Faces_image_0250_blur0.jpg",
+          "true": "0",
+          "predicted": "1",
+          "confidence": 0.2120480918858343,
+          "top_probability": 0.5904541524873357
+        },
+        {
+          "item_id": "airplanes/image_0783_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0783_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.21048110291108169,
+          "top_probability": 0.4756754628288048
+        },
+        {
+          "item_id": "lamp/image_0046_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/lamp_image_0046_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.21030884171425268,
+          "top_probability": 0.4850523706994671
+        },
+        {
+          "item_id": "airplanes/image_0379_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/airplanes_image_0379_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.20980903845839138,
+          "top_probability": 0.4632180276805664
+        },
+        {
+          "item_id": "dolphin/image_0026_blur2",
+          "image_path": ".cache/eval_images/blur_ladder/dolphin_image_0026_blur2.jpg",
+          "true": "2",
+          "predicted": "3",
+          "confidence": 0.20691722388159095,
+          "top_probability": 0.4531742282732645
+        }
+      ]
+    },
+    "caltech101|frontier|pick": {
+      "suite": "caltech101",
+      "backend": "frontier",
+      "method": "pick",
+      "type": "choice",
+      "n_test": 221,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 221,
+        "rate": 0.0
+      },
+      "valid": true,
+      "hard_pick": {
+        "n": 221,
+        "accuracy": 0.9683257918552036
+      }
+    },
+    "caltech101|siglip|independent": {
+      "suite": "caltech101",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 221,
+      "n_calibration": 221,
+      "failures": {
+        "failed": 0,
+        "attempted": 442,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 221,
+        "accuracy": 0.9321266968325792,
+        "nll": 0.1617374468292492,
+        "brier": 0.09297696860971945,
+        "macro_f1": 0.9651567944250871,
+        "ece": 0.027434678733031664,
+        "ece_floor": 0.027072197647058815,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9943502824858758,
+          "90": 0.964824120603015,
+          "100": 0.9321266968325792
+        }
+      },
+      "calibrated": {
+        "n": 221,
+        "accuracy": 0.9321266968325792,
+        "nll": 0.17538774025810597,
+        "brier": 0.10057972931504551,
+        "macro_f1": 0.9651567944250871,
+        "ece": 0.03994596316065475,
+        "ece_floor": 0.015297383848600118,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.964824120603015,
+          "100": 0.9321266968325792
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 221,
+        "accuracy": 0.9321266968325792,
+        "nll": 0.16319655393748408,
+        "brier": 0.09639928112657369,
+        "macro_f1": 0.9651567944250871,
+        "ece": 0.03341507161108741,
+        "ece_floor": 0.018757394163773197,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 0.9698492462311558,
+          "100": 0.9321266968325792
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 21.47975005209446,
+          "p95_ms": 22.659047436900437,
+          "n": 442
+        },
+        "statements_per_second": 4462.553113559518,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "count": 13
+        },
+        {
+          "true": "crayfish",
+          "predicted": "lobster",
+          "count": 1
+        },
+        {
+          "true": "crocodile_head",
+          "predicted": "crocodile",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Faces/image_0100",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0100.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9656964621041851,
+          "top_probability": 0.9715455355794327
+        },
+        {
+          "item_id": "Faces/image_0058",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0058.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.965471995500325,
+          "top_probability": 0.9641730072450374
+        },
+        {
+          "item_id": "Faces/image_0091",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0091.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9513937612558174,
+          "top_probability": 0.9493044847306823
+        },
+        {
+          "item_id": "crocodile_head/image_0005",
+          "image_path": ".cache/eval_images/caltech101/crocodile_head_image_0005.jpg",
+          "true": "crocodile_head",
+          "predicted": "crocodile",
+          "confidence": 0.940561646580824,
+          "top_probability": 0.9218283069450303
+        },
+        {
+          "item_id": "Faces/image_0429",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0429.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9378044739406727,
+          "top_probability": 0.9185138725629222
+        },
+        {
+          "item_id": "Faces/image_0064",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0064.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9369844758457874,
+          "top_probability": 0.9464705754740578
+        },
+        {
+          "item_id": "Faces/image_0417",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0417.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9224336810502491,
+          "top_probability": 0.8907802860724929
+        },
+        {
+          "item_id": "Faces/image_0034",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0034.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.9183332074832119,
+          "top_probability": 0.8835215052351811
+        },
+        {
+          "item_id": "crayfish/image_0027",
+          "image_path": ".cache/eval_images/caltech101/crayfish_image_0027.jpg",
+          "true": "crayfish",
+          "predicted": "lobster",
+          "confidence": 0.8998448214951076,
+          "top_probability": 0.8283432156499506
+        },
+        {
+          "item_id": "Faces/image_0141",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0141.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8683725436511615,
+          "top_probability": 0.8195805152246397
+        },
+        {
+          "item_id": "Faces/image_0140",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0140.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8682721062452259,
+          "top_probability": 0.800068753334049
+        },
+        {
+          "item_id": "Faces/image_0047",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0047.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8458674603952595,
+          "top_probability": 0.5776252330638616
+        },
+        {
+          "item_id": "Faces/image_0241",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0241.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8381983440637675,
+          "top_probability": 0.5694142390937375
+        },
+        {
+          "item_id": "Faces/image_0176",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0176.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8332157794912876,
+          "top_probability": 0.6528379678443181
+        },
+        {
+          "item_id": "Faces/image_0084",
+          "image_path": ".cache/eval_images/caltech101/Faces_image_0084.jpg",
+          "true": "Faces",
+          "predicted": "Faces_easy",
+          "confidence": 0.8027728916049464,
+          "top_probability": 0.46681516288142
+        }
+      ]
+    },
+    "caltech101|vlm|independent": {
+      "suite": "caltech101",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 221,
+      "n_calibration": 221,
+      "failures": {
+        "failed": 0,
+        "attempted": 442,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 221,
+        "accuracy": 0.918552036199095,
+        "nll": 0.7533183411008152,
+        "brier": 0.12724551947064708,
+        "macro_f1": 0.9117919852859614,
+        "ece": 0.05235268325791854,
+        "ece_floor": 0.011267789049773748,
+        "selective_accuracy": {
+          "50": 0.9545454545454546,
+          "80": 0.9717514124293786,
+          "90": 0.9547738693467337,
+          "100": 0.918552036199095
+        }
+      },
+      "calibrated": {
+        "n": 221,
+        "accuracy": 0.918552036199095,
+        "nll": 0.29710382362460425,
+        "brier": 0.12061561573220055,
+        "macro_f1": 0.9117919852859614,
+        "ece": 0.034472535816525915,
+        "ece_floor": 0.02456865085646526,
+        "selective_accuracy": {
+          "50": 0.9818181818181818,
+          "80": 0.9717514124293786,
+          "90": 0.9547738693467337,
+          "100": 0.918552036199095
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 221,
+        "accuracy": 0.918552036199095,
+        "nll": 0.2912059558194089,
+        "brier": 0.12267209828245526,
+        "macro_f1": 0.9117919852859614,
+        "ece": 0.040208620218415356,
+        "ece_floor": 0.02766387512399401,
+        "selective_accuracy": {
+          "50": 0.9727272727272728,
+          "80": 0.9661016949152542,
+          "90": 0.9396984924623115,
+          "100": 0.918552036199095
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 12314.768812502734,
+          "p95_ms": 16531.030226824805,
+          "n": 442
+        },
+        "statements_per_second": 7.617095047350183,
+        "mean_image_tokens": 78.69909502262443,
+        "off_mass_mean": 0.0039039515722367395,
+        "off_mass_p95": 0.01399643025287447
+      },
+      "confusions": [
+        {
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "count": 9
+        },
+        {
+          "true": "windsor_chair",
+          "predicted": "chair",
+          "count": 3
+        },
+        {
+          "true": "Leopards",
+          "predicted": "wild_cat",
+          "count": 2
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "windsor_chair/image_0021",
+          "image_path": ".cache/eval_images/caltech101/windsor_chair_image_0021.jpg",
+          "true": "windsor_chair",
+          "predicted": "chair",
+          "confidence": 0.9992071001823642,
+          "top_probability": 0.9996971135002454
+        },
+        {
+          "item_id": "crayfish/image_0027",
+          "image_path": ".cache/eval_images/caltech101/crayfish_image_0027.jpg",
+          "true": "crayfish",
+          "predicted": "lobster",
+          "confidence": 0.99849356571092,
+          "top_probability": 0.9993932059137902
+        },
+        {
+          "item_id": "windsor_chair/image_0007",
+          "image_path": ".cache/eval_images/caltech101/windsor_chair_image_0007.jpg",
+          "true": "windsor_chair",
+          "predicted": "chair",
+          "confidence": 0.9977311503964087,
+          "top_probability": 0.99882192742907
+        },
+        {
+          "item_id": "Leopards/image_0021",
+          "image_path": ".cache/eval_images/caltech101/Leopards_image_0021.jpg",
+          "true": "Leopards",
+          "predicted": "wild_cat",
+          "confidence": 0.9931311453276289,
+          "top_probability": 0.9969591551537628
+        },
+        {
+          "item_id": "Leopards/image_0102",
+          "image_path": ".cache/eval_images/caltech101/Leopards_image_0102.jpg",
+          "true": "Leopards",
+          "predicted": "wild_cat",
+          "confidence": 0.9885988364732545,
+          "top_probability": 0.9945431309093996
+        },
+        {
+          "item_id": "crocodile_head/image_0005",
+          "image_path": ".cache/eval_images/caltech101/crocodile_head_image_0005.jpg",
+          "true": "crocodile_head",
+          "predicted": "crocodile",
+          "confidence": 0.8846865078293054,
+          "top_probability": 0.7769854765888491
+        },
+        {
+          "item_id": "windsor_chair/image_0019",
+          "image_path": ".cache/eval_images/caltech101/windsor_chair_image_0019.jpg",
+          "true": "windsor_chair",
+          "predicted": "chair",
+          "confidence": 0.8708910852058598,
+          "top_probability": 0.7184511635136848
+        },
+        {
+          "item_id": "ketch/image_0015",
+          "image_path": ".cache/eval_images/caltech101/ketch_image_0015.jpg",
+          "true": "ketch",
+          "predicted": "schooner",
+          "confidence": 0.8691182223094785,
+          "top_probability": 0.7196664138256819
+        },
+        {
+          "item_id": "Faces_easy/image_0241",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0241.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8517101166150381,
+          "top_probability": 0.6546228636643243
+        },
+        {
+          "item_id": "Faces_easy/image_0012",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0012.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.847536939367913,
+          "top_probability": 0.6831197719925546
+        },
+        {
+          "item_id": "Faces_easy/image_0112",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0112.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8472986997387313,
+          "top_probability": 0.6117355724501847
+        },
+        {
+          "item_id": "Faces_easy/image_0081",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0081.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8469834612585825,
+          "top_probability": 0.6032882183014223
+        },
+        {
+          "item_id": "Faces_easy/image_0046",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0046.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8444789899107134,
+          "top_probability": 0.5316017729267212
+        },
+        {
+          "item_id": "Faces_easy/image_0186",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0186.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8422409567405008,
+          "top_probability": 0.5137680899508975
+        },
+        {
+          "item_id": "Faces_easy/image_0173",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0173.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8405576100719022,
+          "top_probability": 0.5302327224107446
+        },
+        {
+          "item_id": "Faces_easy/image_0205",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0205.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8395809683531998,
+          "top_probability": 0.5183307164231744
+        },
+        {
+          "item_id": "Faces_easy/image_0266",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0266.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.8303829144619853,
+          "top_probability": 0.5159555516737123
+        },
+        {
+          "item_id": "cougar_face/image_0067",
+          "image_path": ".cache/eval_images/caltech101/cougar_face_image_0067.jpg",
+          "true": "cougar_face",
+          "predicted": "wild_cat",
+          "confidence": 0.7997808155030228,
+          "top_probability": 0.5834627206981232
+        }
+      ]
+    },
+    "caltech101|vlm|letter": {
+      "suite": "caltech101",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 221,
+      "n_calibration": 221,
+      "failures": {
+        "failed": 0,
+        "attempted": 442,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 221,
+        "accuracy": 0.9773755656108597,
+        "nll": 0.3205696312032099,
+        "brier": 0.04547393491497737,
+        "macro_f1": 0.991941391941392,
+        "ece": 0.02076224886877828,
+        "ece_floor": 0.0022450420814479634,
+        "selective_accuracy": {
+          "50": 0.990909090909091,
+          "80": 0.9943502824858758,
+          "90": 0.9949748743718593,
+          "100": 0.9773755656108597
+        }
+      },
+      "calibrated": {
+        "n": 221,
+        "accuracy": 0.9773755656108597,
+        "nll": 0.08716242525588716,
+        "brier": 0.040481078605775385,
+        "macro_f1": 0.991941391941392,
+        "ece": 0.023062094386740013,
+        "ece_floor": 0.013326842978519701,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.9773755656108597
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 221,
+        "accuracy": 0.9773755656108597,
+        "nll": 0.08698563710280763,
+        "brier": 0.04028572652094648,
+        "macro_f1": 0.991941391941392,
+        "ece": 0.02384422924958191,
+        "ece_floor": 0.015101418778944609,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.9773755656108597
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 980.7253334438428,
+          "p95_ms": 1114.9625786114482,
+          "n": 442
+        },
+        "statements_per_second": 4.134289301117354,
+        "mean_image_tokens": 78.69909502262443,
+        "off_mass_mean": 0.003930531220174439,
+        "off_mass_p95": 0.013997561037380922
+      },
+      "confusions": [
+        {
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "count": 5
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "Faces_easy/image_0186",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0186.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.9550527962337957,
+          "top_probability": 0.9797148809093442
+        },
+        {
+          "item_id": "Faces_easy/image_0205",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0205.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.9381806150537789,
+          "top_probability": 0.9681160791709742
+        },
+        {
+          "item_id": "Faces_easy/image_0046",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0046.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.9360705671078082,
+          "top_probability": 0.9665055425617538
+        },
+        {
+          "item_id": "Faces_easy/image_0241",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0241.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.9073524626469576,
+          "top_probability": 0.9470289780134717
+        },
+        {
+          "item_id": "Faces_easy/image_0173",
+          "image_path": ".cache/eval_images/caltech101/Faces_easy_image_0173.jpg",
+          "true": "Faces_easy",
+          "predicted": "Faces",
+          "confidence": 0.7560837606656974,
+          "top_probability": 0.6725608069989246
+        }
+      ]
+    },
+    "gqa_yesno|frontier|pick": {
+      "suite": "gqa_yesno",
+      "backend": "frontier",
+      "method": "pick",
+      "type": "noul",
+      "n_test": 250,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 250,
+        "rate": 0.0
+      },
+      "valid": true,
+      "hard_pick": {
+        "n": 250,
+        "accuracy": 0.732
+      }
+    },
+    "gqa_yesno|vlm|statement": {
+      "suite": "gqa_yesno",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.732,
+        "auroc": 0.8117903650009622,
+        "nll": 1.3501089973245997,
+        "brier": 0.23190587773542,
+        "ece": 0.20414979600000002,
+        "ece_floor": 0.02564235824,
+        "selective_accuracy": {
+          "50": 0.84,
+          "80": 0.78,
+          "90": 0.7466666666666667,
+          "100": 0.732
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.744,
+        "auroc": 0.8121111039835782,
+        "nll": 0.5290723722152577,
+        "brier": 0.17836209373934087,
+        "ece": 0.09325667850239039,
+        "ece_floor": 0.07446441991363872,
+        "selective_accuracy": {
+          "50": 0.824,
+          "80": 0.775,
+          "90": 0.7688888888888888,
+          "100": 0.744
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.728,
+        "auroc": 0.8121111039835782,
+        "nll": 0.5414016763538746,
+        "brier": 0.1808464082520039,
+        "ece": 0.10902988652821263,
+        "ece_floor": 0.06954426776643068,
+        "selective_accuracy": {
+          "50": 0.832,
+          "80": 0.78,
+          "90": 0.7777777777777778,
+          "100": 0.728
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 438.43885394744575,
+          "p95_ms": 472.8787020314485,
+          "n": 500
+        },
+        "statements_per_second": 2.3761037433663064,
+        "mean_image_tokens": 265.596,
+        "off_mass_mean": 0.0038811275396214745,
+        "off_mass_p95": 0.013820409815454689
+      },
+      "confusions": [
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 43
+        },
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 21
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "20456727",
+          "image_path": ".cache/eval_images/gqa_yesno/20456727.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.8860717501368438,
+          "top_probability": 0.9430358750684219
+        },
+        {
+          "item_id": "201407334",
+          "image_path": ".cache/eval_images/gqa_yesno/201407334.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.8780754808521969,
+          "top_probability": 0.9390377404260984
+        },
+        {
+          "item_id": "201795290",
+          "image_path": ".cache/eval_images/gqa_yesno/201795290.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8196366988151311,
+          "top_probability": 0.9098183494075656
+        },
+        {
+          "item_id": "201061298",
+          "image_path": ".cache/eval_images/gqa_yesno/201061298.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.803951068647947,
+          "top_probability": 0.9019755343239735
+        },
+        {
+          "item_id": "201879811",
+          "image_path": ".cache/eval_images/gqa_yesno/201879811.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.7790643324095949,
+          "top_probability": 0.8895321662047975
+        },
+        {
+          "item_id": "201711321",
+          "image_path": ".cache/eval_images/gqa_yesno/201711321.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.7703923097037721,
+          "top_probability": 0.8851961548518861
+        },
+        {
+          "item_id": "20923159",
+          "image_path": ".cache/eval_images/gqa_yesno/20923159.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.682589928874819,
+          "top_probability": 0.8412949644374095
+        },
+        {
+          "item_id": "201951877",
+          "image_path": ".cache/eval_images/gqa_yesno/201951877.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.679237912782976,
+          "top_probability": 0.839618956391488
+        },
+        {
+          "item_id": "202100299",
+          "image_path": ".cache/eval_images/gqa_yesno/202100299.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6749456160422735,
+          "top_probability": 0.8374728080211368
+        },
+        {
+          "item_id": "201342325",
+          "image_path": ".cache/eval_images/gqa_yesno/201342325.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6622893718032768,
+          "top_probability": 0.8311446859016385
+        },
+        {
+          "item_id": "20621983",
+          "image_path": ".cache/eval_images/gqa_yesno/20621983.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.642064812788961,
+          "top_probability": 0.8210324063944805
+        },
+        {
+          "item_id": "201428716",
+          "image_path": ".cache/eval_images/gqa_yesno/201428716.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6383825663453475,
+          "top_probability": 0.8191912831726738
+        },
+        {
+          "item_id": "201956853",
+          "image_path": ".cache/eval_images/gqa_yesno/201956853.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6295974278891734,
+          "top_probability": 0.8147987139445867
+        },
+        {
+          "item_id": "201972699",
+          "image_path": ".cache/eval_images/gqa_yesno/201972699.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6290887396504621,
+          "top_probability": 0.814544369825231
+        },
+        {
+          "item_id": "201079738",
+          "image_path": ".cache/eval_images/gqa_yesno/201079738.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6258742747020283,
+          "top_probability": 0.8129371373510141
+        },
+        {
+          "item_id": "20611590",
+          "image_path": ".cache/eval_images/gqa_yesno/20611590.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6255485197320446,
+          "top_probability": 0.8127742598660224
+        },
+        {
+          "item_id": "202133566",
+          "image_path": ".cache/eval_images/gqa_yesno/202133566.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.5886364291181712,
+          "top_probability": 0.7943182145590856
+        },
+        {
+          "item_id": "202174161",
+          "image_path": ".cache/eval_images/gqa_yesno/202174161.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.5732626679251831,
+          "top_probability": 0.7866313339625916
+        },
+        {
+          "item_id": "20511447",
+          "image_path": ".cache/eval_images/gqa_yesno/20511447.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5591229342089348,
+          "top_probability": 0.7795614671044674
+        },
+        {
+          "item_id": "201878388",
+          "image_path": ".cache/eval_images/gqa_yesno/201878388.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.552622275096603,
+          "top_probability": 0.7763111375483015
+        }
+      ]
+    },
+    "pets37|frontier|pick": {
+      "suite": "pets37",
+      "backend": "frontier",
+      "method": "pick",
+      "type": "choice",
+      "n_test": 250,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 250,
+        "rate": 0.0
+      },
+      "valid": true,
+      "hard_pick": {
+        "n": 250,
+        "accuracy": 0.932
+      }
+    },
+    "pets37|siglip|independent": {
+      "suite": "pets37",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.956,
+        "nll": 0.16063381235151025,
+        "brier": 0.08082876301626399,
+        "macro_f1": 0.9620478105772224,
+        "ece": 0.04776237199999999,
+        "ece_floor": 0.03598529775999999,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.995,
+          "90": 0.9822222222222222,
+          "100": 0.956
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.956,
+        "nll": 0.1399105186675057,
+        "brier": 0.07392555892038204,
+        "macro_f1": 0.9620478105772224,
+        "ece": 0.018023134384541332,
+        "ece_floor": 0.022225941853770834,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.995,
+          "90": 0.9822222222222222,
+          "100": 0.956
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.956,
+        "nll": 0.14245310157788585,
+        "brier": 0.07295646310786096,
+        "macro_f1": 0.9620478105772224,
+        "ece": 0.017651286946242746,
+        "ece_floor": 0.017186082486815423,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.995,
+          "90": 0.9822222222222222,
+          "100": 0.956
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 21.572520374320447,
+          "p95_ms": 22.30339366942644,
+          "n": 500
+        },
+        "statements_per_second": 1662.0356939230644,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 4
+        },
+        {
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "count": 2
+        },
+        {
+          "true": "siamese",
+          "predicted": "birman",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "chihuahua_85",
+          "image_path": ".cache/eval_images/pets37/chihuahua_85.jpg",
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "confidence": 0.9746787399712454,
+          "top_probability": 0.9817588864224747
+        },
+        {
+          "item_id": "chihuahua_55",
+          "image_path": ".cache/eval_images/pets37/chihuahua_55.jpg",
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "confidence": 0.9026012604460895,
+          "top_probability": 0.8884339905470647
+        },
+        {
+          "item_id": "staffordshire_bull_terrier_53",
+          "image_path": ".cache/eval_images/pets37/staffordshire_bull_terrier_53.jpg",
+          "true": "staffordshire_bull_terrier",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.8447419000323831,
+          "top_probability": 0.836292150895633
+        },
+        {
+          "item_id": "Ragdoll_252",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_252.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8280902312724137,
+          "top_probability": 0.7593399707743038
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8060758705011826,
+          "top_probability": 0.6278609002783048
+        },
+        {
+          "item_id": "Ragdoll_224",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_224.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8035951274706369,
+          "top_probability": 0.5425304140698365
+        },
+        {
+          "item_id": "Siamese_228",
+          "image_path": ".cache/eval_images/pets37/Siamese_228.jpg",
+          "true": "siamese",
+          "predicted": "ragdoll",
+          "confidence": 0.7951423650072883,
+          "top_probability": 0.5444365153841806
+        },
+        {
+          "item_id": "Ragdoll_58",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_58.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7889284402589255,
+          "top_probability": 0.5910917607788705
+        },
+        {
+          "item_id": "Siamese_78",
+          "image_path": ".cache/eval_images/pets37/Siamese_78.jpg",
+          "true": "siamese",
+          "predicted": "birman",
+          "confidence": 0.7591943013171139,
+          "top_probability": 0.5984602028873311
+        },
+        {
+          "item_id": "Maine_Coon_244",
+          "image_path": ".cache/eval_images/pets37/Maine_Coon_244.jpg",
+          "true": "maine_coon",
+          "predicted": "ragdoll",
+          "confidence": 0.7243414784823247,
+          "top_probability": 0.4946059001096032
+        },
+        {
+          "item_id": "american_pit_bull_terrier_32",
+          "image_path": ".cache/eval_images/pets37/american_pit_bull_terrier_32.jpg",
+          "true": "american_pit_bull_terrier",
+          "predicted": "staffordshire_bull_terrier",
+          "confidence": 0.6849811886315249,
+          "top_probability": 0.5867893218902785
+        }
+      ]
+    },
+    "pets37|vlm|independent": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.892,
+        "nll": 0.8807931270180476,
+        "brier": 0.188824766353372,
+        "macro_f1": 0.860436842789784,
+        "ece": 0.07922047599999998,
+        "ece_floor": 0.012133439680000024,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.965,
+          "90": 0.9333333333333333,
+          "100": 0.892
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.892,
+        "nll": 0.3863299792551395,
+        "brier": 0.16551333938034224,
+        "macro_f1": 0.860436842789784,
+        "ece": 0.03807978037946649,
+        "ece_floor": 0.036203741185899446,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.96,
+          "90": 0.9288888888888889,
+          "100": 0.892
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.892,
+        "nll": 0.38776264858346415,
+        "brier": 0.16469053539168457,
+        "macro_f1": 0.860436842789784,
+        "ece": 0.03130290433731781,
+        "ece_floor": 0.0346683670608155,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.96,
+          "90": 0.9244444444444444,
+          "100": 0.892
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 8940.729166613892,
+          "p95_ms": 11922.552895976696,
+          "n": 500
+        },
+        "statements_per_second": 4.007358078739721,
+        "mean_image_tokens": 179.272,
+        "off_mass_mean": 0.003900882938080109,
+        "off_mass_p95": 0.01395505376590126
+      },
+      "confusions": [
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 7
+        },
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "count": 2
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "chihuahua_85",
+          "image_path": ".cache/eval_images/pets37/chihuahua_85.jpg",
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "confidence": 0.9863882398347921,
+          "top_probability": 0.9939462802551139
+        },
+        {
+          "item_id": "Ragdoll_252",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_252.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.9795035382804512,
+          "top_probability": 0.9895927203873833
+        },
+        {
+          "item_id": "scottish_terrier_96",
+          "image_path": ".cache/eval_images/pets37/scottish_terrier_96.jpg",
+          "true": "scottish_terrier",
+          "predicted": "wheaten_terrier",
+          "confidence": 0.9762485059967503,
+          "top_probability": 0.9862726278531834
+        },
+        {
+          "item_id": "chihuahua_55",
+          "image_path": ".cache/eval_images/pets37/chihuahua_55.jpg",
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "confidence": 0.9751299315223207,
+          "top_probability": 0.9857905630661291
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8964257575716239,
+          "top_probability": 0.9225438587942427
+        },
+        {
+          "item_id": "beagle_69",
+          "image_path": ".cache/eval_images/pets37/beagle_69.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.8704015413059523,
+          "top_probability": 0.8292566866590911
+        },
+        {
+          "item_id": "Siamese_228",
+          "image_path": ".cache/eval_images/pets37/Siamese_228.jpg",
+          "true": "siamese",
+          "predicted": "birman",
+          "confidence": 0.8399679245693062,
+          "top_probability": 0.8061549711881448
+        },
+        {
+          "item_id": "Ragdoll_36",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_36.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.8366439071774849,
+          "top_probability": 0.7865670056524767
+        },
+        {
+          "item_id": "english_setter_2",
+          "image_path": ".cache/eval_images/pets37/english_setter_2.jpg",
+          "true": "english_setter",
+          "predicted": "english_cocker_spaniel",
+          "confidence": 0.8011273955841944,
+          "top_probability": 0.7021465097624191
+        },
+        {
+          "item_id": "Ragdoll_88",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_88.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7983706627008178,
+          "top_probability": 0.5809454266267441
+        },
+        {
+          "item_id": "staffordshire_bull_terrier_53",
+          "image_path": ".cache/eval_images/pets37/staffordshire_bull_terrier_53.jpg",
+          "true": "staffordshire_bull_terrier",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.785229987000762,
+          "top_probability": 0.7496187705378089
+        },
+        {
+          "item_id": "american_bulldog_98",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_98.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7850063337013173,
+          "top_probability": 0.6402451339537908
+        },
+        {
+          "item_id": "Ragdoll_20",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_20.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7790777413636022,
+          "top_probability": 0.5751305305897824
+        },
+        {
+          "item_id": "staffordshire_bull_terrier_93",
+          "image_path": ".cache/eval_images/pets37/staffordshire_bull_terrier_93.jpg",
+          "true": "staffordshire_bull_terrier",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7665843118660113,
+          "top_probability": 0.6431130013855713
+        },
+        {
+          "item_id": "Ragdoll_224",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_224.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7500655384484597,
+          "top_probability": 0.5397918783731115
+        },
+        {
+          "item_id": "Ragdoll_26",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_26.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.6790818970212666,
+          "top_probability": 0.46689569143503495
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.6589178995057101,
+          "top_probability": 0.5113859000091349
+        },
+        {
+          "item_id": "saint_bernard_57",
+          "image_path": ".cache/eval_images/pets37/saint_bernard_57.jpg",
+          "true": "saint_bernard",
+          "predicted": "beagle",
+          "confidence": 0.6471009799808516,
+          "top_probability": 0.7223251785071103
+        },
+        {
+          "item_id": "leonberger_82",
+          "image_path": ".cache/eval_images/pets37/leonberger_82.jpg",
+          "true": "leonberger",
+          "predicted": "saint_bernard",
+          "confidence": 0.6242297785604439,
+          "top_probability": 0.540297919995185
+        },
+        {
+          "item_id": "Abyssinian_40",
+          "image_path": ".cache/eval_images/pets37/Abyssinian_40.jpg",
+          "true": "abyssinian",
+          "predicted": "egyptian_mau",
+          "confidence": 0.6230695675328313,
+          "top_probability": 0.6202270537944364
+        }
+      ]
+    },
+    "pets37|vlm|letter": {
+      "suite": "pets37",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.904,
+        "nll": 1.4162654804546493,
+        "brier": 0.17870300443747197,
+        "macro_f1": 0.9015726088054118,
+        "ece": 0.08295722400000002,
+        "ece_floor": 0.0054278333599999985,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9422222222222222,
+          "100": 0.904
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.904,
+        "nll": 0.40038492557040095,
+        "brier": 0.15213823810535132,
+        "macro_f1": 0.9015726088054118,
+        "ece": 0.03749392444543714,
+        "ece_floor": 0.0384384889754499,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9422222222222222,
+          "100": 0.904
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.904,
+        "nll": 0.40063313322872013,
+        "brier": 0.15229362310585007,
+        "macro_f1": 0.9015726088054118,
+        "ece": 0.03788163314673802,
+        "ece_floor": 0.037582053128566904,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9422222222222222,
+          "100": 0.904
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 1736.4495835499838,
+          "p95_ms": 2062.7085773507133,
+          "n": 500
+        },
+        "statements_per_second": 2.248695308390208,
+        "mean_image_tokens": 179.272,
+        "off_mass_mean": 0.003738082255480019,
+        "off_mass_p95": 0.013857839670945492
+      },
+      "confusions": [
+        {
+          "true": "ragdoll",
+          "predicted": "birman",
+          "count": 5
+        },
+        {
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "count": 2
+        },
+        {
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "count": 2
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "chihuahua_85",
+          "image_path": ".cache/eval_images/pets37/chihuahua_85.jpg",
+          "true": "chihuahua",
+          "predicted": "miniature_pinscher",
+          "confidence": 0.950870067772656,
+          "top_probability": 0.9802526874526678
+        },
+        {
+          "item_id": "beagle_69",
+          "image_path": ".cache/eval_images/pets37/beagle_69.jpg",
+          "true": "beagle",
+          "predicted": "basset_hound",
+          "confidence": 0.9479252006083846,
+          "top_probability": 0.9776642507824712
+        },
+        {
+          "item_id": "Ragdoll_252",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_252.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.9365764009730693,
+          "top_probability": 0.9735523235485333
+        },
+        {
+          "item_id": "english_setter_2",
+          "image_path": ".cache/eval_images/pets37/english_setter_2.jpg",
+          "true": "english_setter",
+          "predicted": "english_cocker_spaniel",
+          "confidence": 0.9313810767718883,
+          "top_probability": 0.9704563134466502
+        },
+        {
+          "item_id": "scottish_terrier_96",
+          "image_path": ".cache/eval_images/pets37/scottish_terrier_96.jpg",
+          "true": "scottish_terrier",
+          "predicted": "wheaten_terrier",
+          "confidence": 0.922949090458136,
+          "top_probability": 0.9655280136476253
+        },
+        {
+          "item_id": "japanese_chin_70",
+          "image_path": ".cache/eval_images/pets37/japanese_chin_70.jpg",
+          "true": "japanese_chin",
+          "predicted": "english_cocker_spaniel",
+          "confidence": 0.8745095884895421,
+          "top_probability": 0.9330831152241775
+        },
+        {
+          "item_id": "american_bulldog_216",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_216.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.8322047788599378,
+          "top_probability": 0.9037460268988803
+        },
+        {
+          "item_id": "german_shorthaired_2",
+          "image_path": ".cache/eval_images/pets37/german_shorthaired_2.jpg",
+          "true": "german_shorthaired",
+          "predicted": "basset_hound",
+          "confidence": 0.7814452018528933,
+          "top_probability": 0.8778864635464098
+        },
+        {
+          "item_id": "Ragdoll_67",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_67.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.7575440130878764,
+          "top_probability": 0.8573176439586432
+        },
+        {
+          "item_id": "Ragdoll_36",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_36.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.740981644808572,
+          "top_probability": 0.8531152820224347
+        },
+        {
+          "item_id": "staffordshire_bull_terrier_53",
+          "image_path": ".cache/eval_images/pets37/staffordshire_bull_terrier_53.jpg",
+          "true": "staffordshire_bull_terrier",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.7403135538537039,
+          "top_probability": 0.7040713444157694
+        },
+        {
+          "item_id": "saint_bernard_57",
+          "image_path": ".cache/eval_images/pets37/saint_bernard_57.jpg",
+          "true": "saint_bernard",
+          "predicted": "english_cocker_spaniel",
+          "confidence": 0.7271140843491877,
+          "top_probability": 0.8484347278096881
+        },
+        {
+          "item_id": "miniature_pinscher_87",
+          "image_path": ".cache/eval_images/pets37/miniature_pinscher_87.jpg",
+          "true": "miniature_pinscher",
+          "predicted": "wheaten_terrier",
+          "confidence": 0.7235558014247412,
+          "top_probability": 0.849574119527509
+        },
+        {
+          "item_id": "Ragdoll_20",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_20.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.6761317288724034,
+          "top_probability": 0.779856799246234
+        },
+        {
+          "item_id": "american_bulldog_209",
+          "image_path": ".cache/eval_images/pets37/american_bulldog_209.jpg",
+          "true": "american_bulldog",
+          "predicted": "american_pit_bull_terrier",
+          "confidence": 0.5979777218231184,
+          "top_probability": 0.6610466903076626
+        },
+        {
+          "item_id": "Siamese_228",
+          "image_path": ".cache/eval_images/pets37/Siamese_228.jpg",
+          "true": "siamese",
+          "predicted": "russian_blue",
+          "confidence": 0.5661963008019186,
+          "top_probability": 0.4578313573548942
+        },
+        {
+          "item_id": "Egyptian_Mau_83",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_83.jpg",
+          "true": "egyptian_mau",
+          "predicted": "bengal",
+          "confidence": 0.4901869830392308,
+          "top_probability": 0.5471688325912921
+        },
+        {
+          "item_id": "Egyptian_Mau_213",
+          "image_path": ".cache/eval_images/pets37/Egyptian_Mau_213.jpg",
+          "true": "egyptian_mau",
+          "predicted": "abyssinian",
+          "confidence": 0.48113838574825096,
+          "top_probability": 0.5606817741373101
+        },
+        {
+          "item_id": "Ragdoll_224",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_224.jpg",
+          "true": "ragdoll",
+          "predicted": "russian_blue",
+          "confidence": 0.4065359380817455,
+          "top_probability": 0.3876094537064597
+        },
+        {
+          "item_id": "Ragdoll_58",
+          "image_path": ".cache/eval_images/pets37/Ragdoll_58.jpg",
+          "true": "ragdoll",
+          "predicted": "birman",
+          "confidence": 0.4010672716856706,
+          "top_probability": 0.43821317458949127
+        }
+      ]
+    },
+    "pope|frontier|pick": {
+      "suite": "pope",
+      "backend": "frontier",
+      "method": "pick",
+      "type": "noul",
+      "n_test": 250,
+      "n_calibration": 0,
+      "failures": {
+        "failed": 0,
+        "attempted": 250,
+        "rate": 0.0
+      },
+      "valid": true,
+      "hard_pick": {
+        "n": 250,
+        "accuracy": 0.92
+      }
+    },
+    "pope|siglip|statement": {
+      "suite": "pope",
+      "backend": "siglip",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.588,
+        "auroc": 0.7792674321637052,
+        "nll": 0.9511583348042952,
+        "brier": 0.294966143856848,
+        "ece": 0.25465441600000005,
+        "ece_floor": 0.060556627,
+        "selective_accuracy": {
+          "50": 0.704,
+          "80": 0.63,
+          "90": 0.5911111111111111,
+          "100": 0.588
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.732,
+        "auroc": 0.7792674321637052,
+        "nll": 0.5742932346554348,
+        "brier": 0.19419855144201534,
+        "ece": 0.09060930325881494,
+        "ece_floor": 0.08774762715179865,
+        "selective_accuracy": {
+          "50": 0.784,
+          "80": 0.775,
+          "90": 0.7511111111111111,
+          "100": 0.732
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.732,
+        "auroc": 0.7792674321637052,
+        "nll": 0.5742932346554348,
+        "brier": 0.19419855144201534,
+        "ece": 0.09060930325881494,
+        "ece_floor": 0.08774762715179865,
+        "selective_accuracy": {
+          "50": 0.784,
+          "80": 0.775,
+          "90": 0.7511111111111111,
+          "100": 0.732
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 23.019729065708816,
+          "p95_ms": 33.98000904126093,
+          "n": 500
+        },
+        "statements_per_second": 80.10603161274508,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 38
+        },
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 29
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "adversarial_329",
+          "image_path": ".cache/eval_images/pope/adversarial_329.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8046043887069961,
+          "top_probability": 0.902302194353498
+        },
+        {
+          "item_id": "random_135",
+          "image_path": ".cache/eval_images/pope/random_135.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.7180628957929649,
+          "top_probability": 0.8590314478964824
+        },
+        {
+          "item_id": "random_447",
+          "image_path": ".cache/eval_images/pope/random_447.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6886375209313869,
+          "top_probability": 0.8443187604656934
+        },
+        {
+          "item_id": "popular_2225",
+          "image_path": ".cache/eval_images/pope/popular_2225.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6824702066896431,
+          "top_probability": 0.8412351033448215
+        },
+        {
+          "item_id": "popular_1255",
+          "image_path": ".cache/eval_images/pope/popular_1255.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6528177510764591,
+          "top_probability": 0.8264088755382295
+        },
+        {
+          "item_id": "popular_179",
+          "image_path": ".cache/eval_images/pope/popular_179.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6313531548081703,
+          "top_probability": 0.8156765774040852
+        },
+        {
+          "item_id": "popular_2604",
+          "image_path": ".cache/eval_images/pope/popular_2604.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6114282566666118,
+          "top_probability": 0.8057141283333059
+        },
+        {
+          "item_id": "adversarial_2100",
+          "image_path": ".cache/eval_images/pope/adversarial_2100.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.5251900530163611,
+          "top_probability": 0.7625950265081806
+        },
+        {
+          "item_id": "popular_2722",
+          "image_path": ".cache/eval_images/pope/popular_2722.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.5023079389841476,
+          "top_probability": 0.7511539694920738
+        },
+        {
+          "item_id": "random_2570",
+          "image_path": ".cache/eval_images/pope/random_2570.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.49718679603437943,
+          "top_probability": 0.7485933980171897
+        },
+        {
+          "item_id": "popular_2622",
+          "image_path": ".cache/eval_images/pope/popular_2622.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.4876055275541551,
+          "top_probability": 0.7438027637770775
+        },
+        {
+          "item_id": "popular_1531",
+          "image_path": ".cache/eval_images/pope/popular_1531.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4845346084624399,
+          "top_probability": 0.74226730423122
+        },
+        {
+          "item_id": "random_2272",
+          "image_path": ".cache/eval_images/pope/random_2272.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.46364747118518945,
+          "top_probability": 0.7318237355925947
+        },
+        {
+          "item_id": "random_1072",
+          "image_path": ".cache/eval_images/pope/random_1072.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.4455603030319395,
+          "top_probability": 0.7227801515159697
+        },
+        {
+          "item_id": "popular_1297",
+          "image_path": ".cache/eval_images/pope/popular_1297.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4413054429011436,
+          "top_probability": 0.7206527214505718
+        },
+        {
+          "item_id": "adversarial_2815",
+          "image_path": ".cache/eval_images/pope/adversarial_2815.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.4318654878951207,
+          "top_probability": 0.7159327439475603
+        },
+        {
+          "item_id": "random_1530",
+          "image_path": ".cache/eval_images/pope/random_1530.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.40894977102363184,
+          "top_probability": 0.7044748855118159
+        },
+        {
+          "item_id": "popular_779",
+          "image_path": ".cache/eval_images/pope/popular_779.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.40591665163905954,
+          "top_probability": 0.7029583258195298
+        },
+        {
+          "item_id": "adversarial_690",
+          "image_path": ".cache/eval_images/pope/adversarial_690.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.36797689246713294,
+          "top_probability": 0.6839884462335665
+        },
+        {
+          "item_id": "popular_2941",
+          "image_path": ".cache/eval_images/pope/popular_2941.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.35744170523064556,
+          "top_probability": 0.6787208526153228
+        }
+      ]
+    },
+    "pope|vlm|statement": {
+      "suite": "pope",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 250,
+      "n_calibration": 250,
+      "failures": {
+        "failed": 0,
+        "attempted": 500,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 250,
+        "accuracy": 0.88,
+        "auroc": 0.9551606902302906,
+        "nll": 1.5211461903216432,
+        "brier": 0.118421380356856,
+        "ece": 0.11355341600000002,
+        "ece_floor": 0.0038784710800000084,
+        "selective_accuracy": {
+          "50": 0.944,
+          "80": 0.95,
+          "90": 0.9111111111111111,
+          "100": 0.88
+        }
+      },
+      "calibrated": {
+        "n": 250,
+        "accuracy": 0.884,
+        "auroc": 0.9729937776637373,
+        "nll": 0.2640879644880548,
+        "brier": 0.08391429633639726,
+        "ece": 0.06646688315517654,
+        "ece_floor": 0.040408407093769264,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.965,
+          "90": 0.9155555555555556,
+          "100": 0.884
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 250,
+        "accuracy": 0.884,
+        "auroc": 0.9729937776637373,
+        "nll": 0.23652117441910359,
+        "brier": 0.07318701588538427,
+        "ece": 0.05713702593825637,
+        "ece_floor": 0.04090186608026429,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9333333333333333,
+          "100": 0.884
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 457.88691693451256,
+          "p95_ms": 533.175247895997,
+          "n": 500
+        },
+        "statements_per_second": 2.2758601653047488,
+        "mean_image_tokens": 275.44,
+        "off_mass_mean": 0.0042213540991223614,
+        "off_mass_p95": 0.01349040675338809
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 24
+        },
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 5
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "adversarial_1113",
+          "image_path": ".cache/eval_images/pope/adversarial_1113.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.9112985300633587,
+          "top_probability": 0.9556492650316794
+        },
+        {
+          "item_id": "random_2269",
+          "image_path": ".cache/eval_images/pope/random_2269.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.9049965761323733,
+          "top_probability": 0.9524982880661866
+        },
+        {
+          "item_id": "adversarial_357",
+          "image_path": ".cache/eval_images/pope/adversarial_357.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.9006238345162119,
+          "top_probability": 0.9503119172581059
+        },
+        {
+          "item_id": "popular_179",
+          "image_path": ".cache/eval_images/pope/popular_179.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8998704634873673,
+          "top_probability": 0.9499352317436837
+        },
+        {
+          "item_id": "popular_1642",
+          "image_path": ".cache/eval_images/pope/popular_1642.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.8904684256310575,
+          "top_probability": 0.9452342128155288
+        },
+        {
+          "item_id": "random_2955",
+          "image_path": ".cache/eval_images/pope/random_2955.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8290520108463056,
+          "top_probability": 0.9145260054231528
+        },
+        {
+          "item_id": "popular_779",
+          "image_path": ".cache/eval_images/pope/popular_779.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8014613609967994,
+          "top_probability": 0.9007306804983997
+        },
+        {
+          "item_id": "random_2417",
+          "image_path": ".cache/eval_images/pope/random_2417.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.7908108185854963,
+          "top_probability": 0.8954054092927481
+        },
+        {
+          "item_id": "adversarial_1593",
+          "image_path": ".cache/eval_images/pope/adversarial_1593.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.7817943947755974,
+          "top_probability": 0.8908971973877987
+        },
+        {
+          "item_id": "popular_121",
+          "image_path": ".cache/eval_images/pope/popular_121.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.7733853860546723,
+          "top_probability": 0.8866926930273362
+        },
+        {
+          "item_id": "adversarial_2385",
+          "image_path": ".cache/eval_images/pope/adversarial_2385.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.7714628259659704,
+          "top_probability": 0.8857314129829852
+        },
+        {
+          "item_id": "adversarial_627",
+          "image_path": ".cache/eval_images/pope/adversarial_627.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6930015135963354,
+          "top_probability": 0.8465007567981677
+        },
+        {
+          "item_id": "adversarial_884",
+          "image_path": ".cache/eval_images/pope/adversarial_884.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6423452780272654,
+          "top_probability": 0.8211726390136327
+        },
+        {
+          "item_id": "adversarial_23",
+          "image_path": ".cache/eval_images/pope/adversarial_23.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6112511264849401,
+          "top_probability": 0.80562556324247
+        },
+        {
+          "item_id": "popular_2722",
+          "image_path": ".cache/eval_images/pope/popular_2722.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.6060032985519681,
+          "top_probability": 0.803001649275984
+        },
+        {
+          "item_id": "adversarial_505",
+          "image_path": ".cache/eval_images/pope/adversarial_505.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.6046443091326802,
+          "top_probability": 0.8023221545663402
+        },
+        {
+          "item_id": "adversarial_2603",
+          "image_path": ".cache/eval_images/pope/adversarial_2603.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5994650730388478,
+          "top_probability": 0.7997325365194239
+        },
+        {
+          "item_id": "popular_873",
+          "image_path": ".cache/eval_images/pope/popular_873.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5823985500884862,
+          "top_probability": 0.7911992750442431
+        },
+        {
+          "item_id": "popular_35",
+          "image_path": ".cache/eval_images/pope/popular_35.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5270384150397016,
+          "top_probability": 0.7635192075198508
+        },
+        {
+          "item_id": "adversarial_1887",
+          "image_path": ".cache/eval_images/pope/adversarial_1887.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.5115838677832472,
+          "top_probability": 0.7557919338916236
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {
+    "pets37|vlm": {
+      "n": 250,
+      "options_letter": 26,
+      "options_full": 37,
+      "letter_raw": {
+        "n": 250,
+        "accuracy": 0.904,
+        "nll": 1.4162654804546493,
+        "brier": 0.17870300443747197,
+        "macro_f1": 0.9015726088054118,
+        "ece": 0.08295722400000002,
+        "ece_floor": 0.0054278333599999985,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9422222222222222,
+          "100": 0.904
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 250,
+        "accuracy": 0.912,
+        "nll": 0.6097087971066484,
+        "brier": 0.15375465951632936,
+        "macro_f1": 0.9065844550955386,
+        "ece": 0.06890206361905465,
+        "ece_floor": 0.008477740308733432,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.975,
+          "90": 0.96,
+          "100": 0.912
+        }
+      },
+      "independent_full_raw": {
+        "n": 250,
+        "accuracy": 0.892,
+        "nll": 0.8807931270180476,
+        "brier": 0.188824766353372,
+        "macro_f1": 0.860436842789784,
+        "ece": 0.07922047599999998,
+        "ece_floor": 0.012133439680000024,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.965,
+          "90": 0.9333333333333333,
+          "100": 0.892
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 1721.9666874734685,
+        "p95_ms": 2060.7081228517927,
+        "n": 250
+      },
+      "independent_latency": {
+        "p50_ms": 8422.414854052477,
+        "p95_ms": 11902.735264902003,
+        "n": 250
+      },
+      "letter_calibrated": {
+        "n": 250,
+        "accuracy": 0.904,
+        "nll": 0.40038492557040095,
+        "brier": 0.15213823810535132,
+        "macro_f1": 0.9015726088054118,
+        "ece": 0.03749392444543714,
+        "ece_floor": 0.0384384889754499,
+        "selective_accuracy": {
+          "50": 0.992,
+          "80": 0.965,
+          "90": 0.9422222222222222,
+          "100": 0.904
+        }
+      },
+      "independent_full_calibrated": {
+        "n": 250,
+        "accuracy": 0.892,
+        "nll": 0.3863299792551395,
+        "brier": 0.16551333938034224,
+        "macro_f1": 0.860436842789784,
+        "ece": 0.03807978037946649,
+        "ece_floor": 0.036203741185899446,
+        "selective_accuracy": {
+          "50": 0.984,
+          "80": 0.96,
+          "90": 0.9288888888888889,
+          "100": 0.892
+        }
+      }
+    },
+    "caltech101|vlm": {
+      "n": 221,
+      "options_letter": 26,
+      "options_full": 101,
+      "letter_raw": {
+        "n": 221,
+        "accuracy": 0.9773755656108597,
+        "nll": 0.3205696312032099,
+        "brier": 0.04547393491497737,
+        "macro_f1": 0.991941391941392,
+        "ece": 0.02076224886877828,
+        "ece_floor": 0.0022450420814479634,
+        "selective_accuracy": {
+          "50": 0.990909090909091,
+          "80": 0.9943502824858758,
+          "90": 0.9949748743718593,
+          "100": 0.9773755656108597
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 221,
+        "accuracy": 0.9728506787330317,
+        "nll": 0.12866729131579685,
+        "brier": 0.029269276315098656,
+        "macro_f1": 0.9898485298485299,
+        "ece": 0.015895707725549244,
+        "ece_floor": 0.0047328353414832856,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9943502824858758,
+          "90": 0.9949748743718593,
+          "100": 0.9728506787330317
+        }
+      },
+      "independent_full_raw": {
+        "n": 221,
+        "accuracy": 0.918552036199095,
+        "nll": 0.7533183411008152,
+        "brier": 0.12724551947064708,
+        "macro_f1": 0.9117919852859614,
+        "ece": 0.05235268325791854,
+        "ece_floor": 0.011267789049773748,
+        "selective_accuracy": {
+          "50": 0.9545454545454546,
+          "80": 0.9717514124293786,
+          "90": 0.9547738693467337,
+          "100": 0.918552036199095
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 981.2063330318779,
+        "p95_ms": 1311.361791798845,
+        "n": 221
+      },
+      "independent_latency": {
+        "p50_ms": 12315.594125073403,
+        "p95_ms": 21641.932250000536,
+        "n": 221
+      },
+      "letter_calibrated": {
+        "n": 221,
+        "accuracy": 0.9773755656108597,
+        "nll": 0.08716242525588716,
+        "brier": 0.040481078605775385,
+        "macro_f1": 0.991941391941392,
+        "ece": 0.023062094386740013,
+        "ece_floor": 0.013326842978519701,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 1.0,
+          "90": 1.0,
+          "100": 0.9773755656108597
+        }
+      },
+      "independent_full_calibrated": {
+        "n": 221,
+        "accuracy": 0.918552036199095,
+        "nll": 0.29710382362460425,
+        "brier": 0.12061561573220055,
+        "macro_f1": 0.9117919852859614,
+        "ece": 0.034472535816525915,
+        "ece_floor": 0.02456865085646526,
+        "selective_accuracy": {
+          "50": 0.9818181818181818,
+          "80": 0.9717514124293786,
+          "90": 0.9547738693467337,
+          "100": 0.918552036199095
+        }
+      }
+    }
+  },
+  "baseline": {
+    "pope": {
+      "frontier": {
+        "n": 250,
+        "accuracy": 0.92
+      },
+      "local": {
+        "siglip": {
+          "accuracy_same_items": 0.732,
+          "selective_accuracy_80": 0.775,
+          "field": "calibrated"
+        },
+        "vlm": {
+          "accuracy_same_items": 0.884,
+          "selective_accuracy_80": 0.965,
+          "field": "calibrated"
+        }
+      }
+    },
+    "gqa_yesno": {
+      "frontier": {
+        "n": 250,
+        "accuracy": 0.732
+      },
+      "local": {
+        "vlm": {
+          "accuracy_same_items": 0.744,
+          "selective_accuracy_80": 0.775,
+          "field": "calibrated"
+        }
+      }
+    },
+    "pets37": {
+      "frontier": {
+        "n": 250,
+        "accuracy": 0.932
+      },
+      "local": {
+        "siglip": {
+          "accuracy_same_items": 0.956,
+          "selective_accuracy_80": 0.995,
+          "field": "calibrated"
+        },
+        "vlm": {
+          "accuracy_same_items": 0.892,
+          "selective_accuracy_80": 0.96,
+          "field": "calibrated"
+        }
+      }
+    },
+    "caltech101": {
+      "frontier": {
+        "n": 221,
+        "accuracy": 0.9683257918552036
+      },
+      "local": {
+        "siglip": {
+          "accuracy_same_items": 0.9321266968325792,
+          "selective_accuracy_80": 1.0,
+          "field": "calibrated"
+        },
+        "vlm": {
+          "accuracy_same_items": 0.918552036199095,
+          "selective_accuracy_80": 0.9717514124293786,
+          "field": "calibrated"
+        }
+      }
+    },
+    "blur_ladder": {
+      "frontier": {
+        "n": 250,
+        "accuracy": 0.536
+      },
+      "local": {
+        "siglip": {
+          "accuracy_same_items": 0.344,
+          "selective_accuracy_80": 0.38,
+          "field": "calibrated"
+        },
+        "vlm": {
+          "accuracy_same_items": 0.496,
+          "selective_accuracy_80": 0.535,
+          "field": "calibrated"
+        }
+      }
+    }
+  },
+  "permutation": {
+    "pets37|siglip|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "pets37|vlm|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "pets37|vlm|letter": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.971019,
+      "mean_abs_dp": 0.03409614444444444,
+      "choice_flips": 3,
+      "requests": 90
+    },
+    "caltech101|siglip|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "caltech101|vlm|independent": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    },
+    "caltech101|vlm|letter": {
+      "items": 30,
+      "orders": 3,
+      "max_abs_dp": 0.0,
+      "mean_abs_dp": 0.0,
+      "choice_flips": 0,
+      "requests": 90
+    }
+  },
+  "latency": {
+    "siglip": {
+      "p50_ms": 22.975416970439255,
+      "p95_ms": 23.501875484362245,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    },
+    "vlm": {
+      "p50_ms": 8604.29627110716,
+      "p95_ms": 10816.806343733333,
+      "n": 20,
+      "questions": 5,
+      "statements": 11,
+      "images": 1
+    }
+  },
+  "calibration": {
+    "cal_8edfd9": {
+      "key": {
+        "backend": "siglip",
+        "model": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": null
+      },
+      "version": "cal_8edfd9",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T002639Z-2091d3",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.5302648587711538,
+            "b": 1.0952640796529474
+          },
+          "n": 250,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 0.9997877339263843,
+          "nll_after": 0.6213550350948788,
+          "ece_before": 0.2605744267912154,
+          "ece_after": 0.09432658746878839
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 0.6729891772498633
+          },
+          "n": 471,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.12083750865928351,
+          "nll_after": 0.1034077611505603,
+          "ece_before": 0.02520202515876277,
+          "ece_after": 0.009480521155211388
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 4.044292830392224
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 1.623106542413429,
+          "nll_after": 1.3196089684190597,
+          "ece_before": 0.262126618501106,
+          "ece_after": 0.08564124086574447
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 4.044292830392224
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 1.623106542413429,
+          "nll_after": 1.3196089684190597,
+          "ece_before": 0.262126618501106,
+          "ece_after": 0.08564124086574447
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 0.8131472106572365
+          },
+          "n": 221,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.1195591686454858,
+          "nll_after": 0.11358508442967757,
+          "ece_before": 0.02211158214100834,
+          "ece_after": 0.014369222689575092
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 0.5369753008710221
+          },
+          "n": 250,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.1219675612314807,
+          "nll_after": 0.08718605752536007,
+          "ece_before": 0.038293641297419814,
+          "ece_after": 0.01521596753971929
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.5302648587711538,
+            "b": 1.0952640796529474
+          },
+          "n": 250,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 0.9997877339263843,
+          "nll_after": 0.6213550350948788,
+          "ece_before": 0.2605744267912154,
+          "ece_after": 0.09432658746878839
+        }
+      }
+    },
+    "cal_1d9418": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 768
+      },
+      "version": "cal_1d9418",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T002639Z-2091d3",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.18363871476874544,
+            "b": 0.557360891321939
+          },
+          "n": 500,
+          "suite_ids": [
+            "gqa_yesno",
+            "pope"
+          ],
+          "nll_before": 0.9780052365102359,
+          "nll_after": 0.34085668562122146,
+          "ece_before": 0.11104306493041732,
+          "ece_after": 0.03792916985742924
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.086433423167478
+          },
+          "n": 471,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.5296320980364961,
+          "nll_after": 0.2785994437114841,
+          "ece_before": 0.06363795958143781,
+          "ece_after": 0.012957103090738149
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 8.283623298132216
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.3186752261287347,
+          "nll_after": 1.127938680948252,
+          "ece_before": 0.3634055431925117,
+          "ece_after": 0.16375943708049276
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 8.283623298132216
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.3186752261287347,
+          "nll_after": 1.127938680948252,
+          "ece_before": 0.3634055431925117,
+          "ece_after": 0.16375943708049276
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 3.353547335782289
+          },
+          "n": 221,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.46922088136920775,
+          "nll_after": 0.23311334371899323,
+          "ece_before": 0.057986717614144305,
+          "ece_after": 0.014129444422978034
+        },
+        "gqa_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.23738096041981316,
+            "b": 0.2830443162604427
+          },
+          "n": 250,
+          "suite_ids": [
+            "gqa_yesno"
+          ],
+          "nll_before": 0.8578712786453428,
+          "nll_after": 0.42520801408055536,
+          "ece_before": 0.13874403886422937,
+          "ece_after": 0.06622881407566943
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 2.9168217207849745
+          },
+          "n": 250,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.583035613570379,
+          "nll_after": 0.31650331822471917,
+          "ece_before": 0.06863369982668419,
+          "ece_after": 0.027685374953170687
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.19775283762349682,
+            "b": 1.622635134067753
+          },
+          "n": 250,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.0981391943751289,
+          "nll_after": 0.2155089727416718,
+          "ece_before": 0.0834945227661072,
+          "ece_after": 0.050415557309068375
+        }
+      }
+    },
+    "cal_eac746": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "letter",
+        "image_token_budget": 768
+      },
+      "version": "cal_eac746",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T002639Z-2091d3",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.18363871476874544,
+            "b": 0.557360891321939
+          },
+          "n": 500,
+          "suite_ids": [
+            "gqa_yesno",
+            "pope"
+          ],
+          "nll_before": 0.9780052365102359,
+          "nll_after": 0.34085668562122146,
+          "ece_before": 0.11104306493041732,
+          "ece_after": 0.03792916985742924
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.6144722857390565
+          },
+          "n": 471,
+          "suite_ids": [
+            "caltech101",
+            "pets37"
+          ],
+          "nll_before": 0.5948255047808038,
+          "nll_after": 0.20846941927077292,
+          "ece_before": 0.043006098232776305,
+          "ece_after": 0.01751943921509615
+        },
+        "score": {
+          "method": "temperature",
+          "params": {
+            "T": 8.283623298132216
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.3186752261287347,
+          "nll_after": 1.127938680948252,
+          "ece_before": 0.3634055431925117,
+          "ece_after": 0.16375943708049276
+        }
+      },
+      "per_suite": {
+        "blur_ladder": {
+          "method": "temperature",
+          "params": {
+            "T": 8.283623298132216
+          },
+          "n": 250,
+          "suite_ids": [
+            "blur_ladder"
+          ],
+          "nll_before": 3.3186752261287347,
+          "nll_after": 1.127938680948252,
+          "ece_before": 0.3634055431925117,
+          "ece_after": 0.16375943708049276
+        },
+        "caltech101": {
+          "method": "temperature",
+          "params": {
+            "T": 3.688632888957933
+          },
+          "n": 221,
+          "suite_ids": [
+            "caltech101"
+          ],
+          "nll_before": 0.3022549506193006,
+          "nll_after": 0.10165422421896243,
+          "ece_before": 0.0219950422486483,
+          "ece_after": 0.0190136934060829
+        },
+        "gqa_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.23738096041981316,
+            "b": 0.2830443162604427
+          },
+          "n": 250,
+          "suite_ids": [
+            "gqa_yesno"
+          ],
+          "nll_before": 0.8578712786453428,
+          "nll_after": 0.42520801408055536,
+          "ece_before": 0.13874403886422937,
+          "ece_after": 0.06622881407566943
+        },
+        "pets37": {
+          "method": "temperature",
+          "params": {
+            "T": 3.587158957626544
+          },
+          "n": 250,
+          "suite_ids": [
+            "pets37"
+          ],
+          "nll_before": 0.8534578746595726,
+          "nll_after": 0.3027635028346087,
+          "ece_before": 0.06157987362148784,
+          "ece_after": 0.05167554127994911
+        },
+        "pope": {
+          "method": "platt",
+          "params": {
+            "a": 0.19775283762349682,
+            "b": 1.622635134067753
+          },
+          "n": 250,
+          "suite_ids": [
+            "pope"
+          ],
+          "nll_before": 1.0981391943751289,
+          "nll_after": 0.2155089727416718,
+          "ece_before": 0.0834945227661072,
+          "ece_after": 0.050415557309068375
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "+3.1 points over 5 suites",
+      "pass": true
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.149 (blur_ladder, sampling floor 0.097); over threshold: blur_ladder, gqa_yesno, pope",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.841 vs baseline 0.818 (macro over 5 suites)",
+      "pass": true
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "0.0e+00 (pets37)",
+      "pass": true
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms on mps (not a gate)",
+      "measured": "p50 8604 ms, p95 10817 ms",
+      "pass": "recorded",
+      "within_target": false
+    }
+  ],
+  "verdict": "NO-GO"
+}

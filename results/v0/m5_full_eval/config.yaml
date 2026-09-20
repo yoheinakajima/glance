@@ -1,0 +1,160 @@
+config:
+  paths:
+    hf_home: .cache/hf
+    eval_images: .cache/eval_images
+    logs: logs
+    runs: runs
+    calibration: calibration
+    human_gold: gold/human_gold.jsonl
+  models:
+    siglip:
+      id: google/siglip2-base-patch16-256
+      revision: 3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab
+      photo_prefix: false
+    vlm_tiers:
+      cuda_24gb:
+        id: Qwen/Qwen3-VL-8B-Instruct
+        revision: 0c351dd01ed87e9c1b53cbc748cba10e6187ff3b
+        dtype: bfloat16
+        image_token_budget: 768
+      cuda_12gb:
+        id: Qwen/Qwen3-VL-4B-Instruct
+        revision: ebb281ec70b05090aa6165b016eac8ec08e71b17
+        dtype: bfloat16
+        image_token_budget: 768
+      apple_32gb:
+        id: Qwen/Qwen3-VL-4B-Instruct
+        revision: ebb281ec70b05090aa6165b016eac8ec08e71b17
+        dtype: float16
+        image_token_budget: 768
+      apple_8gb:
+        id: Qwen/Qwen3-VL-2B-Instruct
+        revision: 89644892e4d85e24eaac8bacfd4f463576704203
+        dtype: float16
+        image_token_budget: 384
+    tier_override: null
+    image_token_budget_override: null
+  vlm:
+    batch_size: 8
+    suffix_batch_size: 16
+    prefix_cache: false
+    letter_rotations: 4
+    off_mass_warn: 0.1
+  limits:
+    max_image_mb: 20
+    formats:
+    - JPEG
+    - PNG
+    - WEBP
+    max_side: 2048
+  eval:
+    seed: 7
+    n_cuda: 1000
+    n_apple: 500
+    manifest_n: 1000
+    max_hours: 4.0
+    warmup_items: 10
+    baseline_n: 300
+    ece_bins: 15
+    permutation_items: 30
+    permutation_orders: 3
+    letter_max_options: 26
+    latency_repeats: 20
+    max_failure_rate: 0.02
+    top_errors: 20
+  calibration:
+    isotonic_min_n: 1000
+  server:
+    host: 127.0.0.1
+    port: 8077
+args:
+  suites:
+  - pope
+  - gqa_yesno
+  - pets37
+  - caltech101
+  - blur_ladder
+  - doctype16
+  - human_gold
+  models:
+  - siglip
+  - vlm
+  - frontier
+  n: null
+  max_hours: null
+  choice_methods:
+  - independent
+  - letter
+  baseline_n: null
+  confirm_spend: false
+  allow_upload_gold: false
+  skip_permutation: false
+  permutation_items: 30
+  skip_latency: false
+  calibrate: true
+  resume: null
+n_requested: 500
+max_hours: 4.0
+harness_version: 0.2.0
+git_sha: 55177cc51c3416e7ca569174feda0868481e3b1d
+trim:
+  requested_n: 500
+  final_n:
+    pope: 500
+    gqa_yesno: 500
+    pets37: 500
+    caltech101: 442
+    blur_ladder: 500
+  eta_hours_at_requested_n: 4.15
+  eta_hours_at_final_n: 3.92
+  max_hours: 4.0
+  trimmed: true
+notes:
+- '`gqa_yesno` does not run on `siglip` (its questions carry no criteria the backend
+  can use)'
+- frontier baseline added on 2026-09-20 with `anthropic/claude-opus-5` via `glance
+  baseline` (test split, up to 300 items per suite; picks are not stored, only whether
+  each was right)
+suites:
+  pope:
+    qtype: noul
+    source: https://github.com/RUCAIBox/POPE (questions), http://images.cocodataset.org/val2014
+      (images)
+    license: MIT (questions); COCO terms of use (images)
+    status: ok
+    n_items: 500
+  gqa_yesno:
+    qtype: noul
+    source: https://huggingface.co/datasets/lmms-lab/GQA (testdev_balanced)
+    license: MIT on the Hub card; CC BY 4.0 upstream (GQA / Visual Genome)
+    status: ok
+    n_items: 500
+  pets37:
+    qtype: choice
+    source: https://huggingface.co/datasets/timm/oxford-iiit-pet (test split)
+    license: CC BY-SA 4.0
+    status: ok
+    n_items: 500
+  caltech101:
+    qtype: choice
+    source: https://data.caltech.edu/records/mzrjq-6wc02 (doi:10.22002/D1.20086)
+    license: CC BY 4.0
+    status: ok
+    n_items: 500
+  blur_ladder:
+    qtype: score
+    source: derived from Caltech-101 (https://data.caltech.edu/records/mzrjq-6wc02)
+    license: CC BY 4.0 (derived)
+    status: ok
+    n_items: 500
+  doctype16:
+    qtype: choice
+    source: https://huggingface.co/datasets/aharley/rvl_cdip
+    license: unclear ("other" on the Hub card)
+    status: 'skipped: RVL-CDIP license is "other" on its dataset card: unclear, so
+      the suite is skipped'
+  human_gold:
+    qtype: any
+    source: local JSONL (paths.human_gold)
+    license: private
+    status: 'skipped: no hand-labeled items at gold/human_gold.jsonl'

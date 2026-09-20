@@ -388,3 +388,38 @@ Offline on the same predictions, AUROC for spotting a held-out breed: `-max z ov
 held-out items and wrongly rejects 4% of known ones (median best-option z: known 16.6, held-out -3.5). For v1,
 open-set handling belongs in the scorer as a calibrated threshold on the best option's own yes-probability, not as
 a candidate statement. That is a calibration-sized fix, not a data problem.
+
+## Update 2026-09-20: frontier baseline added to the full evaluation
+
+The user ran `uv run glance baseline` (D25) against the full run `20260920T002639Z-2091d3`. Baseline model:
+`anthropic/claude-opus-5` through LiteLLM, JSON-schema constrained picks, test split only, 1,221 calls (250 per
+suite, 221 for caltech101), 0 failures, about 2.4 s per call. The adapter's temperature fallback (D26) applied.
+Picks are not stored, only whether each was right. Snapshot: `results/v0/m5_full_eval/`.
+
+The go/no-go table is now complete (this supersedes rows 1 and 3 of the M5 final summary above):
+
+| metric | threshold | measured | pass |
+| --- | --- | --- | --- |
+| Accuracy gap vs frontier baseline | <= 5 points, macro-averaged | +3.1 points over 5 suites (Opus 5 ahead) | pass |
+| ECE after calibration | <= 0.05 per suite | pets37 0.038, caltech101 0.034 pass; pope 0.066, gqa_yesno 0.093, blur_ladder 0.149 miss | FAIL |
+| Selective accuracy at 80% coverage | >= baseline full-coverage accuracy | 0.841 vs 0.818 (macro over 5 suites) | pass |
+| Permutation invariance (choice) | <= 1e-3, independent | 0.0e+00 | pass |
+| Latency, 1 image + 5 questions | recorded | p50 8,604 ms reference path; 1,265 ms with --prefix-cache | recorded |
+
+Verdict: still NO-GO by the letter, on the ECE gate alone. Three of the four gates pass.
+
+Per suite, same items (`results/v0/m5_full_eval/metrics.json: baseline`):
+
+| Suite | n | Opus 5 acc | Qwen3-VL-4B acc | gap (points) | Qwen sel. acc @80% | SigLIP2 acc |
+| --- | --- | --- | --- | --- | --- | --- |
+| pope | 250 | 0.920 | 0.884 | +3.6 | 0.965 | 0.732 |
+| gqa_yesno | 250 | 0.732 | 0.744 | -1.2 | 0.775 | not run |
+| pets37 | 250 | 0.932 | 0.892 | +4.0 | 0.960 | 0.956 |
+| caltech101 | 221 | 0.968 | 0.919 | +5.0 | 0.972 | 0.932 |
+| blur_ladder | 250 | 0.536 | 0.496 | +4.0 | 0.535 | 0.344 |
+
+Readings: (1) a 4B open model read out through yes/no logits is within 5 points of a frontier model on every
+suite, and ahead on the relational yes/no suite; (2) the 375M dual encoder beats the frontier model on fine-grained
+pet breeds (0.956 vs 0.932); (3) the frontier model is also poor at the 4-level blur rating (0.536), so the `score`
+weakness is a property of the task as posed, not only of the small model. That last point is what the score lab
+(branch `score-lab`, `lab/NOTES.md`) goes after.
