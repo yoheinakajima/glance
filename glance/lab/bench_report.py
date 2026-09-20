@@ -30,9 +30,10 @@ from .collect import BENCHES, LAB_DIR
 from .select import cv_scores
 
 ENS4D = "ens4d=digits+zoom_digits+digitsrev+zoom_digitsrev:concat"
+FAST2 = "fast2=digits+digitsrev:concat"
 # `ens4d` has one calibration (matrix scaling). The baselines get the kind with the lowest 5-fold cross-validated NLL on
 # the calibration split of each distortion, the lab's own rule (`select.cv_scores`), so they are not handicapped.
-CALIBRATION = {"ens4d": "matrix", "zoom_digits": "cv", "digits": "cv", "independent": "cv", "independent (as shipped)": "raw"}
+CALIBRATION = {"ens4d": "matrix", "fast2": "matrix", "zoom_digits": "cv", "digits": "cv", "independent": "cv", "independent (as shipped)": "raw"}
 COVERAGE = 0.8
 
 
@@ -79,7 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     rows = read_jsonl(PROJECT_ROOT / args.inp)
-    rows += combine_rows(rows, ENS4D)
+    rows += combine_rows(rows, ENS4D) + combine_rows(rows, FAST2)
     shipped = [{**r, "method_key": "independent (as shipped)"} for r in rows if r["method_key"] == "independent"]
     rows += shipped
     dmos: dict[str, float] = {}
@@ -142,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
         lines.append("| " + " | ".join(str(c) for c in cells) + " |")
 
     lead = "ens4d" if "ens4d" in results else next(iter(results))
-    others = [k for k in ("independent", "independent (as shipped)", "zoom_digits") if k in results]
+    others = [k for k in ("independent", "independent (as shipped)", "digits", "zoom_digits", "fast2") if k in results]
     lines += ["", f"## Per distortion (`{lead}`; accuracy of the baselines alongside)", "",
               "| Distortion | n fit | n test | accuracy | within 1 | MAE | ECE (floor) | " + ("SRCC vs DMOS | " if dmos else "")
               + " | ".join(f"acc `{k}`" for k in others) + " |",
