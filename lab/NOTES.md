@@ -312,3 +312,26 @@ Candidates for the final selection (run once, when stage B is complete; `glance.
 If stage C (four extra `zoom_digits` crops) completes, two more candidates are added in a second, separately reported
 selection: `zoomx5` (the five crops, 5 passes) and `ens7+crops` (18 passes). Winners: best mean cross-validated NLL at
 any cost, and best within 4 forward passes.
+
+## 2026-09-20 05:55 Entry 12: WINNERS FIXED (calibration split only). The test split has not been scored yet.
+
+Stage B finished at 05:52 (109.1 min, no errors); `lab/runs/main.jsonl` now holds 7 readouts x 5,000 items. Final
+selection, run once with the candidate list of entry 11 (`lab/SELECTION.md`, `lab/SELECTION.json`; 5-fold
+cross-validation inside the 500-item calibration split of each scale; ranking by mean cross-validated NLL):
+
+| Rank | Candidate | Passes | Mean CV NLL | Mean CV acc | blur | exposure | jpeg | noise | resolution |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `ens7` (all seven readouts) | 14 | 0.3007 | 0.884 | 0.896 | 0.934 | 0.792 | 0.884 | 0.916 |
+| 2 | `ens4d` (digits, zoom_digits, digitsrev, zoom_digitsrev) | 4 | 0.3135 | 0.875 | 0.876 | 0.928 | 0.798 | 0.858 | 0.914 |
+| 3 | `ens5` | 12 | 0.3227 | 0.866 | 0.888 | 0.930 | 0.762 | 0.874 | 0.876 |
+| 5 | `ens2` | 2 | 0.3440 | 0.857 | 0.874 | 0.916 | 0.770 | 0.838 | 0.888 |
+| 7 | `zoom_digits` | 1 | 0.3832 | 0.841 | 0.868 | 0.912 | 0.772 | 0.842 | 0.812 |
+| 12 | `independent` (the v0 method) | 4 | 0.4846 | 0.806 | 0.872 | 0.920 | 0.626 | 0.790 | 0.822 |
+
+**Winner at any cost: `ens7`. Winner within 4 forward passes: `ens4d`.** Both use matrix calibration on every scale.
+H6 (the reversed scale adds signal) is supported on calibration data: `ens4d` beats `ens2` by 1.8 points of
+cross-validated accuracy and beats the 12-pass `ens5` on NLL at a third of the cost.
+
+Next, in this order: (1) score every method once on the test split (`glance.lab.analyze` without `--dev`);
+(2) compare cached and reference-path logits for the two winners on the 500-item test subsample; (3) learning curve
+and transfer for `ens4d`; (4) figures and `docs/paper/RESULTS_LAB.md`.
