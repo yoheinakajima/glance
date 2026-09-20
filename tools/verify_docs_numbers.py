@@ -1,6 +1,12 @@
 """Check that every 3-decimal number in the docs appears in a committed source (results/**/metrics.json, report.md,
 summary.txt, the prefix-cache acceptance JSON, lab reports, STATUS.md). Prints the ones that do not.
 
+Limit of this check, stated plainly: the committed results now contain tens of thousands of numbers, so a wrong
+3-decimal number has a real chance of matching SOME source by coincidence. The check catches typos and invented
+numbers most of the time; it does not prove that a number is attached to the right claim. The generated result documents
+(RESULTS_LAB, RESULTS_GENERALIZATION, RESULTS_COMPARISONS) do not have this weakness: their tables are built from the
+JSON files directly.
+
 uv run python tools/verify_docs_numbers.py
 """
 import json, pathlib, re, sys
@@ -28,7 +34,9 @@ source_text = "\n".join(p.read_text() for p in text_sources if p.exists())
 
 # Numbers quoted from third-party pages (not our measurements). They are cited with their source in the document and
 # are excluded from the check on purpose; everything else must trace to a committed file.
-EXTERNAL = {"docs/paper/RELATED_WORK.md": {"8.566", "0.114", "0.061", "0.025", "0.012", "0.004"}}
+EXTERNAL = {"docs/paper/RELATED_WORK.md": {"8.566", "0.114", "0.061", "0.025", "0.012", "0.004"},
+            # every number in the survey except our own three headline accuracies is quoted from a third-party page
+            "docs/paper/COMPARABLE_SYSTEMS.md": {"0.042", "0.671", "0.674", "0.684", "0.687", "0.694", "0.830", "0.840", "0.855", "0.870", "0.875", "0.878", "0.913", "0.917", "0.934", "0.935", "0.939", "0.952", "0.953", "0.955"}}
 
 bad = 0
 for doc in sorted((ROOT / "docs").rglob("*.md")):
