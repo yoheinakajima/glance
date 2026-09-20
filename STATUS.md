@@ -437,3 +437,22 @@ Documented for the paper in `docs/paper/RESULTS_FOLLOWUP.md`, `lab/NOTES.md` (li
   overnight run finishes.
 - Docs for a paper were backfilled under `docs/`; finished runs are snapshotted under `results/`; every 3-decimal
   number in `docs/` is checked against a committed source by `tools/verify_docs_numbers.py`.
+
+## Update 2026-09-20 (morning): score lab result
+
+Branch `score-lab`. Full write-up: `docs/paper/RESULTS_LAB.md`; notebook: `lab/NOTES.md`; figures: `docs/paper/figures/`.
+On five new 4-level rating scales (500 held-out test images each), zero training:
+
+| Method | Forward passes | p50 latency | Mean accuracy |
+| --- | --- | --- | --- |
+| v0 `score` method as shipped (single temperature) | 4 | 432 ms | 0.500 |
+| v0 readout with its best calibration | 4 | 432 ms | 0.810 |
+| `ens4d`: digits readout, forward + reversed scale, with + without a magnified crop; matrix calibration | 4 | 609 ms | 0.867 |
+| `ens7`: all seven readouts | 14 | 1,980 ms | 0.876 |
+
+Both winners meet the bar fixed in advance (accuracy >= 0.85, MAE <= 0.25 levels, ECE <= 0.05) on 4 of 5 scales; JPEG
+artifacts is the miss (0.772 / 0.776). Winners were chosen on calibration data and committed before the test split was
+scored. 32 labeled images per scale are enough; calibrations do not transfer between scales; results hold on the
+uncached path. This revises the v0 reading that `score` needs training data: it needs a better readout and a few dozen
+labels per scale. Nothing in the v0 harness API was changed; promoting the readout into `glance decide` would change
+the section 5 contract and is left for a decision.

@@ -354,3 +354,24 @@ negatives the model had answered No on).
 traceable, wording is not guaranteed. An escalation ("answer locally when confident, send the rest to the frontier
 model") analysis was started and then dropped at the project owner's direction; its script and plots were removed
 to keep the repository focused on the model itself.
+
+## 2026-09-20  Score lab: rating scales without training (summary; the detailed notebook is `lab/NOTES.md`)
+
+**Question.** v0's weakest result was the `score` question type (0.496 on `blur_ladder`; the frontier baseline scored
+0.536 on the same suite). Is that a limit of the model or of how the question is asked and calibrated?
+
+**What was done.** Five new 4-level degradation scales on sharper photos (1,000 items each, 500 calibration / 500
+test); seven zero-training readouts; per-scale calibration chosen by cross-validation; pilots and every design choice
+on the calibration split only; winners fixed and committed (`lab/NOTES.md` entry 12) before the test split was scored
+once; reference-path re-check on 500 test items; separate uncontended latency benchmark.
+
+**Result.** Mean test accuracy: v0 as shipped 0.500; v0 readout with its best calibration 0.810; `ens4d` (four
+one-pass readouts, same forward-pass count as v0) 0.867; `ens7` 0.876. Both winners meet the pre-registered bar on
+four of five scales; JPEG artifacts miss (0.772 / 0.776). 32 labeled images per scale bring `ens4d` within two points
+of its final accuracy. Calibrations do not transfer between scales. Same prediction on 499 / 500 (`ens4d`) and
+500 / 500 (`ens7`) items on the reference path. Sources: `docs/paper/RESULTS_LAB.md`, `lab/REPORT.md`.
+
+**Decision.** The v0 verdict "`score` is a data problem" is revised: it is a readout and calibration problem that
+needs a few dozen labels per scale. Not yet done: a frontier-model comparison on the new scales, real (non-synthetic)
+rating tasks, and wiring the winning readout into the harness API (that changes the section 5 contract, so it waits
+for the project owner).

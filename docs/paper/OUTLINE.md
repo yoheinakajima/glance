@@ -32,6 +32,26 @@ Word count: approximately 200. Every number is copied from
 `docs/paper/RESULTS_V0.md`'s M5 section, sourced to `results/v0/m5_full_eval/metrics.json` and `STATUS.md`'s
 "Update 2026-09-20: frontier baseline added to the full evaluation" section.
 
+## Draft abstract B: if the paper leads with rating scales (added 2026-09-20 after the score lab)
+
+> Vision-language models rank images well on graded visual attributes but place the boundaries between levels
+> badly, so zero-shot ratings on a described 4-level scale are poor: 0.500 mean accuracy for a 4B open model read
+> out through yes/no logits, and 0.536 for a frontier model on a comparable task. We show this is a readout and
+> calibration problem, not a perception or training problem. Without any training we (i) read the logits over the
+> digits of a numbered scale in one forward pass, (ii) add a pixel-magnified crop as a second image so fine
+> artifacts become visible, (iii) ask the same question with the scale reversed, and (iv) fit a small affine
+> calibration on a few dozen labeled images per scale. On five degradation scales (blur, noise, JPEG artifacts,
+> underexposure, low resolution; 500 held-out images each) four one-pass readouts combined reach 0.867 mean accuracy
+> at the forward-pass cost of the baseline readout (0.609 s per question on a laptop), with mean absolute error of
+> 0.11-0.28 levels and expected calibration error at or below 0.05 on every scale. Accuracy is within two points of
+> its final value with 32 labeled images per scale. The method and its calibration were selected on a calibration
+> split before the test split was scored. Calibrations do not transfer between scales.
+
+Every number in abstract B is in `docs/paper/RESULTS_LAB.md` (sections 2, 3, 4, 5, 7) except 0.536, which is the frontier
+baseline on v0's `blur_ladder` suite (`results/v0/m5_full_eval/metrics.json: baseline.blur_ladder.frontier.accuracy`);
+"comparable task" is deliberate wording: that suite used softer source images and the frontier model was not
+calibrated, so it is context, not a head-to-head comparison.
+
 ## Candidate contributions, each linked to its evidence
 
 1. **A 4B open, Apache-2.0 model read out via yes/no logits comes within 3.1 accuracy points of a frontier
@@ -73,6 +93,16 @@ Word count: approximately 200. Every number is copied from
    option fails as a candidate statement for open-set detection (AUROC 0.655) while the same signal is
    recoverable from the raw per-option logits without training (AUROC 0.977 for `-max z` over listed
    options). Evidence: `docs/paper/RESULTS_V0.md` "Stretch experiments" section.
+
+8. **Rating scales are a readout and calibration problem** (score lab, `docs/paper/RESULTS_LAB.md`, notebook
+   `lab/NOTES.md`). On five new 4-level degradation scales, the v0 readout as shipped scores 0.500 mean accuracy; four
+   one-pass readouts (digits of a numbered scale, forward and reversed, each with and without a pixel-magnified crop)
+   with a matrix calibration reach 0.867 at the same four forward passes, and seven readouts reach 0.876; both meet
+   a bar fixed in advance (accuracy >= 0.85, MAE <= 0.25 levels, ECE <= 0.05) on four of five scales, JPEG artifacts
+   being the exception (0.772 / 0.776). 32 labeled images per scale suffice; calibrations do not transfer across
+   scales; the result holds on the uncached reference path (same prediction on 499 of 500 and 500 of 500 items).
+   Hypotheses were registered before each experiment and one of them (threshold questions beat isolated level
+   questions) was not supported. Figures: `docs/paper/figures/`.
 
 ## Section outline with figures/tables
 
