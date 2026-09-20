@@ -52,6 +52,27 @@ def latest_full_run(cfg: Config) -> Path | None:
     return best
 
 
+def load_env_file(path: str | Path, names: list[str]) -> list[str]:
+    """Set os.environ[name] from a dotenv-style file, ONLY for the variable names in `names` (the provider key the chosen
+    model needs). Every other line of the file is ignored, nothing is printed or returned except which names were
+    found, and nothing is written anywhere: the values live in this process's environment and die with it."""
+    import os
+    import re
+
+    found = []
+    for line in Path(path).expanduser().read_text().splitlines():
+        m = re.match(r"\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$", line)
+        if not m or m.group(1) not in names:
+            continue
+        value = m.group(2)
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        if value:
+            os.environ[m.group(1)] = value
+            found.append(m.group(1))
+    return found
+
+
 def ask_model_and_key(
     model: str | None, input_fn: Callable[[str], str] = input, secret_fn: Callable[[str], str] = getpass.getpass,
     out=sys.stderr,
@@ -81,7 +102,7 @@ def ask_model_and_key(
 def add_baseline(
     cfg: Config, run_dir: Path, model_id: str, api_key: str | None, baseline_n: int | None = None,
     allow_upload_gold: bool = False, confirmed: bool = False,
-    input_fn: Callable[[str], str] = input, out=sys.stderr,
+    input_fn: Callable[[str], str] = input, out=sys.stderr, estimate_only: bool = False,
 ) -> Path | None:
     run_config = yaml.safe_load((run_dir / "config.yaml").read_text())
     run_id = run_dir.name
@@ -111,6 +132,14 @@ def add_baseline(
             units.append(Unit(name, "frontier", "pick", todo))
     if not units:
         print("Nothing to do: this run already has a baseline for every suite.", file=out)
+        return None
+
+    if estimate_only:  # no API call of any kind: the plan and the price, then stop
+        cost = estimate_frontier_cost(units, model=model_id)
+        usd = "price unknown to LiteLLM" if cost["est_usd"] is None else f"about ${cost['est_usd']:.2f} at list price (an upper estimate)"
+        print(f"\nBaseline plan: {cost['calls']} calls to {model_id} "
+              f"({', '.join(f'{u.suite} {len(u.items)}' for u in units)}), test split only.", file=out)
+        print(f"Estimated spend: {usd}. Nothing was sent; re-run with --confirm-spend to start.", file=out)
         return None
 
     backend = FrontierBackend(cfg, model_id=model_id, api_key=api_key)

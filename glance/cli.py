@@ -114,7 +114,7 @@ def _cmd_calibrate(args: argparse.Namespace) -> int:
 def _cmd_baseline(args: argparse.Namespace) -> int:
     import os
 
-    from .evals.baseline import add_baseline, ask_model_and_key, latest_full_run
+    from .evals.baseline import add_baseline, ask_model_and_key, latest_full_run, load_env_file
 
     cfg = load_config(args.config)
     run_dir = cfg.path("runs") / args.run if args.run else latest_full_run(cfg)
@@ -129,7 +129,23 @@ def _cmd_baseline(args: argparse.Namespace) -> int:
     if model:
         import litellm
 
-        key_in_env = bool(litellm.validate_environment(model).get("keys_in_environment"))
+        env = litellm.validate_environment(model)
+        if args.env_file and not env.get("keys_in_environment"):
+            # Only the variable(s) this provider needs are read from the file; everything else in it is ignored.
+            wanted = [str(k) for k in env.get("missing_keys") or []]
+            found = load_env_file(args.env_file, wanted)
+            print(f"{args.env_file}: " + (f"loaded {', '.join(found)} (value not shown)" if found
+                                           else f"no {' / '.join(wanted) or 'provider key'} defined there"), file=sys.stderr)
+            env = litellm.validate_environment(model)
+        key_in_env = bool(env.get("keys_in_environment"))
+    if args.estimate_only:
+        if not model:
+            print("--estimate-only needs --model", file=sys.stderr)
+            return 2
+        add_baseline(cfg, run_dir, model, None, baseline_n=args.baseline_n, allow_upload_gold=args.allow_upload_gold,
+                     estimate_only=True)
+        print(f"provider key available to this process: {'yes' if key_in_env else 'NO'}", file=sys.stderr)
+        return 0
     if not key_in_env:
         if not sys.stdin.isatty():
             print("This command asks for your API key with hidden input, so it needs a real terminal.\n"
@@ -254,6 +270,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--baseline-n", type=int, help="items per suite, test split only (default: 300)")
     p.add_argument("--allow-upload-gold", action="store_true", help="allow human_gold images to be sent to the provider")
     p.add_argument("--confirm-spend", action="store_true", help="skip the interactive y/N after the cost estimate")
+    p.add_argument("--env-file", metavar="PATH", help="read ONLY the provider key this model needs from a dotenv file you name "
+                   "(needs --model); the value is never printed or stored")
+    p.add_argument("--estimate-only", action="store_true", help="print the plan and the cost estimate, make no API call, and stop")
     p.set_defaults(func=_cmd_baseline)
 
     p = sub.add_parser("serve", help="local HTTP server on 127.0.0.1 (POST /v1/decide, GET /v1/models, GET /healthz)")

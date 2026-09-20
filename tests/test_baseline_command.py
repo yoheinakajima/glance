@@ -140,3 +140,17 @@ def test_a_bad_key_stops_at_the_check_and_is_scrubbed_from_logs(cfg, local_run, 
 
 def test_latest_full_run_picks_the_biggest(cfg, local_run):
     assert baseline.latest_full_run(cfg) == local_run
+
+
+def test_load_env_file_reads_only_the_named_variable(tmp_path, monkeypatch):
+    import os
+
+    from glance.evals.baseline import load_env_file
+
+    env = tmp_path / ".env"
+    env.write_text('OTHER_SECRET=do-not-touch\nexport ANTHROPIC_API_KEY="sk-test-123"\nOPENAI_API_KEY=\n# comment\n')
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("OTHER_SECRET", raising=False)
+    assert load_env_file(env, ["ANTHROPIC_API_KEY", "OPENAI_API_KEY"]) == ["ANTHROPIC_API_KEY"]  # empty values do not count
+    assert os.environ["ANTHROPIC_API_KEY"] == "sk-test-123" and "OTHER_SECRET" not in os.environ
+    assert load_env_file(env, ["GEMINI_API_KEY"]) == []
