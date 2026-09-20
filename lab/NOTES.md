@@ -866,3 +866,32 @@ What this says, without spin:
    scores (interim 0.805 against 0.629 here) would then be the part that stands.
 BRISQUE / NIQE / CLIP-IQA were not added: the BRISQUE weights' upstream license is unclear, no permissively licensed
 NIQE was found, and CLIP-IQA proper fails our weights rule (`docs/paper/COMPARABLE_SYSTEMS.md`).
+
+## 2026-09-20 12:00 Entry 26: can `score` work out of the box? Two label-free calibrations, registered before they are run
+
+**Why.** The owner's question: Jev's point is that it needs no per-task fitting; does ours? For yes/no and choice,
+yes (v0 results). For `score`, no: the zero-label readout is about 0.57 exact on the lab scales (0.97 within one level)
+and the 0.857 to 0.867 numbers need about 32 labels per rubric. Two ways to close that gap with ZERO labels for the
+target rubric:
+
+**BC, batch calibration from unlabeled images.** For each member readout, subtract from every level logit its mean over
+a pool of UNLABELED images of the target domain (variant BCz: also divide by its standard deviation over the pool), then
+average the members and take the softmax. Removes systematic digit / position / middle-level bias; knows nothing about
+levels. Assumption stated up front: the unlabeled pool is not wildly unbalanced across levels.
+- Dev (lab calibration split only): pool = first half of the split with its labels thrown away, judged on the second
+  half. Choose between BC and BCz and check pool sizes 16 / 32 / 64 / 250 and an unbalanced pool (70% of the pool from
+  one level, for each level in turn).
+- Test, once, with the variant chosen on dev: pool = the 500 calibration images without labels, scored on the 500 test
+  images, next to zero-label raw (0.57) and the 32-label fit (0.856).
+- H19: BC lifts zero-label accuracy on the lab test split to at least 0.70; with a 70%-one-level pool it keeps at least
+  half of that gain on average.
+
+**LORO, a universal map from other rubrics (leave one rubric out).** On the 23 severity distortions of KADID-10k (same
+question template, same five level words): fit ONE matrix map on the pooled calibration-reference items of the other
+22 distortions and apply it unchanged to the held-out distortion's test-reference items. Zero labels and zero images
+from the target rubric. Compared with: raw (0 labels), BC (unlabeled pool = that distortion's calibration images),
+LORO + BC, and the per-rubric fit (205 labels). Repeated on `distort25` when it is collected.
+- H20: LORO beats raw by at least 5 points of mean accuracy and lands within 8 points of the per-rubric fit; LORO + BC is
+  the best zero-label row.
+If H19 or H20 holds, the harness gets a documented zero-label mode for `score` (BC needs only unlabeled images, which
+every user has); if neither holds, the honest statement stays "ratings need about 32 labels per rubric".
