@@ -1,7 +1,7 @@
 .venv/
 .cache/
-runs/
-logs/
+/runs/
+/logs/
 gold/
 .env
 __pycache__/

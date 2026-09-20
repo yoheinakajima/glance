@@ -1,0 +1,872 @@
+{
+  "summary": {
+    "cumulative": {
+      "mean_cv_nll": 0.54644187358614,
+      "mean_cv_accuracy": 0.7564,
+      "forward_passes": 3
+    },
+    "digits": {
+      "mean_cv_nll": 0.455842662406582,
+      "mean_cv_accuracy": 0.8168,
+      "forward_passes": 1
+    },
+    "ens2(digits+zoom_digits)": {
+      "mean_cv_nll": 0.34403678735194954,
+      "mean_cv_accuracy": 0.8572000000000001,
+      "forward_passes": 2
+    },
+    "ens3(independent+digits+zoom_digits)": {
+      "mean_cv_nll": 0.34119261066655404,
+      "mean_cv_accuracy": 0.8588000000000001,
+      "forward_passes": 6
+    },
+    "ens4(independent+zoom_digits)": {
+      "mean_cv_nll": 0.3537591554444945,
+      "mean_cv_accuracy": 0.8496,
+      "forward_passes": 5
+    },
+    "ens5(all five)": {
+      "mean_cv_nll": 0.32267250792683405,
+      "mean_cv_accuracy": 0.866,
+      "forward_passes": 12
+    },
+    "independent": {
+      "mean_cv_nll": 0.48457490785074364,
+      "mean_cv_accuracy": 0.806,
+      "forward_passes": 4
+    },
+    "zoom_cumulative": {
+      "mean_cv_nll": 0.47671650123250087,
+      "mean_cv_accuracy": 0.7847999999999999,
+      "forward_passes": 3
+    },
+    "zoom_digits": {
+      "mean_cv_nll": 0.3831555189298624,
+      "mean_cv_accuracy": 0.8412000000000001,
+      "forward_passes": 1
+    }
+  },
+  "per_scale": {
+    "cumulative": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.4850440680127111,
+        "cv_accuracy": 0.806,
+        "all": {
+          "raw": {
+            "cv_nll": 9.682273892909434,
+            "cv_accuracy": 0.502
+          },
+          "platt/threshold": {
+            "cv_nll": 0.7981997681999975,
+            "cv_accuracy": 0.746
+          },
+          "matrix": {
+            "cv_nll": 0.4850440680127111,
+            "cv_accuracy": 0.806
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.37265146025352086,
+        "cv_accuracy": 0.826,
+        "all": {
+          "raw": {
+            "cv_nll": 7.154046597131191,
+            "cv_accuracy": 0.504
+          },
+          "platt/threshold": {
+            "cv_nll": 0.41405137103489503,
+            "cv_accuracy": 0.886
+          },
+          "matrix": {
+            "cv_nll": 0.37265146025352086,
+            "cv_accuracy": 0.826
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "platt/threshold",
+        "cv_nll": 0.8254789336766758,
+        "cv_accuracy": 0.586,
+        "all": {
+          "raw": {
+            "cv_nll": 2.803869449087319,
+            "cv_accuracy": 0.48
+          },
+          "platt/threshold": {
+            "cv_nll": 0.8254789336766758,
+            "cv_accuracy": 0.586
+          },
+          "matrix": {
+            "cv_nll": 0.8352396789869222,
+            "cv_accuracy": 0.596
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "platt/threshold",
+        "cv_nll": 0.40652885788917403,
+        "cv_accuracy": 0.836,
+        "all": {
+          "raw": {
+            "cv_nll": 3.1835969365724597,
+            "cv_accuracy": 0.56
+          },
+          "platt/threshold": {
+            "cv_nll": 0.40652885788917403,
+            "cv_accuracy": 0.836
+          },
+          "matrix": {
+            "cv_nll": 0.5483146160470929,
+            "cv_accuracy": 0.726
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "platt/threshold",
+        "cv_nll": 0.6425060480986184,
+        "cv_accuracy": 0.728,
+        "all": {
+          "raw": {
+            "cv_nll": 9.337615694747186,
+            "cv_accuracy": 0.488
+          },
+          "platt/threshold": {
+            "cv_nll": 0.6425060480986184,
+            "cv_accuracy": 0.728
+          },
+          "matrix": {
+            "cv_nll": 0.7247385594340684,
+            "cv_accuracy": 0.708
+          }
+        }
+      }
+    },
+    "digits": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.37529828573811747,
+        "cv_accuracy": 0.848,
+        "all": {
+          "raw": {
+            "cv_nll": 4.720661955803254,
+            "cv_accuracy": 0.46
+          },
+          "T": {
+            "cv_nll": 1.0470808886359075,
+            "cv_accuracy": 0.46
+          },
+          "bias+T": {
+            "cv_nll": 0.8309824154243296,
+            "cv_accuracy": 0.624
+          },
+          "matrix": {
+            "cv_nll": 0.37529828573811747,
+            "cv_accuracy": 0.848
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.28021484817597925,
+        "cv_accuracy": 0.896,
+        "all": {
+          "raw": {
+            "cv_nll": 1.904344658791812,
+            "cv_accuracy": 0.53
+          },
+          "T": {
+            "cv_nll": 0.8254916861079847,
+            "cv_accuracy": 0.53
+          },
+          "bias+T": {
+            "cv_nll": 0.40517917434146594,
+            "cv_accuracy": 0.87
+          },
+          "matrix": {
+            "cv_nll": 0.28021484817597925,
+            "cv_accuracy": 0.896
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.7412092285299066,
+        "cv_accuracy": 0.656,
+        "all": {
+          "raw": {
+            "cv_nll": 4.665857727385484,
+            "cv_accuracy": 0.386
+          },
+          "T": {
+            "cv_nll": 1.173740886384938,
+            "cv_accuracy": 0.386
+          },
+          "bias+T": {
+            "cv_nll": 1.046855560182258,
+            "cv_accuracy": 0.56
+          },
+          "matrix": {
+            "cv_nll": 0.7412092285299066,
+            "cv_accuracy": 0.656
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.436994952842476,
+        "cv_accuracy": 0.82,
+        "all": {
+          "raw": {
+            "cv_nll": 1.0264429452904178,
+            "cv_accuracy": 0.686
+          },
+          "T": {
+            "cv_nll": 0.6200229684339641,
+            "cv_accuracy": 0.686
+          },
+          "bias+T": {
+            "cv_nll": 0.5417632860152237,
+            "cv_accuracy": 0.818
+          },
+          "matrix": {
+            "cv_nll": 0.436994952842476,
+            "cv_accuracy": 0.82
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.44549599674643114,
+        "cv_accuracy": 0.864,
+        "all": {
+          "raw": {
+            "cv_nll": 1.7636768562152816,
+            "cv_accuracy": 0.552
+          },
+          "T": {
+            "cv_nll": 0.8717642165604971,
+            "cv_accuracy": 0.552
+          },
+          "bias+T": {
+            "cv_nll": 0.5845353510447386,
+            "cv_accuracy": 0.83
+          },
+          "matrix": {
+            "cv_nll": 0.44549599674643114,
+            "cv_accuracy": 0.864
+          }
+        }
+      }
+    },
+    "ens2(digits+zoom_digits)": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.28279715777640724,
+        "cv_accuracy": 0.874,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.28279715777640724,
+            "cv_accuracy": 0.874
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.21574431941414488,
+        "cv_accuracy": 0.916,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.21574431941414488,
+            "cv_accuracy": 0.916
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.5219868889639762,
+        "cv_accuracy": 0.77,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.5219868889639762,
+            "cv_accuracy": 0.77
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.3664712906274724,
+        "cv_accuracy": 0.838,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.3664712906274724,
+            "cv_accuracy": 0.838
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.333184279977747,
+        "cv_accuracy": 0.888,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.333184279977747,
+            "cv_accuracy": 0.888
+          }
+        }
+      }
+    },
+    "ens3(independent+digits+zoom_digits)": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.2669238386603838,
+        "cv_accuracy": 0.882,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.2669238386603838,
+            "cv_accuracy": 0.882
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.19443163224852011,
+        "cv_accuracy": 0.926,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.19443163224852011,
+            "cv_accuracy": 0.926
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.5367414834563047,
+        "cv_accuracy": 0.754,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.5367414834563047,
+            "cv_accuracy": 0.754
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.3677176024412606,
+        "cv_accuracy": 0.838,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.3677176024412606,
+            "cv_accuracy": 0.838
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.34014849652630086,
+        "cv_accuracy": 0.894,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.34014849652630086,
+            "cv_accuracy": 0.894
+          }
+        }
+      }
+    },
+    "ens4(independent+zoom_digits)": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.2804433473977167,
+        "cv_accuracy": 0.876,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.2804433473977167,
+            "cv_accuracy": 0.876
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.18402068878767278,
+        "cv_accuracy": 0.928,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.18402068878767278,
+            "cv_accuracy": 0.928
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.546196902660525,
+        "cv_accuracy": 0.758,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.546196902660525,
+            "cv_accuracy": 0.758
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.37055874874312056,
+        "cv_accuracy": 0.842,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.37055874874312056,
+            "cv_accuracy": 0.842
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.38757608963343737,
+        "cv_accuracy": 0.844,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.38757608963343737,
+            "cv_accuracy": 0.844
+          }
+        }
+      }
+    },
+    "ens5(all five)": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.24936290004246053,
+        "cv_accuracy": 0.888,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.24936290004246053,
+            "cv_accuracy": 0.888
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.18940895790738116,
+        "cv_accuracy": 0.93,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.18940895790738116,
+            "cv_accuracy": 0.93
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.5207221253585206,
+        "cv_accuracy": 0.762,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.5207221253585206,
+            "cv_accuracy": 0.762
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.3279306937870581,
+        "cv_accuracy": 0.874,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.3279306937870581,
+            "cv_accuracy": 0.874
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.3259378625387499,
+        "cv_accuracy": 0.876,
+        "all": {
+          "matrix": {
+            "cv_nll": 0.3259378625387499,
+            "cv_accuracy": 0.876
+          }
+        }
+      }
+    },
+    "independent": {
+      "blur": {
+        "n": 500,
+        "kind": "bias+T",
+        "cv_nll": 0.32263998506460334,
+        "cv_accuracy": 0.872,
+        "all": {
+          "raw": {
+            "cv_nll": 1.302136477327346,
+            "cv_accuracy": 0.612
+          },
+          "T": {
+            "cv_nll": 0.7619712284445184,
+            "cv_accuracy": 0.612
+          },
+          "bias+T": {
+            "cv_nll": 0.32263998506460334,
+            "cv_accuracy": 0.872
+          },
+          "matrix": {
+            "cv_nll": 0.3637227641112646,
+            "cv_accuracy": 0.858
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.2448362400181206,
+        "cv_accuracy": 0.92,
+        "all": {
+          "raw": {
+            "cv_nll": 1.4996726569378056,
+            "cv_accuracy": 0.544
+          },
+          "T": {
+            "cv_nll": 0.9697487751588724,
+            "cv_accuracy": 0.544
+          },
+          "bias+T": {
+            "cv_nll": 0.5746446135617932,
+            "cv_accuracy": 0.672
+          },
+          "matrix": {
+            "cv_nll": 0.2448362400181206,
+            "cv_accuracy": 0.92
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.7775792094086288,
+        "cv_accuracy": 0.626,
+        "all": {
+          "raw": {
+            "cv_nll": 2.8110159870786564,
+            "cv_accuracy": 0.344
+          },
+          "T": {
+            "cv_nll": 1.1806120132817368,
+            "cv_accuracy": 0.344
+          },
+          "bias+T": {
+            "cv_nll": 0.9753480647936543,
+            "cv_accuracy": 0.562
+          },
+          "matrix": {
+            "cv_nll": 0.7775792094086288,
+            "cv_accuracy": 0.626
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.4670608370486525,
+        "cv_accuracy": 0.79,
+        "all": {
+          "raw": {
+            "cv_nll": 1.53379881425881,
+            "cv_accuracy": 0.568
+          },
+          "T": {
+            "cv_nll": 0.8223464901918339,
+            "cv_accuracy": 0.568
+          },
+          "bias+T": {
+            "cv_nll": 0.5710595117823675,
+            "cv_accuracy": 0.752
+          },
+          "matrix": {
+            "cv_nll": 0.4670608370486525,
+            "cv_accuracy": 0.79
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "bias+T",
+        "cv_nll": 0.6107582677137134,
+        "cv_accuracy": 0.822,
+        "all": {
+          "raw": {
+            "cv_nll": 2.992823553979311,
+            "cv_accuracy": 0.496
+          },
+          "T": {
+            "cv_nll": 1.209426072945657,
+            "cv_accuracy": 0.496
+          },
+          "bias+T": {
+            "cv_nll": 0.6107582677137134,
+            "cv_accuracy": 0.822
+          },
+          "matrix": {
+            "cv_nll": 0.6484907581004622,
+            "cv_accuracy": 0.772
+          }
+        }
+      }
+    },
+    "zoom_cumulative": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.5060727463516551,
+        "cv_accuracy": 0.766,
+        "all": {
+          "raw": {
+            "cv_nll": 9.281360295706298,
+            "cv_accuracy": 0.492
+          },
+          "platt/threshold": {
+            "cv_nll": 0.6436718032333217,
+            "cv_accuracy": 0.816
+          },
+          "matrix": {
+            "cv_nll": 0.5060727463516551,
+            "cv_accuracy": 0.766
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "platt/threshold",
+        "cv_nll": 0.25162068667108567,
+        "cv_accuracy": 0.906,
+        "all": {
+          "raw": {
+            "cv_nll": 7.3478797346592115,
+            "cv_accuracy": 0.514
+          },
+          "platt/threshold": {
+            "cv_nll": 0.25162068667108567,
+            "cv_accuracy": 0.906
+          },
+          "matrix": {
+            "cv_nll": 0.3305217757170003,
+            "cv_accuracy": 0.85
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.6173079870695608,
+        "cv_accuracy": 0.71,
+        "all": {
+          "raw": {
+            "cv_nll": 1.6936196027637633,
+            "cv_accuracy": 0.594
+          },
+          "platt/threshold": {
+            "cv_nll": 0.6815531325616696,
+            "cv_accuracy": 0.694
+          },
+          "matrix": {
+            "cv_nll": 0.6173079870695608,
+            "cv_accuracy": 0.71
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "platt/threshold",
+        "cv_nll": 0.34758394710014895,
+        "cv_accuracy": 0.848,
+        "all": {
+          "raw": {
+            "cv_nll": 6.168982045043919,
+            "cv_accuracy": 0.518
+          },
+          "platt/threshold": {
+            "cv_nll": 0.34758394710014895,
+            "cv_accuracy": 0.848
+          },
+          "matrix": {
+            "cv_nll": 0.4070234353413839,
+            "cv_accuracy": 0.84
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.660997138970054,
+        "cv_accuracy": 0.694,
+        "all": {
+          "raw": {
+            "cv_nll": 10.544771670281774,
+            "cv_accuracy": 0.418
+          },
+          "platt/threshold": {
+            "cv_nll": 0.7345246411543582,
+            "cv_accuracy": 0.68
+          },
+          "matrix": {
+            "cv_nll": 0.660997138970054,
+            "cv_accuracy": 0.694
+          }
+        }
+      }
+    },
+    "zoom_digits": {
+      "blur": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.3212714813211979,
+        "cv_accuracy": 0.868,
+        "all": {
+          "raw": {
+            "cv_nll": 6.189224403171884,
+            "cv_accuracy": 0.29
+          },
+          "T": {
+            "cv_nll": 1.2445658875671257,
+            "cv_accuracy": 0.29
+          },
+          "bias+T": {
+            "cv_nll": 1.0296135924511285,
+            "cv_accuracy": 0.496
+          },
+          "matrix": {
+            "cv_nll": 0.3212714813211979,
+            "cv_accuracy": 0.868
+          }
+        }
+      },
+      "exposure": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.21883410847529453,
+        "cv_accuracy": 0.912,
+        "all": {
+          "raw": {
+            "cv_nll": 1.3949982760689221,
+            "cv_accuracy": 0.682
+          },
+          "T": {
+            "cv_nll": 0.7918148247132801,
+            "cv_accuracy": 0.682
+          },
+          "bias+T": {
+            "cv_nll": 0.23945408737714355,
+            "cv_accuracy": 0.906
+          },
+          "matrix": {
+            "cv_nll": 0.21883410847529453,
+            "cv_accuracy": 0.912
+          }
+        }
+      },
+      "jpeg": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.5486564321786441,
+        "cv_accuracy": 0.772,
+        "all": {
+          "raw": {
+            "cv_nll": 3.82296498974279,
+            "cv_accuracy": 0.342
+          },
+          "T": {
+            "cv_nll": 1.192762413634667,
+            "cv_accuracy": 0.342
+          },
+          "bias+T": {
+            "cv_nll": 0.7262973799651454,
+            "cv_accuracy": 0.712
+          },
+          "matrix": {
+            "cv_nll": 0.5486564321786441,
+            "cv_accuracy": 0.772
+          }
+        }
+      },
+      "noise": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.374359820244658,
+        "cv_accuracy": 0.842,
+        "all": {
+          "raw": {
+            "cv_nll": 2.2490575070072154,
+            "cv_accuracy": 0.442
+          },
+          "T": {
+            "cv_nll": 0.9390956082882137,
+            "cv_accuracy": 0.442
+          },
+          "bias+T": {
+            "cv_nll": 0.43898590929293013,
+            "cv_accuracy": 0.83
+          },
+          "matrix": {
+            "cv_nll": 0.374359820244658,
+            "cv_accuracy": 0.842
+          }
+        }
+      },
+      "resolution": {
+        "n": 500,
+        "kind": "matrix",
+        "cv_nll": 0.45265575242951706,
+        "cv_accuracy": 0.812,
+        "all": {
+          "raw": {
+            "cv_nll": 3.0222121072713404,
+            "cv_accuracy": 0.592
+          },
+          "T": {
+            "cv_nll": 1.2304562693834427,
+            "cv_accuracy": 0.592
+          },
+          "bias+T": {
+            "cv_nll": 0.8334661190818018,
+            "cv_accuracy": 0.662
+          },
+          "matrix": {
+            "cv_nll": 0.45265575242951706,
+            "cv_accuracy": 0.812
+          }
+        }
+      }
+    }
+  },
+  "winner_overall": "ens5(all five)",
+  "winner_budget": "ens2(digits+zoom_digits)",
+  "budget": 4
+}

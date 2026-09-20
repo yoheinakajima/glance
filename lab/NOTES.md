@@ -291,3 +291,24 @@ floors, after the matrix-calibration rescale of entry 8.
 **Reference-path check started** (collection only): the first 100 test items per scale are being re-collected
 without the prefix cache into `lab/runs/reference_check.jsonl` for all seven readouts; compared with the cached
 logits by `glance/lab/refcheck.py` once the winner is fixed.
+
+## 2026-09-20 05:10 Entry 11: final candidate list, fixed before stage B data is analyzed
+
+Reference-path collection finished at 05:08 (3,500 rows: 7 readouts x the first 100 test items of each scale,
+63.6 min while sharing the GPU with stage B). It will not be compared or scored until the winner is fixed.
+
+Candidates for the final selection (run once, when stage B is complete; `glance.lab.select`, calibration split only):
+
+| Name | Readouts | Forward passes |
+| --- | --- | --- |
+| seven single readouts | `independent`, `cumulative`, `digits`, `zoom_cumulative`, `zoom_digits`, `digitsrev`, `zoom_digitsrev` | 4, 3, 1, 3, 1, 1, 1 |
+| `ens2` | digits + zoom_digits | 2 |
+| `ens2r` | zoom_digits + zoom_digitsrev | 2 |
+| `ens4d` | digits + zoom_digits + digitsrev + zoom_digitsrev | 4 |
+| `ens3` | independent + digits + zoom_digits | 6 |
+| `ens5` | the five stage A readouts | 12 |
+| `ens7` | all seven readouts | 14 |
+
+If stage C (four extra `zoom_digits` crops) completes, two more candidates are added in a second, separately reported
+selection: `zoomx5` (the five crops, 5 passes) and `ens7+crops` (18 passes). Winners: best mean cross-validated NLL at
+any cost, and best within 4 forward passes.
