@@ -949,3 +949,14 @@ order in the chunk round, four rotations in the final. Evaluated on the v0 test 
 instead of 37 and 101. Known risk, stated now: the true label can lose inside its chunk, and the result is not
 order-invariant (the seed fixes the order; we report the spread over 3 seeds on `pets37`).
 Also: Brier score is added to `glance fit`'s report and to the benchmark reports (a proper scoring rule next to NLL).
+
+## 2026-09-20 12:52 Entry 27b: E7 result (adaptive compute), scored once
+
+`tools/adaptive_compute.py`, `results/lab/adaptive_compute.{json,md}`. Threshold from the calibration split
+(out-of-fold): escalate when `fast2`'s confidence is below 0.55 (dev: 26.6% escalated, 0.870 against 0.875 for
+always-`ens4d`). Test split: always `fast2` 0.833; **adaptive 0.863 with 28.4% of images escalated, 2.57 forward passes
+on average**; always `ens4d` 0.867. Escalation per scale: blur 18%, exposure 11%, jpeg 69%, noise 22%, resolution 22%:
+the rule spends the magnified-crop passes where they matter (compression artifacts).
+**H21 narrowly NOT met:** 88% of the gain kept (registered: at least 90%), accuracy 0.863 (registered: at least 0.864).
+Still the better default on cost: 36% fewer forward passes for 0.4 points. Not yet in the harness; it needs the scorer to
+apply the first-stage map before deciding on the second stage.
