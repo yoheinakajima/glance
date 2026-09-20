@@ -1,0 +1,974 @@
+{
+  "run_id": "20260920T205633Z-99f822",
+  "units": {
+    "fresh_choice|siglip|independent": {
+      "suite": "fresh_choice",
+      "backend": "siglip",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 65,
+      "n_calibration": 66,
+      "failures": {
+        "failed": 0,
+        "attempted": 131,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 65,
+        "accuracy": 0.8307692307692308,
+        "nll": 0.761299857330329,
+        "brier": 0.27571359721315386,
+        "macro_f1": 0.8151385651385651,
+        "ece": 0.1123350769230769,
+        "ece_floor": 0.03886348953846153,
+        "selective_accuracy": {
+          "50": 0.96875,
+          "80": 0.9230769230769231,
+          "90": 0.8620689655172413,
+          "100": 0.8307692307692308
+        }
+      },
+      "calibrated": {
+        "n": 65,
+        "accuracy": 0.8307692307692308,
+        "nll": 0.6202938852052607,
+        "brier": 0.25630587819049283,
+        "macro_f1": 0.8151385651385651,
+        "ece": 0.06259588473898602,
+        "ece_floor": 0.08363470610002759,
+        "selective_accuracy": {
+          "50": 0.96875,
+          "80": 0.9230769230769231,
+          "90": 0.8620689655172413,
+          "100": 0.8307692307692308
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 65,
+        "accuracy": 0.8307692307692308,
+        "nll": 0.6202938852052607,
+        "brier": 0.25630587819049283,
+        "macro_f1": 0.8151385651385651,
+        "ece": 0.06259588473898602,
+        "ece_floor": 0.08363470610002759,
+        "selective_accuracy": {
+          "50": 0.96875,
+          "80": 0.9230769230769231,
+          "90": 0.8620689655172413,
+          "100": 0.8307692307692308
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 48.31604193896055,
+          "p95_ms": 106.73497896641493,
+          "n": 131
+        },
+        "statements_per_second": 204.77774257441476,
+        "mean_image_tokens": 256.0,
+        "off_mass_mean": null,
+        "off_mass_p95": null
+      },
+      "confusions": [
+        {
+          "true": "car",
+          "predicted": "church",
+          "count": 4
+        },
+        {
+          "true": "bird",
+          "predicted": "mountain",
+          "count": 2
+        },
+        {
+          "true": "car",
+          "predicted": "bridge",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "horse_63c57f91",
+          "image_path": ".cache/eval_images/fresh_choice/horse_63c57f91.jpg",
+          "true": "horse",
+          "predicted": "church",
+          "confidence": 0.9279208690072601,
+          "top_probability": 0.9720807049242014
+        },
+        {
+          "item_id": "car_cae03a13",
+          "image_path": ".cache/eval_images/fresh_choice/car_cae03a13.jpg",
+          "true": "car",
+          "predicted": "mountain",
+          "confidence": 0.8284642323360044,
+          "top_probability": 0.9159923541804381
+        },
+        {
+          "item_id": "mountain_8d9e77b6",
+          "image_path": ".cache/eval_images/fresh_choice/mountain_8d9e77b6.jpg",
+          "true": "mountain",
+          "predicted": "church",
+          "confidence": 0.8122743545433602,
+          "top_probability": 0.9105759639034404
+        },
+        {
+          "item_id": "car_91c7ea3d",
+          "image_path": ".cache/eval_images/fresh_choice/car_91c7ea3d.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.7029065396129386,
+          "top_probability": 0.8333792053972133
+        },
+        {
+          "item_id": "car_06483af2",
+          "image_path": ".cache/eval_images/fresh_choice/car_06483af2.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.5991455302946886,
+          "top_probability": 0.7667483750772752
+        },
+        {
+          "item_id": "bird_086777f1",
+          "image_path": ".cache/eval_images/fresh_choice/bird_086777f1.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.5777636447149879,
+          "top_probability": 0.713005788944192
+        },
+        {
+          "item_id": "bird_1f941b23",
+          "image_path": ".cache/eval_images/fresh_choice/bird_1f941b23.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.5422603007872688,
+          "top_probability": 0.6917104504578534
+        },
+        {
+          "item_id": "dog_cd61bbf7",
+          "image_path": ".cache/eval_images/fresh_choice/dog_cd61bbf7.jpg",
+          "true": "dog",
+          "predicted": "cat",
+          "confidence": 0.5222092838414417,
+          "top_probability": 0.4993300656958958
+        },
+        {
+          "item_id": "car_bcf7c0f0",
+          "image_path": ".cache/eval_images/fresh_choice/car_bcf7c0f0.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.4816343208362016,
+          "top_probability": 0.6696679891305196
+        },
+        {
+          "item_id": "car_c8c8d773",
+          "image_path": ".cache/eval_images/fresh_choice/car_c8c8d773.jpg",
+          "true": "car",
+          "predicted": "bridge",
+          "confidence": 0.3591939034257695,
+          "top_probability": 0.3286755607188603
+        },
+        {
+          "item_id": "car_4afdcf5c",
+          "image_path": ".cache/eval_images/fresh_choice/car_4afdcf5c.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.18784771356662822,
+          "top_probability": 0.31117574660697017
+        }
+      ]
+    },
+    "fresh_choice|vlm|independent": {
+      "suite": "fresh_choice",
+      "backend": "vlm",
+      "method": "independent",
+      "type": "choice",
+      "n_test": 65,
+      "n_calibration": 66,
+      "failures": {
+        "failed": 0,
+        "attempted": 131,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 1.9325920902118319,
+        "brier": 0.23993788254946152,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.10931824615384617,
+        "ece_floor": 0.01880623061538461,
+        "selective_accuracy": {
+          "50": 0.9375,
+          "80": 0.8846153846153846,
+          "90": 0.896551724137931,
+          "100": 0.8615384615384616
+        }
+      },
+      "calibrated": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 0.6350477969539553,
+        "brier": 0.26333849885477373,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.1518936245532494,
+        "ece_floor": 0.04868135308732693,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.8846153846153846,
+          "90": 0.8793103448275862,
+          "100": 0.8615384615384616
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 0.6350477969539553,
+        "brier": 0.26333849885477373,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.1518936245532494,
+        "ece_floor": 0.04868135308732693,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.8846153846153846,
+          "90": 0.8793103448275862,
+          "100": 0.8615384615384616
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 2497.54691706039,
+          "p95_ms": 2685.823499923572,
+          "n": 131
+        },
+        "statements_per_second": 5.1996890778637175,
+        "mean_image_tokens": 741.6870229007634,
+        "off_mass_mean": 2.261760540674252e-08,
+        "off_mass_p95": 0.0
+      },
+      "confusions": [
+        {
+          "true": "car",
+          "predicted": "church",
+          "count": 2
+        },
+        {
+          "true": "bird",
+          "predicted": "mountain",
+          "count": 2
+        },
+        {
+          "true": "car",
+          "predicted": "bridge",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "bird_1f941b23",
+          "image_path": ".cache/eval_images/fresh_choice/bird_1f941b23.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.9571768010906495,
+          "top_probability": 0.9849844336930783
+        },
+        {
+          "item_id": "car_cae03a13",
+          "image_path": ".cache/eval_images/fresh_choice/car_cae03a13.jpg",
+          "true": "car",
+          "predicted": "mountain",
+          "confidence": 0.9358494240414019,
+          "top_probability": 0.9772437303566999
+        },
+        {
+          "item_id": "bird_086777f1",
+          "image_path": ".cache/eval_images/fresh_choice/bird_086777f1.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.8439792349705261,
+          "top_probability": 0.9299481328244042
+        },
+        {
+          "item_id": "car_c8c8d773",
+          "image_path": ".cache/eval_images/fresh_choice/car_c8c8d773.jpg",
+          "true": "car",
+          "predicted": "bridge",
+          "confidence": 0.8172467823130615,
+          "top_probability": 0.9210251037256297
+        },
+        {
+          "item_id": "church_12849fb8",
+          "image_path": ".cache/eval_images/fresh_choice/church_12849fb8.jpg",
+          "true": "church",
+          "predicted": "car",
+          "confidence": 0.6418800289119779,
+          "top_probability": 0.6215391303721026
+        },
+        {
+          "item_id": "horse_63c57f91",
+          "image_path": ".cache/eval_images/fresh_choice/horse_63c57f91.jpg",
+          "true": "horse",
+          "predicted": "church",
+          "confidence": 0.6010550097255716,
+          "top_probability": 0.7927998981426094
+        },
+        {
+          "item_id": "mountain_8d9e77b6",
+          "image_path": ".cache/eval_images/fresh_choice/mountain_8d9e77b6.jpg",
+          "true": "mountain",
+          "predicted": "church",
+          "confidence": 0.4945128131628581,
+          "top_probability": 0.7104889672151881
+        },
+        {
+          "item_id": "car_bcf7c0f0",
+          "image_path": ".cache/eval_images/fresh_choice/car_bcf7c0f0.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.030446621974729138,
+          "top_probability": 0.1531498962606301
+        },
+        {
+          "item_id": "car_06483af2",
+          "image_path": ".cache/eval_images/fresh_choice/car_06483af2.jpg",
+          "true": "car",
+          "predicted": "church",
+          "confidence": 0.02861497763235199,
+          "top_probability": 0.1478294843626779
+        }
+      ]
+    },
+    "fresh_choice|vlm|letter": {
+      "suite": "fresh_choice",
+      "backend": "vlm",
+      "method": "letter",
+      "type": "choice",
+      "n_test": 65,
+      "n_calibration": 66,
+      "failures": {
+        "failed": 0,
+        "attempted": 131,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 65,
+        "accuracy": 0.8769230769230769,
+        "nll": 2.3034168102989487,
+        "brier": 0.23917834864792306,
+        "macro_f1": 0.8694261892791305,
+        "ece": 0.11493987692307692,
+        "ece_floor": 0.008773739076923087,
+        "selective_accuracy": {
+          "50": 0.96875,
+          "80": 0.9423076923076923,
+          "90": 0.9310344827586207,
+          "100": 0.8769230769230769
+        }
+      },
+      "calibrated": {
+        "n": 65,
+        "accuracy": 0.8769230769230769,
+        "nll": 0.46907242936384874,
+        "brier": 0.19602811719305263,
+        "macro_f1": 0.8694261892791305,
+        "ece": 0.0840929333999593,
+        "ece_floor": 0.08843490388114315,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9615384615384616,
+          "90": 0.9310344827586207,
+          "100": 0.8769230769230769
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 65,
+        "accuracy": 0.8769230769230769,
+        "nll": 0.46907242936384874,
+        "brier": 0.19602811719305263,
+        "macro_f1": 0.8694261892791305,
+        "ece": 0.0840929333999593,
+        "ece_floor": 0.08843490388114315,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9615384615384616,
+          "90": 0.9310344827586207,
+          "100": 0.8769230769230769
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 2319.561165990308,
+          "p95_ms": 3172.259083483368,
+          "n": 131
+        },
+        "statements_per_second": 1.6524641114286007,
+        "mean_image_tokens": 741.6870229007634,
+        "off_mass_mean": 2.9894926469013878e-05,
+        "off_mass_p95": 1.3853884185732707e-06
+      },
+      "confusions": [
+        {
+          "true": "bird",
+          "predicted": "mountain",
+          "count": 2
+        },
+        {
+          "true": "car",
+          "predicted": "bridge",
+          "count": 1
+        },
+        {
+          "true": "mountain",
+          "predicted": "church",
+          "count": 1
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "car_cae03a13",
+          "image_path": ".cache/eval_images/fresh_choice/car_cae03a13.jpg",
+          "true": "car",
+          "predicted": "mountain",
+          "confidence": 0.7730073222728175,
+          "top_probability": 0.8974310861983096
+        },
+        {
+          "item_id": "bird_1f941b23",
+          "image_path": ".cache/eval_images/fresh_choice/bird_1f941b23.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.6544102478979846,
+          "top_probability": 0.8245102662720378
+        },
+        {
+          "item_id": "church_12849fb8",
+          "image_path": ".cache/eval_images/fresh_choice/church_12849fb8.jpg",
+          "true": "church",
+          "predicted": "car",
+          "confidence": 0.6523360894442451,
+          "top_probability": 0.7992957044477129
+        },
+        {
+          "item_id": "horse_63c57f91",
+          "image_path": ".cache/eval_images/fresh_choice/horse_63c57f91.jpg",
+          "true": "horse",
+          "predicted": "church",
+          "confidence": 0.6274286491537704,
+          "top_probability": 0.8095617791861132
+        },
+        {
+          "item_id": "beach_c0db1c91",
+          "image_path": ".cache/eval_images/fresh_choice/beach_c0db1c91.jpg",
+          "true": "beach",
+          "predicted": "car",
+          "confidence": 0.6045771241913918,
+          "top_probability": 0.7903952689605201
+        },
+        {
+          "item_id": "bird_086777f1",
+          "image_path": ".cache/eval_images/fresh_choice/bird_086777f1.jpg",
+          "true": "bird",
+          "predicted": "mountain",
+          "confidence": 0.5818792208002276,
+          "top_probability": 0.7732648588628704
+        },
+        {
+          "item_id": "mountain_8d9e77b6",
+          "image_path": ".cache/eval_images/fresh_choice/mountain_8d9e77b6.jpg",
+          "true": "mountain",
+          "predicted": "church",
+          "confidence": 0.5740411847971515,
+          "top_probability": 0.77259620490238
+        },
+        {
+          "item_id": "car_c8c8d773",
+          "image_path": ".cache/eval_images/fresh_choice/car_c8c8d773.jpg",
+          "true": "car",
+          "predicted": "bridge",
+          "confidence": 0.36156380929069765,
+          "top_probability": 0.43027814257066727
+        }
+      ]
+    },
+    "fresh_yesno|vlm|statement": {
+      "suite": "fresh_yesno",
+      "backend": "vlm",
+      "method": "statement",
+      "type": "noul",
+      "n_test": 131,
+      "n_calibration": 131,
+      "failures": {
+        "failed": 0,
+        "attempted": 262,
+        "rate": 0.0
+      },
+      "valid": true,
+      "raw": {
+        "n": 131,
+        "accuracy": 0.9312977099236641,
+        "auroc": 0.9632867132867133,
+        "nll": 0.9611905072353574,
+        "brier": 0.060198463770229006,
+        "ece": 0.056516519083969464,
+        "ece_floor": 0.007705086412213734,
+        "selective_accuracy": {
+          "50": 0.9696969696969697,
+          "80": 0.9619047619047619,
+          "90": 0.9661016949152542,
+          "100": 0.9312977099236641
+        }
+      },
+      "calibrated": {
+        "n": 131,
+        "accuracy": 0.9312977099236641,
+        "auroc": 0.9783216783216783,
+        "nll": 0.1811440815905292,
+        "brier": 0.04873940271406019,
+        "ece": 0.059635480822009146,
+        "ece_floor": 0.05334283537508733,
+        "selective_accuracy": {
+          "50": 0.9848484848484849,
+          "80": 0.9809523809523809,
+          "90": 0.9661016949152542,
+          "100": 0.9312977099236641
+        }
+      },
+      "calibrated_suite_fit": {
+        "n": 131,
+        "accuracy": 0.9312977099236641,
+        "auroc": 0.9783216783216783,
+        "nll": 0.1811440815905292,
+        "brier": 0.04873940271406019,
+        "ece": 0.059635480822009146,
+        "ece_floor": 0.05334283537508733,
+        "selective_accuracy": {
+          "50": 0.9848484848484849,
+          "80": 0.9809523809523809,
+          "90": 0.9661016949152542,
+          "100": 0.9312977099236641
+        }
+      },
+      "throughput": {
+        "latency": {
+          "p50_ms": 1763.8324373401701,
+          "p95_ms": 2131.325474579353,
+          "n": 262
+        },
+        "statements_per_second": 0.5561517775447707,
+        "mean_image_tokens": 741.6870229007634,
+        "off_mass_mean": 7.14734937805267e-08,
+        "off_mass_p95": 7.586659701214193e-07
+      },
+      "confusions": [
+        {
+          "true": "yes",
+          "predicted": "no",
+          "count": 5
+        },
+        {
+          "true": "no",
+          "predicted": "yes",
+          "count": 4
+        }
+      ],
+      "top_errors": [
+        {
+          "item_id": "dog_5abeff59__dog",
+          "image_path": ".cache/eval_images/fresh_yesno/dog_5abeff59__dog.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.9445102618944824,
+          "top_probability": 0.9722551309472413
+        },
+        {
+          "item_id": "train_114bf7a0__mountain",
+          "image_path": ".cache/eval_images/fresh_yesno/train_114bf7a0__mountain.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.917893870321739,
+          "top_probability": 0.9589469351608695
+        },
+        {
+          "item_id": "bridge_fd860db6__bridge",
+          "image_path": ".cache/eval_images/fresh_yesno/bridge_fd860db6__bridge.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.9020451068496749,
+          "top_probability": 0.9510225534248374
+        },
+        {
+          "item_id": "flower_61225879__flower",
+          "image_path": ".cache/eval_images/fresh_yesno/flower_61225879__flower.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.8720571395466117,
+          "top_probability": 0.9360285697733058
+        },
+        {
+          "item_id": "beach_3db6bf61__beach",
+          "image_path": ".cache/eval_images/fresh_yesno/beach_3db6bf61__beach.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.3242322489473748,
+          "top_probability": 0.6621161244736874
+        },
+        {
+          "item_id": "bridge_1ddb4b4b__bridge",
+          "image_path": ".cache/eval_images/fresh_yesno/bridge_1ddb4b4b__bridge.jpg",
+          "true": "yes",
+          "predicted": "no",
+          "confidence": 0.2773911547046948,
+          "top_probability": 0.6386955773523474
+        },
+        {
+          "item_id": "dog_9e93ef7c__flower",
+          "image_path": ".cache/eval_images/fresh_yesno/dog_9e93ef7c__flower.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.27237966069248487,
+          "top_probability": 0.6361898303462424
+        },
+        {
+          "item_id": "bridge_4b995b67__train",
+          "image_path": ".cache/eval_images/fresh_yesno/bridge_4b995b67__train.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.16490592767131318,
+          "top_probability": 0.5824529638356566
+        },
+        {
+          "item_id": "bridge_4aaddbe2__car",
+          "image_path": ".cache/eval_images/fresh_yesno/bridge_4aaddbe2__car.jpg",
+          "true": "no",
+          "predicted": "yes",
+          "confidence": 0.1227351931088334,
+          "top_probability": 0.5613675965544167
+        }
+      ]
+    }
+  },
+  "letter_vs_independent": {
+    "fresh_choice|vlm": {
+      "n": 65,
+      "options_letter": 13,
+      "options_full": 13,
+      "letter_raw": {
+        "n": 65,
+        "accuracy": 0.8769230769230769,
+        "nll": 2.3034168102989487,
+        "brier": 0.23917834864792306,
+        "macro_f1": 0.8694261892791305,
+        "ece": 0.11493987692307692,
+        "ece_floor": 0.008773739076923087,
+        "selective_accuracy": {
+          "50": 0.96875,
+          "80": 0.9423076923076923,
+          "90": 0.9310344827586207,
+          "100": 0.8769230769230769
+        }
+      },
+      "independent_same_options_raw": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 1.5119004800887699,
+        "brier": 0.23993782814988554,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.10931826431804917,
+        "ece_floor": 0.018806231682265123,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.8846153846153846,
+          "90": 0.896551724137931,
+          "100": 0.8615384615384616
+        }
+      },
+      "independent_full_raw": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 1.9325920902118319,
+        "brier": 0.23993788254946152,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.10931824615384617,
+        "ece_floor": 0.01880623061538461,
+        "selective_accuracy": {
+          "50": 0.9375,
+          "80": 0.8846153846153846,
+          "90": 0.896551724137931,
+          "100": 0.8615384615384616
+        }
+      },
+      "letter_latency": {
+        "p50_ms": 2319.561165990308,
+        "p95_ms": 2898.1601589359334,
+        "n": 65
+      },
+      "independent_latency": {
+        "p50_ms": 2498.7395838834345,
+        "p95_ms": 2655.624958127737,
+        "n": 65
+      },
+      "letter_calibrated": {
+        "n": 65,
+        "accuracy": 0.8769230769230769,
+        "nll": 0.46907242936384874,
+        "brier": 0.19602811719305263,
+        "macro_f1": 0.8694261892791305,
+        "ece": 0.0840929333999593,
+        "ece_floor": 0.08843490388114315,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.9615384615384616,
+          "90": 0.9310344827586207,
+          "100": 0.8769230769230769
+        }
+      },
+      "independent_full_calibrated": {
+        "n": 65,
+        "accuracy": 0.8615384615384616,
+        "nll": 0.6350477969539553,
+        "brier": 0.26333849885477373,
+        "macro_f1": 0.8573922422606634,
+        "ece": 0.1518936245532494,
+        "ece_floor": 0.04868135308732693,
+        "selective_accuracy": {
+          "50": 1.0,
+          "80": 0.8846153846153846,
+          "90": 0.8793103448275862,
+          "100": 0.8615384615384616
+        }
+      }
+    }
+  },
+  "baseline": {},
+  "permutation": {},
+  "latency": {},
+  "calibration": {
+    "cal_8edfd9": {
+      "key": {
+        "backend": "siglip",
+        "model": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": null
+      },
+      "version": "cal_8edfd9",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T205633Z-99f822",
+      "types": {
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 1.5096797153412838
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 0.6395358499106409,
+          "nll_after": 0.5537150311404834,
+          "ece_before": 0.0599582386828587,
+          "ece_after": 0.07046706331236023
+        }
+      },
+      "per_suite": {
+        "fresh_choice": {
+          "method": "temperature",
+          "params": {
+            "T": 1.5096797153412838
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 0.6395358499106409,
+          "nll_after": 0.5537150311404834,
+          "ece_before": 0.0599582386828587,
+          "ece_after": 0.07046706331236023
+        }
+      }
+    },
+    "cal_1d9418": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "independent",
+        "image_token_budget": 768
+      },
+      "version": "cal_1d9418",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T205633Z-99f822",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.18072915969891887,
+            "b": 0.30034117581445585
+          },
+          "n": 131,
+          "suite_ids": [
+            "fresh_yesno"
+          ],
+          "nll_before": 0.7386565169101619,
+          "nll_after": 0.19596717291319776,
+          "ece_before": 0.0656953022689775,
+          "ece_after": 0.04738573340487896
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.655328199134972
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 0.9906844533992343,
+          "nll_after": 0.48389020372452346,
+          "ece_before": 0.08663571253127295,
+          "ece_after": 0.08489331262655574
+        }
+      },
+      "per_suite": {
+        "fresh_choice": {
+          "method": "temperature",
+          "params": {
+            "T": 3.655328199134972
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 0.9906844533992343,
+          "nll_after": 0.48389020372452346,
+          "ece_before": 0.08663571253127295,
+          "ece_after": 0.08489331262655574
+        },
+        "fresh_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.18072915969891887,
+            "b": 0.30034117581445585
+          },
+          "n": 131,
+          "suite_ids": [
+            "fresh_yesno"
+          ],
+          "nll_before": 0.7386565169101619,
+          "nll_after": 0.19596717291319776,
+          "ece_before": 0.0656953022689775,
+          "ece_after": 0.04738573340487896
+        }
+      }
+    },
+    "cal_eac746": {
+      "key": {
+        "backend": "vlm",
+        "model": "Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17",
+        "prompt_version": "p1",
+        "choice_method": "letter",
+        "image_token_budget": 768
+      },
+      "version": "cal_eac746",
+      "fit_date": "2026-09-20",
+      "source_run": "20260920T205633Z-99f822",
+      "types": {
+        "noul": {
+          "method": "platt",
+          "params": {
+            "a": 0.18072915969891887,
+            "b": 0.30034117581445585
+          },
+          "n": 131,
+          "suite_ids": [
+            "fresh_yesno"
+          ],
+          "nll_before": 0.7386565169101619,
+          "nll_after": 0.19596717291319776,
+          "ece_before": 0.0656953022689775,
+          "ece_after": 0.04738573340487896
+        },
+        "choice": {
+          "method": "temperature",
+          "params": {
+            "T": 4.778518997410464
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 1.8255801164027894,
+          "nll_after": 0.4882175083284918,
+          "ece_before": 0.1056675059714801,
+          "ece_after": 0.09653317993677107
+        }
+      },
+      "per_suite": {
+        "fresh_choice": {
+          "method": "temperature",
+          "params": {
+            "T": 4.778518997410464
+          },
+          "n": 66,
+          "suite_ids": [
+            "fresh_choice"
+          ],
+          "nll_before": 1.8255801164027894,
+          "nll_after": 0.4882175083284918,
+          "ece_before": 0.1056675059714801,
+          "ece_after": 0.09653317993677107
+        },
+        "fresh_yesno": {
+          "method": "platt",
+          "params": {
+            "a": 0.18072915969891887,
+            "b": 0.30034117581445585
+          },
+          "n": 131,
+          "suite_ids": [
+            "fresh_yesno"
+          ],
+          "nll_before": 0.7386565169101619,
+          "nll_after": 0.19596717291319776,
+          "ece_before": 0.0656953022689775,
+          "ece_after": 0.04738573340487896
+        }
+      }
+    }
+  },
+  "go_no_go": [
+    {
+      "metric": "Accuracy gap vs frontier baseline",
+      "threshold": "<= 5 points, macro-averaged over suites",
+      "measured": "not measured (no frontier baseline run)",
+      "pass": null
+    },
+    {
+      "metric": "ECE after calibration",
+      "threshold": "<= 0.05 per suite (15 equal-mass bins)",
+      "measured": "worst 0.152 (fresh_choice, sampling floor 0.049); over threshold: fresh_choice, fresh_yesno",
+      "pass": false
+    },
+    {
+      "metric": "Selective accuracy at 80% coverage",
+      "threshold": ">= baseline full-coverage accuracy",
+      "measured": "0.933 local (macro); baseline not measured",
+      "pass": null
+    },
+    {
+      "metric": "Permutation invariance (choice)",
+      "threshold": "max probability shift <= 1e-3 (independent)",
+      "measured": "not measured",
+      "pass": null
+    },
+    {
+      "metric": "Latency, 1 image + 5 questions",
+      "threshold": "recorded; target <= 2000 ms (not a gate)",
+      "measured": "not measured",
+      "pass": "recorded"
+    }
+  ],
+  "verdict": "NO-GO"
+}

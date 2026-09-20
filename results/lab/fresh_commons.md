@@ -1,0 +1,25 @@
+# Out of the box on fresh real photos (taken after the models were released; labels from Commons 'depicts' statements)
+
+Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the same for every system: a 'depicts' tag means the thing APPEARS in the photo, not that it is the main subject, so the pick-one labels are noisier than the yes/no labels; a 'no' question can be wrong when the other object happens to be in frame.
+
+## Yes/no: "Is there a <class> in the photo?"
+
+| System | n | accuracy | on yes questions | on no questions |
+| --- | --- | --- | --- | --- |
+| vlm:statement | 262 | 0.931 [0.901, 0.962] | 0.908 | 0.954 |
+
+## Pick one of 13: "What is the main subject?"
+
+| System | n | accuracy |
+| --- | --- | --- |
+| vlm:independent | 131 | 0.885 [0.824, 0.939] |
+| vlm:letter | 131 | 0.885 [0.832, 0.939] |
+| siglip:independent | 131 | 0.855 [0.794, 0.908] |
+
+Per class (accuracy, photos):
+
+| System | beach | bicycle | bird | boat | bridge | car | cat | church | dog | flower | horse | mountain | train |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| vlm:independent | 0.92 (12) | 0.00 (1) | 0.71 (7) | 1.00 (12) | 0.92 (12) | 0.58 (12) | 1.00 (10) | 0.92 (12) | 0.92 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |
+| vlm:letter | 0.75 (12) | 0.00 (1) | 0.71 (7) | 1.00 (12) | 0.92 (12) | 0.75 (12) | 1.00 (10) | 0.92 (12) | 0.92 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |
+| siglip:independent | 0.83 (12) | 0.00 (1) | 0.57 (7) | 1.00 (12) | 1.00 (12) | 0.33 (12) | 1.00 (10) | 1.00 (12) | 0.83 (12) | 1.00 (12) | 0.60 (5) | 0.92 (12) | 1.00 (12) |

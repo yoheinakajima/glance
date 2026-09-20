@@ -1100,3 +1100,20 @@ of the rubric, at a small fraction of the cost per rating (entry 23). It does NO
 Opus got no examples, cannot be calibrated through a hard pick, and a few-shot prompt for it was not tried; these are
 synthetic single-factor scales with hand-written level texts; and with hundreds of labels classical features beat both
 (entry 25). GPT and Gemini runs are prepared (`...165949Z`, `...170146Z`); no rows yet.
+
+## 2026-09-20 14:16 Entry 30b: E10 result, out of the box on photos no model can have seen (zero labels made by us)
+
+131 Wikimedia Commons photos taken 2026-08-15 to 2026-09-20 by 74 authors (CC0 / CC BY / CC BY-SA, own work), labels =
+Commons "depicts" statements; run `20260920T205633Z-99f822`, `tools/fresh_report.py`, `results/lab/fresh_commons.{md,json}`.
+Uncalibrated decisions, all items, bootstrap 95%.
+- `fresh_yesno` (262 questions): Qwen3-VL-4B **0.931 [0.901, 0.962]**; 0.908 on yes questions, 0.954 on no questions.
+  The old public benchmark: POPE 0.880 [0.840, 0.920].
+- `fresh_choice` (131 photos, 13 classes): `independent` **0.885 [0.824, 0.939]**, `letter` 0.885, SigLIP2 0.855
+  [0.794, 0.908]. Old public benchmarks: 0.892 (37 breeds), 0.919 (101 classes).
+**H25 met** (both >= 0.85): no sign that the v0 out-of-the-box numbers were inflated by benchmark contamination.
+**H26 met:** SigLIP2 is 3.0 points behind the VLM here (it was ahead on pets). H27 (frontier models) needs the owner's key.
+**Label noise, seen on the contact sheet BEFORE any model ran and visible in the per-class table:** a "depicts" tag means
+the thing appears, not that it is the main subject. "car" (0.58 for the VLM, 0.33 for SigLIP2) is mostly buildings and
+landscapes with parked cars; "bird" (0.71) includes lakes with a distant bird; "horse" (0.60) includes a crowd scene and a
+painting; "bicycle" kept a single photo. So the pick-one number is a LOWER bound under noisy labels; the yes/no question
+matches the tag's meaning and is the cleaner number. Classes are unbalanced because of the 2-per-author cap.

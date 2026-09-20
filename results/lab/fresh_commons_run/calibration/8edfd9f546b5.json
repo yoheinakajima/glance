@@ -1,0 +1,44 @@
+{
+  "key": {
+    "backend": "siglip",
+    "model": "google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab",
+    "prompt_version": "p1",
+    "choice_method": "independent",
+    "image_token_budget": null
+  },
+  "version": "cal_8edfd9",
+  "fit_date": "2026-09-20",
+  "source_run": "20260920T205633Z-99f822",
+  "types": {
+    "choice": {
+      "method": "temperature",
+      "params": {
+        "T": 1.5096797153412838
+      },
+      "n": 66,
+      "suite_ids": [
+        "fresh_choice"
+      ],
+      "nll_before": 0.6395358499106409,
+      "nll_after": 0.5537150311404834,
+      "ece_before": 0.0599582386828587,
+      "ece_after": 0.07046706331236023
+    }
+  },
+  "per_suite": {
+    "fresh_choice": {
+      "method": "temperature",
+      "params": {
+        "T": 1.5096797153412838
+      },
+      "n": 66,
+      "suite_ids": [
+        "fresh_choice"
+      ],
+      "nll_before": 0.6395358499106409,
+      "nll_after": 0.5537150311404834,
+      "ece_before": 0.0599582386828587,
+      "ece_after": 0.07046706331236023
+    }
+  }
+}
