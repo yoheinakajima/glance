@@ -133,7 +133,11 @@ def _cmd_baseline(args: argparse.Namespace) -> int:
         if args.env_file and not env.get("keys_in_environment"):
             # Only the variable(s) this provider needs are read from the file; everything else in it is ignored.
             wanted = [str(k) for k in env.get("missing_keys") or []]
-            found = load_env_file(args.env_file, wanted)
+            try:
+                found = load_env_file(args.env_file, wanted)
+            except OSError as exc:
+                print(f"could not read --env-file {args.env_file}: {exc.strerror or exc}", file=sys.stderr)
+                return 2
             print(f"{args.env_file}: " + (f"loaded {', '.join(found)} (value not shown)" if found
                                            else f"no {' / '.join(wanted) or 'provider key'} defined there"), file=sys.stderr)
             env = litellm.validate_environment(model)
