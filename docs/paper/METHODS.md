@@ -533,6 +533,11 @@ split over the mean of probabilities (`lab/NOTES.md` entry 17).
 mapped by `p = softmax(W x' + b)`, `W` of shape `K x 4K`: matrix scaling, fit by L2-regularized negative log
 likelihood (`l2 = 0.05`, L-BFGS), followed by one scalar `s` refit without the penalty (`p = softmax(s (W x' + b))`)
 because the penalty makes the probabilities too timid; `s` multiplies every logit alike, so no prediction changes.
+The score lab fit `s` on the same data as `W` and `b` (500 labels per rubric). `glance fit` estimates `s` on held-out
+folds instead (`W`, `b` refit without each fold, `s` fit on the pooled held-out logits): with a few dozen labels the
+training data is nearly separable and a train-fit `s` makes the answers overconfident (NLL 0.749 against 0.478 at 32
+labels on the lab calibration split; equal from about 128 labels; `lab/NOTES.md` entry 18). The shipped lab
+calibrations keep the lab procedure so that they are exactly what `RESULTS_LAB.md` reports.
 `score` = expected level, `confidence` = 1 - H(p) / ln K, as for every other answer.
 
 **A calibration belongs to one rubric and one configuration.** Key: backend, model id @ revision, rating prompt
