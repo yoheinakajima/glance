@@ -615,3 +615,57 @@ multi-image requests already allow); it would be designed on calibration referen
 Also for the record, the first real `glance fit` demo (entry 18) was then tried on the 10 held-out CALIBRATION-split
 images of its demo folder (never the benchmark's test split): 6 of 10 exact, 10 of 10 within one level, with 8 labels per level on the 5-level
 JPEG rubric, confidences low (0.07 to 0.55), which is the honest picture of a 40-label fit on the hardest distortion.
+
+## 2026-09-20 10:00 Entry 19: outside reviews, and two calibration challengers registered before they are run
+
+Five outside reviews of `docs/BRIEFING.md` (relayed by the project owner) agree on the weak points: the +36.8 headline
+is mostly "the shipped calibration was badly specified" (+5.7 over the best-calibrated naive readout is the method's own
+effect); matrix scaling does not know the levels are ordered and is over-parameterized at 32 labels; "0 parameters
+trained" is wrong wording (the base VLM is frozen, a small readout IS fit on labels); one model; one task family; cite
+G-Eval-style probability-weighted scoring, Guo et al. 2017 (temperature / vector / matrix scaling), CLIP-IQA, Q-Bench's
+token-logit readout and Q-Bench+'s prompt ensembles by name. All accepted.
+
+Two challengers, run on saved logits (CPU only). **Protocol, fixed now:** development on the lab CALIBRATION split
+only (fit on random draws of n labels from its first half, judged on its second half, n in 8, 16, 32, 64, 128, 240;
+five scales; 10 draws). Criterion: NLL first, accuracy second. A challenger that beats the current recipe
+(`rating.fit_matrix`, L2 0.05, held-out sharpness) on dev NLL at n = 32 AND is not worse at n = 240 is then scored ONCE
+on the lab test split with the full calibration split as fit data, next to the published 0.867. Otherwise it is
+reported as a tie or loss and nothing ships.
+
+- **C1, prior-centred shrinkage.** Today the L2 penalty pulls `W` toward zero, i.e. toward a uniform answer, so at
+  small n the fit forgets what the uncalibrated readout already knows. C1 penalizes the distance from the mean-member-
+  logit readout instead (in standardized coordinates: `W0 = (1/4)[I I I I] diag(std)`, `b0 = (1/4)[I I I I] mean`), so
+  n -> 0 recovers the uncalibrated answer and labels move it away only as far as they justify.
+- **C2, ordinal readout.** A cumulative-link model on a learned 1-D projection: `P(level <= k) = sigmoid(theta_k -
+  w.x)`, ordered thresholds, L2 on `w`, same held-out sharpness idea (a scalar on `w` and `theta`). K - 1 + 4K
+  parameters instead of K + 4K^2.
+
+Hypotheses: H10, C1 beats the current recipe on dev accuracy and NLL at n <= 32 and ties from n = 128. H11, C2 has
+better NLL than the current recipe at n <= 32 (fewer parameters) but lower accuracy at n = 240 (one projection cannot
+represent level-specific evidence such as "both extremes look alike").
+
+## 2026-09-20 10:15 Entry 19b: result of the two calibration challengers (dev only; nothing ships, test split untouched)
+
+`tools/dev_calibration_challengers.py`, `lab/dev/calibration_challengers.{md,json}`. Mean over five scales and 10 draws,
+second half of the calibration split:
+
+| labels | accuracy: current / C1 / C2 | NLL: current / C1 / C2 |
+| --- | --- | --- |
+| 8 | 0.801 / 0.788 / 0.553 | 1.268 / 1.037 / 1.135 |
+| 16 | 0.826 / 0.817 / 0.826 | 0.542 / 0.698 / 0.482 |
+| 32 | 0.843 / 0.832 / 0.844 | 0.423 / 0.499 / 0.403 |
+| 64 | 0.858 / 0.842 / 0.856 | 0.371 / 0.441 / 0.373 |
+| 128 | 0.863 / 0.852 / 0.858 | 0.352 / 0.422 / 0.353 |
+| 240 | 0.864 / 0.858 / 0.856 | 0.345 / 0.409 / 0.346 |
+
+- **H10 not supported.** Shrinking toward the uncalibrated mean-logit readout (C1) is worse than shrinking toward zero at
+  every size from 16 labels up, on accuracy and NLL. The uncalibrated readout is a poor prior (0.572 accuracy): the
+  labels have to move the map a long way, and the penalty gets in the way.
+- **H11 supported in direction, small in size.** The ordinal 1-D model (C2, 19 parameters) matches matrix scaling (68
+  parameters) on accuracy from 16 to 64 labels, has slightly better NLL at 16 and 32 labels (0.482 vs 0.542, 0.403 vs
+  0.423), is slightly behind on accuracy at 128 and 240 (0.856 vs 0.864), and collapses at 8 labels (0.553). By the
+  registered rule (better NLL at 32 AND not worse at 240) it does not replace the current recipe.
+- **What it says about the method:** almost all of the usable evidence in the 16 member logits lies along ONE direction,
+  a severity axis; the extra freedom of the full matrix buys under a point, and only with more than 100 labels. For the
+  paper: matrix scaling is kept as the recipe, the ordinal readout is reported as an equivalent with a quarter of the
+  parameters, and "8 labels" is below what either can use.
