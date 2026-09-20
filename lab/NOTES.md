@@ -896,7 +896,7 @@ LORO + BC, and the per-rubric fit (205 labels). Repeated on `distort25` when it 
 If H19 or H20 holds, the harness gets a documented zero-label mode for `score` (BC needs only unlabeled images, which
 every user has); if neither holds, the honest statement stays "ratings need about 32 labels per rubric".
 
-## 2026-09-20 11:55 Entry 26b: batch calibration from unlabeled images, result (LORO still waits for KADID)
+## 2026-09-20 11:41 Entry 26b: batch calibration from unlabeled images, result (LORO still waits for KADID)
 
 `tools/label_free_calibration.py`. Dev (calibration split, pool = first half without labels, judged on the second half):
 raw 0.552; BC (mean-centred) 0.627 with all 250 pool images, 0.632 / 0.635 / 0.628 with 16 / 32 / 64; BCz (z-scored)
