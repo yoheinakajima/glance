@@ -1,5 +1,8 @@
 # Score lab: final results on the held-out test split
 
+> **Correction, 2026-09-20 (`lab/NOTES.md` entry 16).** The latency column below is the MARGINAL cost of a readout on an image whose prefix is already cached; only `independent` and `zoom_cumulative` rows include an image prefill. It is not the cost of rating a fresh image and rows are not comparable with each other. Cold-start costs: `lab/PACKING.md`.
+
+
 Fit on the calibration split, reported on the held-out test split.
 
 Bar for "impressive": accuracy >= 85%, MAE <= 0.25 levels, ECE <= 0.05 (15 equal-mass bins; read each ECE against its sampling floor).

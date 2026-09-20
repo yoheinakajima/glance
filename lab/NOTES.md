@@ -186,6 +186,7 @@ Verdicts on the registered hypotheses, from DEV data only:
   of 5 scales.
 - H2 (`digits` matches the multi-pass readouts at 1 pass): supported. 0.762 vs 0.757 for `independent` at a quarter
   of the passes and a third of the latency (159 ms vs 447 ms).
+  [See entry 16: 159 ms was measured on a cached prefix, 447 ms included the prefill; fresh-image costs are 359 vs 441 ms.]
 - H3 (reference images help where wording is vaguest): weak and mixed. +6 points on noise, -6 on jpeg, -15 on exposure
   against plain `digits`; not worth 4 images. Pilot-only evidence; anchors are dropped from the full run.
 - H4 (per-level calibration is required): supported everywhere; a single temperature never changes accuracy.
@@ -367,6 +368,8 @@ figures `docs/paper/figures/`. n = 500 test items per scale.
 - **Latency**: stage B ran while the reference collection shared the GPU, which inflated its logged latencies. A
   separate uncontended benchmark (`lab/LATENCY.json`, 40 test items per scale) gives 151-154 ms for each digits-style
   readout, 609 ms per question for `ens4d` and 1,980 ms for `ens7`. The report uses these.
+  [CORRECTED in entry 16: these are marginal costs on an image whose prefix was already cached; the `ens4d` figure
+  contains no image prefill. A fresh-image rating costs 1,089 to 1,248 ms with `ens4d` and 441 ms with the v0 readout.]
 
 Verdicts: H1 not supported; H2, H4, H5, H6 supported; H3 weak (pilot only). What did not work: threshold questions,
 reference images, `zoom` on the multi-pass readouts, averaging crops (small gain for 5x cost, stage C will say more).
@@ -451,3 +454,97 @@ on calibration references.
 (references I01 to I40, which the seeded split divides into calibration and test), about 1.4 s per item. Then the
 remaining references, then the `independent` baseline on everything. Results are reported when all 81 references are
 in; the fast pass is a progress check, not a separate result.
+
+## 2026-09-20 08:55 Entry 15b: a flaw in H8's ECE criterion, recorded before the results exist
+
+While checking that the report tool runs (on the first two distortions of the fast pass, 85 calibration / 115 test
+items each, far from final) I saw that the ECE sampling floor at that size is about 0.10, and it will still be about
+0.07 to 0.08 at the final 200 test items per distortion. "ECE <= 0.05 on at least 20 of 25 distortions" (entry 14)
+therefore cannot be met even by a perfectly calibrated predictor; I wrote that criterion by analogy with the lab's 500
+test items per scale without recomputing the floor. It stays in the report as registered and will be reported as
+failed if it fails. Added now, before the full data exists: (a) each distortion's ECE is printed next to its floor,
+(b) one POOLED ECE over all main distortions (about 4,600 test items, floor about 0.015), which is the number that can
+actually tell calibrated from uncalibrated. Nothing else about the method, wording or report changes.
+
+## 2026-09-20 09:10 Entry 16: ERRATUM on latency, and what packing questions behind one prefill saves
+
+**The error.** Entry 13 and every document derived from it said `ens4d` costs "609 ms per question", next to 432 ms
+for the v0 readout, and the paper abstract said "at the forward-pass cost of the baseline readout (0.609 s)". The
+forward-pass COUNT is equal (4 and 4). The latency comparison was wrong. `lab/LATENCY.json` timed each readout inside
+the collector's per-image loop, in the order `independent`, `cumulative`, `digits`, `zoom_cumulative`, `zoom_digits`,
+`digitsrev`, `zoom_digitsrev`, with the prefix cache on. `independent` and `zoom_cumulative` paid the image prefills;
+every other readout found its prefix cached (`cache_hit` is true on 200 of 200 of their rows). 151 ms is the marginal
+cost of one more digit readout on an already-prefilled image, and 609 ms = 4 x ~152 ms contains no prefill at all,
+while v0's 432 ms contains one. I found this while reading the benchmark rows to plan the packing experiment below
+(prompted by outside feedback that our method "pays a new pass per readout"). Accuracy, calibration and selection
+results are not affected: selection used cross-validated NLL, and the 4-pass budget was a pass count.
+
+**The corrected measurement** (`glance/lab/pack_bench.py`, `lab/PACKING.{md,json}`, rows in
+`lab/runs/pack_bench.jsonl`): prefix cache cleared before every measurement, timed end to end from the image file,
+GPU otherwise idle (the KADID collection was suspended with SIGSTOP for the duration), first 20 test images of each
+scale, 3 warm-up images. p50:
+
+| Configuration | ms for one image | per rating question |
+| --- | --- | --- |
+| v0 readout as shipped (reference path, no cache) | 918 | 918 |
+| v0 readout, prefix cache | 441 | 441 |
+| `digits`, one readout | 359 | 359 |
+| `zoom_digits`, one readout | 575 | 575 |
+| `ens4d`, reference path | 1,571 | 1,571 |
+| `ens4d`, prefix cache, one readout at a time (how it was collected) | 1,248 | 1,248 |
+| `ens4d` packed: 2 prefills, 2 batched reads | 1,089 | 1,089 |
+| `ens4d` packed, all 5 lab rubrics in one request | 2,918 | 584 |
+| `digits` + `digitsrev` packed (no magnified crop), 5 rubrics | 1,199 | 240 |
+| `ens4d` packed, 25 five-level questions | 8,529 | 341 |
+| `digits` + `digitsrev` packed (no crop), 25 questions | 3,333 | 133 |
+
+So on a fresh image `ens4d` costs 2.5 to 2.8 times the cached v0 readout (1.2 to 1.4 times v0 as shipped), not the
+same. The +5.7 points over the best-calibrated v0 readout are bought with that.
+
+**What packing does and does not save.** The image is 196 tokens; one digits prompt is about 100 tokens. Sharing the
+prefill therefore removes less than in a long-document setting: one question drops from 1,248 to 1,089 ms (13%), five
+questions cost 584 ms each (53% less than one at a time), 25 cost 341 ms each. The remaining cost is the question
+text itself, read once per readout. A tree-shaped cache (image, then question, then the two level orders) would cut
+that further; not built.
+
+**Does packing change answers?** Batch composition perturbs half-precision logits, so I checked
+(`lab/REFCHECK_packed.{md,json}`): the calibration fit on one-at-a-time logits, applied unchanged to the packed logits
+of the same 100 test images, gives the same prediction on 100 of 100 (median abs logit difference 0.017, max 0.160).
+
+**Corrected in:** `docs/paper/RESULTS_LAB.md` (column renamed to marginal cost, correction note, new section 9),
+`docs/paper/OUTLINE.md` (abstract B), `STATUS.md` (morning table), `docs/paper/RELATED_WORK.md`, `lab/REPORT.md` (note
+at the top). `lab/LATENCY.json` is kept as is, with its meaning stated.
+
+## 2026-09-20 09:20 Entry 17: the lab winner goes into the harness as "Glance elicitation" (`glance/rating.py`)
+
+Approved by the project owner on 2026-09-20 (promotion into `glance decide` and an additive change to the section 5
+contract). Decisions, each made without touching any test split:
+
+- **Default.** `options.score_method` = `auto`: `ens4d` on the VLM, the v0 statements on the dual encoder. `statements`
+  and `digits` (one pass) stay selectable. The eval harness pins `statements` unless told otherwise, so v0 runs
+  reproduce.
+- **No calibration yet for a rubric?** The answer is the softmax of the MEAN of the four members' level logits. Chosen
+  on the lab's calibration split (2,500 items): mean-of-logits 0.572 accuracy / 0.449 MAE, mean-of-probabilities
+  0.564 / 0.488, `digits` alone 0.523 / 0.497, the v0 readout raw 0.513 / 0.521. Better than v0 on average, worse on
+  blur (0.462 vs 0.612). The uncalibrated answer is a fallback; the product is the fit.
+- **Calibration is per rubric, never pooled.** Entry 13 showed a calibration does not transfer between rating
+  dimensions, so the key is (backend, model@revision, prompt version `s1`, method, image-token budget, instructions,
+  criteria). `calibrated: true` with no matching file is a 409 `calibration_mismatch`, as in v0; the new
+  `calibrated: "auto"` calibrates what it can and warns about the rest.
+- **`glance fit`** (CLI and `Glance.fit`): labeled images in a folder per level, or JSONL/CSV; four readouts per
+  image; matrix scaling (L2 0.05 + rescale, identical to the lab's, checked by a test); reports 5-fold cross-validated
+  accuracy, MAE, ECE and the ECE sampling floor AT THE USER'S SAMPLE SIZE; writes `calibration/ratings/<hash>.json`.
+- **Shipped calibrations** (`glance/assets/ratings/`, `tools/make_rating_assets.py`): the five lab rubrics, fit on the
+  lab's calibration split only (500 images each; CV accuracy 0.876 / 0.858 / 0.798 / 0.928 / 0.914 for blur / noise /
+  jpeg / exposure / resolution). Valid for Qwen3-VL-4B-Instruct at the pinned revision and the 768-token budget only.
+- **Packing.** All rating questions of a request go into one `score_labels` call per view (image alone; image plus
+  magnified crop) and per number of levels, so a request pays at most two prefills with the prefix cache on.
+- **Prompt identity.** The harness renders byte-identical prompts to the lab (`tests/test_rating.py`), which is what
+  makes the shipped calibrations valid. The magnified-crop sentence names the rated image id; the lab always used
+  `img0`.
+- **Naming** (owner's direction): the package and CLI are `glance`; the method is "Glance elicitation"; result rows
+  read "Qwen3-VL-4B + Glance". Glance is not a model and ships no weights. No claim of universality: everything is
+  measured on one 4B model; `fit` is the transfer mechanism, not a transfer result.
+- **Acceptance check** (`tools/check_harness_rating.py`): ordinary `decide` requests with `calibrated: true` on the
+  first 40 test images of each lab scale must reproduce the lab's own predictions; result recorded below when it
+  finishes.

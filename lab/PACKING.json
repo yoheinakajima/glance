@@ -1,0 +1,79 @@
+{
+  "independent, no cache (v0 as shipped)": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 918.4447085717693,
+    "p90_ms": 1013.1113460985945,
+    "p50_ms_per_question": 918.4447085717693
+  },
+  "independent": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 440.7005625544116,
+    "p90_ms": 462.64791244175285,
+    "p50_ms_per_question": 440.7005625544116
+  },
+  "digits": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 359.19135401491076,
+    "p90_ms": 478.9632083149627,
+    "p50_ms_per_question": 359.19135401491076
+  },
+  "zoom_digits": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 574.7216455638409,
+    "p90_ms": 617.860987293534,
+    "p50_ms_per_question": 574.7216455638409
+  },
+  "ens4d, no cache, one readout at a time": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 1571.4026039931923,
+    "p90_ms": 1855.032749962993,
+    "p50_ms_per_question": 1571.4026039931923
+  },
+  "ens4d, cached, one readout at a time": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 1248.1079584686086,
+    "p90_ms": 1387.2063208604231,
+    "p50_ms_per_question": 1248.1079584686086
+  },
+  "ens4d packed, 1 question": {
+    "images": 100,
+    "questions": 1,
+    "p50_ms": 1089.1686045797542,
+    "p90_ms": 1148.3931414783,
+    "p50_ms_per_question": 1089.1686045797542
+  },
+  "ens4d packed, 5 questions": {
+    "images": 100,
+    "questions": 5,
+    "p50_ms": 2917.67764557153,
+    "p90_ms": 3029.8575631109998,
+    "p50_ms_per_question": 583.535529114306
+  },
+  "digits+digitsrev packed (no zoom), 5 questions": {
+    "images": 100,
+    "questions": 5,
+    "p50_ms": 1198.67027096916,
+    "p90_ms": 1246.2951044552028,
+    "p50_ms_per_question": 239.73405419383198
+  },
+  "ens4d packed, 25 questions": {
+    "images": 25,
+    "questions": 25,
+    "p50_ms": 8528.873041039333,
+    "p90_ms": 8874.022741988301,
+    "p50_ms_per_question": 341.1549216415733
+  },
+  "digits+digitsrev packed (no zoom), 25 questions": {
+    "images": 25,
+    "questions": 25,
+    "p50_ms": 3333.2499170210212,
+    "p90_ms": 3484.4785415101796,
+    "p50_ms_per_question": 133.32999668084085
+  }
+}

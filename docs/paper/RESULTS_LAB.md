@@ -24,11 +24,11 @@ Model: Qwen3-VL-4B-Instruct, float16 on Apple M5 (MPS), no generation, no traini
 | 12 | `independent` | 4 | 0.4846 | 0.806 |
 | 13 | `cumulative` | 3 | 0.5464 | 0.756 |
 
-Winner at any cost: `ens7`. Winner within 4 forward passes (the cost of the v0 method): `ens4d`.
+Winner at any cost: `ens7`. Winner within 4 forward passes (the number the v0 method uses; not the same latency, see section 9): `ens4d`.
 
 ## 2. Test split, every method (n = 500 per scale, scored once)
 
-| Method | What it is | Passes | p50 latency (ms) | blur | exposure | jpeg | noise | resolution | mean accuracy | mean MAE | mean ECE |
+| Method | What it is | Passes | marginal p50 ms (image already cached) | blur | exposure | jpeg | noise | resolution | mean accuracy | mean MAE | mean ECE |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `independent` | v0 method: one yes/no statement per level, scale never shown | 4 | 432 | 0.874 | 0.898 | 0.674 | 0.814 | 0.792 | **0.810** | 0.263 | 0.050 |
 | `cumulative` | scale shown; "is it step k or higher?" per threshold | 3 | 317 | 0.814 | 0.830 | 0.574 | 0.832 | 0.726 | **0.755** | 0.314 | 0.067 |
@@ -44,7 +44,7 @@ Winner at any cost: `ens7`. Winner within 4 forward passes (the cost of the v0 m
 | `ens5` | the five stage A readouts | 12 | 1675 | 0.906 | 0.934 | 0.758 | 0.870 | 0.880 | **0.870** | 0.184 | 0.037 |
 | `ens7` | all seven readouts | 14 | 1980 | 0.902 | 0.932 | 0.776 | 0.870 | 0.902 | **0.876** | 0.171 | 0.037 |
 
-Each method is shown with the calibration chosen for it by cross-validation on the calibration split. Latency is the separately measured, uncontended p50 on the prefix-cached path for one question about one image (`lab/LATENCY.json`); a combination costs the sum of its members.
+Each method is shown with the calibration chosen for it by cross-validation on the calibration split. The latency column is the separately measured, uncontended p50 of the readout on the prefix-cached path (`lab/LATENCY.json`); a combination is the sum of its members. CORRECTION (2026-09-20, `lab/NOTES.md` entry 16): in that benchmark `independent` and `zoom_cumulative` ran first on each image and paid the image prefill, every other readout found the prefix cached. The column is therefore the MARGINAL cost of adding a readout, and is not comparable across rows that did and did not pay the prefill. Section 9 gives the cost of each method on a fresh image.
 
 ## 3. The two winners against the v0 method, per scale
 
@@ -131,17 +131,19 @@ The experiments used the prefix-cached path. The first 100 test items of each sc
 | `ens7` | noise | 100 | 0.106 | 0.015 | 1.000 | 0.910 | 0.910 |
 | `ens7` | resolution | 100 | 0.118 | 0.014 | 1.000 | 0.920 | 0.920 |
 
-## 7. Clean latency of each readout (cached path, one question, one image)
+## 7. Marginal latency of each readout (cached path, one question, one image)
 
-| Readout | p50 ms |
-| --- | --- |
-| `independent` | 432 |
-| `cumulative` | 317 |
-| `digits` | 151 |
-| `zoom_cumulative` | 621 |
-| `zoom_digits` | 153 |
-| `digitsrev` | 151 |
-| `zoom_digitsrev` | 154 |
+Order within an image: `independent`, `cumulative`, `digits`, `zoom_cumulative`, `zoom_digits`, `digitsrev`, `zoom_digitsrev`. Only the first one-image readout and the first two-image readout pay a prefill (see the correction under section 2).
+
+| Readout | p50 ms | paid the image prefill |
+| --- | --- | --- |
+| `independent` | 432 | yes |
+| `cumulative` | 317 | no |
+| `digits` | 151 | no |
+| `zoom_cumulative` | 621 | yes |
+| `zoom_digits` | 153 | no |
+| `digitsrev` | 151 | no |
+| `zoom_digitsrev` | 154 | no |
 
 ## 8. Uncertainty: bootstrap 95% intervals
 
@@ -169,3 +171,31 @@ Paired differences in mean accuracy (same resampled items):
 | zoom_digits minus digits | +2.3 | [+0.7, +3.9] |
 
 Reading: every listed difference excludes zero. The pre-registered bar is met at the point estimates. Among the scales that meet it, the 95% interval reaches below 0.85 for: `ens4d`: noise; `ens7`: noise. JPEG artifacts is below the bar for every method.
+
+## 9. Cost of a rating on a fresh image, and what packing questions saves
+
+`glance/lab/pack_bench.py`: prefix cache cleared before every measurement, timed end to end from the image file (decode, resize, zoom crop, forward passes, readout), uncontended GPU, the first 20 test images of each scale. "Packed" means one prefill of the image with the `digits` and `digitsrev` questions of every scale batched behind it, and one prefill of image + magnified crop with the two zoom readouts behind it: two prefills in total however many rating questions are asked. The 25-question rows ask the 25 five-level KADID-style questions of the same lab images (timing only).
+
+| Configuration | images | rating questions answered | p50 ms | p90 ms | p50 ms per question |
+| --- | --- | --- | --- | --- | --- |
+| independent, no cache (v0 as shipped) | 100 | 1 | 918 | 1013 | 918 |
+| independent | 100 | 1 | 441 | 463 | 441 |
+| digits | 100 | 1 | 359 | 479 | 359 |
+| zoom_digits | 100 | 1 | 575 | 618 | 575 |
+| ens4d, no cache, one readout at a time | 100 | 1 | 1571 | 1855 | 1571 |
+| ens4d, cached, one readout at a time | 100 | 1 | 1248 | 1387 | 1248 |
+| ens4d packed, 1 question | 100 | 1 | 1089 | 1148 | 1089 |
+| ens4d packed, 5 questions | 100 | 5 | 2918 | 3030 | 584 |
+| digits+digitsrev packed (no zoom), 5 questions | 100 | 5 | 1199 | 1246 | 240 |
+| ens4d packed, 25 questions | 25 | 25 | 8529 | 8874 | 341 |
+| digits+digitsrev packed (no zoom), 25 questions | 25 | 25 | 3333 | 3484 | 133 |
+
+Packing changes the batch composition, which perturbs half-precision logits. Check (`lab/REFCHECK_packed.json`): the calibration fit on the one-readout-at-a-time logits, applied unchanged to the packed logits of the same 100 test images:
+
+| Scale | n | max abs logit diff | median abs logit diff | same prediction | accuracy one at a time | accuracy packed |
+| --- | --- | --- | --- | --- | --- | --- |
+| blur | 20 | 0.160 | 0.016 | 1.000 | 1.000 | 1.000 |
+| exposure | 20 | 0.091 | 0.017 | 1.000 | 1.000 | 1.000 |
+| jpeg | 20 | 0.088 | 0.017 | 1.000 | 0.900 | 0.900 |
+| noise | 20 | 0.094 | 0.018 | 1.000 | 0.800 | 0.800 |
+| resolution | 20 | 0.133 | 0.019 | 1.000 | 0.850 | 0.850 |

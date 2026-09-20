@@ -1,4 +1,4 @@
-"""glance doctor | decide | eval | calibrate | baseline | serve"""
+"""glance doctor | decide | score | fit | eval | calibrate | baseline | serve"""
 
 from __future__ import annotations
 
@@ -49,10 +49,12 @@ def _cmd_decide(args: argparse.Namespace) -> int:
     if isinstance(body, dict):
         if args.model:
             body["model"] = args.model
-        if args.choice_method or args.calibrated is not None:
+        if args.choice_method or args.score_method or args.calibrated is not None:
             options = body.setdefault("options", {})
             if args.choice_method:
                 options["choice_method"] = args.choice_method
+            if args.score_method:
+                options["score_method"] = args.score_method
             if args.calibrated is not None:
                 options["calibrated"] = args.calibrated
     status, payload = Engine(cfg, source="cli", allow_frontier=args.confirm_spend).decide_json(body)
@@ -154,6 +156,42 @@ def _cmd_serve(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_score(args: argparse.Namespace) -> int:
+    """One rating question about one image, from the command line."""
+    from .fit import read_rubric
+    from .pipeline import Engine
+
+    cfg = load_config(args.config, _config_overrides(args))
+    if args.rubric:
+        instructions, criteria = read_rubric(args.rubric)
+    elif args.instructions and args.criteria:
+        instructions, criteria = args.instructions, list(args.criteria)
+    else:
+        print("give the rubric as --rubric file.json, or as --instructions \"...\" --criteria \"lowest\" ... \"highest\"", file=sys.stderr)
+        return 2
+    body = {"model": "vlm", "state": {"images": [{"id": "img0", "path": args.image}]},
+            "questions": {"score": {"type": "score", "instructions": instructions, "criteria": criteria}},
+            "options": {"score_method": args.method, "calibrated": "auto"}}
+    status, payload = Engine(cfg, source="cli").decide_json(body)
+    print(json.dumps(payload if status != 200 or args.full else {**payload["answers"]["score"], "warnings": payload["warnings"]}, indent=2))
+    return 0 if status == 200 else 1
+
+
+def _cmd_fit(args: argparse.Namespace) -> int:
+    from .fit import main_fit
+
+    return main_fit(args)
+
+
+def _rubric_args(p: argparse.ArgumentParser) -> None:
+    p.add_argument("--rubric", help='JSON file: {"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}')
+    p.add_argument("--instructions", help="the question, naming the image as `img0` (alternative to --rubric)")
+    p.add_argument("--criteria", nargs="+", help="level descriptions, lowest first (alternative to --rubric)")
+    p.add_argument("--method", choices=["ens4d", "digits"], default="ens4d", help="4 forward passes (default) or 1")
+    p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
+    p.add_argument("--prefix-cache", action="store_true", help="VLM: share the image prefill between readouts (faster)")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="glance", description="Image decision harness v0")
     parser.add_argument("--config", default=None, help="path to a config yaml (default: configs/default.yaml)")
@@ -167,11 +205,24 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("request", help="path to a request JSON file")
     p.add_argument("--model", choices=["siglip", "vlm", "frontier"], help="override the request's model")
     p.add_argument("--choice-method", choices=["independent", "letter"], help="override options.choice_method")
+    p.add_argument("--score-method", choices=["auto", "statements", "digits", "ens4d"], help="override options.score_method")
     p.add_argument("--calibrated", action=argparse.BooleanOptionalAction, default=None, help="override options.calibrated")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path (every statement a full prompt)")
     p.add_argument("--confirm-spend", action="store_true", help="allow --model frontier: sends the image to a paid API")
     p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_decide)
+
+    p = sub.add_parser("score", help="rate one image on a rubric (Glance elicitation; uses your `glance fit` calibration if there is one)")
+    p.add_argument("image", help="path to the image")
+    _rubric_args(p)
+    p.add_argument("--full", action="store_true", help="print the whole response, not only the answer")
+    p.set_defaults(func=_cmd_score)
+
+    p = sub.add_parser("fit", help="fit a calibration for one rating rubric from a few dozen labeled images (no training)")
+    p.add_argument("--data", required=True, help="folder with one sub-folder per level (0/, 1/, ...), or a JSONL/CSV with image,level")
+    _rubric_args(p)
+    p.add_argument("--name", help="a label stored in the calibration file")
+    p.set_defaults(func=_cmd_fit)
 
     p = sub.add_parser("eval", help="run eval suites and write runs/<run_id>/")
     p.add_argument("--suite", action="append", help="suite name, repeatable or comma-separated (default: all)")

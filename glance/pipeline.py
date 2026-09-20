@@ -8,7 +8,7 @@ from __future__ import annotations
 import threading
 from typing import Any
 
-from . import __version__, calibration
+from . import __version__, calibration, rating
 from .backends import Backend, load_backend, model_string
 from .config import Config
 from .images import load_images
@@ -16,6 +16,7 @@ from .logging_utils import Timer, call_log_writer, error_record, git_sha, new_re
 from .prompts import PROMPT_VERSION
 from .schema import (
     BackendError,
+    CalibrationMismatchError,
     DecideRequest,
     DecideResponse,
     ErrorResponse,
@@ -75,6 +76,19 @@ class Engine:
             self._calibration[cache_key] = calibration.load_params(self.cfg.path("calibration"), key)
         return self._calibration[cache_key]
 
+    def rating_key(self, backend: Backend, method: str, question) -> rating.RatingKey:
+        return rating.RatingKey(
+            backend=backend.name,
+            model=f"{backend.model_id}@{backend.revision}" if backend.revision else backend.model_id,
+            prompt_version=rating.RATING_PROMPT_VERSION, score_method=method,
+            image_token_budget=backend.image_token_budget,
+            instructions=question.instructions, criteria=tuple(question.criteria),
+        )
+
+    def rating_calibration(self, key: rating.RatingKey) -> rating.RatingCalibration | None:
+        """User fits (calibration/ratings/) shadow the calibrations shipped with the package."""
+        return rating.load_calibration([self.cfg.path("calibration") / "ratings", rating.ASSETS_DIR], key)
+
     # --- decide -----------------------------------------------------------------------------------
 
     def decide(self, body: Any, source: str | None = None, request_id: str | None = None) -> DecisionTrace:
@@ -113,6 +127,7 @@ class Engine:
         log["questions"] = {qid: q.model_dump() for qid, q in request.questions.items()}
         log["context"] = request.state.context
         log["choice_method"] = request.options.choice_method
+        log["score_method"] = request.options.score_method
         if request.model == "frontier" and not self.allow_frontier:
             raise UnsupportedQuestionError(
                 "the frontier baseline is eval-only: it sends images off this machine and spends money, so it runs "
@@ -133,33 +148,60 @@ class Engine:
                 choice_method=request.options.choice_method,
                 letter_rotations=self.cfg.vlm.letter_rotations,
                 off_mass_warn=self.cfg.vlm.off_mass_warn,
+                score_method=request.options.score_method,
             )
         timer.add("prefix", scoring.timing_ms.get("prefix", 0.0))
         timer.add("score", scoring.timing_ms.get("score", 0.0))
         log["images"] = [img.log_record() for img in images]
 
         warnings = list(scoring.warnings)
+        wanted = request.options.calibrated  # False | True | "auto"
         params = None
-        if request.options.calibrated:
-            if backend.kind == "frontier":
-                warnings.append("calibrated: true has no effect on frontier picks, which carry no probabilities")
-            else:
+        needs_v0 = any(qs.method not in rating.MEMBERS for qs in scoring.scores.values())
+        if wanted and backend.kind == "frontier":
+            warnings.append("calibrated: true has no effect on frontier picks, which carry no probabilities")
+        elif wanted and needs_v0:
+            try:
                 params = self._calibration_params(self.calibration_key(backend, request.options.choice_method))
+            except CalibrationMismatchError:
+                if wanted is True:
+                    raise
+                warnings.append("no fitted calibration matches the active configuration; noul, choice and "
+                                "statement-scored answers are uncalibrated (run `glance calibrate`)")
 
         answers = {}
         question_logs = {}
+        versions: list[str] = [params.version] if params is not None else []
         with timer.span("calibrate"):
             for qid, question in request.questions.items():
                 qs = scoring.scores[qid]
                 raw = raw_probabilities(qs)
-                cal = calibration.apply(qs, params) if params is not None else None
-                answers[qid] = build_answer(question, qs, raw, cal)
+                cal, cal_version = None, None
+                if qs.method in rating.MEMBERS:
+                    # Glance elicitation: the calibration belongs to this rubric; there is no pooled fallback.
+                    fitted = self.rating_calibration(self.rating_key(backend, qs.method, question)) if wanted else None
+                    if fitted is not None:
+                        cal, cal_version = rating.apply_matrix(fitted, qs.features), fitted.version
+                        versions.append(fitted.version)
+                    elif wanted is True:
+                        raise CalibrationMismatchError(
+                            f"calibrated: true, but question `{qid}` has no calibration for this rubric and configuration; "
+                            "fit one from a few dozen labeled images with `glance fit`, or send calibrated: \"auto\"",
+                            {"question": qid, "rating_key": self.rating_key(backend, qs.method, question).model_dump()},
+                        )
+                    elif wanted == "auto":
+                        warnings.append(f"question `{qid}`: no calibration for this rubric; probabilities are uncalibrated "
+                                        "(fit one from a few dozen labeled images with `glance fit`)")
+                elif params is not None:
+                    cal = calibration.apply(qs, params)
+                answers[qid] = build_answer(question, qs, raw, cal, cal_version)
                 # Frontier outputs are evaluation-only and must never land in a file that could serve as a
                 # training label, so the call log records that a pick was made but not what it was.
                 logged_answer = FRONTIER_REDACTED if backend.kind == "frontier" else answers[qid].model_dump()
                 question_logs[qid] = {
                     "type": qs.qtype, "method": qs.method, "keys": qs.keys,
                     "z": None if qs.z is None else qs.z.tolist(),
+                    "features": None if qs.features is None else qs.features.tolist(),
                     "raw_probabilities": raw, "calibrated_probabilities": cal,
                     "answer": logged_answer, "statements": qs.statements,
                 }
@@ -168,7 +210,7 @@ class Engine:
             request_id=request_id,
             model=model_string(backend),
             prompt_version=PROMPT_VERSION,
-            calibration_version=params.version if params is not None else None,
+            calibration_version="+".join(dict.fromkeys(versions)) or None,
             answers=answers,
             usage=Usage(
                 image_tokens=scoring.usage.image_tokens, text_tokens=scoring.usage.text_tokens,

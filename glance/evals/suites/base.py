@@ -118,12 +118,14 @@ def _write_manifest(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text("".join(json.dumps(r) + "\n" for r in rows))
 
 
-def item_to_request(item: EvalItem, model: str, choice_method: str = "independent") -> dict[str, Any]:
+def item_to_request(item: EvalItem, model: str, choice_method: str = "independent",
+                    score_method: str = "statements") -> dict[str, Any]:
+    """The eval harness measures the v0 `score` method ("statements") unless asked otherwise, so v0 runs reproduce."""
     return {
         "model": model,
         "state": {"images": [{"id": "img0", "path": item.image_path}]},
         "questions": {"q": item.question},
-        "options": {"choice_method": choice_method, "calibrated": False},
+        "options": {"choice_method": choice_method, "score_method": score_method, "calibrated": False},
     }
 
 

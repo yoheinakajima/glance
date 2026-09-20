@@ -74,7 +74,8 @@ def _score(request_body, backend, method="independent"):
 
     req = parse_request(request_body)
     images = load_images(req.state.images, load_config().limits)
-    return req, scorer.score_questions(backend, images, req.state.context, req.questions, choice_method=method)
+    return req, scorer.score_questions(backend, images, req.state.context, req.questions, choice_method=method,
+                                       score_method=req.options.score_method)
 
 
 def test_assembly_from_fixed_logits(request_body):
@@ -171,7 +172,10 @@ def test_pipeline_response_shape_and_call_log(cfg, request_body, png_b64):
     assert set(payload["timing_ms"]) == {"load", "prefix", "score", "calibrate", "total"}
     assert payload["usage"] == {"image_tokens": 64, "text_tokens": 70, "forward_passes": 7}
     assert set(payload["answers"]["color"]) == {"type", "choice", "probabilities", "confidence", "margin", "raw"}
-    assert set(payload["answers"]["brightness"]) == {"type", "score", "legend", "probabilities", "confidence", "margin", "raw"}
+    # v0.3 added `method` and `calibration` to score answers (additive; see STATUS.md, "API extension")
+    assert set(payload["answers"]["brightness"]) == {"type", "score", "legend", "probabilities", "confidence", "margin", "raw",
+                                                     "method", "calibration"}
+    assert payload["answers"]["brightness"]["method"] == "statements" and payload["answers"]["brightness"]["calibration"] is None
     assert set(payload["answers"]["is_red"]) == {"type", "noul", "raw"}
 
     rows = [r for f in sorted((cfg.path("logs") / "calls").glob("*.jsonl")) for r in read_jsonl(f)]
@@ -213,7 +217,7 @@ def test_pipeline_errors_are_shaped_and_logged(cfg, request_body):
 
 
 def test_calibrated_without_params_is_409(cfg, request_body):
-    request_body["options"] = {"calibrated": True}
+    request_body["options"] = {"calibrated": True, "score_method": "statements"}
     status, payload = Engine(cfg, backends={"vlm": FakeBackend()}).decide_json(request_body)
     assert status == 409 and payload["code"] == "calibration_mismatch"
 

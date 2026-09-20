@@ -88,4 +88,6 @@ def request_body(png_b64):
             "brightness": {"type": "score", "instructions": "How bright is `img0`?",
                            "criteria": ["Very dark", "Medium", "Very bright"]},
         },
+        # The v0 tests exercise the v0 `score` method; Glance elicitation (the default since v0.3) is in test_rating.py.
+        "options": {"score_method": "statements"},
     }

@@ -443,12 +443,16 @@ Documented for the paper in `docs/paper/RESULTS_FOLLOWUP.md`, `lab/NOTES.md` (li
 Branch `score-lab`. Full write-up: `docs/paper/RESULTS_LAB.md`; notebook: `lab/NOTES.md`; figures: `docs/paper/figures/`.
 On five new 4-level rating scales (500 held-out test images each), zero training:
 
-| Method | Forward passes | p50 latency | Mean accuracy |
+| Method | Forward passes | p50 latency, one rating of a fresh image, prefix cache on | Mean accuracy |
 | --- | --- | --- | --- |
-| v0 `score` method as shipped (single temperature) | 4 | 432 ms | 0.500 |
-| v0 readout with its best calibration | 4 | 432 ms | 0.810 |
-| `ens4d`: digits readout, forward + reversed scale, with + without a magnified crop; matrix calibration | 4 | 609 ms | 0.867 |
-| `ens7`: all seven readouts | 14 | 1,980 ms | 0.876 |
+| v0 `score` method as shipped (single temperature) | 4 | 441 ms (918 ms on the default reference path) | 0.500 |
+| v0 readout with its best calibration | 4 | 441 ms | 0.810 |
+| `ens4d`: digits readout, forward + reversed scale, with + without a magnified crop; matrix calibration | 4 | 1,089 ms packed (1,248 ms one readout at a time); 584 ms per rating when 5 share the prefill | 0.867 |
+| `ens7`: all seven readouts | 14 | not re-measured | 0.876 |
+
+Correction (2026-09-20, `lab/NOTES.md` entry 16): this table first said 432 / 609 / 1,980 ms. Those were marginal costs
+measured on images whose prefix was already cached (the `ens4d` figure contained no image prefill at all), so they
+understated `ens4d` relative to v0. The numbers above are from `lab/PACKING.md`.
 
 Both winners meet the bar fixed in advance (accuracy >= 0.85, MAE <= 0.25 levels, ECE <= 0.05) on 4 of 5 scales; JPEG
 artifacts is the miss (0.772 / 0.776). Winners were chosen on calibration data and committed before the test split was

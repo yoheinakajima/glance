@@ -42,8 +42,9 @@ Word count: approximately 200. Every number is copied from
 > artifacts become visible, (iii) ask the same question with the scale reversed, and (iv) fit a small affine
 > calibration on a few dozen labeled images per scale. On five degradation scales (blur, noise, JPEG artifacts,
 > underexposure, low resolution; 500 held-out images each) four one-pass readouts combined reach 0.867 mean accuracy
-> at the forward-pass cost of the baseline readout (0.609 s per question on a laptop), with mean absolute error of
-> 0.11-0.28 levels and expected calibration error at or below 0.05 on every scale. Accuracy is within two points of
+> with the same number of forward passes as the baseline readout (1.09 s for one rating of a fresh image on a laptop
+> against 0.44 s for the baseline; 0.58 s per rating when five ratings share the image prefill), with mean absolute
+> error of 0.11-0.28 levels and expected calibration error at or below 0.05 on every scale. Accuracy is within two points of
 > its final value with 32 labeled images per scale. The method and its calibration were selected on a calibration
 > split before the test split was scored. Calibrations do not transfer between scales.
 

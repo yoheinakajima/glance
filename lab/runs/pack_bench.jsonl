@@ -1,0 +1,950 @@
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 1221.324749989435}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 501.1158750858158}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 507.88404210470617}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 763.4735000319779}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 2230.4290421307087}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 1586.2738750874996}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 1277.4480830412358}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 3131.230792030692}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 1269.9347909074277}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 8909.992041997612}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "blur", "item_id": "Persian_91_L0", "latency_ms": 3435.3110829833895}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 937.3235411476344}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 458.6600831244141}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 466.09570807777345}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 681.1334169469774}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 1815.4380000196397}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 1378.2331249676645}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 1145.07104200311}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 2973.6412500496954}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "yorkshire_terrier_98_L1", "latency_ms": 1214.532374870032}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 942.4033341929317}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 453.90708302147686}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 470.47633305191994}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 588.499124860391}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 1836.6802921518683}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 1380.972750019282}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 1148.333374876529}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 2951.9862080924213}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Persian_62_L2", "latency_ms": 1212.8106669988483}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 820.5491669941694}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 447.7287500631064}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 369.6565830614418}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 571.6017079539597}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 1541.8198751285672}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 1234.2201669234782}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 1083.9809158351272}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 2899.867417057976}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "american_bulldog_92_L3", "latency_ms": 1204.3907078914344}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 933.2902079913765}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 548.1839999556541}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 487.3634169343859}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 598.0864169541746}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 1811.8920831475407}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 1363.1862078327686}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 1117.612750036642}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 2933.584041893482}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 1200.3348330035806}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 8464.658957906067}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "blur", "item_id": "english_setter_91_L0", "latency_ms": 3408.0387498252094}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 854.285583132878}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 462.6056249253452}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 355.28008290566504}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 582.745417021215}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 1581.3282909803092}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 1249.6573750395328}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 1090.4107911046594}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 2925.2879589330405}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Russian_Blue_93_L1", "latency_ms": 1273.4754579141736}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 972.7119999006391}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 463.02850008942187}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 487.23445809446275}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 588.6081249918789}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 1784.9501671735197}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 1351.0007499717176}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 1135.4419169947505}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 3036.481374874711}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Egyptian_Mau_74_L2", "latency_ms": 1225.8437499403954}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 823.8700001966208}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 441.6772499680519}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 355.7585410308093}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 566.7128749191761}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 1548.133958131075}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 1248.3086250722408}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 1109.1035001445562}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 2984.910500003025}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_63_L3", "latency_ms": 1230.6547078769654}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 818.7068339902908}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 442.16691702604294}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 356.0903749894351}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 572.1714999526739}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 1544.841250171885}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 1239.1742910258472}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 1067.232457920909}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 2869.916083989665}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 1186.9312908966094}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 8446.433500153944}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "blur", "item_id": "saint_bernard_198_L0", "latency_ms": 3288.5874591302127}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 927.7093750424683}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 446.0955420508981}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 462.98900013789535}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 581.3427090179175}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 1800.2292499877512}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 1406.0888751409948}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 1141.5193330030888}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 2913.949792040512}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_cocker_spaniel_92_L1", "latency_ms": 1195.4213338904083}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 951.0912080295384}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 445.34895895048976}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 458.28433404676616}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 589.8782080039382}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 1782.4792498722672}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 1375.9944171179086}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 1096.93400003016}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 2897.983333095908}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Russian_Blue_53_L2", "latency_ms": 1192.7458748687059}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 806.4210000447929}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 440.4414580203593}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 347.25829120725393}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 563.4804998990148}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 1519.3767079617828}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 1244.6213338989764}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 1081.7035001236945}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 2867.8311249241233}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "english_setter_37_L3", "latency_ms": 1195.8184579852968}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 932.050917064771}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 447.57691607810557}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 462.3810409102589}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 579.619875177741}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 1802.9236251022667}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 1379.2297921609133}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 1106.5542919095606}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 2885.3287079837173}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 1188.0997919943184}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 8531.37670783326}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "blur", "item_id": "Siamese_70_L0", "latency_ms": 3329.6851660124958}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 946.6189579106867}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 449.67724988237023}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 463.0272500216961}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 590.7376250252128}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 1819.8643329087645}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 1423.3021659310907}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 1119.900707853958}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 2923.1029169168323}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_21_L1", "latency_ms": 1209.9319591652602}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 812.5969578977674}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 437.52012494951487}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 363.49195800721645}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 561.0248341690749}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 1537.0975830592215}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 1241.1595839075744}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 1096.990458900109}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 2888.2008329965174}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "german_shorthaired_23_L2", "latency_ms": 1203.1407919712365}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 807.4083749670535}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 431.7301670089364}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 350.01258295960724}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 555.7765001431108}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 1603.4827919211239}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 1237.1907499618828}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 1082.0843749679625}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 2920.8072090987116}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "newfoundland_7_L3", "latency_ms": 1191.1968339700252}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 819.395582890138}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 433.8462909217924}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 349.4324591010809}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 558.0441248603165}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 1520.6507910043001}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 1226.0304589290172}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 1065.243833931163}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 2869.9337081052363}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 1183.1531249918044}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 8395.800959086046}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "blur", "item_id": "Birman_95_L0", "latency_ms": 3271.072416100651}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 811.0061250627041}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 428.6873750388622}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 353.30475005321205}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 554.5259998179972}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 1516.4979160763323}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 1216.7739169672132}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 1065.8720000647008}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 2924.353249836713}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "havanese_72_L1", "latency_ms": 1184.5586670096964}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 797.6701660081744}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 427.9496669769287}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 349.3409159127623}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 557.2065419983119}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 1524.9367500655353}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 1219.2090000025928}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 1074.012374971062}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 2866.7827919125557}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "pug_41_L2", "latency_ms": 1200.9242919739336}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 802.1646658889949}
+{"config": "independent", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 428.6539580207318}
+{"config": "digits", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 350.74558295309544}
+{"config": "zoom_digits", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 555.0395830068737}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 1514.6647919900715}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 1223.7270409241319}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 1057.1942499373108}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 2844.111958052963}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "blur", "item_id": "keeshond_69_L3", "latency_ms": 1173.8492499571294}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 1038.1420408375561}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 459.1240829322487}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 471.0516252089292}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 617.464458104223}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 1861.6405001375824}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 1386.452249949798}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 1150.8325419854373}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 2966.203917050734}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 1209.5427080057561}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 8553.8767920807}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "noise", "item_id": "Siamese_63_L0", "latency_ms": 3641.319875139743}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 858.1335409544408}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 439.87529212608933}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 355.1664580591023}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 585.8040421735495}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 1535.4288339149207}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 1255.9420419856906}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 1121.644499944523}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 2916.2030830048025}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_42_L1", "latency_ms": 1201.144249876961}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 997.9085829108953}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 479.2700419202447}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 478.39433304034173}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 656.9012091495097}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 1872.060124995187}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 1393.9929590560496}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 1113.1683751009405}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 2931.6376249771565}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_41_L2", "latency_ms": 1203.6734579596668}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 939.1557502094656}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 442.117583937943}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 358.79233409650624}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 576.9162499345839}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 1568.5929169412702}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 1246.1497080512345}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 1105.5929579306394}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 2922.667874954641}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "miniature_pinscher_24_L3", "latency_ms": 1188.438625074923}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 794.9677091091871}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 424.41674997098744}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 349.4739590678364}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 606.4006250817329}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 1553.5950830671936}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 1315.6864170450717}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 1138.42395786196}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 3053.08720911853}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 1248.4185418579727}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 8820.068791974336}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "noise", "item_id": "havanese_31_L0", "latency_ms": 3370.3789999708533}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 929.0997921489179}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 442.670457996428}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 369.6940829977393}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 586.230874992907}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 1587.4412080738693}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 1266.7048331350088}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 1091.8624999467283}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 2965.6697080936283}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "Bombay_36_L1", "latency_ms": 1222.6555831730366}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 933.2703750114888}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 451.21904206462204}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 368.90545790083706}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 591.467667138204}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 1614.1710421070457}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 1345.5497920513153}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 1142.3000840004534}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 2915.5817090068012}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "keeshond_19_L2", "latency_ms": 1192.0136250555515}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 938.4857919067144}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 438.9450419694185}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 358.6106251459569}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 570.9547919686884}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 1567.6054158248007}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 1239.3974580336362}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 1078.7291249725968}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 2914.5095839630812}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "english_cocker_spaniel_77_L3", "latency_ms": 1231.123249977827}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 826.51795912534}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 437.06095800735056}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 356.2620000448078}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 570.9227079059929}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 1528.8905000779778}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 1237.7909999340773}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 1072.3504580091685}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 2883.3585421089083}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 1181.716375052929}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 8534.468374913558}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "noise", "item_id": "american_bulldog_95_L0", "latency_ms": 3361.4290829282254}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 933.0152499023825}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 447.8572909720242}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 370.5817919690162}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 587.324958993122}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 1620.293791871518}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 1307.7526669949293}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 1138.3572921622545}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 3018.8365830108523}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "Russian_Blue_207_L1", "latency_ms": 1255.449749995023}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 1047.1277080941945}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 474.63974985294044}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 489.5525830797851}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 612.8350419458002}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 1838.7803749646991}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 1380.6104168761522}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 1124.659749912098}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 2966.726459097117}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "newfoundland_57_L2", "latency_ms": 1210.7262921053916}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 1085.3395001031458}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 477.0942081231624}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 485.61200010590255}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 740.026457933709}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 2149.082832969725}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 1524.4471251498908}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 1198.9721672143787}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 3047.9586250148714}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_49_L3", "latency_ms": 1229.2618341743946}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 925.8217501919717}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 440.8805000130087}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 362.47491696849465}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 574.5495411101729}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 1662.1557911857963}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 1262.5762498937547}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 1097.9689580854028}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 2930.007708026096}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 1199.384625069797}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 8911.3277499564}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "noise", "item_id": "scottish_terrier_89_L0", "latency_ms": 3475.881417049095}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 850.2991248387843}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 440.3075419832021}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 363.31829195842147}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 582.5618340168148}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 1650.6398341152817}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 1255.530667025596}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 1063.8502079527825}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 2982.647791970521}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "havanese_3_L1", "latency_ms": 1195.3154590446502}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 1105.136041995138}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 482.9679580871016}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 491.86337483115494}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 739.6790410857648}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 2152.86475000903}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 1542.2650000546128}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 1266.1743748467416}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 3104.8012089449912}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "basset_hound_3_L2", "latency_ms": 1242.2059171367437}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 986.9798750150949}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 459.1635409742594}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 463.63062504678965}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 600.6309171207249}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 1856.757374946028}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 1379.9870838411152}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 1121.0057919379324}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 3129.1873750742525}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "beagle_6_L3", "latency_ms": 1250.6349170580506}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 827.2609170526266}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 445.6376249436289}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 361.04195890948176}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 597.3372920416296}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 1564.9902920704335}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 1362.5566670671105}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 1150.881415931508}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 3009.089916013181}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 1298.4831249341369}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 9095.859833993018}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "noise", "item_id": "staffordshire_bull_terrier_65_L0", "latency_ms": 3625.303041888401}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 839.3249581567943}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 448.9531659055501}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 378.6238331813365}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 596.8800408300012}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 1629.0696668438613}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 1294.9723340570927}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 1153.479915810749}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 3058.4692917764187}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_59_L1", "latency_ms": 1230.8022920042276}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 885.0774590391666}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 454.81133298017085}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 369.80087496340275}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 578.9822910446674}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 1570.2915829606354}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 1235.4609998874366}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 1076.1470838915557}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 2939.2612089868635}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "staffordshire_bull_terrier_97_L2", "latency_ms": 1192.0937919057906}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 801.2561667710543}
+{"config": "independent", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 426.29899992607534}
+{"config": "digits", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 354.6866250690073}
+{"config": "zoom_digits", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 554.3454168364406}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 1572.5136250257492}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 1266.8740830849856}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 1050.8121668826789}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 2852.3459169082344}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "noise", "item_id": "boxer_34_L3", "latency_ms": 1178.6728338338435}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 797.4988331552595}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 426.69508303515613}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 342.82012516632676}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 545.3137089498341}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 1500.1163331326097}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 1198.01912503317}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 1045.6630419939756}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 2954.3638748582453}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 1223.3873750083148}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 8707.087874878198}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "saint_bernard_97_L0", "latency_ms": 3333.2499170210212}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 828.9197501726449}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 433.20566695183516}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 354.6955829951912}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 549.4985831901431}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 1493.2687911204994}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 1194.039291003719}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 1042.1776250004768}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 2847.8392909746617}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "american_bulldog_80_L1", "latency_ms": 1174.1262499708682}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 792.9951671976596}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 426.41475005075336}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 342.147332848981}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 546.2172089610249}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 1489.7072499152273}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 1186.6934590507299}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 1040.6012921594083}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 2845.682332990691}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "english_cocker_spaniel_47_L2", "latency_ms": 1170.5116250086576}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 928.0118329916149}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 446.9202500768006}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 360.7500421348959}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 578.3064998686314}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 1553.2219160813838}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 1295.1501251664013}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 1084.7854169551283}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 2916.040417039767}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "keeshond_99_L3", "latency_ms": 1190.502166049555}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 987.6403328962624}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 453.3527079038322}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 468.90662517398596}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 600.5777500104159}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 1806.1165001709014}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 1375.3285419661552}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 1106.4660421106964}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 2914.191541960463}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 1194.4403750821948}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 8683.592959074304}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "basset_hound_89_L0", "latency_ms": 3490.2099578175694}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 1011.3405419979244}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 453.2577081117779}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 371.8920419923961}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 585.8377078548074}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 1612.664292100817}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 1262.8673750441521}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 1111.7870002053678}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 2957.329624798149}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "boxer_58_L1", "latency_ms": 1195.805166149512}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 809.2315408866853}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 430.24795805104077}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 343.1842499412596}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 555.3023340180516}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 1483.911040937528}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 1191.133416024968}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 1039.0441250056028}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 2874.874624889344}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "newfoundland_199_L2", "latency_ms": 1174.62854180485}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 914.9429590906948}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 438.81158297881484}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 353.54208294302225}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 570.4039998818189}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 1550.4675419069827}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 1231.8718330934644}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 1074.1961249150336}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 2878.180416068062}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "miniature_pinscher_46_L3", "latency_ms": 1185.5127911549062}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 1033.8894168380648}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 462.32566703110933}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 471.7523748986423}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 612.6915840432048}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 1847.4716250784695}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 1385.197666939348}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 1142.3979590181261}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 2950.636165915057}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 1206.6184591967613}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 8528.873041039333}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "english_cocker_spaniel_96_L0", "latency_ms": 3308.4640419110656}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 858.9556671213359}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 450.19687502644956}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 339.6044580731541}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 532.9866248648614}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 1405.060582794249}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 1155.0232078880072}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 1020.027708960697}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 2708.818207960576}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "shiba_inu_62_L1", "latency_ms": 1147.9225831571966}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 937.5494581181556}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 447.0629170536995}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 351.80354211479425}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 572.6004170719534}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 1564.258542144671}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 1234.1593750752509}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 1076.7803341150284}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 2879.6417501289397}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Russian_Blue_72_L2", "latency_ms": 1189.6937920246273}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 1206.7077080719173}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 487.16179095208645}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 487.25429200567305}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 747.9484581854194}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 2167.0122500509024}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 1540.1181250344962}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 1216.093499911949}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 3059.454708127305}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "great_pyrenees_41_L3", "latency_ms": 1238.4002909529954}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 803.3908749930561}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 433.35429206490517}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 342.4370000138879}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 554.1264170315117}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 1487.0695408899337}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 1197.4713748786598}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 1046.1290839593858}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 2856.1749160289764}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 1174.3605001829565}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 8370.742915896699}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "Ragdoll_91_L0", "latency_ms": 3273.462082957849}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 915.7570421230048}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 440.84533397108316}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 356.318541103974}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 569.4546250160784}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 1580.695000011474}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 1252.1512920502573}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 1115.7110419590026}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 2913.471250096336}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "staffordshire_bull_terrier_30_L1", "latency_ms": 1194.0248750615865}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 921.1323750205338}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 437.4084589071572}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 359.51508302241564}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 568.4878339525312}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 1558.9009581599385}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 1230.909415986389}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 1137.1223330497742}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 2910.56620888412}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "american_bulldog_38_L2", "latency_ms": 1192.9951661732048}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 974.0703750867397}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 448.38479114696383}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 459.6685830038041}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 581.0451249126345}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 1779.6629171352834}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 1341.973999980837}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 1096.8449998181313}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 2929.3316251132637}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "saint_bernard_55_L3", "latency_ms": 1202.5055410340428}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 806.4815839752555}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 432.2592089883983}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 345.79462511464953}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 554.1577078402042}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 1491.2394580896944}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 1199.7802080586553}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 1061.8841249961406}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 2879.92454203777}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 1194.5672079455107}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 8383.69870884344}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "jpeg", "item_id": "great_pyrenees_44_L0", "latency_ms": 3259.808958042413}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 793.8740411773324}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 425.02395808696747}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 345.18954204395413}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 547.2568338736892}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 1491.2156658247113}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 1192.1892918180674}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 1036.3802500069141}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 2864.9395001120865}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "wheaten_terrier_56_L1", "latency_ms": 1178.7253331858665}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 933.8616249151528}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 441.76924997009337}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 358.8676250074059}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 573.000666918233}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 1574.9250832013786}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 1251.5823747962713}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 1088.7877501081675}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 2921.704249922186}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "Bengal_35_L2", "latency_ms": 1200.008291983977}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 925.3909168764949}
+{"config": "independent", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 442.5452088471502}
+{"config": "digits", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 357.50949988141656}
+{"config": "zoom_digits", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 571.7484999913722}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 1575.8803749922663}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 1243.1846670806408}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 1076.2128331698477}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 2915.3857501223683}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "jpeg", "item_id": "newfoundland_78_L3", "latency_ms": 1194.0990001894534}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 926.270249998197}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 424.56675018183887}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 358.73345797881484}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 573.4996658284217}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 1611.5030830260366}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 1285.8998749870807}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 1097.4312920589}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 2952.934624860063}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 1202.0953341852874}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 8501.865333179012}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "exposure", "item_id": "yorkshire_terrier_72_L0", "latency_ms": 3302.6975840330124}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 957.181042060256}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 427.6051660999656}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 358.4654170554131}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 575.4909589886665}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 1576.8946250900626}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 1238.3812500629574}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 1082.7605829108506}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 2922.6282499730587}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Siamese_83_L1", "latency_ms": 1199.50879085809}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 972.0771249849349}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 440.8424999564886}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 461.1922500189394}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 594.4822079036385}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 1817.865707911551}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 1369.300042046234}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 1106.443541822955}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 2949.9164998997003}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "american_pit_bull_terrier_24_L2", "latency_ms": 1203.1194169539958}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 926.4862090349197}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 429.2421250138432}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 359.51854195445776}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 574.8937500175089}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 1573.347750119865}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 1246.0002081934363}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 1083.9966668281704}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 2910.5588749516755}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "saint_bernard_3_L3", "latency_ms": 1198.1246669311076}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 815.3446668293327}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 417.3451252281666}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 345.4957080539316}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 559.3887919094414}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 1500.5398751236498}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 1206.861917162314}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 1072.119250195101}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 2907.1523339953274}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 1198.3942079823464}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 8670.519541949034}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "exposure", "item_id": "wheaten_terrier_34_L0", "latency_ms": 3414.4395841285586}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 961.1913338303566}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 448.4112919308245}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 373.7925000023097}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 604.4223750941455}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 1689.1312499064952}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 1292.5736668985337}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 1130.043791839853}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 3029.121584026143}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "keeshond_44_L1", "latency_ms": 1294.1100411117077}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 1030.3468750789762}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 455.7722909376025}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 479.391457978636}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 622.6134579628706}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 1887.128375004977}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 1374.04412496835}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 1126.9714580848813}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 3028.2808751799166}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Maine_Coon_97_L2", "latency_ms": 1246.0591669660062}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 847.4068338982761}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 430.20112509839237}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 356.5853328909725}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 581.4804160036147}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 1600.2307089511305}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 1259.3067919369787}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 1091.1851660348475}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 2974.2291250731796}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "shiba_inu_69_L3", "latency_ms": 1230.303790885955}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 830.835625063628}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 423.18604211322963}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 360.5316667817533}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 621.4297499973327}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 1620.9752501454204}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 1232.7615418471396}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 1077.9658330138773}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 2955.823624972254}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 1210.2356660179794}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 8627.038500038907}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "exposure", "item_id": "havanese_38_L0", "latency_ms": 3426.299042068422}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 946.0257499013096}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 439.50008298270404}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 363.5227910708636}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 586.0015000216663}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 1577.798250131309}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 1255.7686248328537}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 1094.1756248939782}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 2943.715374916792}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Sphynx_49_L1", "latency_ms": 1200.4262087866664}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 819.1070838365704}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 413.1644160952419}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 346.2819999549538}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 554.2374171782285}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 1504.5320831704885}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 1222.2399997990578}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 1063.6587080080062}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 2996.228541014716}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "British_Shorthair_43_L2", "latency_ms": 1280.1203751005232}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 955.4982078261673}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 438.3417081553489}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 369.1950000356883}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 596.725125098601}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 1626.551624853164}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 1345.7232918590307}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 1148.9310408942401}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 3027.4776248261333}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Maine_Coon_94_L3", "latency_ms": 1231.2692499253899}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 1029.0485830046237}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 461.03991684503853}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 495.43291702866554}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 611.4366669207811}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 1854.841124964878}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 1395.7727500237525}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 1134.748874930665}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 2990.707291988656}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 1208.6194171570241}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 8618.532082997262}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "exposure", "item_id": "english_setter_86_L0", "latency_ms": 3334.8252498544753}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 809.5659159589559}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 418.9042919315398}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 343.9474168699235}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 556.520750047639}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 1509.0009160339832}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 1192.5599579699337}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 1042.515458073467}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 2850.8559581823647}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Siamese_61_L1", "latency_ms": 1174.3982089683414}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 1210.2339160628617}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 480.1385838072747}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 491.54733400791883}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 746.3926658965647}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 2161.2512909341604}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 1538.618041900918}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 1208.988750120625}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 3080.0229581072927}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "newfoundland_90_L2", "latency_ms": 1260.1782090496272}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 932.8128749039024}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 426.56804202124476}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 359.7391250077635}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 568.075624993071}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 1563.012707978487}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 1239.1947500873357}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 1075.3895840607584}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 2890.716457972303}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "boxer_94_L3", "latency_ms": 1201.6541669145226}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 790.4245001263916}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 409.54658295959234}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 346.67158406227827}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 548.6524591688067}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 1487.9921248648316}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 1194.0881658811122}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 1042.7834999281913}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 2832.375125028193}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 1187.6250838395208}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 8360.888540977612}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "exposure", "item_id": "Persian_8_L0", "latency_ms": 3259.294540854171}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 758.6687500588596}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 411.55387507751584}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 337.42354181595147}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 574.1669158451259}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 1449.1984581109136}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 1165.9400421194732}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 1036.014833021909}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 2730.4229580331594}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "Bengal_6_L1", "latency_ms": 1161.8682080879807}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 974.3471250403672}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 440.425792010501}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 461.10141603276134}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 594.3777081556618}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 1814.0501659363508}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 1361.1352920997888}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 1104.0037090424448}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 2918.5691659804434}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "german_shorthaired_48_L2", "latency_ms": 1198.9463339559734}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 801.6207499895245}
+{"config": "independent", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 418.62370795570314}
+{"config": "digits", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 341.10745904035866}
+{"config": "zoom_digits", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 553.802290931344}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 1493.9965000376105}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 1202.938917092979}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 1045.4485409427434}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 2859.901250107214}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "exposure", "item_id": "saint_bernard_46_L3", "latency_ms": 1182.1795420255512}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 789.6748331841081}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 425.82187498919666}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 345.4504581168294}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 551.4772499445826}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 1495.1692500617355}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 1209.3351250514388}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 1052.75316699408}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 2862.9972499329597}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 1180.6920000817627}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 8445.145916892216}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "resolution", "item_id": "pug_38_L0", "latency_ms": 3286.6664580069482}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 805.6113331113011}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 424.7293749358505}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 349.0762908477336}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 552.5696252007037}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 1510.949291056022}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 1208.4606669377536}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 1048.177249962464}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 2856.381541118026}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "japanese_chin_98_L1", "latency_ms": 1187.4718749895692}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 795.2543750870973}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 423.4878751449287}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 348.2090001925826}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 551.8146669492126}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 1501.6596659552306}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 1202.2935000713915}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 1058.2765410654247}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 2918.4331661090255}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "yorkshire_terrier_66_L2", "latency_ms": 1223.0507920030504}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 813.4445829782635}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 427.03658412210643}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 347.80487488023937}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 564.7310828790069}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 1504.9695409834385}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 1212.1637919917703}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 1063.9359578490257}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 2872.923207934946}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "leonberger_91_L3", "latency_ms": 1188.8662918936461}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 795.0141248293221}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 426.1343330144882}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 353.97200006991625}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 552.7104998473078}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 1510.6567910406739}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 1234.305125195533}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 1055.2938331384212}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 2878.9522498846054}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 1194.5687921252102}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 8474.704792024568}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "resolution", "item_id": "german_shorthaired_200_L0", "latency_ms": 3310.2821249049157}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 949.1935418918729}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 453.9075419306755}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 363.1864998023957}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 587.8185001201928}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 1578.397125005722}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 1247.9072918649763}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 1101.4602091163397}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 2931.61429092288}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "newfoundland_97_L1", "latency_ms": 1214.1132918186486}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 991.8226660229266}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 466.85216715559363}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 478.915625018999}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 611.1353749874979}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 1867.9343750700355}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 1458.2740408368409}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 1164.1316250897944}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 3040.8393340185285}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "samoyed_7_L2", "latency_ms": 1290.6753330025822}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 954.2772078420967}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 460.9257080592215}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 373.69524990208447}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 645.6956670153886}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 1701.9075830467045}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 1291.6722081135958}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 1121.25249998644}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 3003.7340000271797}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "wheaten_terrier_87_L3", "latency_ms": 1236.394542036578}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 791.7549579869956}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 442.370249889791}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 351.40337492339313}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 541.5238339919597}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 1470.1632498763502}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 1253.7077078595757}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 1063.0692499689758}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 2794.370416784659}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 1193.337291944772}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 8356.08833306469}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "resolution", "item_id": "miniature_pinscher_68_L0", "latency_ms": 3252.499041846022}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 818.7918330077082}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 433.22645779699087}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 347.2592500038445}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 561.3677089568228}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 1507.422833936289}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 1217.5258751958609}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 1059.535666834563}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 2891.5937079582363}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "leonberger_2_L1", "latency_ms": 1185.9545828774571}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 928.320833016187}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 450.58933389373124}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 358.80066617392004}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 584.007625002414}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 1569.9907918460667}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 1243.6280420515686}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 1089.250042103231}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 2916.9221250340343}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Maine_Coon_63_L2", "latency_ms": 1194.4763748906553}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 795.4747499898076}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 423.6371668521315}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 345.339666120708}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 548.0380831286311}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 1495.6863748375326}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 1202.8124581556767}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 1042.5235419534147}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 2854.8623751848936}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Russian_Blue_35_L3", "latency_ms": 1189.186125062406}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 793.5364157892764}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 425.3395840059966}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 346.96887503378093}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 551.6554170753807}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 1502.0933749619871}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 1209.1761250048876}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 1055.346457986161}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 2870.0002499390393}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 1183.0276669934392}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 8402.036749990657}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "resolution", "item_id": "Birman_62_L0", "latency_ms": 3275.421916972846}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 922.2823749296367}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 440.55862515233457}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 362.7202089410275}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 572.2921669948846}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 1572.6296249777079}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 1235.237792134285}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 1083.5733748972416}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 2914.1605419572443}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "german_shorthaired_4_L1", "latency_ms": 1192.5085419788957}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 792.6769580226392}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 427.31800000183284}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 386.1077500041574}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 571.9402090180665}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 1502.5574159808457}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 1207.6283749192953}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 1050.0124578829855}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 2880.523833911866}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "staffordshire_bull_terrier_67_L2", "latency_ms": 1182.0327499881387}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 986.2109171226621}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 458.84808292612433}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 461.337375221774}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 588.7064160779119}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 1794.6490829344839}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 1349.453124916181}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 1104.2324588634074}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 2916.3261249195784}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "saint_bernard_44_L3", "latency_ms": 1200.8404170628637}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 926.7055417876691}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 449.3374170269817}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 361.10720899887383}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 574.9899588990957}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 1567.2571670729667}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 1240.0550418533385}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 1089.0871670562774}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 2906.089707976207}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 1190.6096248421818}
+{"config": "ens4d packed, 25 questions", "questions": 25, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 8461.17045916617}
+{"config": "digits+digitsrev packed (no zoom), 25 questions", "questions": 25, "ladder": "resolution", "item_id": "beagle_43_L0", "latency_ms": 3394.4644590374082}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 810.5947081930935}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 425.3169170115143}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 346.8917920254171}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 557.5365000404418}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 1535.7751669362187}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 1220.1308750081807}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 1050.499124918133}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 2897.3892079666257}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "Maine_Coon_70_L1", "latency_ms": 1186.7575410287827}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 796.8574170954525}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 421.0048750974238}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 347.6367089897394}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 552.5242921430618}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 1546.0855420678854}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 1312.0830829720944}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 1101.4825829770416}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 2961.342625087127}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "basset_hound_63_L2", "latency_ms": 1215.1427080389112}
+{"config": "independent, no cache (v0 as shipped)", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 828.687708126381}
+{"config": "independent", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 438.135749893263}
+{"config": "digits", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 348.6389999743551}
+{"config": "zoom_digits", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 551.3731248211116}
+{"config": "ens4d, no cache, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 1498.7619169987738}
+{"config": "ens4d, cached, one readout at a time", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 1203.3004998229444}
+{"config": "ens4d packed, 1 question", "questions": 1, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 1039.2734999768436}
+{"config": "ens4d packed, 5 questions", "questions": 5, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 2950.2784160431474}
+{"config": "digits+digitsrev packed (no zoom), 5 questions", "questions": 5, "ladder": "resolution", "item_id": "basset_hound_196_L3", "latency_ms": 1188.4583341889083}

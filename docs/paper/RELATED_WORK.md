@@ -141,6 +141,9 @@ calibration is post hoc, fit per task on a few dozen to a few hundred labels; a 
 transfer to another, about 32 labels per scale are enough, and a single temperature is not enough for ordered
 scales. On five synthetic 4-level image-quality rating scales the shipped v0 readout reached mean accuracy 0.500,
 the same readout with a fitted bias and temperature reached 0.810, and a 4-pass ensemble of digit readouts with
-matrix scaling (`ens4d`) reached 0.867, mean ECE about 0.03, at 609 ms per score on an Apple-silicon laptop. The
-multi-question-per-prefill idea that jev-visual and OpenJev-Vision both measure is something glance's own prefix
-cache already supports; a measurement of it is planned but not yet run, so no number is reported here.
+matrix scaling (`ens4d`) reached 0.867, mean ECE about 0.03. On an Apple-silicon laptop one such rating of a fresh
+image takes 1.09 s (the v0 readout: 0.44 s); when five ratings share the image prefill it is 0.58 s per rating, and
+0.34 s with 25 (`docs/paper/RESULTS_LAB.md`, section 9). The multi-question-per-prefill idea that jev-visual and
+OpenJev-Vision both measure is what glance's prefix cache does; packing changed none of 100 checked predictions. The
+saving is smaller here than in their settings because a 196-token image is short next to a 100-token rating prompt
+that has to be read once per readout.

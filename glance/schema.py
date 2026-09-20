@@ -83,7 +83,13 @@ Question = Annotated[Union[NoulQuestion, ChoiceQuestion, ScoreQuestion], Field(d
 
 class Options(_Strict):
     choice_method: Literal["independent", "letter"] = "independent"
-    calibrated: bool = False
+    # How `score` questions are read (v0.3, additive). "auto" = "ens4d" on the VLM, "statements" elsewhere.
+    # "statements" is the v0 method (one yes/no statement per level); "digits" and "ens4d" are Glance elicitation
+    # (`glance/rating.py`), which is calibrated per rubric with `glance fit`.
+    score_method: Literal["auto", "statements", "digits", "ens4d"] = "auto"
+    # true: every answer must be calibrated, or the request fails with calibration_mismatch (v0 behaviour).
+    # "auto": calibrate the answers that have fitted parameters, warn about the others.
+    calibrated: bool | Literal["auto"] = False
 
 
 class DecideRequest(_Strict):
@@ -119,6 +125,8 @@ class ScoreAnswer(_Strict):
     confidence: float | None
     margin: float | None
     raw: dict[str, float] | None
+    method: str | None = None  # "statements" | "digits" | "ens4d"; None for a frontier pick
+    calibration: str | None = None  # version of the rubric calibration applied to this answer, if any
 
 
 Answer = Annotated[Union[NoulAnswer, ChoiceAnswer, ScoreAnswer], Field(discriminator="type")]

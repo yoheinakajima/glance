@@ -15,7 +15,7 @@ from typing import Any
 import numpy as np
 from scipy.special import expit
 
-from . import prompts
+from . import prompts, rating
 from .backends.base import Backend, BackendUsage, PickItem, Statement
 from .images import LoadedImage
 from .schema import (
@@ -78,10 +78,11 @@ class QuestionScore:
     qid: str
     qtype: str
     keys: list[str]  # noul: ["true"]; choice: option keys; score: "0".."K-1"
-    method: str  # "statement" | "independent" | "letter" | "pick"
+    method: str  # "statement" | "independent" | "letter" | "pick" | "digits" | "ens4d"
     z: np.ndarray | None = None  # noul: [1]; choice and score: [K]; None for a frontier pick
     pick: str | None = None  # frontier only
     statements: list[dict[str, Any]] = field(default_factory=list)  # per-statement log records
+    features: np.ndarray | None = None  # rating methods: the members' level logits, concatenated, for the rubric calibration
 
 
 @dataclass
@@ -153,11 +154,14 @@ def score_questions(
     choice_method: str = "independent",
     letter_rotations: int = 4,
     off_mass_warn: float = 0.1,
+    score_method: str = "auto",
 ) -> ScoringResult:
     if backend.kind == "frontier":
         return _score_frontier(backend, images, context, questions)
 
     dual = backend.kind == "dual_encoder"
+    if score_method == "auto":
+        score_method = "statements" if dual else "ens4d"
     usage = BackendUsage()
     timing: dict[str, float] = {}
     warnings: list[str] = []
@@ -167,6 +171,7 @@ def score_questions(
     # 1. Build every Yes/No statement in the request so one backend call can share the image prefix.
     plan: list[tuple[str, str, list[Statement], LoadedImage | None]] = []  # qid, method, statements, dual image
     letter_qids: list[str] = []
+    rating_qids: list[str] = []
     for qid, q in questions.items():
         image = _referenced_image(q, images) if dual else None
         if isinstance(q, NoulQuestion):
@@ -196,6 +201,12 @@ def score_questions(
                     {"question": qid},
                 )
             letter_qids.append(qid)
+        elif isinstance(q, ScoreQuestion) and score_method != "statements":
+            if dual:
+                raise UnsupportedQuestionError(
+                    f"question `{qid}`: score_method `{score_method}` is VLM-only; use `statements`", {"question": qid}
+                )
+            rating_qids.append(qid)
         else:
             statements = [
                 Statement(text=prompts.render_candidate(q.instructions, c), candidate=c) for c in _candidates(q)
@@ -255,6 +266,11 @@ def score_questions(
             ],
         )
 
+    # 4. Rating methods: digit readouts, packed so that every question shares the image prefill(s).
+    if rating_qids:
+        _score_ratings(backend, images, context, {qid: questions[qid] for qid in rating_qids}, score_method,
+                       scores, usage, timing, cache_hits)
+
     for qid, qs in scores.items():
         worst = max((s["off_mass"] for s in qs.statements if s.get("off_mass") is not None), default=0.0)
         if worst > off_mass_warn:
@@ -265,6 +281,80 @@ def score_questions(
         scores=ordered, usage=usage, timing_ms=timing, warnings=warnings,
         cache_hit=all(cache_hits) if cache_hits else None,
     )
+
+
+def _rated_image(qid: str, question: Question, images: list[LoadedImage]) -> LoadedImage:
+    """The one image a rating question is about: named by backticked id, or the only image in the request."""
+    ids = {img.id: img for img in images}
+    named = [m for m in dict.fromkeys(re.findall(r"`([^`]+)`", question.instructions)) if m in ids]
+    if len(named) == 1:
+        return ids[named[0]]
+    if not named and len(images) == 1:
+        return images[0]
+    raise UnsupportedQuestionError(
+        f"question `{qid}`: score_method `ens4d` magnifies the one image the question rates, but the instructions name "
+        f"{named or 'no image'} and the request has {len(images)} images; name exactly one image by backticked id, or "
+        "use score_method `digits` or `statements`",
+        {"question": qid, "named_images": named},
+    )
+
+
+def _zoom_image(target: LoadedImage) -> LoadedImage:
+    import hashlib
+
+    crop = rating.zoom_crop(target.image)
+    return LoadedImage(id=rating.ZOOM_IMAGE_ID, image=crop, sha256=hashlib.sha256(crop.tobytes()).hexdigest(),
+                       width=crop.width, height=crop.height, format="PNG", source=f"derived:zoom:{target.id}")
+
+
+def _score_ratings(backend, images, context, questions: dict[str, ScoreQuestion], score_method: str,
+                   scores: dict[str, QuestionScore], usage: BackendUsage, timing: dict[str, float],
+                   cache_hits: list[bool]) -> None:
+    """Glance elicitation (`glance/rating.py`). One `score_labels` call per (view, number of levels): the full view is
+    the request's images; the zoom view adds a magnified crop of the rated image. Every question of a call sits behind
+    the same image prefix, so with the prefix cache a request pays at most one prefill per view."""
+    members = rating.MEMBERS[score_method]
+    needs_zoom = any(m.startswith("zoom_") for m in members)
+    if needs_zoom and any(img.id == rating.ZOOM_IMAGE_ID for img in images):
+        raise UnsupportedQuestionError(f"image id `{rating.ZOOM_IMAGE_ID}` is reserved by score_method `{score_method}`")
+
+    # (view key, K) -> [(qid, member, reversed?, block)], with the image list of each view
+    calls: dict[tuple[str, int], list[tuple[str, str, bool, str]]] = {}
+    views: dict[str, list[LoadedImage]] = {"": images}
+    labels_for: dict[int, list[str]] = {}
+    for qid, q in questions.items():
+        levels = list(q.criteria)
+        target = _rated_image(qid, q, images) if needs_zoom else None
+        for member in members:
+            view = ""
+            if member.startswith("zoom_"):
+                view = target.id
+                if view not in views:
+                    views[view] = images + [_zoom_image(target)]
+            block, labels, reverse = rating.member_prompt(member, q.instructions, levels, target.id if target else "img0")
+            labels_for[len(levels)] = labels
+            calls.setdefault((view, len(levels)), []).append((qid, member, reverse, block))
+
+    member_logits: dict[str, dict[str, np.ndarray]] = {qid: {} for qid in questions}
+    records: dict[str, list[dict[str, Any]]] = {qid: [] for qid in questions}
+    for (view, k), entries in calls.items():
+        result = backend.score_labels(views[view], context, [block for *_, block in entries], labels_for[k])
+        usage.add(result.usage)
+        for key, ms in result.timing_ms.items():
+            timing[key] = timing.get(key, 0.0) + ms
+        if result.cache_hit is not None:
+            cache_hits.append(result.cache_hit)
+        for row, (qid, member, reverse, _) in enumerate(entries):
+            logits = np.asarray(result.logits[row], dtype=np.float64)
+            member_logits[qid][member] = logits[::-1] if reverse else logits
+            records[qid].append({"member": member, "prompt_hash": result.prompt_hashes[row],
+                                 "label_logits": member_logits[qid][member].tolist(), "off_mass": float(result.off_mass[row])})
+    for qid, q in questions.items():
+        ordered = [member_logits[qid][m] for m in members]
+        scores[qid] = QuestionScore(
+            qid=qid, qtype=q.type, keys=_keys(q), method=score_method, z=rating.raw_level_logits(ordered),
+            features=np.concatenate(ordered), statements=sorted(records[qid], key=lambda r: members.index(r["member"])),
+        )
 
 
 def _score_frontier(backend, images, context, questions: dict[str, Question]) -> ScoringResult:
@@ -314,6 +404,7 @@ def build_answer(
     qs: QuestionScore,
     raw: float | np.ndarray | None,
     calibrated: float | np.ndarray | None = None,
+    calibration_version: str | None = None,
 ) -> Answer:
     """Assemble the typed answer. `calibrated` is None when calibration is off; the answer then uses `raw`."""
     final = raw if calibrated is None else calibrated
@@ -346,4 +437,6 @@ def build_answer(
         confidence=round(confidence(final), ROUND),
         margin=round(margin(final), ROUND),
         raw=_as_dict(qs.keys, raw),
+        method="statements" if qs.method == "statement" else qs.method,
+        calibration=calibration_version if calibrated is not None else None,
     )

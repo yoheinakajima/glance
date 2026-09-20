@@ -117,14 +117,14 @@ def test_pipeline_applies_calibration(cfg, request_body):
     key = engine.calibration_key(backend, "independent")
     C.save_params(cfg.path("calibration"), C.build_params(key, _rows(), source_run="r1"))
 
-    request_body["options"] = {"calibrated": True}
+    request_body["options"] = {"calibrated": True, "score_method": "statements"}
     status, payload = engine.decide_json(request_body)
     assert status == 200 and payload["calibration_version"] == key.version()
     color = payload["answers"]["color"]
     assert color["raw"]["red"] > color["probabilities"]["red"] > 1 / 3  # tempered, same argmax
     assert payload["answers"]["is_red"]["raw"] != payload["answers"]["is_red"]["noul"]
 
-    request_body["options"] = {"calibrated": True, "choice_method": "letter"}  # a different key: never a warning
+    request_body["options"] = {"calibrated": True, "choice_method": "letter", "score_method": "statements"}  # a different key: never a warning
     status, payload = engine.decide_json(request_body)
     assert status == 409 and payload["code"] == "calibration_mismatch"
 
@@ -158,7 +158,7 @@ def test_server_error_shapes(client, request_body):
     resp = client.post("/v1/decide", json=request_body)
     assert resp.status_code == 400 and resp.get_json()["code"] == "image_load_failed"
 
-    request_body["options"] = {"calibrated": True}
+    request_body["options"] = {"calibrated": True, "score_method": "statements"}
     request_body["state"]["images"] = [{"id": "img0", "path": "samples/dog.jpg"}]
     assert client.post("/v1/decide", json=request_body).status_code == 409
 

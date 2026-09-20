@@ -20,7 +20,9 @@ from typing import Any
 import numpy as np
 from scipy.stats import pearsonr, spearmanr
 
+from ..calibration import ece_equal_mass
 from ..config import PROJECT_ROOT
+from ..evals.metrics import ece_noise_floor
 from ..logging_utils import read_jsonl
 from . import score_methods as sm
 from .analyze import combine_rows, metrics
@@ -52,6 +54,7 @@ def evaluate(rows: list[dict[str, Any]], kind: str, dmos: dict[str, float]) -> d
     entropy = -(np.clip(pt, 1e-12, None) * np.log(np.clip(pt, 1e-12, None))).sum(1) / np.log(pt.shape[1])
     keep = np.argsort(entropy, kind="stable")[: int(round(COVERAGE * len(yt)))]
     out["accuracy_at_80"] = float(np.mean(pt[keep].argmax(1) == yt[keep]))
+    out["_conf"], out["_correct"] = pt.max(1).tolist(), (pt.argmax(1) == yt).tolist()
     if dmos:
         from sklearn.isotonic import IsotonicRegression
 
@@ -107,7 +110,14 @@ def main(argv: list[str] | None = None) -> int:
         entry = {"scales": len(main_scales), "n_test_per_scale": int(np.median([per[s]["n"] for s in per])),
                  "accuracy": avg("accuracy"), "accuracy_at_80": avg("accuracy_at_80"), "within_1": avg("within_1"),
                  "mae": avg("mae"), "ece": avg("ece"),
-                 "scales_ece_le_0.05": int(sum(per[s]["ece"] <= 0.05 for s in main_scales))}
+                 "scales_ece_le_0.05": int(sum(per[s]["ece"] <= 0.05 for s in main_scales)),
+                 "mean_ece_floor": avg("ece_floor")}
+        # Per-distortion test sets are small, so their ECE sits near its sampling floor. Pooling every main distortion
+        # gives one reliability estimate with a low floor.
+        conf = np.concatenate([per[s]["_conf"] for s in main_scales])
+        correct = np.concatenate([per[s]["_correct"] for s in main_scales])
+        entry["pooled_n"], entry["pooled_ece"] = int(len(conf)), ece_equal_mass(conf, correct, 15)
+        entry["pooled_ece_floor"] = ece_noise_floor(conf, 15)
         if dmos:
             entry["mean_srcc_vs_dmos"] = avg("srcc_vs_dmos")
             entry["mean_srcc_true_level_vs_dmos"] = avg("srcc_level_vs_dmos")
@@ -116,15 +126,16 @@ def main(argv: list[str] | None = None) -> int:
             entry["overall_srcc_type_aware"] = float(spearmanr(pred, true).statistic)
             entry["overall_plcc_type_aware"] = float(pearsonr(pred, true).statistic)
         summary[key] = entry
-    head = ["Method", "scales", "n test / scale", "accuracy", "accuracy, most confident 80%", "within 1", "MAE", "mean ECE",
-            "scales with ECE <= 0.05"]
+    head = ["Method", "scales", "n test / scale", "accuracy", "accuracy, most confident 80%", "within 1", "MAE",
+            "mean ECE (mean floor)", "scales with ECE <= 0.05", "pooled ECE (floor)"]
     if dmos:
         head += ["mean SRCC vs DMOS (per type)", "same for the TRUE level (ceiling)", "overall SRCC (type-aware)", "overall PLCC (type-aware)"]
     lines += ["## Summary (mean over distortions" + (f", excluding {', '.join(separate)}" if separate else "") + ")", "",
               "| " + " | ".join(head) + " |", "| " + " | ".join("---" for _ in head) + " |"]
     for key, e in summary.items():
         cells = [f"`{key}`", e["scales"], e["n_test_per_scale"], f"{e['accuracy']:.3f}", f"{e['accuracy_at_80']:.3f}", f"{e['within_1']:.3f}", f"{e['mae']:.3f}",
-                 f"{e['ece']:.3f}", e["scales_ece_le_0.05"]]
+                 f"{e['ece']:.3f} ({e['mean_ece_floor']:.3f})", e["scales_ece_le_0.05"],
+                 f"{e['pooled_ece']:.3f} ({e['pooled_ece_floor']:.3f})"]
         if dmos:
             cells += [f"{e['mean_srcc_vs_dmos']:.3f}", f"{e['mean_srcc_true_level_vs_dmos']:.3f}",
                       f"{e['overall_srcc_type_aware']:.3f}", f"{e['overall_plcc_type_aware']:.3f}"]

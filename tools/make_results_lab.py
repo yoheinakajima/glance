@@ -53,20 +53,23 @@ ranked = sorted(selection["summary"], key=lambda k: selection["summary"][k]["mea
 for i, k in enumerate(ranked, 1):
     s = selection["summary"][k]
     out.append(f"| {i} | `{k}` | {s['forward_passes']} | {s['mean_cv_nll']:.4f} | {s['mean_cv_accuracy']:.3f} |")
-out += ["", f"Winner at any cost: `{selection['winner_overall']}`. Winner within {selection['budget']} forward passes (the cost of "
-        f"the v0 method): `{selection['winner_budget']}`.", ""]
+out += ["", f"Winner at any cost: `{selection['winner_overall']}`. Winner within {selection['budget']} forward passes (the number "
+        f"the v0 method uses; not the same latency, see section 9): `{selection['winner_budget']}`.", ""]
 
 out += ["## 2. Test split, every method (n = 500 per scale, scored once)", "",
-        "| Method | What it is | Passes | p50 latency (ms) | " + " | ".join(SCALES) + " | mean accuracy | mean MAE | mean ECE |",
+        "| Method | What it is | Passes | marginal p50 ms (image already cached) | " + " | ".join(SCALES) + " | mean accuracy | mean MAE | mean ECE |",
         "| --- | --- | --- | --- | " + " | ".join("---" for _ in SCALES) + " | --- | --- | --- |"]
 for k in ORDER:
     e = report[f"blur|{k}"]
     out.append(f"| `{k}` | {WHAT[k]} | {e['forward_passes']} | {e['latency_ms_p50']:.0f} | "
                + " | ".join(f"{ev(s, k)['accuracy']:.3f}" for s in SCALES)
                + f" | **{mean(k, 'accuracy'):.3f}** | {mean(k, 'mae'):.3f} | {mean(k, 'ece'):.3f} |")
-out += ["", "Each method is shown with the calibration chosen for it by cross-validation on the calibration split. Latency "
-        "is the separately measured, uncontended p50 on the prefix-cached path for one question about one image "
-        "(`lab/LATENCY.json`); a combination costs the sum of its members.", ""]
+out += ["", "Each method is shown with the calibration chosen for it by cross-validation on the calibration split. The latency "
+        "column is the separately measured, uncontended p50 of the readout on the prefix-cached path (`lab/LATENCY.json`); a "
+        "combination is the sum of its members. CORRECTION (2026-09-20, `lab/NOTES.md` entry 16): in that benchmark "
+        "`independent` and `zoom_cumulative` ran first on each image and paid the image prefill, every other readout found "
+        "the prefix cached. The column is therefore the MARGINAL cost of adding a readout, and is not comparable across rows "
+        "that did and did not pay the prefill. Section 9 gives the cost of each method on a fresh image.", ""]
 
 out += ["## 3. The two winners against the v0 method, per scale", "",
         "| Scale | Method | Calibration | Accuracy | Within 1 level | MAE (levels) | Spearman | NLL | ECE | ECE floor |",
@@ -115,8 +118,11 @@ for k in ("ens4d", "ens7"):
         out.append(f"| `{k}` | {s} | {r['n']} | {r['max_abs_diff']:.3f} | {r['median_abs_diff']:.3f} | {r['same_prediction']:.3f} | "
                    f"{r['accuracy_cached']:.3f} | {r['accuracy_reference']:.3f} |")
 
-out += ["", "## 7. Clean latency of each readout (cached path, one question, one image)", "", "| Readout | p50 ms |", "| --- | --- |"]
-out += [f"| `{k}` | {v:.0f} |" for k, v in latency["p50_ms"].items()]
+out += ["", "## 7. Marginal latency of each readout (cached path, one question, one image)", "",
+        "Order within an image: `independent`, `cumulative`, `digits`, `zoom_cumulative`, `zoom_digits`, `digitsrev`, "
+        "`zoom_digitsrev`. Only the first one-image readout and the first two-image readout pay a prefill (see the correction "
+        "under section 2).", "", "| Readout | p50 ms | paid the image prefill |", "| --- | --- | --- |"]
+out += [f"| `{k}` | {v:.0f} | {'yes' if k in ('independent', 'zoom_cumulative') else 'no'} |" for k, v in latency["p50_ms"].items()]
 boot = J("lab/BOOTSTRAP.json")
 fmt = lambda e: f"{e['point']:.3f} [{e['ci95'][0]:.3f}, {e['ci95'][1]:.3f}]"  # noqa: E731
 out += ["", "## 8. Uncertainty: bootstrap 95% intervals", "",
@@ -132,5 +138,23 @@ out += ["", "Reading: every listed difference excludes zero. The pre-registered 
         "scales that meet it, the 95% interval reaches below 0.85 for: "
         + "; ".join(f"`{k}`: {', '.join(v) if v else 'none'}" for k, v in below.items())
         + ". JPEG artifacts is below the bar for every method."]
+pack, packed_ref = J("lab/PACKING.json"), J("lab/REFCHECK_packed.json")
+out += ["", "## 9. Cost of a rating on a fresh image, and what packing questions saves", "",
+        "`glance/lab/pack_bench.py`: prefix cache cleared before every measurement, timed end to end from the image file "
+        "(decode, resize, zoom crop, forward passes, readout), uncontended GPU, the first 20 test images of each scale. "
+        "\"Packed\" means one prefill of the image with the `digits` and `digitsrev` questions of every scale batched behind it, "
+        "and one prefill of image + magnified crop with the two zoom readouts behind it: two prefills in total however many "
+        "rating questions are asked. The 25-question rows ask the 25 five-level KADID-style questions of the same lab images "
+        "(timing only).", "",
+        "| Configuration | images | rating questions answered | p50 ms | p90 ms | p50 ms per question |", "| --- | --- | --- | --- | --- | --- |"]
+out += [f"| {name} | {e['images']} | {e['questions']} | {e['p50_ms']:.0f} | {e['p90_ms']:.0f} | {e['p50_ms_per_question']:.0f} |" for name, e in pack.items()]
+n_packed = sum(r["n"] for r in packed_ref.values())
+out += ["", "Packing changes the batch composition, which perturbs half-precision logits. Check (`lab/REFCHECK_packed.json`): the "
+        "calibration fit on the one-readout-at-a-time logits, applied unchanged to the packed logits of the same "
+        f"{n_packed} test images:", "",
+        "| Scale | n | max abs logit diff | median abs logit diff | same prediction | accuracy one at a time | accuracy packed |",
+        "| --- | --- | --- | --- | --- | --- | --- |"]
+out += [f"| {s} | {r['n']} | {r['max_abs_diff']:.3f} | {r['median_abs_diff']:.3f} | {r['same_prediction']:.3f} | {r['accuracy_cached']:.3f} | "
+        f"{r['accuracy_reference']:.3f} |" for s, r in packed_ref.items()]
 (ROOT / "docs/paper/RESULTS_LAB.md").write_text("\n".join(out) + "\n")
 print("wrote docs/paper/RESULTS_LAB.md,", len(out), "lines")
