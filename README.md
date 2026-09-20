@@ -1,9 +1,28 @@
 # glance
 
-Image decision harness v0. Takes image(s) plus typed questions (`noul`, `choice`, `score`) and returns probability
-distributions read from single forward passes of an open VLM or a dual encoder. No text generation, no training.
+**Glance is how you ask a frozen vision-language model for a score. It is not a VLM.**
 
-- `HANDOFF.md` is the spec. `STATUS.md` is the build log, with every decision and deviation.
+You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
+rubric) and get probability distributions back, read from the logits of single forward passes of an open model you
+already have (Qwen3-VL-4B by default). No text is generated, no weights are trained or shipped. The interface mirrors
+TypeSafe's Jev, which is text-only; Glance is the same shape for images, running locally.
+
+What is new here is the *elicitation* for `score`, measured in `docs/paper/RESULTS_LAB.md`:
+
+| Qwen3-VL-4B, five 4-level image-quality rubrics, 500 held-out images each | mean accuracy |
+| --- | --- |
+| v0 readout (one yes/no statement per level), single temperature | 0.500 |
+| same readout, with a calibration fit on labeled examples | 0.810 |
+| **+ Glance** (`ens4d`): digit readout, scale forward and reversed, with and without a magnified crop, per-rubric matrix calibration | **0.867** |
+
+About 32 labeled images per rubric are enough for the calibration, and it does **not** transfer from one rubric to
+another, so the verb that matters is `glance fit`. Measured on one 4B model and synthetic degradations so far; the
+generalization tests (25 distortion types, KADID-10k human scores) are in progress on this branch. One rating of a
+fresh image takes about 1.1 s on an Apple-silicon laptop; five ratings of the same image about 0.6 s each.
+
+- `HANDOFF.md` is the original spec. `STATUS.md` is the build log, with every decision and deviation.
+- `docs/` is written for a paper: methods, results, reproduction, related work, research log. `lab/NOTES.md` is the
+  lab notebook, with hypotheses registered before each experiment and two errata.
 - `MODELS.md` and `DATASETS.md` record licenses, pins and check dates.
 
 ## Setup
@@ -16,22 +35,60 @@ uv run glance doctor --json      # detects the device and picks the model tier
 Weights download to `./.cache/hf` on first use (about 10.5 GB for SigLIP2 plus Qwen3-VL-4B on this tier).
 Afterwards everything runs with `HF_HUB_OFFLINE=1`.
 
-## Use
+## Rate an image, and fit your own rubric
+
+```bash
+# one rating, from the command line (uses your calibration for this rubric if you have fit one)
+uv run glance score photo.jpg --prefix-cache \
+  --instructions "How blurry is `img0`?" \
+  --criteria "Sharp" "Slightly soft" "Blurry" "Very blurry"
+
+# fit a calibration for YOUR rubric from a few dozen labeled images: labels/0/*.jpg, labels/1/*.jpg, ...
+uv run glance fit --data labels/ --rubric rubric.json --prefix-cache
+```
+
+`rubric.json` is `{"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}`. `fit`
+reads the model four times per image, fits a K x 4K affine map on those logits (nothing in the model changes), prints
+its cross-validated accuracy, error and calibration at your sample size, and writes a few hundred numbers to
+`calibration/ratings/<hash>.json`. A calibration is tied to the exact rubric text, the model revision and the image
+token budget. Calibrations for the five lab rubrics ship in `glance/assets/ratings/`.
+
+```python
+from glance import Glance
+
+g = Glance()                                   # loads the local VLM on first use
+g.score("photo.jpg", "How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"])
+# {'score': 0.31, 'probabilities': {'0': 0.72, '1': 0.26, ...}, 'confidence': 0.55, 'calibration': 'rate_e098aa', ...}  (values illustrative)
+g.noul("photo.jpg", "Is there a dog in `img0`?")
+g.choice("photo.jpg", "What is in `img0`?", ["dog", "cat", "other"])
+g.ask("photo.jpg", {"blur": {...}, "noise": {...}, "usable": {...}})   # many questions, the image is prefilled once per view
+g.fit("How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"], "labels/")
+```
+
+`score` is the expected level, `probabilities` the distribution over levels, `confidence` is 1 minus the normalized
+entropy. Use the expectation and the confidence, not only the top level: almost every error is an adjacent level.
+
+## Use the harness
 
 ```bash
 uv run glance decide samples/receipt.json --model vlm
 uv run glance decide samples/receipt.json --model siglip
 uv run glance decide samples/receipt.json --model vlm --choice-method letter
 uv run glance decide samples/receipt.json --model vlm --calibrated      # needs fitted params in calibration/
+uv run glance decide samples/receipt.json --model vlm --score-method statements   # the v0 `score` method
 
-uv run glance serve --preload vlm                                        # 127.0.0.1:8077
+uv run glance serve --preload vlm --prefix-cache                         # 127.0.0.1:8077
 curl -s localhost:8077/v1/decide -H 'content-type: application/json' -d @samples/dog.json
 curl -s localhost:8077/v1/models
 curl -s localhost:8077/healthz
 ```
 
-The request and response shapes are in `HANDOFF.md` section 5. Every call appends one line to
-`logs/calls/YYYY-MM-DD.jsonl` (inputs, per-statement logits, raw and calibrated probabilities, timing, versions).
+The request and response shapes are in `HANDOFF.md` section 5, with three additive extensions (`STATUS.md`, "API
+extension"): `options.score_method` (`auto` | `statements` | `digits` | `ens4d`; `auto` is `ens4d` on the VLM),
+`options.calibrated` also accepts `"auto"` (calibrate what has fitted parameters, warn about the rest; `true` still
+fails with 409 when something is missing), and `score` answers carry `method` and `calibration`. Every call appends
+one line to `logs/calls/YYYY-MM-DD.jsonl` (inputs, per-statement logits, raw and calibrated probabilities, timing,
+versions).
 
 ## Evaluate
 

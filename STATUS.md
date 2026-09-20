@@ -460,3 +460,59 @@ scored. 32 labeled images per scale are enough; calibrations do not transfer bet
 uncached path. This revises the v0 reading that `score` needs training data: it needs a better readout and a few dozen
 labels per scale. Nothing in the v0 harness API was changed; promoting the readout into `glance decide` would change
 the section 5 contract and is left for a decision.
+
+## Update 2026-09-20 (day): generalization tests, a latency erratum, and the rating method promoted into the harness
+
+Branch `score-lab`. Notebook entries 14 to 17 in `lab/NOTES.md` have the detail; this is the summary and the decisions.
+
+**Decisions**
+- D27. Generalization of `ens4d` is tested with NO re-selection on two benchmarks registered in advance (entry 14): a
+  license-clean rebuild of the 25-distortion x 5-level design (`glance/lab/distort25.py`), and KADID-10k itself under an
+  evaluation-only exception approved by the project owner (`DATASETS.md`). One generic question wording for all 25
+  distortions; baselines get their best cross-validated calibration.
+- D28. `distort25` draws from the Oxford-IIIT Pet TRAIN split (approved by the owner 2026-09-20): the five lab scales had
+  used 1,603 of the 1,611 eligible test-split photos, and the benchmark must share no photo with them. 1,988 train photos
+  pass the same filters; 300 items per distortion, 30 per split and level.
+- D29. KADID-10k is split by reference image (41 calibration / 40 test). Two of its distortions (#18 mean shift, #25
+  contrast change) are not severity scales (their levels run from one direction through "unchanged" to the other); they
+  are kept, asked with the same generic question, and reported apart from the 23-distortion mean. Decided from KADID's
+  own DMOS file before any model output (entry 15). Nothing from the database is committed except ids, levels and logits.
+- D30. ERRATUM (entry 16). The lab latency table mixed cold and warm measurements: `ens4d` = 609 ms contained no image
+  prefill, v0 = 432 ms contained one. Re-measured cold, end to end, uncontended (`glance/lab/pack_bench.py`): v0 readout
+  441 ms (918 ms on the default reference path), `ens4d` 1,248 ms one readout at a time, 1,089 ms packed, 584 ms per
+  rating with five rubrics in one request, 341 ms with 25. Packing changed 0 of 100 predictions. Accuracy results are
+  unaffected. Every document that quoted the old numbers is corrected and says so.
+- D31. A flaw in my own pre-registration, recorded before the results exist (entry 15b): "ECE <= 0.05 on 20 of 25
+  distortions" cannot be met at 200 test items per distortion (the sampling floor is about 0.08). It stays and will be
+  reported as failed if it fails; a pooled ECE over all distortions is added as the measure that can discriminate.
+- D32. API extension, approved by the owner 2026-09-20 (this is the section 5 change the hand-off says to ask about):
+  `options.score_method` = `auto` | `statements` | `digits` | `ens4d` (default `auto`: `ens4d` on the VLM, `statements` on
+  the dual encoder); `options.calibrated` also accepts `"auto"`; `score` answers gain `method` and `calibration`. All
+  additive: a v0 request is still valid, and `score_method: "statements"` gives the v0 behaviour bit for bit. The eval
+  harness pins `statements` so v0 runs reproduce.
+- D33. Rating calibrations are per rubric and never pooled (the lab showed they do not transfer). Key = backend, model @
+  revision, rating prompt version, method, image-token budget, instructions, criteria. `calibrated: true` without a
+  matching file is a 409, as in v0. Without any calibration the answer is the softmax of the mean member logits (chosen
+  on the lab calibration split: 0.572 accuracy vs 0.513 for the raw v0 readout).
+- D34. `glance fit` (CLI and `Glance.fit`) is the product surface: labeled images in, a few hundred numbers out, with
+  cross-validated quality and the ECE floor at the user's sample size. Calibrations for the five lab rubrics ship in
+  `glance/assets/ratings/` (fit on the lab calibration split only).
+- D35. Naming (owner's direction): package and CLI `glance`; method "Glance elicitation"; result rows "Qwen3-VL-4B +
+  Glance"; never a model-style name, because no weights are trained or shipped. No universality claim: one 4B model
+  measured; `fit` is the transfer mechanism, not a transfer result.
+- D36. Related work now covers Jev and its open reproductions (`docs/paper/RELATED_WORK.md`), every page fetched on
+  2026-09-20; two claims from outside feedback could not be found anywhere and are listed as not verified.
+
+**New commands**
+
+```
+uv run glance score photo.jpg --instructions "How blurry is `img0`?" --criteria "Sharp" "Slightly soft" "Blurry" "Very blurry"
+uv run glance fit --data labels/ --rubric rubric.json --prefix-cache
+uv run python -m glance.lab.pack_bench --limit 20 --out lab/PACKING
+uv run python -m glance.lab.bench_report --bench kadid --in lab/runs/kadid.jsonl --out lab/KADID_REPORT --separate mean_shift,contrast_change
+uv run python tools/check_harness_rating.py --n 40
+```
+
+**In progress (GPU queue, unattended):** KADID-10k `ens4d` readouts on all 81 references, then `distort25`, then the
+`independent` baseline on both. Results and the hypothesis verdicts (H7 to H9) go to `lab/NOTES.md` and
+`docs/paper/RESULTS_GENERALIZATION.md` when the data is complete.

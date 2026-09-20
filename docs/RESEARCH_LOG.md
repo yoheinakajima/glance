@@ -375,3 +375,61 @@ of its final accuracy. Calibrations do not transfer between scales. Same predict
 needs a few dozen labels per scale. Not yet done: a frontier-model comparison on the new scales, real (non-synthetic)
 rating tasks, and wiring the winning readout into the harness API (that changes the section 5 contract, so it waits
 for the project owner).
+
+## 2026-09-20  Outside review, a latency erratum, and "prefill once, ask many"
+
+**Question.** Two outside reviews (relayed by the project owner) compared the score lab with TypeSafe's Jev and its
+open reproductions and said the lab "pays a new pass per readout" where Jev-style systems share the prefill. Is that
+right, and what does a rating really cost?
+
+**What was done.** Checked the Jev claims against primary pages (`docs/paper/RELATED_WORK.md`, new section; two claims
+could not be found and are listed as not verified). Re-read the lab's latency rows and found that `lab/LATENCY.json`
+had timed most readouts on an already-cached image prefix. Wrote `glance/lab/pack_bench.py`: cold cache, end to end,
+idle GPU; single readouts, `ens4d` one readout at a time, and `ens4d` packed (two prefills, all questions batched
+behind them) for 1, 5 and 25 rating questions. Checked packed against unpacked predictions.
+
+**Result.** `ens4d` costs 1,248 ms per fresh image one readout at a time and 1,089 ms packed, against 441 ms for the
+v0 readout with the cache (918 ms as shipped); the previously published 609 ms contained no prefill. With five
+rubrics in one request it is 584 ms per rating, with 25 it is 341 ms. Packing changed 0 of 100 predictions (median
+logit shift 0.017). The saving is modest because a 196-token image is short next to a 100-token rating prompt that
+must be read once per readout. Sources: `lab/PACKING.md`, `lab/REFCHECK_packed.md`, `lab/NOTES.md` entry 16.
+
+**Decision.** Publish the correction everywhere the old number appeared, keep `lab/LATENCY.json` with its meaning
+stated (marginal cost), report cold-start and per-question costs side by side from now on. The accuracy claim is
+unchanged; the claim "same cost as the baseline" is withdrawn and replaced by "same number of forward passes, 2.5 to
+2.8 times the latency for one rating, comparable per-rating latency when several ratings share an image".
+
+## 2026-09-20  The rating method becomes part of the harness: "Glance elicitation" and `glance fit`
+
+**Question.** How should the lab's winner be exposed so that the one thing a user must do (fit a small calibration on
+their own rubric) is the headline, and so that nobody mistakes the project for a fine-tuned model?
+
+**What was done.** `glance/rating.py` (digit readouts, magnified crop, per-rubric matrix calibration; prompts
+byte-identical to the lab's, enforced by a test); scorer and pipeline wiring with all rating questions of a request
+packed into one backend call per view; `options.score_method` and `calibrated: "auto"` (additive to the hand-off's
+section 5, approved by the owner); `glance fit`, `glance score`, a small Python class `Glance`; calibrations for the
+five lab rubrics shipped as 4 KB JSON files fit on the lab calibration split only. 229 tests pass.
+
+**Result.** Uncalibrated fallback chosen on the lab calibration split: mean of member logits, 0.572 accuracy against
+0.513 for the raw v0 readout. Shipped calibrations cross-validate at 0.876 / 0.858 / 0.798 / 0.928 / 0.914 (blur /
+noise / jpeg / exposure / resolution), in line with the lab's selection table. End-to-end acceptance check against
+the lab's held-out predictions: see `results/lab/harness_rating_check.json` and notebook entry 17.
+
+**Decision.** Naming: the package and CLI stay `glance`, the method is "Glance elicitation", result rows read
+"Qwen3-VL-4B + Glance". No model-style names, no universality claim; `fit` is how the method moves to another rubric
+or model, and that transfer is an invitation until someone measures it.
+
+## 2026-09-20  Generalization test of `ens4d`: registered, data prepared, collection running
+
+**Question.** Does the lab result survive (a) 25 distortion types instead of 5, (b) 5 levels instead of 4, (c) one
+generic question wording instead of hand-written level texts, (d) other photos, and (e) comparison with human opinion
+scores?
+
+**What was done.** Registered the method, wording, baselines, hypotheses H7 to H9 and the report definition before any
+data existed (`lab/NOTES.md` entries 14, 15, 15b). Built `distort25` (license-clean, Pets train split, 7,500 items;
+generator written by a cheaper assistant model from a spec, sheets reviewed by me) and prepared KADID-10k (evaluation
+only, split by reference image, nothing from the database committed). Wrote `glance/lab/bench_report.py`.
+
+**Result.** Pending: the collection runs unattended. Two things are already on record: two KADID distortions are not
+severity scales and are reported separately, and my ECE criterion for H8 was badly designed (its sampling floor at 200
+test items is above the threshold), so a pooled ECE was added before the results exist.
