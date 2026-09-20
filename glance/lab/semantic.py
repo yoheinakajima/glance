@@ -206,11 +206,15 @@ for _c in CAPTIONS:
 
 # text_legibility level params (level 0 = worst): font size in px at BASE_SIDE, alpha in [0,1], Gaussian
 # blur radius applied to the text layer only, how the fill color is chosen, and outline width in px.
+# Tuned BY EYE on three photos before any model saw this scale (lab/NOTES.md entry 36): the first version's two
+# lowest levels (background-colored text at 18% and 38% opacity) were both invisible, so levels 0 and 1 could not be
+# told apart by a person. White text with a dark outline stays visible on light and dark backgrounds; legibility is
+# then set by size and blur: an unreadable smudge, hard, readable with effort, easy, very easy.
 TEXT_LEVEL_PARAMS: list[dict[str, Any]] = [
-    {"font_size": 14, "opacity": 0.18, "blur": 2.6, "color_mode": "background", "outline": 0},
-    {"font_size": 18, "opacity": 0.38, "blur": 1.3, "color_mode": "blend35", "outline": 0},
-    {"font_size": 23, "opacity": 0.62, "blur": 0.5, "color_mode": "blend70", "outline": 1},
-    {"font_size": 29, "opacity": 0.88, "blur": 0.0, "color_mode": "white", "outline": 2},
+    {"font_size": 11, "opacity": 0.85, "blur": 1.9, "color_mode": "white", "outline": 1},
+    {"font_size": 14, "opacity": 0.85, "blur": 1.05, "color_mode": "white", "outline": 1},
+    {"font_size": 19, "opacity": 0.85, "blur": 0.45, "color_mode": "white", "outline": 1},
+    {"font_size": 27, "opacity": 0.92, "blur": 0.0, "color_mode": "white", "outline": 2},
     {"font_size": 36, "opacity": 1.0, "blur": 0.0, "color_mode": "white", "outline": 3},
 ]
 assert len(TEXT_LEVEL_PARAMS) == N_LEVELS

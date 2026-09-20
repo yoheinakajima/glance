@@ -1189,3 +1189,24 @@ organism. Source suggested by the owner (relayed review, live-checked 2026-09-20
   (uncalibrated, all items); SigLIP2 within 5 points on pick-one; frontier models (if the owner runs them) within 5
   points of the local model either way. Hard cases expected and reported per class: fungus vs plant, amphibian vs reptile,
   spider vs insect.
+
+## 2026-09-20 15:54 Entry 36: E4 benchmark reviewed before any model saw it; caption levels re-tuned by eye; queued
+
+The creative-QA benchmark (`glance/lab/semantic.py`, entry 20 E4, built by a cheaper assistant model from my spec) was
+reviewed on contact sheets and with pixel checks BEFORE any model output exists for it. Findings, all recorded here so
+the order of events is auditable:
+- `tilt`: the first build had black rotation wedges in the corners (a shortcut for the model). Fixed by the builder with
+  a proof per item (a white mask is rotated and cropped with the same transform; every pixel must stay 255). My check of
+  all 600 items found 7 with a black corner patch; 5 are dark scene content, and 2 (`train_shiba_inu_120`,
+  `train_Sphynx_151`) are source photos that already carry a black letterbox or frame, so their rotated border is a
+  real tilt cue, not an artifact. Kept.
+- `text_legibility`: the two lowest levels (background-colored text at 18% and 38% opacity) were BOTH invisible even
+  at 2x zoom, so "cannot be read" and "very hard to read" could not be told apart by a person. Re-tuned by eye on three
+  photos: white text with a dark outline at every level, legibility set by size and blur (11 px blur 1.9, 14 px blur
+  1.05, 19 px blur 0.45, 27 px, 36 px). Rubric wording unchanged. No model was consulted; the scale was rebuilt (600
+  items) and the sheet regenerated.
+- Five of the seven registered rubrics have manifests (cutoff, occlusion, tilt, text_legibility, watermark; 600 items
+  each, 300 calibration / 300 test). `subject_size` and `off_center` were not filled by the builder; a build attempt is
+  running and the reason will be recorded in 36b. The registered expectations (entry 20) apply to whatever is built;
+  the number of rubrics in the mean will be stated.
+- Queued on GPU lane B after the SmolVLM2 replication: `ens4d` members plus the v0 readout on all items.
