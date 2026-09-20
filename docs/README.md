@@ -1,0 +1,69 @@
+# Documentation index
+
+Backfilled documentation of `glance` v0, written from the project's own records
+(`HANDOFF.md`, `STATUS.md`, code, and the committed result snapshots under `results/v0/`). These docs describe
+work that is already done; they do not add features or change behavior. See each file's own header for
+scope notes and any `NOT RECORDED` / `PENDING` markers.
+
+## Files
+
+| File | What it covers |
+| --- | --- |
+| `docs/README.md` | This index, plus the evidence table below. |
+| `docs/paper/METHODS.md` | Full methods description: question types, statement primitive and logit readout, prompt templates (verbatim), answer assembly formulas, `independent` vs `letter`, the dual-encoder backend, canonical statement ordering, image token budget, prefix cache design, post-hoc calibration, evaluation protocol, metrics formulas, frontier baseline protocol, hardware/software versions, licensing constraints. Detailed enough to re-implement. |
+| `docs/paper/RESULTS_V0.md` | All v0 results as tables with source citations: milestone checks M0-M4, the M4 calibration table, prefix cache acceptance, the M5 full-evaluation results including the completed frontier baseline (`results/v0/m5_full_eval/`), the offline `blur_ladder` per-level-bias analysis, the three stretch experiments, and a "Negative results and things that did not work" section. |
+| `docs/paper/REPRODUCE.md` | Exact commands to reproduce every result: environment setup, model/dataset pins with SHAs, per-milestone eval commands as recorded, model-gated test commands, the frontier baseline command, and known sources of run-to-run variation (float16 batch-shape noise on MPS). |
+| `docs/paper/OUTLINE.md` | Paper skeleton: title options, a draft abstract (150-200 words, with the completed baseline numbers), contributions linked to evidence, section outline with figure/table pointers, threats to validity, `TODO(related work)` topics (no invented citations). |
+| `docs/RESEARCH_LOG.md` | Chronological lab notebook, one dated entry per milestone/decision, backfilled from `STATUS.md`, `git log`, and `tools/` scripts. Ends with the score-lab start on 2026-09-20. |
+
+## Where is the evidence
+
+Every headline claim below cites the exact artifact and, where applicable, the JSON key path.
+
+| Claim | Artifact |
+| --- | --- |
+| Recorded machine: Apple M5, 32 GB RAM, `mps`, float16 (VLM) | `results/v0/m3_pope_n200/env.json: doctor.chip, doctor.ram_gb, doctor.device, doctor.dtype` |
+| torch 2.14.0, transformers 5.17.0 | `results/v0/m3_pope_n200/env.json: uv_pip_freeze`; also `STATUS.md` M0 section |
+| VLM: `Qwen/Qwen3-VL-4B-Instruct@ebb281ec70b05090aa6165b016eac8ec08e71b17`, Apache-2.0 | `MODELS.md`; `configs/default.yaml: models.vlm_tiers.apple_32gb` |
+| Dual encoder: `google/siglip2-base-patch16-256@3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab`, Apache-2.0 | `MODELS.md`; `configs/default.yaml: models.siglip` |
+| `PROMPT_VERSION = "p1"` | `glance/prompts.py:13` |
+| `z = logsumexp(yes variants) - logsumexp(no variants)`, float32 readout head | `glance/backends/vlm_hf.py:162-180, 339-343` |
+| `independent` is exactly permutation-invariant via canonical (sorted) statement ordering | `glance/backends/vlm_hf.py:302-319` (mechanism, D12); `STATUS.md` M2 section and Final summary (`0.0e+00` measured) |
+| `letter` capped at 26 options; larger suites use the true label + 25 seeded distractors | `glance/prompts.py:33`; `glance/evals/run.py:80-89` (D14, `STATUS.md`) |
+| M0 doctor check: `selected_tier apple_32gb`, `pytest: 20 passed` | `STATUS.md`, M0 section |
+| M1 sample answers (e.g. receipt `is_receipt 0.918`) | `STATUS.md`, M1 section |
+| M2 `off_mass` mean/max 0.00000; permutation `0.00e+00`; identical-run `Δz` `0.00e+00` | `STATUS.md`, M2 section |
+| M3 `pope` test acc 0.890, ECE 0.102 (n=100 test) | `results/v0/m3_pope_n200/report.md`; `STATUS.md` M3 section |
+| M3 `pets37` siglip acc 0.96, vlm independent 0.92/0.96, letter 0.96 | `results/v0/m3_pets37_n50/report.md`; `STATUS.md` M3 section |
+| M4 calibration: vlm `pope` ECE 0.145 → 0.088 (n=40 test) | `results/v0/m4_calibrated_n80/report.md`; `STATUS.md` M4 section |
+| M4 fitted params: noul Platt a=0.1623 b=0.1632, choice T=2.0626 | `results/v0/m4_calibrated_n80/calibration/1d941800c4af.json: types.noul.params, types.choice.params` |
+| Prefix cache acceptance: max `\|Δz\|` 0.075 (limit 0.05), speedup 3.75x | `results/v0/prefix_cache_acceptance.json: max_abs_dz, threshold, speedup` |
+| Prefix cache NOT accepted; ships off by default | `configs/default.yaml: vlm.prefix_cache: false`; `STATUS.md` M4 section |
+| M5 full run: 5,326 local-backend requests, 0 failures, 4 h 10 min | `STATUS.md`, M5 section |
+| M5 go/no-go: ECE FAIL on 3 of 5 suites (pope 0.066, gqa_yesno 0.093, blur_ladder 0.149 vs. 0.05 gate); 3 of 4 gates pass overall | `results/v0/m5_full_eval/metrics.json: go_no_go, verdict`; `STATUS.md` "Update 2026-09-20" section |
+| M5 pooled calibration fit (vlm): noul Platt a=0.183639 b=0.557361, choice T=3.086433, score T=8.283623 | `calibration/1d941800c4af.json: types.noul.params, types.choice.params, types.score.params` (identical copy at `results/v0/m5_full_eval/calibration/1d941800c4af.json`, diffed byte-for-byte) |
+| M5 permutation invariance: `0.0e+00` on every `independent` unit (6 suite/backend/method units, up to 90 requests each) | `results/v0/m5_full_eval/report.md`, "Permutation sensitivity" table; `STATUS.md`, Final summary |
+| M5 latency: p50 8,604 ms reference / 1,265 ms with `--prefix-cache` | `results/v0/m5_full_eval/report.md`; `STATUS.md`, Final summary |
+| Frontier baseline: `anthropic/claude-opus-5`, 1,221 calls, 0 failures; accuracy gap **+3.1 points** (frontier ahead); selective accuracy @80% **0.841 vs. baseline 0.818**; frontier itself scored **0.536** on `blur_ladder` | `results/v0/m5_full_eval/metrics.json: baseline, go_no_go`; `STATUS.md`, "Update 2026-09-20: frontier baseline added to the full evaluation" |
+| Weakest suite: `blur_ladder`, Qwen3-VL-4B acc 0.496, MAE 0.67 levels; frontier baseline acc 0.536 on the same suite | `results/v0/m5_full_eval/report.md`; `STATUS.md`, Final summary and "Update 2026-09-20" |
+| Offline per-level-bias refit: accuracy 0.496 → 0.724, MAE 0.67 → 0.37, ECE stays 0.15 | `STATUS.md`, Final summary "recommended v1 data"; method in `tools/analyze_score_offsets.py` |
+| Injection: flip rate 5.2%, mean Δz +6.4 | `STATUS.md`, Stretch section; `results/v0/stretch/injection/report.md` |
+| Image-token sweep: budget 128 → pope 0.870, latency p50 1,920 ms | `STATUS.md`, Stretch section table; `results/v0/stretch/token_sweep_128_pope_blur/predictions.jsonl.gz` (scope verified directly) |
+| Open set: held-out breeds land on `other` 7.7%; AUROC 0.977 for `-max z` | `STATUS.md`, Stretch section |
+| Dataset licenses (POPE MIT, GQA CC BY 4.0/MIT, pets37 CC BY-SA 4.0, caltech101 CC BY 4.0, doctype16 skipped) | `DATASETS.md` |
+| `doctype16` skipped: RVL-CDIP license `other`/unclear | `glance/evals/suites/doctype16.py:20-21`; `DATASETS.md` |
+| Score lab started 2026-09-20 on branch `score-lab` | `lab/NOTES.md`, Entry 1; `glance/lab/score_methods.py` (method definitions); `git branch` (current branch `score-lab`) |
+
+## Scope notes carried from the documentation task
+
+- The full evaluation run `runs/20260920T002639Z-2091d3` was, for part of this documentation pass, still being
+  extended by a frontier-baseline process; numbers from it were temporarily restricted to `STATUS.md`'s "M5"
+  and "Final summary" sections. The frontier baseline (`anthropic/claude-opus-5`, 1,221 calls, 0 failures) has
+  since finished; the completed run is committed as a frozen snapshot at `results/v0/m5_full_eval/`, and every
+  number in `docs/paper/RESULTS_V0.md` and `docs/RESEARCH_LOG.md` now cites that snapshot and/or `STATUS.md`'s
+  "Update 2026-09-20: frontier baseline added to the full evaluation" section. No `PENDING` markers remain.
+- A separate "score lab" experiment (`glance/lab/`, `lab/`) is in progress on this same branch. Its results are
+  not documented here; `docs/RESEARCH_LOG.md`'s last entry notes only that it started, and points to
+  `glance/lab/score_methods.py` for the method definitions.
+- Items with no recorded value anywhere in the repository are marked `NOT RECORDED` rather than estimated.
+  See the final report-back for this documentation pass for the complete list.
