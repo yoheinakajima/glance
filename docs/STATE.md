@@ -74,6 +74,8 @@ After each: notebook entry with verdicts (real clock), regenerate `tools/make_re
 
 Second lane since 14:50: `$TMPDIR/glance/gpuq_b.sh` + `gpuq_b.txt` runs `smol-lab` in parallel with lane A (log lines tagged `[gpuqB]` in the same log). Add further small-model jobs (external systems) to lane B, not lane A.
 
+Lane A was stopped from the app's task list at about 15:00 and resumed at the owner's word ("resume") at 15:27; `lab-hidden` was put back at the front and continues where it stopped (a few dozen items between the last hidden-state flush and the stop have logits but no hidden vectors; the analysis tool skips them). The task named "Run GPU queue lane A" in the app IS the experiment queue: stopping it stops the GPU work.
+
 ### Machine resources (32 GB Apple M5, one GPU)
 
 One model process at a time is comfortable (56% memory free with the queue job running). The heavy swap use seen on
