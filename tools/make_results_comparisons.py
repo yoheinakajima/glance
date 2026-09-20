@@ -123,6 +123,12 @@ if cost:
             "(AWS on-demand g4dn.xlarge and g6.xlarge, us-east-1, checked 2026-09-20) at the laptop's own speed, laptop price "
             f"${a['laptop_price_usd'][0]} to ${a['laptop_price_usd'][1]} amortized over {a['laptop_amortization_hours'][0]} to "
             f"{a['laptop_amortization_hours'][1]} hours. TypeSafe's Jev is not in the table: it does not accept images.", ""]
+measured = ROOT / "results/lab/frontier_cost_measured.md"
+if measured.exists():
+    out += ["Measured, for the frontier calls the owner ran where the cost was logged (`tools/frontier_cost.py`; wall time per call from this laptop, one call "
+            "at a time; the local model's comparable figure is 1.1 s for one rating and 0.34 to 0.58 s per rating when several rubrics share an image):", ""]
+    out += measured.read_text().split("\n")[2:]
+
 else:
     out += ["Pending.", ""]
 (ROOT / "docs/paper/RESULTS_COMPARISONS.md").write_text("\n".join(out) + "\n")

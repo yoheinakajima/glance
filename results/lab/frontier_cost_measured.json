@@ -1,0 +1,62 @@
+[
+ {
+  "run": "20260920T165748Z-8ff72a",
+  "model": "anthropic/claude-opus-5",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 1000,
+  "median_latency_ms": 2415.066187386401,
+  "usd_per_1000_calls": null,
+  "usd_total": null,
+  "median_output_tokens": null
+ },
+ {
+  "run": "20260920T165949Z-8ff72a",
+  "model": "openai/gpt-5.6",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 1000,
+  "median_latency_ms": 1072.2042080014944,
+  "usd_per_1000_calls": null,
+  "usd_total": null,
+  "median_output_tokens": null
+ },
+ {
+  "run": "20260920T170146Z-8ff72a",
+  "model": "openrouter/google/gemini-3.1-pro-preview",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 999,
+  "median_latency_ms": 4023.6223340034485,
+  "usd_per_1000_calls": 6.150728728728727,
+  "usd_total": 6.144577999999998,
+  "median_output_tokens": 192
+ },
+ {
+  "run": "20260920T205633Z-99f822",
+  "model": "anthropic/claude-opus-5",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 2731.107104453258,
+  "usd_per_1000_calls": null,
+  "usd_total": null,
+  "median_output_tokens": null
+ },
+ {
+  "run": "20260920T205633Z-99f822-gpt",
+  "model": "openai/gpt-5.6",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 1228.742167004384,
+  "usd_per_1000_calls": 7.638726530612246,
+  "usd_total": 1.4971904000000003,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T205633Z-99f822-gemini",
+  "model": "openrouter/google/gemini-3.1-pro-preview",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 2886.95310393814,
+  "usd_per_1000_calls": 3.03026530612245,
+  "usd_total": 0.5939320000000002,
+  "median_output_tokens": 12.0
+ }
+]

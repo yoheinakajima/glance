@@ -113,3 +113,14 @@ Seconds are measured (`lab/PACKING.json`); dollar figures are arithmetic on stat
 
 For one rubric per image on a rented GPU the APIs are 15 to 118 times more expensive per rating. Not counted: engineering time and the one-time labeling of about 32 images per rubric (2 to 5 minutes). The APIs need no labels and no setup. Assumptions: laptop draw 15 to 60 W (not measured), electricity $0.10 to $0.40 per kWh, cloud GPU $0.526 to $0.8048 per hour (AWS on-demand g4dn.xlarge and g6.xlarge, us-east-1, checked 2026-09-20) at the laptop's own speed, laptop price $2000 to $4000 amortized over 8760 to 26280 hours. TypeSafe's Jev is not in the table: it does not accept images.
 
+Measured, for the frontier calls the owner ran where the cost was logged (`tools/frontier_cost.py`; wall time per call from this laptop, one call at a time; the local model's comparable figure is 1.1 s for one rating and 0.34 to 0.58 s per rating when several rubrics share an image):
+
+| Model | Task | calls | median seconds per answer | measured $ per 1,000 answers | median output tokens |
+| --- | --- | --- | --- | --- | --- |
+| anthropic/claude-opus-5 | lab scales, one 4-level rating per call | 1000 | 2.4 | not logged (run predates cost logging) | - |
+| openai/gpt-5.6 | lab scales, one 4-level rating per call | 1000 | 1.1 | not logged (run predates cost logging) | - |
+| openrouter/google/gemini-3.1-pro-preview | lab scales, one 4-level rating per call | 999 | 4.0 | $6.15 | 192 |
+| anthropic/claude-opus-5 | fresh photos, one yes/no or pick-one per call | 196 | 2.7 | not logged (run predates cost logging) | - |
+| openai/gpt-5.6 | fresh photos, one yes/no or pick-one per call | 196 | 1.2 | $7.64 | 12 |
+| openrouter/google/gemini-3.1-pro-preview | fresh photos, one yes/no or pick-one per call | 196 | 2.9 | $3.03 | 12 |
+
