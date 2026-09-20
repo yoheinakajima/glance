@@ -960,3 +960,45 @@ the rule spends the magnified-crop passes where they matter (compression artifac
 **H21 narrowly NOT met:** 88% of the gain kept (registered: at least 90%), accuracy 0.863 (registered: at least 0.864).
 Still the better default on cost: 36% fewer forward passes for 0.4 points. Not yet in the harness; it needs the scorer to
 apply the first-stage map before deciding on the second stage.
+
+## 2026-09-20 13:09 Entry 28: KADID-10k, final (all 81 references, fixed method, scored once) and the verdicts
+
+Collection finished at 13:06 (40,500 rows: four readouts x 10,125 items; frozen as `lab/data/kadid_ens4d.jsonl.gz`,
+logits and ids only). `lab/KADID_REPORT.{md,json}`, `docs/paper/RESULTS_GENERALIZATION.md`. 23 severity distortions,
+205 calibration / 200 test items each, split by reference image; `mean_shift` and `contrast_change` reported apart.
+
+**`ens4d`, matrix calibration per distortion:** exact accuracy **0.527**, within one level 0.880, MAE 0.642 levels,
+accuracy on the most confident 80% 0.560, pooled ECE 0.032 (floor 0.020), mean per-distortion Spearman with human DMOS
+**0.763** (the true level itself reaches 0.840), overall type-aware SRCC 0.876 / PLCC 0.881. Single readouts on the same
+items: `digits` 0.492, `zoom_digits` 0.490, `fast2` 0.497. Best distortions: multiplicative noise 0.680, Gaussian blur
+0.650, saturation-down 0.625; worst: patch shuffle 0.335, darken 0.390, quantization 0.400. Not severity scales, as
+registered: mean shift 0.325, contrast change 0.450 (Spearman with DMOS 0.189 and -0.061, as expected for two-sided
+scales).
+
+**Verdicts (entry 14).** H8 "clearly below the lab's 0.867": supported. H8 numeric targets: exact >= 0.70 NOT met
+(0.527); within one >= 0.97 NOT met (0.880); MAE <= 0.40 NOT met (0.642); ECE <= 0.05 on 20 distortions NOT met (0 of
+23; criterion was flawed, entry 15b; the pooled ECE of 0.032 is the usable number and is above its floor of 0.020, so
+calibration here is decent, not perfect). H9 mean per-type SRCC >= 0.85: NOT met (0.763). H7 (beats the v0 readout with
+its best calibration) waits for the `independent` baseline, which is still in the GPU queue. The ensemble's advantage
+over a single pass shrank from 3 to 5 points on the lab scales to 3.0 to 3.7 here. My interim look (entry 15c: 0.537 on
+6 distortions) was representative.
+
+**Against classical features, same labels, same 23 distortions** (`results/lab/kadid_vlm_vs_classical.json`): classical
+0.634 exact / 0.872 within one / Spearman with DMOS 0.674 with all 205 labels, 0.402 exact with about 30 labels; the VLM
+0.527 / 0.880 / 0.763, and 0.468 / 0.492 / 0.507 exact with 30 / 60 / 100 labels. So on KADID too: features win exact
+levels once labels are plentiful, the VLM wins with few labels (+6.6 points at 30) and ranks more like people do (+9
+points of Spearman). With all labels the VLM is ahead on 6 of 23 distortions: colour block, colour diffusion,
+saturation-up, colour shift, patch shuffle, sharpen: mostly the structural ones.
+
+**No labels for the target rubric (entry 26, LORO; `results/lab/loro_kadid.json`).** Raw 0.328; map fit on the other 22
+distortions 0.350; bias removal from unlabeled target images (BC) 0.392; both together 0.433; per-rubric fit 0.527.
+**H20: two of three parts NOT met** (LORO beats raw by 2.2 points, registered at least 5; LORO is 17.7 points below the
+per-rubric fit, registered within 8); the third part holds (LORO + BC is the best zero-label row, +10.5 over raw). A
+universal calibration across rubrics does not work even when the rubrics share their wording; what transfers is only the
+bias removal. This agrees with the lab's transfer table and is the clearest statement yet that the calibration is
+rubric-specific.
+
+**What I take from it.** (1) The lab scales flattered the method: hand-written level texts on one photo type against
+generic wording on 81 diverse references. (2) The defensible claims on a hard benchmark are rank agreement with people
+and label efficiency, not exact grades. (3) The registered follow-up is the reference-anchored question (pristine image
+next to the distorted one); it gets its own registration commit before any code.

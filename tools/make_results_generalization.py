@@ -79,6 +79,32 @@ for bench, (path, title) in BENCHES.items():
                    + " | ".join(f"{per[k][scale]['accuracy']:.3f}" if scale in per[k] else "-" for k in others) + " |")
     out.append("")
 
+def load(path):
+    f = ROOT / path
+    return json.loads(f.read_text()) if f.exists() else None
+
+
+cmp_ = load("results/lab/kadid_vlm_vs_classical.json")
+if cmp_:
+    c, v = cmp_["classical"], cmp_["vlm_ens4d"]
+    out += ["## KADID-10k: the VLM against classical features with the same labels (23 severity distortions)", "",
+            "| System | about 30 labels per distortion | all 205 labels | within one level (205) | MAE (205) | per-type Spearman with human DMOS (205) |",
+            "| --- | --- | --- | --- | --- | --- |",
+            f"| 29 classical no-reference features + logistic regression | {c['accuracy_small_n']:.3f} | **{c['accuracy']:.3f}** | {c['within_1']:.3f} | {c['mae']:.3f} | {c['spearman_dmos']:.3f} |",
+            f"| Qwen3-VL-4B + Glance (`ens4d`) | **{v['accuracy_by_labels']['30']:.3f}** | {v['accuracy']:.3f} | {v['within_1']:.3f} | {v['mae']:.3f} | **{v['spearman_dmos']:.3f}** |", "",
+            f"With 60 and 100 labels the VLM reaches {v['accuracy_by_labels']['60']:.3f} and {v['accuracy_by_labels']['100']:.3f}. With all labels it has the higher exact "
+            f"accuracy on {len(cmp_['vlm_wins'])} of {cmp_['n_distortions']} distortions: " + ", ".join(f"`{s}`" for s in cmp_["vlm_wins"]) + ". "
+            "Reading: on exact severity levels, hand-built features win once a couple of hundred labels exist; the VLM is ahead with few labels, "
+            "ranks images more like people do, and is ahead on the distortions that are structural rather than statistical.", ""]
+loro = load("results/lab/loro_kadid.json")
+if loro:
+    out += ["## KADID-10k: can a rating rubric work with NO labels of its own? (leave one distortion out; `lab/NOTES.md` entry 26)", "",
+            "| Setting | labels from the target distortion | mean accuracy | within one level |", "| --- | --- | --- | --- |"]
+    out += [f"| {k} | {'about 205' if k.startswith('per-rubric') else '0'} | {e['accuracy']:.3f} | {e['within_1']:.3f} |" for k, e in loro.items()]
+    out += ["", "A map learned on 22 other distortions barely helps a distortion it has not seen (calibrations are rubric-specific, as on the lab "
+            "scales). Removing the readout's bias with unlabeled images of the target helps more, and the two together recover about half of the "
+            "distance between nothing and a labeled fit.", ""]
+
 out += ["## Verdicts on the registered hypotheses", ""]
 rows = []
 for bench, report in loaded.items():

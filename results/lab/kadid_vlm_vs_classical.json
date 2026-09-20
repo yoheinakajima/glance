@@ -1,0 +1,123 @@
+{
+  "n_distortions": 23,
+  "classical": {
+    "accuracy": 0.6336956521739131,
+    "within_1": 0.8717391304347827,
+    "mae": 0.5468632438901004,
+    "spearman_dmos": 0.6739320276757208,
+    "accuracy_small_n": 0.40207608695652164
+  },
+  "vlm_ens4d": {
+    "accuracy": 0.5267391304347826,
+    "within_1": 0.8795652173913042,
+    "mae": 0.6424490018680713,
+    "spearman_dmos": 0.7632670920095037,
+    "accuracy_by_labels": {
+      "30": 0.4680652173913043,
+      "60": 0.4919565217391305,
+      "100": 0.506695652173913
+    }
+  },
+  "vlm_wins": [
+    "color_block",
+    "color_diffusion",
+    "color_saturation_2",
+    "color_shift",
+    "patch_shuffle",
+    "sharpen"
+  ],
+  "per_scale": {
+    "brighten": {
+      "classical": 0.475,
+      "vlm": 0.465
+    },
+    "color_block": {
+      "classical": 0.23,
+      "vlm": 0.485
+    },
+    "color_diffusion": {
+      "classical": 0.505,
+      "vlm": 0.52
+    },
+    "color_noise": {
+      "classical": 0.87,
+      "vlm": 0.615
+    },
+    "color_quantization": {
+      "classical": 0.98,
+      "vlm": 0.53
+    },
+    "color_saturation_1": {
+      "classical": 0.78,
+      "vlm": 0.625
+    },
+    "color_saturation_2": {
+      "classical": 0.45,
+      "vlm": 0.595
+    },
+    "color_shift": {
+      "classical": 0.345,
+      "vlm": 0.45
+    },
+    "darken": {
+      "classical": 0.485,
+      "vlm": 0.39
+    },
+    "denoise": {
+      "classical": 0.8,
+      "vlm": 0.615
+    },
+    "gaussian_blur": {
+      "classical": 0.83,
+      "vlm": 0.65
+    },
+    "impulse_noise": {
+      "classical": 0.68,
+      "vlm": 0.58
+    },
+    "jitter": {
+      "classical": 0.805,
+      "vlm": 0.555
+    },
+    "jpeg": {
+      "classical": 0.89,
+      "vlm": 0.505
+    },
+    "jpeg2000": {
+      "classical": 0.665,
+      "vlm": 0.415
+    },
+    "lens_blur": {
+      "classical": 0.815,
+      "vlm": 0.545
+    },
+    "motion_blur": {
+      "classical": 0.545,
+      "vlm": 0.5
+    },
+    "multiplicative_noise": {
+      "classical": 0.83,
+      "vlm": 0.68
+    },
+    "patch_shuffle": {
+      "classical": 0.19,
+      "vlm": 0.335
+    },
+    "pixelate": {
+      "classical": 0.605,
+      "vlm": 0.53
+    },
+    "quantization": {
+      "classical": 0.525,
+      "vlm": 0.4
+    },
+    "sharpen": {
+      "classical": 0.445,
+      "vlm": 0.515
+    },
+    "white_noise": {
+      "classical": 0.83,
+      "vlm": 0.615
+    }
+  }
+}
