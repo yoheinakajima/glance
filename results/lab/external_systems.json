@@ -5,7 +5,58 @@
   "ens4d_accuracy": 0.867,
   "flip_sign_qsit": true,
   "openjev": null,
-  "qsit": null,
+  "qsit": {
+    "per_scale": {
+      "blur": {
+        "n_fit": 300,
+        "n_test": 300,
+        "srcc_vs_true_level": 0.9488689780704662,
+        "accuracy": 0.9633333333333334,
+        "median_ms": 2053.7999578518793
+      },
+      "noise": {
+        "n_fit": 300,
+        "n_test": 300,
+        "srcc_vs_true_level": 0.9340654928164825,
+        "accuracy": 0.8366666666666667,
+        "median_ms": 2162.3382290126756
+      },
+      "jpeg": {
+        "n_fit": 300,
+        "n_test": 300,
+        "srcc_vs_true_level": 0.861528415071962,
+        "accuracy": 0.7066666666666667,
+        "median_ms": 2455.0182500388473
+      },
+      "exposure": {
+        "n_fit": 300,
+        "n_test": 300,
+        "srcc_vs_true_level": 0.947216495995603,
+        "accuracy": 0.8833333333333333,
+        "median_ms": 2233.4030631463975
+      },
+      "resolution": {
+        "n_fit": 300,
+        "n_test": 300,
+        "srcc_vs_true_level": 0.9245981475959115,
+        "accuracy": 0.9566666666666667,
+        "median_ms": 2238.229750539176
+      }
+    },
+    "summary": {
+      "scales": 5,
+      "mean_srcc_vs_true_level": 0.923255505910085,
+      "mean_accuracy": 0.8693333333333333,
+      "median_ms": 2207.8864795621485
+    }
+  },
   "h31": null,
-  "h32": null
+  "h32": {
+    "supported": false,
+    "conditions": {
+      "mean SRCC on blur/jpeg/noise >= 0.80 (got 0.915)": true,
+      "mean SRCC on exposure/resolution < 0.80, i.e. \"weak\" (got 0.936)": false,
+      "calibrated mean accuracy < ens4d 0.867 (got 0.869)": false
+    }
+  }
 }

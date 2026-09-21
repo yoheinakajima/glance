@@ -269,12 +269,20 @@ class OpenJevV2(ExternalSystem):
         # models generally locate image tokens from `config.image_token_id` internally, so it is not passed here.
         # UNVERIFIED (this lab's hard rule means the model was never actually loaded to check its forward signature):
         # if a real run ever raises a missing-argument error, that is the first thing to add back.
+        # The first real run (2026-09-21, entry 37d) raised exactly that error: this transformers version needs
+        # `mm_token_type_ids` to build the multimodal rotary positions. Computed the way the model's own training
+        # collator does (code/train.py, DataCollatorNLIMM): 1 where the token is the image placeholder, else 0.
+        input_ids = built["input_ids"].to(self.device)
+        image_token_id = getattr(self.model.config, "image_token_id", None)
+        if image_token_id is None:
+            image_token_id = self.tokenizer.convert_tokens_to_ids("<|image_pad|>")
         with torch.no_grad():
             out = self.model(
-                input_ids=built["input_ids"].to(self.device),
+                input_ids=input_ids,
                 attention_mask=built["attention_mask"].to(self.device),
                 pixel_values=built["pixel_values"].to(self.device),
                 image_grid_thw=built["image_grid_thw"].to(self.device),
+                mm_token_type_ids=(input_ids == image_token_id).long(),
             )
         logits = out.logits.float().cpu().numpy()  # (K, 3): [contradiction, entailment, neutral]
         true_logit = logits[:, ENT] - logsumexp(logits[:, [CON, NEU]], axis=1)  # log-odds of entailment vs. not

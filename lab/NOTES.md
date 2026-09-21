@@ -1799,3 +1799,33 @@ prompt with the written answer (98.2% identical answers, entry 42b). Found while
 everywhere with the measured shares; `tools/gen_accuracy_report.py` now reports the share per suite; the page's section 3 heading
 and the abstract say "as accurate as", not "the same answer as". The live page deployed at about 00:13 carries the old wording
 until the owner's next deploy.
+
+## 2026-09-21 01:54 Entry 37c: E13, first outside system: a 0.9B image-quality model with our fit MATCHES the 4B model (the outcome I had called embarrassing)
+
+q-sit-mini (`zhangzicheng/q-sit-mini`, 0.9B, trained for image quality, pinned revision 198f645), its five level-word logits,
+our matrix scaling; five lab scales, 300 calibration and 300 test items per scale (`lab/runs/external_qsit.jsonl`, 3,000 rows;
+`results/lab/external_systems.md`).
+- H32, first part (ranks blur, JPEG, noise well, Spearman at least 0.80): SUPPORTED (0.949, 0.862, 0.934).
+- H32, second part (weak on exposure and resolution, Spearman under 0.80): NOT SUPPORTED (0.947 and 0.925). It ranks all five.
+- H32, third part (its calibrated accuracy stays below `ens4d`'s 0.867): NOT SUPPORTED: 0.869.
+That registered comparison was uneven (300 labels and 300 test items against 500 labels and the full test split), so after
+seeing it I ran both systems on exactly the same items with the same fit (`tools/external_same_items.py`, added after the
+result and labelled so): with 300 labels per scale q-sit-mini 0.869 [0.852, 0.886] against `ens4d` 0.863 [0.845, 0.881],
+difference +0.6 points [-1.7, +2.9]; with 32 labels 0.853 [0.838, 0.867] against 0.846 [0.832, 0.861], +0.7 [-1.1, +2.5].
+Indistinguishable overall; by scale they differ (q-sit-mini ahead on blur and resolution by 7 to 9 points, behind on noise, JPEG
+and exposure by 3 to 7).
+Reading: on image-quality rubrics a specialist a quarter of the size, given the same 32-label fit, does as well as the frozen
+general 4B model read with Glance. This joins the hand-built features (0.979 with plentiful labels, entry 25) as evidence that
+quality scales are not where a general VLM readout earns its place; what it offers is one frozen model for ANY typed question
+(q-sit-mini answers one kind). Not measured: q-sit-mini on rubrics outside image quality (it has no way to take one), and its
+speed (the GPU was shared for the whole run, so the 2.2 s median is not a registered idle-GPU timing). H31 (openjev) is running.
+
+## 2026-09-21 01:58 Entry 37d: E13, second outside system: the adapter failed on its first real run; fixed; running
+
+openjev v2 had never been loaded here (memory rule of entry 37), so its adapter was untested against the real model. The first
+real run stopped in under a minute: this transformers version refuses multimodal input without `mm_token_type_ids`. The
+adapter's author had flagged exactly this as the first thing to add if a run ever complained. Fixed the way the model's own
+training collator computes it (1 where the token is the image placeholder), with the unit test now asserting it is passed and
+correct. No openjev output had been seen before the fix (the failed run wrote no row). Re-queued ahead of the low-priority
+`semantic-ens4d` collection (stopped cleanly; it is resumable and re-queued after). First rows look sane (a level-0 blur image
+gets its highest claim score on level 0). About 5 s per image on a shared GPU, so roughly four hours for 3,000 images.

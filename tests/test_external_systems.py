@@ -125,10 +125,18 @@ def test_openjev_build_inputs_computes_image_token_count_and_renders_template(tm
 
 
 class _FakeOpenjevModel:
+    IMAGE_TOKEN_ID = 99
+
     def __init__(self, logits: torch.Tensor):
         self.logits = logits  # (K, 3): [contradiction, entailment, neutral]
+        self.config = type("Config", (), {"image_token_id": self.IMAGE_TOKEN_ID})()
+        self.seen_mm_token_type_ids = None
 
-    def __call__(self, input_ids=None, attention_mask=None, pixel_values=None, image_grid_thw=None):
+    def __call__(self, input_ids=None, attention_mask=None, pixel_values=None, image_grid_thw=None, mm_token_type_ids=None):
+        # the real model refuses multimodal input without this (first real run, lab/NOTES.md entry 37d)
+        assert mm_token_type_ids is not None and mm_token_type_ids.shape == input_ids.shape
+        assert torch.equal(mm_token_type_ids, (input_ids == self.IMAGE_TOKEN_ID).long())
+        self.seen_mm_token_type_ids = mm_token_type_ids
         return type("Out", (), {"logits": self.logits})()
 
 
