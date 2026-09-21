@@ -1613,3 +1613,11 @@ and read, GPU otherwise idle).
   photographs: 2B read 0.66 s against written 1.08 s (1.6 times); 8B pending.
 - Practical note for users: the image-token budget is the speed knob (768 tokens by default); accuracy at smaller budgets
   on these photo tests is not measured yet.
+
+## 2026-09-20 23:10 Entry 48b: reading against writing on the photographs, all three sizes
+
+`lab/PHOTO_TIMING*.json` (40 Commons photographs, GPU otherwise idle): yes/no written / read 1.08 / 0.66 s (2B), 1.65 /
+1.08 s (4B), 3.01 / 2.12 s (8B): 1.6, 1.5 and 1.4 times. Pick-one of 13: 0.94 / 0.85 s, 1.87 / 1.43 s, 3.02 / 2.65 s: 1.1,
+1.3 and 1.1 times. So on full-size photographs the RATIO does not grow with model size (if anything it shrinks, because
+reading the image grows with the model while the written answer stays about ten tokens); the absolute saving per yes/no
+grows (0.41, 0.57, 0.89 s). The large multiples (3.5 and 6 times) belong to requests with many questions per image.
