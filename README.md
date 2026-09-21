@@ -45,7 +45,7 @@ response shapes are in `HANDOFF.md` section 5; every call is logged to `logs/cal
 
 | Question | Setup | What to expect |
 | --- | --- | --- |
-| yes/no, pick-one | none | level with hosted models on photos none of them has seen (table below) |
+| yes/no, pick-one | none | on photos no model has seen: level with the best hosted models on pick-one, about two points behind the best on yes/no (pooled over three photo sets; table below) |
 | rating, you need the ORDER (sort, threshold, flag the worst) | none | within one level on 0.99 of images, rank agreement 0.93 with the true level |
 | rating, you need the EXACT level of your own scale | `glance fit --unlabeled --data folder_of_your_images/` (16 or more images, no labels) | removes the model's constant offset on your rubric: 0.67 -> 0.76 exact on the image-quality scales (it did not help on rubrics that are not image quality) |
 | rating, best accuracy and calibrated probabilities | `glance fit --data labels/ --rubric rubric.json` (about 32 labeled images, folders `labels/0/`, `labels/1/`, ...) | 0.86 exact, ECE about 0.03 on image-quality scales; fits are per rubric and do not transfer. On rubrics that are not image quality (tilt, cut-off, occlusion, caption legibility, watermark) a 300-label fit reached only 0.55 |
@@ -74,8 +74,7 @@ questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the 
 model, except that Claude Haiku 4.5 falls to 0.830 / 0.790 there; on a harder test, seven look-alike insect orders, the hosted
 models spread over 23 points and the open model, at 0.962 pick-one, is within 1 point of the best). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
 position, the default of `glance ask` and `glance score` for a rubric with nothing fitted (the registered check that decided
-this is `lab/NOTES.md` entry 43c); the four-pass read scores 0.570 zero-shot and is the one to fit with labels. Read honestly: on yes/no and pick-one the open 4B model
-is level with hosted models, cheap and expensive. On zero-shot ratings the cheapest Google model is 9 points ahead; the
+this is `lab/NOTES.md` entry 43c); the four-pass read scores 0.570 zero-shot and is the one to fit with labels. Read honestly: Pooled over three fresh photo sets and paired on the same items (541 yes/no questions, 270 pick-one photographs), the open 4B model is level with the best hosted models on pick-one (0.933 against 0.937) and about two points behind the two Gemini models on yes/no (0.939 against 0.959 and 0.961); it is indistinguishable from Claude Opus 5 and GPT-5.6 on both and ahead of Claude Haiku 4.5 and GPT-5.6 Luna on both (`results/lab/pooled_photos.md`; the table above shows the first photo set alone, where every interval overlaps). On zero-shot ratings the cheapest Google model is 9 points ahead; the
 open model reaches 0.758 with 16 unlabeled images (half a point short of it) and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
 1.1 s (faster than five of the six hosted models) and is somewhat cheaper than the cheapest hosted models on a rented GPU,
 not an order of magnitude; most of that time is reading the image. Every experiment was registered before it ran and the misses

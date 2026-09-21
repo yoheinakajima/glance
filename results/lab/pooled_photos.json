@@ -21,6 +21,7 @@
     "GPT-5.6 Luna": 0,
     "Gemini 3.1 Flash-Lite": 0
    },
+   "written_row_complete": false,
    "systems": {
     "Qwen3-VL-4B, read": {
      "pooled": [
@@ -201,6 +202,7 @@
     "GPT-5.6 Luna": 0,
     "Gemini 3.1 Flash-Lite": 0
    },
+   "written_row_complete": false,
    "systems": {
     "Qwen3-VL-4B, read": {
      "pooled": [

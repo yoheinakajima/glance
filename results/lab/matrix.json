@@ -4,6 +4,7 @@
   "choice": "Pick one of 13, 65 fresh Commons photos",
   "rating": "Rating, exact level of 4, 1,000 lab images"
  },
+ "accuracy_basis": "Commons test half",
  "systems": {
   "Gemini 3.1 Pro": {
    "kind": "hosted frontier model, zero-shot, answer written",

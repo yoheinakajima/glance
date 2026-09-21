@@ -148,7 +148,24 @@ extras = [
     {"what": "32 labeled images of the rubric (`glance fit`)", "rating_accuracy": h2h["+ Glance ens4d, 32 labels"]["mean_accuracy"], "note": "same 1,000 images, the four-pass readout; calibrated probabilities (ECE about 0.03)"},
     {"what": "500 labels, readout fitted on the hidden state (research result, not shipped)", "rating_accuracy": ladder["R4a"]["accuracy"], "note": "full test split, ONE forward pass; needs on the order of a hundred labels to beat the row above"},
 ]
-out = {"tests": {k: v[1] for k, v in TESTS.items()}, "systems": systems, "only_the_read_row_can_add": extras,
+# ---- accuracy basis for yes/no and pick-one: the three fresh photo sets pooled (E23, notebook entries 54 and 55) ----------------
+# Used only when tools/pooled_photos.py covers every row, the open model's written answers included; otherwise the Commons
+# numbers above stand. Seconds and dollars are NOT pooled (hosted cost depends on image size): they stay as measured on Commons.
+tests = {k: v[1] for k, v in TESTS.items()}
+basis = "Commons test half"
+pooled_path = ROOT / "results/lab/pooled_photos.json"
+pooled = json.loads(pooled_path.read_text()) if pooled_path.exists() else None
+if pooled and all(pooled["kinds"][k].get("written_row_complete") for k in ("yesno", "choice")):
+    alias = {"Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B, read", "Qwen3-VL-4B, written": "Qwen3-VL-4B, written"}
+    for kind in ("yesno", "choice"):
+        e = pooled["kinds"][kind]
+        for name in systems:
+            row = e["systems"][alias.get(name, name)]
+            systems[name]["accuracy"][kind] = {"accuracy": row["pooled"][0], "ci95": row["pooled"][1:], "n": e["n_total"]}
+    tests["yesno"] = f"Yes/no, {pooled['kinds']['yesno']['n_total']} questions about fresh photographs (three sets pooled)"
+    tests["choice"] = f"Pick one, {pooled['kinds']['choice']['n_total']} fresh photographs (three sets pooled)"
+    basis = "three fresh photo sets pooled"
+out = {"tests": tests, "accuracy_basis": basis, "systems": systems, "only_the_read_row_can_add": extras,
        "caveats": ["The rating read is one forward pass at the JSON answer position (registered and scored once, notebook entry 42b). The four-pass readout shipped earlier scores 0.570 zero-shot on these images and remains the better option once labels exist.",
                    "Frontier models were run once, zero-shot, with a constrained written pick; a failed call counts as wrong. No few-shot prompt was tried for any written row.",
                    "Yes/no and pick-one: photographs taken after every model's release; labels are uploaders' structured 'depicts' statements (pick-one labels are noisy). Ratings: five synthetic 4-level scales.",
@@ -161,7 +178,7 @@ f_sec = lambda c: "pending" if c["value"] is None else f"{c['value']:.2f} s"  # 
 f_usd = lambda c: "pending" if c["value"] is None else (f"${c['value'][0]:.2f}" + ("" if c["value"][0] == c["value"][1] else f" to ${c['value'][1]:.2f}") + (" (est.)" if "estimate" in c["how"] else ""))  # noqa: E731
 md = ["# Five systems, three tests: accuracy, speed, cost (same items in every row)", ""]
 for title, field, fmt in (("Accuracy, zero-shot [95% interval]", "accuracy", f_acc), ("Median seconds per answer", "seconds", f_sec), ("US dollars per 1,000 answers", "usd_per_1000", f_usd)):
-    md += [f"## {title}", "", "| System | " + " | ".join(TESTS[t][1] for t in TESTS) + " |", "| --- | --- | --- | --- |"]
+    md += [f"## {title}", "", "| System | " + " | ".join(tests[t] for t in TESTS) + " |", "| --- | --- | --- | --- |"]
     md += [f"| {name} | " + " | ".join(fmt(s[field][t]) for t in TESTS) + " |" for name, s in systems.items()] + [""]
 md += ["## What only the read row can add (rating accuracy)", "", "| Give it | exact-level accuracy | note |", "| --- | --- | --- |"]
 md += [f"| {e['what']} | {e['rating_accuracy']:.3f} | {e['note']} |" for e in extras]

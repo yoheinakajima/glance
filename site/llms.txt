@@ -5,8 +5,8 @@
 > default); nothing is generated or trained. Glance is a calibration and measurement harness, not a model.
 
 Use it for private or offline image decisions, many questions per image, probabilities to threshold on, and image-quality
-rubrics you can fit from a few dozen images. Zero-shot the open 4B model is statistically indistinguishable from hosted models
-on coarse yes/no and pick-one questions about fresh photographs; on exact rating levels a cheap hosted model (Gemini 3.1
+rubrics you can fit from a few dozen images. Zero-shot, pooled over three sets of fresh photographs, the open 4B model is level with the
+best hosted models on coarse pick-one questions and about two points behind the best (both Gemini models) on yes/no; on exact rating levels a cheap hosted model (Gemini 3.1
 Flash-Lite, 0.763) is ahead zero-shot (0.669), about level once Glance has seen 16 unlabeled images of the rubric (0.758), and
 behind after 32 labels (0.857). Know its limits: it confuses mirror-image diagonal directions, misjudges relative size, slips
 when counting eight objects, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even a 300-label

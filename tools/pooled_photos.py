@@ -22,6 +22,8 @@ SUFFIXES = ["", "-opus", "-gpt", "-gemini", "-haiku", "-gptsmall", "-flashlite"]
 NAMES = {"anthropic/claude-opus-5": "Claude Opus 5", "openai/gpt-5.6": "GPT-5.6", "openrouter/google/gemini-3.1-pro-preview": "Gemini 3.1 Pro",
          "anthropic/claude-haiku-4-5": "Claude Haiku 4.5", "openai/gpt-5.6-luna": "GPT-5.6 Luna", "openrouter/google/gemini-3.1-flash-lite": "Gemini 3.1 Flash-Lite"}
 OPEN = "Qwen3-VL-4B, read"
+WRITTEN = "Qwen3-VL-4B, written"
+WRITTEN_RUNS = ["lab/runs/gen_accuracy.jsonl", "lab/runs/gen_accuracy_inat.jsonl", "lab/runs/gen_accuracy_orders.jsonl"]  # the same model writing JSON (entries 32b, 32c, 55b)
 rng = np.random.default_rng(7)
 
 
@@ -47,11 +49,20 @@ for set_name, (base, yes_suite, choice_suite) in SETS.items():
             elif r["backend"] == "vlm" and r["method"] in ("statement", "independent") and suffix == "":
                 hits[kind_of[r["suite"]]][set_name][OPEN][r["item_id"]] = local_hit(r)
 
+suite_home = {suite: (set_name, kind) for set_name, (_, y, c) in SETS.items() for suite, kind in ((y, "yesno"), (c, "choice"))}
+for path in WRITTEN_RUNS:
+    for r in (read_jsonl(ROOT / path) if (ROOT / path).exists() else []):
+        if r["suite"] in suite_home:
+            set_name, kind = suite_home[r["suite"]]
+            hits[kind][set_name][WRITTEN][r["item_id"]] = bool(r["correct"])
+
 out = {"sets": {k: v[0] for k, v in SETS.items()}, "kinds": {}}
 for kind, by_set in hits.items():
-    systems = [OPEN] + [n for n in NAMES.values() if any(n in by_set[s] for s in by_set)]
+    hosted = [n for n in NAMES.values() if any(n in by_set[s] for s in by_set)]
     # the items the hosted models were asked: the union over hosted models per set; a hosted model without a row for one of them failed that call
-    asked = {s: sorted(set().union(*(set(by_set[s][n]) for n in systems[1:] if n in by_set[s]))) for s in SETS}
+    asked = {s: sorted(set().union(*(set(by_set[s][n]) for n in hosted if n in by_set[s]))) for s in SETS}
+    written_complete = all(i in by_set[s].get(WRITTEN, {}) for s in SETS for i in asked[s])  # the written row joins only when it covers every set
+    systems = [OPEN] + ([WRITTEN] if written_complete else []) + hosted
     table = {s: {n: np.array([bool(by_set[s].get(n, {}).get(i, False)) for i in asked[s]], dtype=float) for n in systems} for s in SETS}
     missing = {n: int(sum(i not in by_set[s].get(n, {}) for s in SETS for i in asked[s])) for n in systems}
     draws = [[rng.integers(0, len(asked[s]), size=len(asked[s])) for s in SETS] for _ in range(10000)]
@@ -64,10 +75,11 @@ for kind, by_set in hits.items():
     pooled = lambda n: (lambda idx: float(np.concatenate([table[s][n][idx[s]] for s in SETS]).mean()))  # noqa: E731
     macro = lambda n: (lambda idx: float(np.mean([table[s][n][idx[s]].mean() for s in SETS])))  # noqa: E731
     diff = lambda n: (lambda idx: 100 * float(np.concatenate([table[s][OPEN][idx[s]] - table[s][n][idx[s]] for s in SETS]).mean()))  # noqa: E731
-    entry = {"n_items": {s: len(asked[s]) for s in SETS}, "n_total": int(sum(len(v) for v in asked.values())), "missing_hosted_rows_counted_wrong": missing, "systems": {}}
+    entry = {"n_items": {s: len(asked[s]) for s in SETS}, "n_total": int(sum(len(v) for v in asked.values())), "missing_hosted_rows_counted_wrong": missing,
+             "written_row_complete": bool(written_complete), "systems": {}}
     for n in systems:
         e = {"pooled": stat(pooled(n)), "equal_weight_per_set": stat(macro(n)), "per_set": {s: float(table[s][n].mean()) for s in SETS}}
-        if n != OPEN:
+        if n not in (OPEN, WRITTEN):
             d = stat(diff(n))
             e["open_minus_this_points"] = d
             e["verdict"] = "indistinguishable" if d[1] <= 0 <= d[2] else ("open model ahead" if d[1] > 0 else "open model behind")

@@ -10,9 +10,10 @@
 A typed question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level
 on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B-Instruct, Apache-2.0, on
 a laptop) and read the answer from the logits of one forward pass; nothing is generated. On photographs taken after every
-model's release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted
-models (three flagships, three low-cost) on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps
-every other). The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
+model's release, labelled by people outside this project (three sets, 541 yes/no questions and 270 pick-one photographs put
+to every system), the open model is level with the best hosted models on pick-one (0.933 against 0.937) and about two points
+behind the best on yes/no (0.939 against 0.961; the paired difference excludes zero for both Gemini models); it is
+indistinguishable from Claude Opus 5 and GPT-5.6 on both and ahead of two of the three low-cost hosted models on both. The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
 Reading is as accurate as the same model writing JSON. Ratings behave differently. On five image-quality scales, zero-shot, every system orders
 images correctly (within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per
 rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read
@@ -42,8 +43,10 @@ text and, in two cases, for images.
 
 1. A fresh-photograph, cross-provider measurement. On photographs taken after every evaluated model's release,
    labelled by people outside this project (Commons "depicts" statements, iNaturalist community identifications), the
-   open model read this way is statistically indistinguishable (overlapping 95% intervals, n = 131 and 65) from three hosted flagships and each provider's cheapest current model on
-   yes/no and pick-one, including a harder insect-order test on which the hosted models spread over 23 points (Section 3).
+   open model read this way is, pooled over three sets and paired on the same items, level with the best hosted models on
+   pick-one and about two points behind the two Gemini models on yes/no, indistinguishable from Claude Opus 5 and GPT-5.6,
+   and ahead of two of the three low-cost hosted models; one of the sets is a harder insect-order test on which the hosted
+   models spread over 23 points (Section 3).
 2. Where that stops. On images drawn by program and on synthetic interface screens, with labels exact by construction,
    the open model reads text, finds the element that serves a goal (0.993) and counts to five, and fails on mirror-image
    direction (0.30) and relative size (0.52): its limit is geometry, not reading (Section 4).
@@ -126,7 +129,7 @@ almost everywhere:
 | Qwen3-VL-4B, read (Glance) | 0.931 [0.885, 0.969] | 0.862 [0.769, 0.938] | 0.669 [0.640, 0.698] |
 
 The yes/no column uses the 131 test-half questions and the pick-one column the 65 test-half photographs the hosted models
-were shown, for every system including the open model (Section 3.2 gives the
+were shown, for every system including the open model (Section 3.3 gives the
 open model's numbers on the full 131 instead). Every yes/no and pick-one interval above overlaps every other. Timed on these
 same photographs with the GPU otherwise idle, reading takes 1.08 s per yes/no (writing 1.65 s) and 1.43 s per 13-way
 pick-one (writing 1.87 s): faster than five of the six hosted models on yes/no (Claude Haiku 4.5 is faster, 0.87 s), and
@@ -143,7 +146,32 @@ An earlier version of these cells (0.33 s, "about five times cheaper") was timed
 (erratum, entry 48).
 <!-- src: results/lab/matrix.md, results/lab/frontier_cost_measured.md, lab/PHOTO_TIMING.json, lab/NOTES.md entries 45b, 48, 48b -->
 
-### 3.2 Both photo sets in full
+### 3.2 Three photo sets pooled
+
+Within any one photo set every 95% interval overlaps every other, which says as much about sample size as about the
+systems. Pooling the three fresh sets (Commons, iNaturalist ten groups, iNaturalist insect orders; the items the hosted
+models were asked; a failed call counts as wrong) and pairing on the same items gives 541 yes/no questions and 270
+pick-one photographs per system. This pooling was added after the per-set results had been seen; its rule (every set,
+every system, nothing dropped; intervals from a bootstrap stratified by set) was fixed before it was computed (entry 54).
+
+| System | yes/no, n=541 | open minus this, points | pick-one, n=270 | open minus this, points |
+| --- | --- | --- | --- | --- |
+| Qwen3-VL-4B, read | 0.939 [0.917, 0.957] | - | 0.933 [0.904, 0.959] | - |
+| Claude Opus 5 | 0.937 [0.915, 0.957] | +0.2 [-1.7, +1.8] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
+| GPT-5.6 | 0.928 [0.906, 0.948] | +1.1 [-0.7, +3.1] | 0.904 [0.867, 0.937] | +3.0 [+0.0, +6.3] |
+| Gemini 3.1 Pro | 0.959 [0.941, 0.976] | -2.0 [-3.7, -0.4] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
+| Claude Haiku 4.5 | 0.839 [0.808, 0.869] | +10.0 [+7.2, +12.8] | 0.785 [0.737, 0.833] | +14.8 [+10.4, +19.3] |
+| GPT-5.6 Luna | 0.906 [0.880, 0.930] | +3.3 [+1.1, +5.5] | 0.881 [0.841, 0.919] | +5.2 [+1.5, +8.9] |
+| Gemini 3.1 Flash-Lite | 0.961 [0.945, 0.976] | -2.2 [-3.9, -0.6] | 0.933 [0.904, 0.959] | +0.0 [-3.0, +3.0] |
+
+On pick-one the open model is indistinguishable from the four best hosted models and within three points of three of
+them. On yes/no it is indistinguishable from Claude Opus 5 and GPT-5.6, about two points behind both Gemini models (a
+small lead that no single set could show), and ahead of GPT-5.6 Luna and Claude Haiku 4.5. The equal-weight-per-set means
+tell the same story (0.938 against 0.958 and 0.960), so the result is not an artefact of two of the three sets being
+nature photographs.
+<!-- src: results/lab/pooled_photos.md, lab/NOTES.md entries 54, 55 -->
+
+### 3.3 The photo sets one by one
 
 The open model's own Commons numbers on all 131/262 items (rather than the 65-item hosted subset of 3.1) are 0.931
 [0.901, 0.958] yes/no and 0.885 [0.824, 0.939] pick-one. A second, more cleanly labelled set, iNaturalist, repeats
@@ -169,7 +197,7 @@ model could have trained on, that gap disappears into overlapping intervals, so 
 artifact working in the open model's favor.
 <!-- src: results/lab/fresh_commons.md, results/lab/fresh_inat.md, docs/paper/RESULTS_ZEROSHOT.md section 1, lab/NOTES.md entries 33, 45b -->
 
-### 3.3 A finer test that separates the hosted models
+### 3.4 A finer test that separates the hosted models
 
 The two photo sets above sit near ceiling for almost every system, which leaves open whether "level with hosted models"
 only means "the task is easy". We registered a deliberately harder closed-set test before collecting it (entry 47): 210
@@ -524,7 +552,7 @@ none a naturally occurring multi-factor judgment; no hosted model was given a fe
 before scoring, so Section 6 compares each provider's zero-shot, not best achievable, performance; yes/no and pick-one
 on fresh photographs sit near ceiling for every system (all near 0.93), so "level with hosted models" partly reflects
 that the task is currently easy, and on older, possibly contaminated benchmarks a hosted flagship led by 3 to 5 points
-(Section 3.2) - the harder insect-order test of Section 3.3 separates the hosted models and the open model holds, but
+(Section 3.3) - the harder insect-order test of Section 3.4 separates the hosted models and the open model holds, but
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
 2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 6.3, now the default, is still poor
 in absolute terms on KADID-10k (0.347) and on rubrics that are not image quality (0.375), and its request wording for a question about several images at once has not been measured (entry 43c); and two open,
@@ -580,7 +608,7 @@ harmless, but one source should feed both tables), (a)3, (a)5, (a)6, (a)8 to (a)
 
 1. Claude Opus 5's Commons yes/no accuracy 95% interval: `results/lab/fresh_commons.md` gives 0.924 [0.878, 0.962];
    `results/lab/matrix.md` (and `site/page.html`) give 0.924 [0.878, 0.969]. Same point estimate, different upper
-   bound. This draft uses the matrix.md figure in Section 3.1 and the fresh_commons.md figure in Section 3.2.
+   bound. This draft uses the matrix.md figure in Section 3.1 and the fresh_commons.md figure in Section 3.3.
 2. GPT-5.6's Commons yes/no accuracy 95% interval: `results/lab/fresh_commons.md` gives 0.893 [0.840, 0.939];
    `results/lab/matrix.md` (and `site/page.html`) give 0.893 [0.840, 0.947]. Same pattern as (1).
 3. "Sixteen unlabeled images" self-calibration exact accuracy for the four-pass readout has three different values

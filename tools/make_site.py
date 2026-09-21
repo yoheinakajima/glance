@@ -258,7 +258,7 @@ def finer():
         out.append("<p>Insect orders on iNaturalist (beetle, true bug, fly, …; 210 photographs; every “no” question names a look-alike order) ask for finer distinctions than the ten-group test." + spread + " The open dual encoder falls to 0.71 here.</p>")
         out.append('<div class="table-scroll"><table><thead><tr><th>Insect orders, zero-shot</th><th class="n">yes/no</th><th class="n">pick one of 7</th></tr></thead><tbody>'
                    + "".join(f'<tr{" class=own" if n.startswith("Qwen") else ""}><td>{n}</td><td class="n">{ci(a) if a else "–"}</td><td class="n">{ci(b_) if b_ else "–"}</td></tr>' for n, a, b_ in rows) + "</tbody></table></div>")
-        out.append('<p class="caption"><b>Table 4.</b> Seven insect orders, zero-shot, 95% bootstrap intervals. The open model answered all items (420 yes/no questions, 210 photographs); hosted models, where present, the test half (210 and 105).</p>')
+        out.append('<p class="caption"><b>Table 5.</b> Seven insect orders, zero-shot, 95% bootstrap intervals. The open model answered all items (420 yes/no questions, 210 photographs); hosted models, where present, the test half (210 and 105).</p>')
     if not probes and not load("results/lab/ui_screens.json"):
         out.append("<p>Tests that need more than coarse recognition (counting, spatial relations, relative size, reading, and which element of a screen to click) are registered and built from images drawn by program, with labels exact by construction; their results are not in this snapshot.</p>")
     return "\n  ".join(out)
@@ -267,6 +267,67 @@ def finer():
 def lower_keep(text):
     """Lower-case a test name for use inside a sentence, keeping proper nouns."""
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
+
+
+POOLED = load("results/lab/pooled_photos.json")
+SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B, read", "Qwen3-VL-4B, written": "Qwen3-VL-4B, written"}
+
+
+def pooled_groups(kind):
+    """Hosted models by the registered reading of the paired difference (entry 54): behind / indistinguishable / ahead."""
+    e = POOLED["kinds"][kind]["systems"]
+    g = {"open model behind": [], "indistinguishable": [], "open model ahead": []}
+    for name, row in e.items():
+        if "verdict" in row:
+            g[row["verdict"]].append((name, row["open_minus_this_points"]))
+    return g
+
+
+def _names(items, with_gap=False):
+    parts = [f"{n} ({abs(d[0]):.1f} points [{min(abs(d[1]), abs(d[2])):.1f}, {max(abs(d[1]), abs(d[2])):.1f}])" if with_gap else n for n, d in items]
+    return ", ".join(parts[:-1]) + (" and " if len(parts) > 1 else "") + parts[-1] if parts else "none"
+
+
+def pooled_sentence(kind, label):
+    g, own = pooled_groups(kind), POOLED["kinds"][kind]["systems"]["Qwen3-VL-4B, read"]["pooled"]
+    out = f"On {label} ({POOLED['kinds'][kind]['n_total']} items) the open model scores {own[0]:.3f} [{own[1]:.3f}, {own[2]:.3f}]: indistinguishable from {_names(g['indistinguishable'])}"
+    if g["open model behind"]:
+        out += f"; behind {_names(g['open model behind'], True)}"
+    if g["open model ahead"]:
+        out += f"; ahead of {_names(g['open model ahead'], True)}"
+    return out + "."
+
+
+def abstract_photos():
+    """The abstract's sentence on photographs, from the pooled analysis (entry 55)."""
+    y, c = POOLED["kinds"]["yesno"], POOLED["kinds"]["choice"]
+    own_y, own_c = y["systems"]["Qwen3-VL-4B, read"]["pooled"][0], c["systems"]["Qwen3-VL-4B, read"]["pooled"][0]
+    hosted = lambda e: {n: r["pooled"][0] for n, r in e["systems"].items() if "verdict" in r}  # noqa: E731
+    best_y, best_c = max(hosted(y).items(), key=lambda kv: kv[1]), max(hosted(c).items(), key=lambda kv: kv[1])
+    gy, gc = pooled_groups("yesno"), pooled_groups("choice")
+    level_both = [n for n, _ in gy["indistinguishable"] if n in {m for m, _ in gc["indistinguishable"]}]
+    ahead_both = [n for n, _ in gy["open model ahead"] if n in {m for m, _ in gc["open model ahead"]}]
+    return (f"On photographs taken after every model’s release, labelled by people outside this project (three sets, {y['n_total']} yes/no questions and {c['n_total']} pick-one photographs put to every system), "
+            f"the open model is level with the best hosted models on pick-one ({own_c:.3f} against {best_c[1]:.3f} for {best_c[0]}) and about two points behind the best on yes/no ({own_y:.3f} against {best_y[1]:.3f} for {best_y[0]}; "
+            f"the paired difference excludes zero for both Gemini models). It is indistinguishable from {_names([(n, None) for n in level_both])} on both, and ahead of {_names([(n, None) for n in ahead_both])} on both.")
+
+
+def pooled_table():
+    def row(name, e):
+        def cell(kind):
+            r = e[kind].get(name)
+            if not r:
+                return '<td class="n">–</td><td class="n">–</td>'
+            d = r.get("open_minus_this_points")
+            return (f'<td class="n">{r["pooled"][0]:.3f} <span class="ci">[{r["pooled"][1]:.3f}, {r["pooled"][2]:.3f}]</span></td>'
+                    + (f'<td class="n">{d[0]:+.1f} <span class="ci">[{d[1]:+.1f}, {d[2]:+.1f}]</span></td>' if d else '<td class="n">–</td>'))
+        return f'<tr{" class=own" if name.startswith("Qwen") else ""}><td>{name}</td>{cell("yesno")}{cell("choice")}</tr>'
+    e = {k: POOLED["kinds"][k]["systems"] for k in ("yesno", "choice")}
+    names = list(dict.fromkeys(list(e["yesno"]) + list(e["choice"])))
+    n = {k: POOLED["kinds"][k]["n_total"] for k in e}
+    return ('<div class="table-scroll"><table><thead><tr><th>Three photo sets pooled, zero-shot</th>'
+            f'<th class="n">yes/no, n={n["yesno"]}</th><th class="n">open minus this, points</th><th class="n">pick-one, n={n["choice"]}</th><th class="n">open minus this, points</th></tr></thead><tbody>'
+            + "".join(row(name, e) for name in names) + "</tbody></table></div>")
 
 
 def older():
@@ -368,7 +429,7 @@ def beyond():
                         + "".join(f'<td class="n">{cell(e[k]["all_items"]) if k in e else "–"}</td>' for k in hosted) + "</tr>")
     note = "Hosted models answered the test half of each set." if hosted else "Hosted models have not been run on these sets."
     return ('<div class="table-scroll"><table><thead><tr><th>Question, zero-shot</th><th class="n">options</th><th class="n">Qwen3-VL-4B, read</th>' + head + "</tr></thead><tbody>" + "".join(body) + "</tbody></table></div>"
-            + f'<p class="caption"><b>Table 5.</b> Exact-answer accuracy on images whose labels are exact by construction (drawn or rendered by program; no photographs, no people). {note}</p>')
+            + f'<p class="caption"><b>Table 6.</b> Exact-answer accuracy on images whose labels are exact by construction (drawn or rendered by program; no photographs, no people). {note}</p>')
 
 
 def beyond_text():
@@ -423,7 +484,7 @@ def ui_text():
 finer_block = finer()
 beyond_block = beyond()
 beyond_section = (f'<section aria-labelledby="stops">\n  <h2 id="stops"><span class="num">3</span>Where coarse recognition ends: geometry, not reading</h2>\n  {beyond_text()}\n  {beyond_block}\n</section>\n') if beyond_block else ""
-t0 = 5 if beyond_block else 4  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
+t0 = 6 if beyond_block else 5  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
 raw = lf["raw (0 labels, no pool)"]
@@ -435,7 +496,7 @@ BODY = f"""
 <header>
   <p class="running">Working paper · snapshot {snapshot}, {today} · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
-  <p class="subtitle">Coarse recognition at the level of hosted models is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
+  <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
   <p class="links"><a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
@@ -443,7 +504,7 @@ BODY = f"""
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
-  <p class="abstract">On photographs taken after every model’s release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted models, three flagships and three low-cost ones, on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps every other). These questions are easy and the labels are imperfect: about 3 to 5% of items are answered “wrongly” by all seven systems. Reading is as accurate as the same model writing JSON.</p>
+  <p class="abstract">{abstract_photos()} These questions are easy and the labels are imperfect: about 3 to 5% of items are answered “wrongly” by all seven systems. Reading is as accurate as the same model writing JSON.</p>
   <p class="abstract">Ratings behave differently. On five image-quality scales, zero-shot, every system orders images correctly (the open model is within one level on {raw["within_1"]:.2f} of images) and places the level boundaries wrongly, by a constant offset per rubric; a low-cost hosted model leads ({best_rating_acc:.3f} against {jd["json_zero"]:.3f}), and an 8B model is no better than a 4B one. Because a read answer is a vector of logits, it can be fitted: 16 unlabeled images of the rubric remove most of the offset ({jd["json_u16"]:.3f}) and 32 labels reach {loc["+ Glance ens4d, 32 labels"]["mean_accuracy"]:.3f}; the hosted models were not given examples, so this is a comparison of products, not of models. On a real image-quality benchmark (KADID-10k) the approach missed every target we registered, hand-built features and a small trained quality model do as well or better on low-level artefacts, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even 300 labels reach only {e4_acc:.2f}.</p>
   <p class="abstract">The open model’s cost is of the same order as the low-cost hosted models and one to two orders below the flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what is offered is the measurement, registered before it was run, with its misses.</p>
 </section>
@@ -474,17 +535,19 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 </section>
 
 <section aria-labelledby="evidence">
-  <h2 id="evidence"><span class="num">2</span>On coarse yes/no and pick-one questions, a 4B open model is indistinguishable from hosted models</h2>
+  <h2 id="evidence"><span class="num">2</span>On coarse yes/no and pick-one questions, a 4B open model is level with the best hosted models on pick-one and about two points behind the best on yes/no</h2>
   <p>The same items went to the open 4B model (read, and also writing its answer as JSON), to three hosted flagships and to each provider’s lowest-cost current vision model. Three tests, all zero-shot: {lower_keep(matrix["tests"]["yesno"])}; {lower_keep(matrix["tests"]["choice"])}; {lower_keep(matrix["tests"]["rating"])} (ratings are the subject of section 5).</p>
   <figure>{fig_bars}<figcaption><b>Figure 1.</b> Accuracy, seconds and dollars for every system, by question type, on scales that start at zero, on the items every system answered (Table 2 gives the counts). Dark bars are the open 4B model.{" An outlined bar is an estimated cost; an estimate beyond the measured range is cut short and marked ›." if has_est else ""}</figcaption></figure>
-  <p>On yes/no and pick-one every 95% interval overlaps every other, so the defensible statement is “indistinguishable at this sample size”, not “equal”. Two cautions apply. The questions are coarse (is there a bridge; which of thirteen everyday things is this), so they measure a floor that all current systems clear. And the labels are not gold: {noise_n("fresh_yesno")} of 131 yes/no items and {noise_n("fresh_choice")} of 65 pick-one items are answered “wrongly” by all seven systems, which is more likely a wrong or ambiguous label than seven identical mistakes (a proxy; no human audit was done). On ratings there is no single best system.</p>
+  <p>Within any one photo set every 95% interval overlaps every other, which says as much about sample size as about the systems. Pooled over the three photo sets and paired on the same items, differences appear. {pooled_sentence("yesno", "yes/no")} {pooled_sentence("choice", "pick-one")} Two cautions apply. The questions are coarse (is there a bridge; which of thirteen everyday things is this), so they measure a floor that all current systems clear. And the labels are not gold: {noise_n("fresh_yesno")} of 131 yes/no items and {noise_n("fresh_choice")} of 65 pick-one items are answered “wrongly” by all seven systems, which is more likely a wrong or ambiguous label than seven identical mistakes (a proxy; no human audit was done). On ratings there is no single best system.</p>
   {matrix_tables(ALL)}
   <p class="caption"><b>Table 2.</b> The numbers behind Figure 1, on the items every system answered (the test half of the Commons set). Accuracy with 95% bootstrap intervals; bold rows are the open model. Hosted speed is wall time per call from one laptop, network included; hosted cost is the provider’s bill where it was logged (“est.” is a list-price upper estimate). The open model was timed on the same photographs with the GPU otherwise idle; its cost is those seconds at an on-demand cloud GPU price.{size_note} No few-shot prompt was tried for any written row.</p>
+  {pooled_table()}
+  <p class="caption"><b>Table 3.</b> The three fresh photo sets pooled (Commons, iNaturalist ten groups, iNaturalist insect orders), on the items the hosted models were asked; a failed call counts as wrong. Differences are paired on the same items, with 95% intervals from a bootstrap stratified by photo set. This pooling was added after the per-set results had been seen; its rule (every set, every system, nothing dropped) was fixed before it was computed.</p>
   <h3>2.1 The photographs</h3>
   <p>Wikimedia Commons photographs taken after 15 August 2026, labelled by their uploaders’ structured “depicts” statements, and iNaturalist observations uploaded on the day of the test, labelled by community identification. No labels were made by us or by any model.</p>
   {fresh_table()}
-  <p class="caption"><b>Table 3.</b> The open model on all items of each photo set, hosted models on the test half; 95% bootstrap intervals, uncalibrated decisions, nothing fitted. {apart()}</p>
-  <figure>{fig1}<figcaption><b>Figure 2.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
+  <p class="caption"><b>Table 4.</b> The open model on all items of each photo set, hosted models on the test half; 95% bootstrap intervals, uncalibrated decisions, nothing fitted. {apart()}</p>
+  <figure>{fig1}<figcaption><b>Figure 2.</b> The Commons rows of Table 4, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
   <p>{older()}</p>
 
   <h3>2.2 A finer test</h3>
@@ -494,7 +557,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 {beyond_section}
 <section aria-labelledby="read">
   <h2 id="read"><span class="num">4</span>Reading is as accurate as writing, and gives the same answer when the prompt is the same</h2>
-  <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree. On yes/no and pick-one the accuracy is the same on both photo sets (differences of {rw_gap[0]:.1f} to {rw_gap[1]:.1f} points, every interval spanning zero; Table 3), and each item comes out the same way, right or wrong, on {rw_same[0]:.1%} to {rw_same[1]:.1%} of items; the few that differ reflect the prompts, which are not the same (a JSON request against one statement per option). On ratings, where the digits can be read at the very position where the written answer puts them, {jd["agree_with_written"]:.0%} of answers are identical: a written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
+  <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree. On yes/no and pick-one the accuracy is the same on both photo sets (differences of {rw_gap[0]:.1f} to {rw_gap[1]:.1f} points, every interval spanning zero; Table 4), and each item comes out the same way, right or wrong, on {rw_same[0]:.1%} to {rw_same[1]:.1%} of items; the few that differ reflect the prompts, which are not the same (a JSON request against one statement per option). On ratings, where the digits can be read at the very position where the written answer puts them, {jd["agree_with_written"]:.0%} of answers are identical: a written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
   <p>They stop agreeing when the prompts differ. Our earlier four-pass rating readout uses different wording from the JSON prompt and scores {100 * (written - jd["ens_zero"]):.0f} points lower zero-shot. And when one written JSON object carries 25 ratings, each field is conditioned on the fields already written, while 25 separate reads are independent: the two agree on only {genb["25 ratings"]["agreement_with_read_on_valid_fields"]:.0%} of fields (that request has no ground truth, so this is a difference, not an error rate). Reading is therefore not a free substitute for any prompt; it is a way to take the same decision without generating it.</p>
   <p>What reading changes is cost and form: about 1.5 times faster for one question about a full-size photograph (encoding the image dominates), 2 to 3 times on small images, more as questions per image grow; and the answer is a probability vector, which can be thresholded, ranked and fitted.</p>
   {cost_table()}

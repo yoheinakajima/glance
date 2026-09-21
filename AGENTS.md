@@ -54,7 +54,7 @@ uv run glance fit --data labels/ --rubric rubric.json                           
 
 ## What it is good and bad at (say this to users)
 
-Good: yes/no and pick-one about ordinary photos (level with hosted models on photos none of them has seen); ordering
+Good: yes/no and pick-one about ordinary photos (on photos no model has seen: level with the best hosted models on pick-one, about two points behind the best on yes/no); ordering
 images by a rubric; many questions per image; private or offline use; probabilities. Not good: best-possible zero-shot
 exact ratings (a cheap hosted model, Gemini 3.1 Flash-Lite, is about 9 points better); fine image-quality levels
 (KADID-10k); saving money against the cheapest hosted models on ratings. Numbers and caveats: `docs/CLAIMS.md`.
