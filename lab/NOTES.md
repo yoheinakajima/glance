@@ -1726,3 +1726,11 @@ model output (marks hidden behind the dialog by a stacking bug; two text overlap
 full-size screens myself (a dark cart page with an error banner, a pricing screen): marks readable and clear of the text
 they mark, goals unambiguous. No deviation from entry 49. Suites registered as opt-in; the local run is queued; hosted rows
 need the owner's paste (`tools/frontier_batch.py --set ui`).
+
+## 2026-09-21 00:53 Entry 47d: a tooling defect caught before it reached the page
+
+The hosted batch tool rebuilds the older reports when a set finishes. It listed only the three flagship runs plus the runs
+finished in that batch, so the insect-order batch rewrote the Commons, iNaturalist and lab-scale reports WITHOUT the three
+low-cost hosted models (working tree only; the committed reports, the matrix and the page were unaffected because the matrix
+reads run folders directly). Fixed: the rebuild now includes every run folder that exists for the set. Verified by re-running
+the three reports with the full lists: byte-identical to the committed files. No number changed.

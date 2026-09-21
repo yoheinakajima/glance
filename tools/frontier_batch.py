@@ -131,9 +131,10 @@ def main() -> int:
                         "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
     if args.set == "orders" and finished:
         subprocess.run(["uv", "run", "python", "tools/fresh_report.py", "--set", "orders", "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
-    for cmd in REPORTS:
+    for cmd in REPORTS:  # every run folder that exists for the set, not only this batch's: a later batch on another set must not drop rows
         base = cmd[cmd.index("--run") + 1]
-        extra = [a for run_id in finished if run_id.startswith(base[:16]) and run_id not in cmd for a in ("--run", run_id)]
+        known = [f"{base}-{suffix}" for _, _, models in FLAGSHIP_AND_CHEAP for _, suffix in models]
+        extra = [a for run_id in known if (cfg.path("runs") / run_id).is_dir() and run_id not in cmd for a in ("--run", run_id)]
         subprocess.run(cmd + extra, check=False, stdout=subprocess.DEVNULL)
     for cmd in REBUILD:
         subprocess.run(cmd, check=False, stdout=subprocess.DEVNULL)
