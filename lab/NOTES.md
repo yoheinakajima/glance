@@ -1746,3 +1746,11 @@ all items (`lab/runs/smolvlm2_fresh.jsonl`, 993 rows; `results/lab/other_models.
 Reading: the readout carries to a second family with no change, and on everyday photographs a 2.2B model of another family is
 level with the 4B model. On nature photographs it trails by 5 points on yes/no and 12 on pick-one (the pick-one intervals do not
 overlap), so "level with hosted models" is a statement about Qwen3-VL (2B to 8B), not about every small open model.
+
+## 2026-09-21 00:56 Entry 46c: the any-model option, checked on the GPU
+
+`glance --model-id HuggingFaceTB/SmolVLM2-2.2B-Instruct --revision 482adb5... --image-longest-edge 768 ask` on the GPU, one
+question of each type: yes/no 0.992, pick-one "dog" 0.99995 over cat and car, a four-level blur rating with a full
+distribution (method `ens4d`), each with the correct "uncalibrated" warning; exit 0 (`$TMPDIR/glance/generic_smoke.out`).
+Together with E19 (993 photo questions through the same backend and the shipped scorer) the option is checked end to end on one
+other family. The README and AGENTS.md now say exactly that instead of "experimental"; any other model is untested.

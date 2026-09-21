@@ -19,7 +19,7 @@ CLI, one question: `uv run glance ask IMAGE "QUESTION"` (yes/no), add `--options
 ```python
 from glance import Glance
 g = Glance()                                   # model="vlm" (default) or "siglip" (tiny dual encoder, pick-one only in practice)
-# Glance(model_id="org/any-hf-vlm", revision="<commit>") swaps in another Hugging Face VLM (experimental; CLI: glance --model-id ... ask ...)
+# Glance(model_id="org/any-hf-vlm", revision="<commit>") swaps in another Hugging Face VLM (checked end to end on SmolVLM2-2.2B only; CLI: glance --model-id ... ask ...)
 g.noul(image, "Is there a person in `img0`?")                      # -> {"type": "noul", "noul": float in [0, 1], "raw": float}
 g.choice(image, "What is `img0`?", {"receipt": "an itemized proof of purchase", "invoice": "a bill", "other": None})
                                                                     # -> {"choice": key, "probabilities": {key: p}, "confidence": float}

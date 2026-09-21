@@ -99,7 +99,7 @@ OpenJev v2. The request and response shapes follow TypeSafe's Jev, a hosted text
 Python 3.11, [uv](https://docs.astral.sh/uv/). Apple silicon with 16 GB or more, or a CUDA GPU with 12 GB or more, runs the
 default Qwen3-VL-4B (8.9 GB download); `glance doctor` picks Qwen3-VL-2B on small machines and 8B on 24 GB GPUs. Other
 sizes of the family load through a config file (`configs/scaling_qwen3vl_*.yaml`); any other Hugging Face image-text-to-text model
-with a chat template loads with `--model-id` (experimental):
+with a chat template loads with `--model-id` (checked end to end on one other family; treat any model not listed below as untested):
 
 ```bash
 uv run glance --model-id HuggingFaceTB/SmolVLM2-2.2B-Instruct --revision 482adb537c021c86670beed01cd58990d01e72e4 --image-longest-edge 768 \
@@ -107,7 +107,8 @@ uv run glance --model-id HuggingFaceTB/SmolVLM2-2.2B-Instruct --revision 482adb5
 ```
 
 Same questions, same readout, nothing model-specific; `Glance(model_id=...)` in Python. Only Qwen3-VL (2B, 4B, 8B) and SmolVLM2-2.2B are
-MEASURED here, and zero-shot quality is the model's: SmolVLM2 is clearly weaker than Qwen3-VL-4B until it is fitted. Only Apache-2.0 or MIT weights are used;
+MEASURED here, and zero-shot quality is the model's: on fresh photographs SmolVLM2 answers yes/no and pick-one at 0.931 / 0.870 (everyday
+photos, level with Qwen3-VL-4B) and 0.892 / 0.815 (nature photos, 5 and 12 points behind it), and on ratings it is clearly weaker until it is fitted. Only Apache-2.0 or MIT weights are used;
 pins, licenses and check dates are in `MODELS.md` and `DATASETS.md`. After the first download everything runs offline.
 
 ## Where things are
