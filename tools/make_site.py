@@ -708,6 +708,29 @@ footer{font-size:.8rem;line-height:1.55;color:var(--muted);border-top:1px solid 
 page = STYLE + "<main>" + BODY + "</main>\n"
 (ROOT / "site").mkdir(exist_ok=True)
 (ROOT / "site/page.html").write_text(page)
+# ---- link previews (messages, social posts): description, Open Graph and a card image; numbers from the pooled analysis -------
+_y, _c = POOLED["kinds"]["yesno"]["systems"], POOLED["kinds"]["choice"]["systems"]
+_best = lambda e: max(r["pooled"][0] for n, r in e.items() if "verdict" in r)  # noqa: E731
+DESCRIPTION = (f"Typed questions about images, answered from one forward pass of a frozen open 4B vision-language model on a laptop. On fresh photographs: pick-one {_c['Qwen3-VL-4B, read']['pooled'][0]:.3f} "
+               f"against {_best(_c):.3f} for the best hosted model, yes/no {_y['Qwen3-VL-4B, read']['pooled'][0]:.3f} against {_best(_y):.3f}. Every experiment registered before it ran; misses published.")
+META = (f'<meta name="description" content="{html.escape(DESCRIPTION)}">\n<link rel="canonical" href="https://glance.yohei.me/">\n'
+        f'<meta property="og:type" content="article">\n<meta property="og:title" content="Glance: a working paper">\n<meta property="og:description" content="{html.escape(DESCRIPTION)}">\n'
+        '<meta property="og:url" content="https://glance.yohei.me/">\n<meta property="og:image" content="https://glance.yohei.me/og.png">\n<meta property="og:image:width" content="1200">\n'
+        '<meta property="og:image:height" content="630">\n<meta name="twitter:card" content="summary_large_image">\n')
+CARD = f"""<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>body{{margin:0;width:1200px;height:630px;background:#fff;color:#14171a;font-family:"STIX Two Text",Georgia,serif}}
+.w{{padding:64px 80px}}.k{{font:500 20px "IBM Plex Sans",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#56616b}}
+h1{{font-size:92px;margin:14px 0 8px;font-weight:600}}.s{{font-size:33px;line-height:1.32;max-width:1010px}}
+.r{{display:flex;gap:56px;margin-top:40px;border-top:2px solid #14171a;padding-top:24px}}.r div{{font:400 20px "IBM Plex Sans",Arial,sans-serif;color:#56616b}}
+.r b{{display:block;font:600 42px "STIX Two Text",Georgia,serif;color:#14171a;margin-bottom:4px}}.u{{position:absolute;right:80px;bottom:46px;font:500 22px "IBM Plex Sans",Arial,sans-serif;color:#56616b}}</style></head>
+<body><div class="w"><div class="k">Working paper · every experiment registered before it ran</div><h1>Glance</h1>
+<div class="s">Typed questions about images, read from one forward pass of a frozen open 4B model. Level with the best hosted models on pick-one, two points behind on yes/no; geometry is where it stops.</div>
+<div class="r"><div><b>{_c['Qwen3-VL-4B, read']['pooled'][0]:.3f} <span style="font-weight:400;color:#56616b">vs {_best(_c):.3f}</span></b>pick-one, best hosted model</div>
+<div><b>{_y['Qwen3-VL-4B, read']['pooled'][0]:.3f} <span style="font-weight:400;color:#56616b">vs {_best(_y):.3f}</span></b>yes/no, best hosted model</div>
+<div><b>{own["seconds"]["yesno"]["value"]:.1f} s</b>per yes/no, on a laptop</div></div></div><div class="u">glance.yohei.me</div></body></html>"""
+(ROOT / "site/og_card.html").write_text(CARD)  # rendered to site/og.png by tools/make_og.py (needs a local Chrome); not uploaded itself
+
 (ROOT / "site/index.html").write_text('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n'
-                                      + STYLE + "</head>\n<body>\n<main>" + BODY + "</main>\n</body>\n</html>\n")
+                                      + META + STYLE + "</head>\n<body>\n<main>" + BODY + "</main>\n</body>\n</html>\n")
 print("wrote site/index.html and site/page.html,", len(page) // 1024, "KB")

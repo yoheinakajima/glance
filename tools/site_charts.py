@@ -185,8 +185,8 @@ def bars_by_type(rows, wide, tests=None):
             g.append(_t(4, y + 10, title, "start", "m-tick"))
             y += 16
             for name in names:
-                g.append(_t(108, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if name.startswith("Qwen") else "m-lab"))
-                g.append(bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, 114, y, 160))
+                g.append(_t(122, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if name.startswith("Qwen") else "m-lab"))  # 122: room for the longest name at phone width
+                g.append(bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, 128, y, 150))
                 y += 14
             y += 8
         out.append(f'<svg viewBox="0 0 360 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, {TESTS[t]}">{"".join(g)}</svg>')

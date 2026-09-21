@@ -23,7 +23,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: rm -f site/page.html site/chart_options.html   # preview wrapper and an internal options page: not part of the public site
+      - run: rm -f site/page.html site/chart_options.html site/og_card.html   # preview wrapper, an internal options page, the source of og.png: not part of the public site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
