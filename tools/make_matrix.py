@@ -157,6 +157,27 @@ pooled_path = ROOT / "results/lab/pooled_photos.json"
 pooled = json.loads(pooled_path.read_text()) if pooled_path.exists() else None
 if pooled and all(pooled["kinds"][k].get("written_row_complete") for k in ("yesno", "choice")):
     alias = {"Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B, read", "Qwen3-VL-4B, written": "Qwen3-VL-4B, written"}
+    # Other open models read the same way (E24, notebook entry 58) join only on the same basis as every other row: the pooled
+    # items for yes/no and pick-one, the same 1,000 lab images for ratings, and seconds measured the same way (idle GPU).
+    for size, json_rows_path in (("2B", "lab/runs/scaling_2b.jsonl"), ("8B", "lab/runs/scaling_8b.jsonl")):
+        pooled_name, row_name = f"Qwen3-VL-{size}, read", f"Qwen3-VL-{size}, read (Glance)"
+        photo_t, rating_t = ROOT / f"lab/PHOTO_TIMING_{size}.json", ROOT / f"lab/runs/jsondigits_timing_{size.lower()}.jsonl"
+        if not all(pooled_name in pooled["kinds"][k]["systems"] for k in ("yesno", "choice")) or not photo_t.exists() or not rating_t.exists():
+            continue
+        other_json = {(r["ladder"], r["item_id"]): r["logits"] for r in read_jsonl(ROOT / json_rows_path) if r["method_key"] == "jsondigits"}
+        keys = sorted({(r["suite"], r["item_id"]) for name in lab for r in lab[name] if r["suite"].startswith("ladder_")})
+        if not all((k[0].removeprefix("ladder_"), k[1]) in other_json for k in keys):
+            continue
+        pt = json.loads(photo_t.read_text())
+        ms = {"yesno": pt["yesno"]["read_p50_ms"], "choice": pt["choice"]["read_p50_ms"],
+              "rating": statistics.median(r["latency_ms"] for r in read_jsonl(rating_t) if r["method_key"] == "jsondigits")}
+        systems[row_name] = {"kind": f"a {size} open model of the same family, zero-shot, answer read from one forward pass",
+                             "accuracy": {"rating": cell([int(np.argmax(other_json[(k[0].removeprefix("ladder_"), k[1])])) == by[k]["digits"]["level"] for k in keys])},
+                             "seconds": {t: {"value": v / 1000, "how": "measured on the laptop, GPU otherwise idle, " + ("on these photographs" if t != "rating" else "on the 448 px lab images")} for t, v in ms.items()},
+                             "usd_per_1000": {t: {"value": local_usd(v / 1000), "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"} for t, v in ms.items()}}
+        alias[row_name] = pooled_name
+    order = [n for n in systems if not n.startswith("Qwen")] + [n for n in ("Qwen3-VL-4B, written", "Qwen3-VL-2B, read (Glance)", "Qwen3-VL-4B, read (Glance)", "Qwen3-VL-8B, read (Glance)") if n in systems]
+    systems = {n: systems[n] for n in order}
     for kind in ("yesno", "choice"):
         e = pooled["kinds"][kind]
         for name in systems:

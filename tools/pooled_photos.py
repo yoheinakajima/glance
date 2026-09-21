@@ -9,6 +9,7 @@ uv run python tools/pooled_photos.py
 import collections
 import json
 import pathlib
+import re
 
 import numpy as np
 
@@ -24,6 +25,10 @@ NAMES = {"anthropic/claude-opus-5": "Claude Opus 5", "openai/gpt-5.6": "GPT-5.6"
 OPEN = "Qwen3-VL-4B, read"
 WRITTEN = "Qwen3-VL-4B, written"
 WRITTEN_RUNS = ["lab/runs/gen_accuracy.jsonl", "lab/runs/gen_accuracy_inat.jsonl", "lab/runs/gen_accuracy_orders.jsonl"]  # the same model writing JSON (entries 32b, 32c, 55b)
+# other open models read the same way (E24, notebook entry 58): eval runs named in these logs, or per-item files with a `correct` flag
+OTHER_OPEN = {"Qwen3-VL-2B, read": ["lab/runs/scaling_2b_eval.out", "lab/runs/scaling_2b_orders_eval.out"],
+              "Qwen3-VL-8B, read": ["lab/runs/scaling_8b_eval.out", "lab/runs/scaling_8b_orders_eval.out"],
+              "SmolVLM2-2.2B, read": ["lab/runs/smolvlm2_fresh.jsonl", "lab/runs/smolvlm2_orders.jsonl"]}
 rng = np.random.default_rng(7)
 
 
@@ -56,13 +61,30 @@ for path in WRITTEN_RUNS:
             set_name, kind = suite_home[r["suite"]]
             hits[kind][set_name][WRITTEN][r["item_id"]] = bool(r["correct"])
 
+for name, sources in OTHER_OPEN.items():
+    for src in sources:
+        path = ROOT / src
+        if not path.exists():
+            continue
+        if src.endswith(".jsonl"):
+            rows = [(r["suite"], r["item_id"], bool(r["correct"])) for r in read_jsonl(path)]
+        else:
+            found = re.search(r"run (\d{8}T\d{6}Z-[0-9a-f]+)", path.read_text())
+            preds = read_jsonl(ROOT / "runs" / found.group(1) / "predictions.jsonl") if found else []
+            rows = [(r["suite"], r["item_id"], local_hit(r)) for r in preds if r["backend"] == "vlm" and r["method"] in ("statement", "independent")]
+        for suite, item_id, ok in rows:
+            if suite in suite_home:
+                set_name, kind = suite_home[suite]
+                hits[kind][set_name][name][item_id] = ok
+
 out = {"sets": {k: v[0] for k, v in SETS.items()}, "kinds": {}}
 for kind, by_set in hits.items():
     hosted = [n for n in NAMES.values() if any(n in by_set[s] for s in by_set)]
     # the items the hosted models were asked: the union over hosted models per set; a hosted model without a row for one of them failed that call
     asked = {s: sorted(set().union(*(set(by_set[s][n]) for n in hosted if n in by_set[s]))) for s in SETS}
     written_complete = all(i in by_set[s].get(WRITTEN, {}) for s in SETS for i in asked[s])  # the written row joins only when it covers every set
-    systems = [OPEN] + ([WRITTEN] if written_complete else []) + hosted
+    others = [n for n in OTHER_OPEN if all(i in by_set[s].get(n, {}) for s in SETS for i in asked[s])]  # only models that cover every set
+    systems = [OPEN] + ([WRITTEN] if written_complete else []) + others + hosted
     table = {s: {n: np.array([bool(by_set[s].get(n, {}).get(i, False)) for i in asked[s]], dtype=float) for n in systems} for s in SETS}
     missing = {n: int(sum(i not in by_set[s].get(n, {}) for s in SETS for i in asked[s])) for n in systems}
     draws = [[rng.integers(0, len(asked[s]), size=len(asked[s])) for s in SETS] for _ in range(10000)]
@@ -79,7 +101,9 @@ for kind, by_set in hits.items():
              "written_row_complete": bool(written_complete), "systems": {}}
     for n in systems:
         e = {"pooled": stat(pooled(n)), "equal_weight_per_set": stat(macro(n)), "per_set": {s: float(table[s][n].mean()) for s in SETS}}
-        if n not in (OPEN, WRITTEN):
+        if n in others:
+            e["open_4b_minus_this_points"] = stat(diff(n))
+        elif n not in (OPEN, WRITTEN):
             d = stat(diff(n))
             e["open_minus_this_points"] = d
             e["verdict"] = "indistinguishable" if d[1] <= 0 <= d[2] else ("open model ahead" if d[1] > 0 else "open model behind")
@@ -97,7 +121,7 @@ for kind, title in (("yesno", "Yes/no"), ("choice", "Pick-one")):
     md += [f"## {title}: {e['n_total']} items ({', '.join(f'{s} {n}' for s, n in e['n_items'].items())})", "",
            "| System | pooled accuracy | equal weight per set | " + " | ".join(SETS) + " | open model minus this system, points | reading |", "| --- | --- | --- | " + " | ".join("---" for _ in SETS) + " | --- | --- |"]
     for n, s in e["systems"].items():
-        d = s.get("open_minus_this_points")
+        d = s.get("open_minus_this_points") or s.get("open_4b_minus_this_points")
         md.append(f"| {n} | {f(s['pooled'])} | {s['equal_weight_per_set'][0]:.3f} | " + " | ".join(f"{s['per_set'][k]:.3f}" for k in SETS) + " | "
                   + (f"{d[0]:+.1f} [{d[1]:+.1f}, {d[2]:+.1f}]" if d else "-") + " | " + (s.get("verdict", "-") + (", within 3 points" if s.get("within_3_points") else "")) + " |")
     md += ["", "Hosted rows missing and counted wrong: " + ", ".join(f"{n} {m}" for n, m in e["missing_hosted_rows_counted_wrong"].items() if n != OPEN and m) + ".", ""]
