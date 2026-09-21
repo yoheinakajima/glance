@@ -262,8 +262,8 @@ unlabeled images and to 0.697 with the full 500-image pool; a badly unbalanced p
 only part of the gain (0.646). Calibration error falls too: mean ECE (floor in parentheses) goes from 0.327 (0.033)
 zero-shot to 0.175 (0.066) at 16 images, negative log-likelihood 1.94 to 0.82, not calibrated in the sense a labeled
 fit is (about 0.03 ECE), so usable for the level, not yet for a confidence threshold. On the one-pass JSON-position
-read the same idea reaches 0.758 at 16 unlabeled images, level with Gemini 3.1 Flash-Lite's zero-shot pick (0.763) and
-ahead of the five other hosted systems measured.
+read the same idea reaches 0.758 at 16 unlabeled images, half a point short of Gemini 3.1 Flash-Lite's zero-shot pick
+(0.763 [0.737, 0.789], well inside its interval) and ahead of the five other hosted systems measured.
 <!-- src: results/lab/label_free_test.md, results/lab/label_free_ece.md, results/lab/jsondigits.md, lab/NOTES.md entry 45b -->
 
 A correction that needs no images of the task at all, subtracting the model's own reading of content-free inputs
