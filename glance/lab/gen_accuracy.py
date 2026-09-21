@@ -29,9 +29,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default="lab/runs/gen_accuracy.jsonl")
     parser.add_argument("--limit", type=int, help="items per suite (smoke tests)")
     parser.add_argument("--suites", help="comma-separated suites instead of the default set (e.g. inat_yesno,inat_choice)")
+    parser.add_argument("--config", help="another model size (configs/scaling_*.yaml); the JSON request and the token cap do not change")
     args = parser.parse_args(argv)
 
-    bench = Bench()
+    bench = Bench(args.config)
     seen_by_frontier = {(r["suite"], r["item_id"]) for r in read_jsonl(PROJECT_ROOT / "runs" / args.frontier_run / "predictions.jsonl")
                         if r["backend"] == "frontier"}
     out_path = PROJECT_ROOT / args.out
@@ -58,7 +59,11 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 correct = ok and int(value) == int(item.label)
             writer.write({"suite": suite, "item_id": item.item_id, "split": item.split, "type": question["type"], "valid": bool(ok),
-                          "correct": bool(correct), "written": value if ok else None, "write_ms": ms, "write_tokens": tokens})
+                          "correct": bool(correct), "written": value if ok else None, "write_ms": ms, "write_tokens": tokens,
+                          # kept since E25 (lab/NOTES.md entry 59) so a lenient score can be computed: raw text of an OPEN local model, its allowed answers, the label
+                          "text": text[:300], "allowed": (["Yes", "No"] if question["type"] == "noul" else list(question["criteria"]) if question["type"] == "choice"
+                                                          else [str(i) for i in range(len(question["criteria"]))]),
+                          "label": (("Yes" if item.label else "No") if question["type"] == "noul" else str(item.label))})
             if n % 50 == 0 or n == len(items):
                 print(f"[genacc {time.strftime('%H:%M:%S')}] {suite}: {n}/{len(items)}", file=sys.stderr, flush=True)
     return 0
