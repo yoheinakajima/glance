@@ -1945,3 +1945,32 @@ rating on a shared GPU (not an idle-GPU timing; its linear-attention kernels fel
 Reading of E13 as a whole: our calibration helps an outside readout a great deal (0.41 to 0.77), which supports the claim that
 the fit is the transferable part; of the two outside systems, the quality SPECIALIST matches the fitted 4B model (37c) and the
 general trained claim scorer is nine to ten points behind it.
+
+## 2026-09-21 07:01 Entry 54: how the hosted rows on the probes and the interface screens will be reported, and a pooled photo analysis; registered before any hosted output on the new sets was seen
+
+The owner started the hosted batches for the rendered probes and the interface screens at about 07:01. I have not opened any of
+their output. Fixed now:
+**Probes and interface screens (E21, E22, hosted half).** Reported PER SUITE on the items every system answered, with the paired
+difference best-hosted-minus-open and its 95% interval per suite, and the same breakdowns as the open model (count, size ratio,
+stripe direction, UI state, done / not done, reasoning kind). NO composite score across suites or families: the suites measure
+different abilities, some items were built to be hard, and any average would be set by how many items of each kind I generated.
+The page shows them as a profile (abilities by systems), not a total. No suite and no system is dropped, whatever the result; a
+failed call counts as wrong. H52 and H54 (entries 49, 50) stand; H51 is already refuted by arithmetic. New, blind:
+- H56: the mirror-image confusion is not special to the open model: at least 4 of the 6 hosted models score under 0.80 on the two
+  diagonal stripe directions taken together.
+- H57: relative size is where hosted models pull ahead: the best hosted model beats the open model on `probe_largest` by at
+  least 15 points.
+- H58: the disabled-button miss is partly the test's: at least 4 of the 6 hosted models detect the disabled state on fewer than
+  0.80 of the screens that have it (if they all detect it, the miss is the open model's alone).
+**Pooled photo analysis (E23). NOT blind: every per-set result below was seen before this entry**, and I had already
+back-of-enveloped the pooled values from rounded per-set figures (open model about 0.943 yes/no against about 0.960 for the two
+Gemini models; pick-one about 0.930, level with the top three hosted models). It is registered so that the RULE cannot be tuned:
+all three fresh photo sets (Commons, iNaturalist ten groups, iNaturalist insect orders), yes/no and pick-one separately, only the
+items every system answered (the hosted test halves), a failed call counts as wrong, no set and no system dropped. Primary
+number: item-pooled accuracy per system, and the paired difference open-minus-hosted per hosted model, 95% intervals from a
+bootstrap stratified by photo set (10,000 draws, seed 7). Sensitivity: the equal-weight-per-set mean, because two of the three
+sets are nature photographs (about three quarters of the items). Wording rule fixed now: "indistinguishable" is used only for a
+hosted model whose paired interval includes zero; otherwise the difference is stated with its interval, in either direction;
+"within 3 points" is used only if the whole paired interval lies inside [-3, +3]. If the owner adopts it, this pooled result
+replaces the Commons-only numbers as the headline for yes/no and pick-one, with the per-set rows kept beneath it; cost and speed
+are NOT pooled (hosted cost depends on image size) and stay per set. Ratings stay separate.
