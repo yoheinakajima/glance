@@ -50,8 +50,8 @@ def json_prompt(questions: dict[str, dict[str, Any]]) -> str:
 
 
 class Bench:
-    def __init__(self):
-        self.cfg = load_config(overrides={"vlm": {"prefix_cache": True}})
+    def __init__(self, config_path: str | None = None):
+        self.cfg = load_config(config_path, overrides={"vlm": {"prefix_cache": True}})  # config_path: another model size (configs/scaling_*.yaml)
         self.engine = Engine(self.cfg, source="gen_bench")
         self.backend = self.engine.backend("vlm")
 
@@ -114,6 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=8, help="test images per lab scale (5 scales)")
     parser.add_argument("--out", default="lab/GENBENCH")
     parser.add_argument("--rows", default="lab/runs/gen_bench.jsonl")
+    parser.add_argument("--config", help="config yaml for another model size, e.g. configs/scaling_qwen3vl_8b.yaml")
     parser.add_argument("--single", action="store_true", help="one question per request of each type (yes/no, pick-one, rating): the cells of the comparison matrix")
     args = parser.parse_args(argv)
 
@@ -127,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         sets = {"1 yes/no": ({"animal": {"type": "noul", "instructions": YESNO}}, 16), "1 pick-one": ({"kind": {"type": "choice", **CHOICE}}, 24),
                 "1 rating": (one_rating, 24)}
 
-    bench = Bench()
+    bench = Bench(args.config)
     (PROJECT_ROOT / args.rows).unlink(missing_ok=True)
     rows = JsonlWriter(PROJECT_ROOT / args.rows)
     items = [i for scale in lab for i in [x for x in load_items(scale) if x["split"] == "test"][: args.limit]]
