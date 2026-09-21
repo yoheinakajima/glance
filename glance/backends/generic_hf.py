@@ -134,7 +134,9 @@ class GenericVlmBackend:
             timing_ms={"prefix": 0.0, "score": (time.perf_counter() - t0) * 1000}, cache_hit=None,
         )
 
-    def score_labels(self, images: list[LoadedImage], context, blocks: list[str], labels: list[str]) -> LabelScores:
+    def score_labels(self, images: list[LoadedImage], context, blocks: list[str], labels: list[str], assistant_prefix: str = "") -> LabelScores:
+        """`assistant_prefix` forces the start of the assistant turn (e.g. `{"answer": `), so the labels are read where a
+        written structured answer would put its value (lab/NOTES.md entry 42). Its tokens replace the usual space-token rule."""
         from scipy.special import logsumexp
 
         t0 = time.perf_counter()
@@ -143,7 +145,11 @@ class GenericVlmBackend:
                 self._label_ids[label] = self._single_token_ids([label, " " + label])
         groups = [self._label_ids[label] for label in labels]
         flat = [tid for group in groups for tid in group]
-        rows = [self._forward(images, context, block, flat, suffix_ids=self.label_prefix_ids) for block in blocks]
+        suffix = self.tokenizer.encode(assistant_prefix, add_special_tokens=False) if assistant_prefix else self.label_prefix_ids
+        if assistant_prefix:  # after a forced prefix the value follows directly: read the bare label token only
+            groups = [self._single_token_ids([label]) for label in labels]
+            flat = [tid for group in groups for tid in group]
+        rows = [self._forward(images, context, block, flat, suffix_ids=suffix) for block in blocks]
         logits = np.zeros((len(blocks), len(labels)))
         for i, row in enumerate(rows):
             cursor = 0
