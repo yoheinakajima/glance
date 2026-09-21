@@ -116,17 +116,17 @@
    "usd_per_1000": {
     "yesno": {
      "value": [
-      18.7,
-      18.7
+      3.365174999999999,
+      3.365174999999999
      ],
-     "how": "list-price upper estimate (this run predates cost logging)"
+     "how": "measured on the iNaturalist photos (smaller images), same question type"
     },
     "choice": {
      "value": [
-      18.7,
-      18.7
+      4.478100000000003,
+      4.478100000000003
      ],
-     "how": "list-price upper estimate (this run predates cost logging)"
+     "how": "measured on the iNaturalist photos (smaller images), same question type"
     },
     "rating": {
      "value": [

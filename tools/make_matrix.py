@@ -75,6 +75,13 @@ for test, (suite, _) in TESTS.items():
         systems[name].setdefault("seconds", {})[test] = {"value": statistics.median(r["latency_ms"] for r in rows) / 1000, "how": "measured, one call at a time from this laptop"}
         costs = [r["cost_usd"] for r in rows if r.get("cost_usd") is not None]
         key = next(k for k in LIST_PRICE if name.split()[0].lower() in k or name.split()[-1].lower() in k or ("opus" in k and "Opus" in name))
+        if not costs and suite:  # this run predates cost logging: use the same model's measured bill on the iNaturalist photos, same question type
+            twin = {"fresh_yesno": "inat_yesno", "fresh_choice": "inat_choice"}[suite]
+            inat_run = "20260920T232332Z-80efa7" + {"Gemini 3.1 Pro": "-gemini", "GPT-5.6": "-gpt"}.get(name, "")
+            inat = [r["cost_usd"] for r in frontier_rows(inat_run) if r["suite"] == twin and r.get("cost_usd") is not None] if (ROOT / "runs" / inat_run).exists() else []
+            if inat:
+                systems[name].setdefault("usd_per_1000", {})[test] = {"value": [1000 * sum(inat) / len(inat)] * 2, "how": "measured on the iNaturalist photos (smaller images), same question type"}
+                continue
         systems[name].setdefault("usd_per_1000", {})[test] = ({"value": [1000 * sum(costs) / len(costs)] * 2, "how": "measured"} if costs
                                                               else {"value": [LIST_PRICE[key]] * 2, "how": "list-price upper estimate (this run predates cost logging)"})
     systems["Qwen3-VL-4B, written"].setdefault("accuracy", {})[test] = cell([written[k] for k in sorted(shared)])

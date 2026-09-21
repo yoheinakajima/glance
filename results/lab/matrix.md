@@ -25,7 +25,7 @@
 | System | Yes/no, 131 fresh Commons questions | Pick one of 13, 65 fresh Commons photos | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
 | Gemini 3.1 Pro | $2.62 | $3.85 | $6.15 |
-| Claude Opus 5 | $18.70 (est.) | $18.70 (est.) | $18.70 (est.) |
+| Claude Opus 5 | $3.37 | $4.48 | $18.70 (est.) |
 | GPT-5.6 | $7.55 | $7.82 | $14.96 (est.) |
 | Qwen3-VL-4B, written | $0.12 to $0.18 | pending | pending |
 | Qwen3-VL-4B, read (Glance) | $0.05 to $0.08 | pending | pending |

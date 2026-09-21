@@ -33,8 +33,11 @@ The frontier models were scored on the test half only (their n is smaller).
 | --- | --- | --- | --- | --- |
 | Qwen3-VL-4B + Glance (open, local) | 0.945 [0.922, 0.968] | 400 | 0.940 [0.905, 0.970] | 200 |
 | SigLIP2 (open dual encoder) | - | - | 0.880 [0.835, 0.925] | 200 |
+| Claude Opus 5 | 0.945 [0.910, 0.975] | 200 | 0.930 [0.880, 0.980] | 100 |
+| GPT-5.6 | 0.935 [0.900, 0.965] | 200 | 0.910 [0.850, 0.960] | 100 |
+| Gemini 3.1 Pro | 0.960 [0.930, 0.985] | 200 | 0.910 [0.850, 0.960] | 100 |
 
-Frontier models: pending (the owner runs the paid calls).
+The frontier models were scored on the test half only (their n is smaller).
 
 ## 3. Ratings against a rubric in words, zero-shot (five synthetic 4-level scales, same 1,000 held-out images)
 
