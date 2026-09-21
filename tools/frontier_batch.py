@@ -126,11 +126,14 @@ def main() -> int:
     for run_id, model, state in done:
         print(f"  {model} on {run_id}: {state}")
     finished = [run_id for run_id, _, state in done if state == "finished"]
+    # every copy of the base run that exists, not only this batch's, so a second batch (one provider at a time) keeps the first's rows
+    copies = [a for _, _, models in FLAGSHIP_AND_CHEAP for _, suffix in models if (cfg.path("runs") / f"{bases[0][0]}-{suffix}").is_dir() for a in ("--run", f"{bases[0][0]}-{suffix}")]
     if args.set in ("probes", "ui") and finished:
+        by = [a for spec in ("probe_count=count", "probe_count_color=label", "probe_largest=ratio") for a in ("--by", spec)] if args.set == "probes" else []
         subprocess.run(["uv", "run", "python", "tools/suite_report.py", "--name", {"probes": "probes", "ui": "ui_screens"}[args.set], "--prefix", {"probes": "probe_", "ui": "ui_"}[args.set],
-                        "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
+                        "--run", bases[0][0]] + copies + by, check=False, stdout=subprocess.DEVNULL)
     if args.set == "orders" and finished:
-        subprocess.run(["uv", "run", "python", "tools/fresh_report.py", "--set", "orders", "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
+        subprocess.run(["uv", "run", "python", "tools/fresh_report.py", "--set", "orders", "--run", bases[0][0]] + copies, check=False, stdout=subprocess.DEVNULL)
     for cmd in REPORTS:  # every run folder that exists for the set, not only this batch's: a later batch on another set must not drop rows
         base = cmd[cmd.index("--run") + 1]
         known = [f"{base}-{suffix}" for _, _, models in FLAGSHIP_AND_CHEAP for _, suffix in models]
