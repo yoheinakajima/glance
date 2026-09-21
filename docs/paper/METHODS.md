@@ -555,3 +555,27 @@ section 9.
 **Naming.** In result tables the configuration is written "Qwen3-VL-4B + Glance". Glance is a readout and calibration
 recipe with a runtime, not a model: no VLM weights are updated or distributed, only fitted readout files of a few hundred
 numbers.
+
+### 14.1 Self-calibration from unlabeled images (`glance fit --unlabeled`; `rating.build_unlabeled_calibration`)
+
+Zero labels, but not zero-shot: it needs a pool of unlabeled images of the rubric. For every `ens4d` member `m` and
+level `k`, the pool gives a mean and a standard deviation of the raw level logit, `mu[m,k]` and `sd[m,k]`. A new
+image's logits are standardized, `z[m,k] = (x[m,k] - mu[m,k]) / (sd[m,k] + 1e-6)`, averaged over members and passed
+through a softmax: `p = softmax(mean_m z[m,:])`. Nothing is fitted to labels and there is no free parameter. In the
+stored calibration this is the matrix form of section 14 with `W` = the member-averaging matrix, `b = 0`, scale 1 and
+the pool's mean and standard deviation as the standardization (`kind = "unlabeled_zscore"`), so the harness applies it
+through the same code path as a labeled fit and keys it by the same rubric key. What it removes is the readout's
+per-rubric offset (zero-shot the model is, for example, half a level too harsh on blur and never uses the top level on
+JPEG); what it cannot know is where the rubric's author drew the level boundaries, so it assumes the pool covers the
+rubric's range roughly evenly. Measured on the lab test split (`results/lab/label_free_test.md`, entry 26): exact
+accuracy 0.558 -> 0.686 with 16 images, 0.697 with 500; a pool with 70% of its images at one level gives back part of
+the gain (0.646). Calibration quality before and after (same split; 15 equal-mass bins, sampling floor in brackets):
+ECE 0.327 (0.033) zero-shot, 0.175 (0.066) with 16 unlabeled images, 0.208 (0.068) with 500; NLL 1.94 -> 0.82. So
+self-calibration halves the calibration error and removes most of the overconfidence, but its probabilities are NOT
+calibrated in the sense of a labeled fit (ECE about 0.03, section 14): use it for the level, not for a confidence
+threshold.
+
+The textbook alternative does not work here: a content-free prior (the level logits of blank, black, white and noise
+images, subtracted per member) was registered and tested (`lab/NOTES.md` entries 39 and 39b; `results/lab/null_prior.md`)
+and takes exact accuracy from 0.558 to 0.400, because the model reads a blank or noise image as the worst level of most
+quality rubrics. For an image rubric there is no content-free image; the prior has to come from real images.
