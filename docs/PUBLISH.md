@@ -1,4 +1,10 @@
-# Publishing checklist (the code is pushed to a PRIVATE repository; going public and the project page are the owner's steps)
+# Publishing checklist
+
+**State on 2026-09-21, about 09:00: PUBLISHED.** The owner made `github.com/yoheinakajima/glance` public, `glance-vlm` 0.3.0 is on
+PyPI (published with Trusted Publishing by the owner's browser-capable assistant, `docs/PYPI.md`; checked: it installs into a clean
+Python 3.11 environment and `glance doctor` runs), and the page is live at https://glance.yohei.me/ with HTTPS. Everything pushed to
+this repository is now public at once. The page still deploys ONLY on a manual run of the `pages` workflow (section 3b), and only the
+owner decides when. The sections below are the record of how it was set up.
 
 Going public and turning on the page are the owner's actions. The assistant pushed to a private repository only.
 
