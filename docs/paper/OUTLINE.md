@@ -124,6 +124,23 @@ calibrated, so it is context, not a head-to-head comparison.
     generic question wording on 25 distortion types x 5 levels, on license-clean photos and on KADID-10k with human
     opinion scores (evaluation only), hypotheses H7 to H9 registered beforehand, including the parts that fail.
 
+## Positioning, revised by the project owner (2026-09-20 evening; STATUS D44, `lab/NOTES.md` entry 38). Supersedes the block below where they differ
+
+One sentence: **Glance is how you ask an open vision-language model for a decision. It is not a model.**
+The claim: a frozen open 4B model, READ instead of generated, is a zero-shot general image decision engine: level with
+frontier models on yes/no and pick-one on photos no model has seen, with usable probabilities, several times faster than
+the same model writing its answer, at a small fraction of API cost; on ratings it matches frontier models zero-shot and
+orders images almost perfectly, while exact levels need a few unlabeled images or, optionally, labels.
+- The model does the seeing; Glance is the asking (typed questions, logit readout, many questions per pass,
+  probabilities, optional fit). Accuracy that belongs to the open model is credited to it: rows read
+  "Qwen3-VL-4B + Glance", "Qwen3-VL-8B + Glance", "SmolVLM2 + Glance".
+- Verbs, in this order: `glance decide` / `glance score` (zero-shot, the headline), `glance fit --unlabeled`
+  (self-calibrating: zero labels, never called zero-shot), `glance fit` (labels: a caveat and an extension).
+- Allowed now, with the measured numbers next to them: cost and speed against hosted models (`RESULTS_ZEROSHOT.md`
+  section 5). Still not allowed: "Glance beats <frontier model>" (say "level with", and name Gemini's 8-point lead on
+  zero-shot exact ratings); "a model"; "Jev for vision"; "works on any VLM" until E3 and E15 report; "zero-shot" for
+  anything that saw images of the rubric; "0.87 on image quality assessment".
+
 ## Positioning guardrails (agreed with the project owner, 2026-09-20)
 
 Say: a frozen 4B VLM already sees graded quality; the missing piece was how the question is asked and how the logits

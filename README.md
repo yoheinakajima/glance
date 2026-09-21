@@ -1,29 +1,36 @@
 # glance
 
-**Glance is how you ask a frozen vision-language model for a score. It is not a VLM.**
+**Glance is how you ask an open vision-language model for a decision. It is not a model.**
 
 You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
-rubric) and get probability distributions back, read from the logits of single forward passes of an open model you
-already have (Qwen3-VL-4B by default). No text is generated. The VLM stays frozen: no VLM weights are updated or shipped; what is fit, from a few dozen labeled images, is a small readout on top of its logits. The request and
-response shapes follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar. That is where the
-resemblance ends: Glance is a readout-and-calibration recipe on someone else's frozen weights, the calibration is
-yours to fit, and it makes no speed or cost claim against any hosted model.
+rubric) and get probability distributions back, READ from single forward passes of a frozen open model you run
+yourself (Qwen3-VL-4B by default, Apache-2.0). No text is generated, nothing is trained, and out of the box no labels
+or examples are needed. The model does the seeing; Glance is the asking: typed questions, a readout of the answer from
+the logits, many questions per image in one pass, probabilities instead of prose. The request and response shapes
+follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar; that is where the resemblance ends.
 
-What is new here is the *elicitation* for `score`, measured in `docs/paper/RESULTS_LAB.md`:
+Zero-shot, on a laptop (`docs/paper/RESULTS_ZEROSHOT.md`; result rows read "Qwen3-VL-4B + Glance"):
 
-| Qwen3-VL-4B, five 4-level image-quality rubrics, 500 held-out images each | mean accuracy |
-| --- | --- |
-| v0 readout (one yes/no statement per level), single temperature | 0.500 |
-| same readout, with a calibration fit on labeled examples | 0.810 |
-| **+ Glance** (`ens4d`): digit readout, scale forward and reversed, with and without a magnified crop, per-rubric matrix calibration | **0.867** |
+| Photos taken after every model's release, labels made by nobody here | yes/no | pick-one |
+| --- | --- | --- |
+| Qwen3-VL-4B + Glance, 131 Wikimedia Commons photos | 0.931 | 0.885 (of 13) |
+| Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6, same photos (test half) | 0.947 / 0.924 / 0.893 | 0.923 / 0.908 / 0.892 |
+| Qwen3-VL-4B + Glance, 200 iNaturalist photos uploaded the day of the test | 0.945 | 0.940 (of 10) |
 
-About 32 labeled images per rubric are enough for the calibration, and it does **not** transfer from one rubric to
-another, so the verb that matters is `glance fit`. Measured on one 4B model and five synthetic single-factor scales
-with hand-written level texts. The harder test (25 distortion types, 5 levels, one generic wording, KADID-10k human
-scores) is running on this branch; early numbers are clearly lower and will be published as they are
-(`docs/BRIEFING.md`, section 7). One rating of a fresh image takes about 1.1 s on an Apple-silicon laptop, slower
-than the 0.44 s of the naive readout; five ratings of the same image cost about 0.6 s each, 25 about 0.34 s each.
-An earlier 609 ms figure was wrong and is corrected (`lab/NOTES.md`, entry 16).
+Intervals overlap everywhere; on older public benchmarks Claude Opus 5 is ahead by about 3 points. Ratings against a
+rubric in words (`score`), zero-shot on five synthetic 4-level scales: exact level 0.570 (Opus 5 0.550, GPT-5.6 0.597,
+Gemini 3.1 Pro 0.650 on the same 1,000 images), within one level on 0.99 of images, rank agreement 0.93: the model
+orders images almost perfectly, and what no model can know zero-shot is where YOUR rubric draws its lines. Reading the
+answer is 2.4 to 6.1 times faster than the same model writing it as JSON; a yes/no takes under a second, a rating about
+1.1 s (0.34 to 0.58 s each when several rubrics share an image). Self-hosted cost is $0.02 to $0.24 per 1,000 ratings
+(arithmetic on measured seconds); the frontier calls measured $3 to $8 per 1,000 answers.
+
+If you have images of your own (optional): `glance fit --unlabeled` lets a rubric calibrate itself on 16 or more
+UNLABELED images (exact level 0.57 -> 0.69, ahead of all three frontier models; zero labels, but not zero-shot), and
+`glance fit` with about 32 labeled images reaches 0.86. Fits are per rubric and do not transfer. Honest limits: one
+model family measured so far; the rating scales are synthetic; fine severity levels on KADID-10k are weak zero-shot
+(0.33 exact); hand-built features beat the VLM on low-level artifacts when labels are plentiful; two errata are on
+record (`lab/NOTES.md` entries 16 and 18). Every experiment was registered before it ran, misses included.
 
 - `HANDOFF.md` is the original spec. `STATUS.md` is the build log, with every decision and deviation.
 - `docs/` is written for a paper: methods, results, reproduction, related work, research log. `lab/NOTES.md` is the

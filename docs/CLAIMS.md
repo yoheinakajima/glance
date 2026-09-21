@@ -1,5 +1,7 @@
 # Claims ledger: what we can say, what it rests on, and what we must not say
 
+> **Framing update, 2026-09-20 evening (STATUS D44).** The owner's headline is the ZERO-SHOT use of an open model as a general image decision engine (`docs/paper/RESULTS_ZEROSHOT.md`; one-sentence positioning and allowed / not-allowed wording in `docs/paper/OUTLINE.md`, "Positioning, revised"). Label-based claims below stay true and move to the "if you have examples" part of the story. Cost and speed against hosted models may now be stated with the measured numbers next to them. New since this ledger was written: iNaturalist fresh photos (entry 35b), Gemini on the lab scales (33c), the hidden-state readout (40), the failed content-free prior (39b).
+
 Status date 2026-09-20. One row per claim. "Supported" means measured on held-out data with the evidence file named;
 "with caveats" means the sentence is only true together with the caveat next to it; "pending" means the experiment is
 registered or running and the claim must not be made yet. Model everywhere: Qwen3-VL-4B-Instruct, frozen, on one Apple
