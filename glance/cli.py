@@ -194,7 +194,7 @@ def _cmd_score(args: argparse.Namespace) -> int:
         return 2
     body = {"model": "vlm", "state": {"images": [{"id": "img0", "path": args.image}]},
             "questions": {"score": {"type": "score", "instructions": instructions, "criteria": criteria}},
-            "options": {"score_method": args.method, "calibrated": "auto"}}
+            "options": {"score_method": args.method or "auto", "calibrated": "auto"}}
     status, payload = Engine(cfg, source="cli").decide_json(body)
     print(json.dumps(payload if status != 200 or args.full else {**payload["answers"]["score"], "warnings": payload["warnings"]}, indent=2))
     return 0 if status == 200 else 1
@@ -232,7 +232,9 @@ def _rubric_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--rubric", help='JSON file: {"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}')
     p.add_argument("--instructions", help="the question, naming the image as `img0` (alternative to --rubric)")
     p.add_argument("--criteria", nargs="+", help="level descriptions, lowest first (alternative to --rubric)")
-    p.add_argument("--method", choices=["ens4d", "fast2", "digits", "jsondigits"], default="ens4d", help="4 forward passes (default), 2 without the magnified crop, 1, or 1 pass read at the JSON answer position (best with nothing fitted)")
+    p.add_argument("--method", choices=["ens4d", "fast2", "digits", "jsondigits"], default=None,
+                   help="rating readout. Default: `glance score` uses the method this rubric was fitted with, or `jsondigits` (1 pass, best with nothing fitted) when it has no fit; "
+                        "`glance fit` uses `ens4d` (4 passes, best with labels), and `jsondigits` with --unlabeled. Others: `fast2` (2 passes), `digits` (1 pass)")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
     p.add_argument("--prefix-cache", action="store_true", help="VLM: share the image prefill between readouts (faster)")
 

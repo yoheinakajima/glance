@@ -69,7 +69,7 @@ Exact level is a hard target zero-shot because where a rubric draws its boundari
 | 500 | 0.697 | 0.985 |
 | 100, badly unbalanced (70% one level) | 0.646 | 0.976 |
 
-With the full unlabeled pool the open model is ahead of all three frontier models' zero-shot picks on the same 1,000 images (paired: +5.2 points [+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`). Sixteen unlabeled images already give most of that gain; that row is on the full test split and was not tested pairwise against the frontier models. The pool has to cover the range of the rubric: a badly unbalanced pool gives back part of the gain.
+With the full unlabeled pool the open model is ahead of the three FLAGSHIP hosted models' zero-shot picks on the same 1,000 images (paired: +5.2 points [+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`); it is NOT ahead of the providers' cheapest models, run later: Gemini 3.1 Flash-Lite scores 0.763 and GPT-5.6 Luna 0.686 zero-shot (`lab/NOTES.md` entry 45b). Sixteen unlabeled images already give most of that gain; that row is on the full test split and was not tested pairwise against the frontier models. The pool has to cover the range of the rubric: a badly unbalanced pool gives back part of the gain.
 
 A correction that needs nothing at all does NOT work: subtracting the model's reading of content-free images (flat grey, black, white, noise) as its prior takes exact accuracy from 0.558 to 0.400, because a blank image is read as the worst level of most rubrics (`results/lab/null_prior.md`, `lab/NOTES.md` entry 39b). For an image rubric there is no content-free image.
 

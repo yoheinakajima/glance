@@ -154,14 +154,18 @@ def score_questions(
     choice_method: str = "independent",
     letter_rotations: int = 4,
     off_mass_warn: float = 0.1,
-    score_method: str = "auto",
+    score_method: str | dict[str, str] = "auto",
 ) -> ScoringResult:
     if backend.kind == "frontier":
         return _score_frontier(backend, images, context, questions)
 
     dual = backend.kind == "dual_encoder"
-    if score_method == "auto":
-        score_method = "statements" if dual else "ens4d"
+    # `score_method` is one method for every rating question, or {question id: method} (the engine resolves "auto" per rubric:
+    # a fitted rubric keeps the method it was fit with, an unfitted one gets the zero-shot read)
+    per_question = dict(score_method) if isinstance(score_method, dict) else {}
+    explicit = score_method if isinstance(score_method, str) and score_method != "auto" else None
+    default_method = explicit or ("statements" if dual else rating.ZERO_SHOT_METHOD)
+    method_of = lambda qid: per_question.get(qid, default_method)  # noqa: E731
     usage = BackendUsage()
     timing: dict[str, float] = {}
     warnings: list[str] = []
@@ -201,10 +205,10 @@ def score_questions(
                     {"question": qid},
                 )
             letter_qids.append(qid)
-        elif isinstance(q, ScoreQuestion) and score_method != "statements":
+        elif isinstance(q, ScoreQuestion) and method_of(qid) != "statements":
             if dual:
                 raise UnsupportedQuestionError(
-                    f"question `{qid}`: score_method `{score_method}` is VLM-only; use `statements`", {"question": qid}
+                    f"question `{qid}`: score_method `{method_of(qid)}` is VLM-only; use `statements`", {"question": qid}
                 )
             rating_qids.append(qid)
         else:
@@ -267,8 +271,8 @@ def score_questions(
         )
 
     # 4. Rating methods: digit readouts, packed so that every question shares the image prefill(s).
-    if rating_qids:
-        _score_ratings(backend, images, context, {qid: questions[qid] for qid in rating_qids}, score_method,
+    for method in dict.fromkeys(method_of(qid) for qid in rating_qids):
+        _score_ratings(backend, images, context, {qid: questions[qid] for qid in rating_qids if method_of(qid) == method}, method,
                        scores, usage, timing, cache_hits)
 
     for qid, qs in scores.items():
@@ -281,6 +285,15 @@ def score_questions(
         scores=ordered, usage=usage, timing_ms=timing, warnings=warnings,
         cache_hit=all(cache_hits) if cache_hits else None,
     )
+
+
+def _subject_id(question: Question, images: list[LoadedImage]) -> str | None:
+    """The id of the one image a rating question is about (named by backticked id, or the only image), else None."""
+    ids = {img.id for img in images}
+    named = [m for m in dict.fromkeys(re.findall(r"`([^`]+)`", question.instructions)) if m in ids]
+    if len(named) == 1:
+        return named[0]
+    return images[0].id if not named and len(images) == 1 else None
 
 
 def _rated_image(qid: str, question: Question, images: list[LoadedImage]) -> LoadedImage:
@@ -331,8 +344,8 @@ def _score_ratings(backend, images, context, questions: dict[str, ScoreQuestion]
                 view = target.id
                 if view not in views:
                     views[view] = images + [_zoom_image(target)]
-            image_id = target.id if target else (images[0].id if len(images) == 1 else "img0")
-            block, labels, reverse = rating.member_prompt(member, q.instructions, levels, image_id)
+            image_id = target.id if target else _subject_id(q, images)
+            block, labels, reverse = rating.member_prompt(member, q.instructions, levels, image_id if member == "jsondigits" else (image_id or "img0"))
             labels_for[len(levels)] = labels
             calls.setdefault((view, len(levels), rating.member_assistant_prefix(member)), []).append((qid, member, reverse, block))
 

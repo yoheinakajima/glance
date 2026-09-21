@@ -89,6 +89,24 @@ class Engine:
         """User fits (calibration/ratings/) shadow the calibrations shipped with the package."""
         return rating.load_calibration([self.cfg.path("calibration") / "ratings", rating.ASSETS_DIR], key)
 
+    def auto_rating_methods(self, backend: Backend, questions: dict[str, Any], wanted: bool | str) -> dict[str, str]:
+        """`score_method: "auto"` on the VLM, resolved per rubric (the registered decision of lab/NOTES.md entries 43 and 43c): a
+        rubric with a labeled fit is scored with the method of that fit, one with only a label-free fit with that method, and a
+        rubric with nothing fitted (or a request that asks for no calibration) with the one-pass zero-shot read."""
+        methods = {}
+        for qid, question in questions.items():
+            if getattr(question, "type", None) != "score":
+                continue
+            methods[qid] = rating.ZERO_SHOT_METHOD
+            if not wanted:
+                continue
+            found = {m: self.rating_calibration(self.rating_key(backend, m, question)) for m in rating.AUTO_LABELED_ORDER}
+            labeled = [m for m in rating.AUTO_LABELED_ORDER if found[m] is not None and found[m].kind != "unlabeled_zscore"]
+            unlabeled = [m for m in rating.AUTO_UNLABELED_ORDER if found[m] is not None and found[m].kind == "unlabeled_zscore"]
+            if labeled or unlabeled:
+                methods[qid] = (labeled or unlabeled)[0]
+        return methods
+
     # --- decide -----------------------------------------------------------------------------------
 
     def decide(self, body: Any, source: str | None = None, request_id: str | None = None) -> DecisionTrace:
@@ -142,13 +160,16 @@ class Engine:
             device=backend.device, dtype=backend.dtype, image_token_budget=backend.image_token_budget,
         )
 
+        score_method: str | dict[str, str] = request.options.score_method
+        if score_method == "auto" and backend.kind not in ("frontier", "dual_encoder"):
+            score_method = self.auto_rating_methods(backend, request.questions, request.options.calibrated)
         with self._lock:
             scoring = score_questions(
                 backend, images, request.state.context, request.questions,
                 choice_method=request.options.choice_method,
                 letter_rotations=self.cfg.vlm.letter_rotations,
                 off_mass_warn=self.cfg.vlm.off_mass_warn,
-                score_method=request.options.score_method,
+                score_method=score_method,
             )
         timer.add("prefix", scoring.timing_ms.get("prefix", 0.0))
         timer.add("score", scoring.timing_ms.get("score", 0.0))

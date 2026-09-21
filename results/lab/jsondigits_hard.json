@@ -46,9 +46,185 @@
    },
    "scales_where_json_is_at_least_ens": 3,
    "scales": 5
+  },
+  "KADID-10k (23 severity distortions)": {
+   "per_scale": {
+    "brighten": {
+     "n": 200,
+     "json_zero": 0.28,
+     "ens_zero": 0.285,
+     "json_within_1": 0.635,
+     "json_u16": 0.2935
+    },
+    "color_block": {
+     "n": 200,
+     "json_zero": 0.28,
+     "ens_zero": 0.24,
+     "json_within_1": 0.705,
+     "json_u16": 0.32325
+    },
+    "color_diffusion": {
+     "n": 200,
+     "json_zero": 0.43,
+     "ens_zero": 0.43,
+     "json_within_1": 0.765,
+     "json_u16": 0.40574999999999994
+    },
+    "color_noise": {
+     "n": 200,
+     "json_zero": 0.535,
+     "ens_zero": 0.51,
+     "json_within_1": 0.965,
+     "json_u16": 0.5685
+    },
+    "color_quantization": {
+     "n": 200,
+     "json_zero": 0.41,
+     "ens_zero": 0.38,
+     "json_within_1": 0.82,
+     "json_u16": 0.441
+    },
+    "color_saturation_1": {
+     "n": 200,
+     "json_zero": 0.095,
+     "ens_zero": 0.045,
+     "json_within_1": 0.485,
+     "json_u16": 0.07149999999999998
+    },
+    "color_saturation_2": {
+     "n": 200,
+     "json_zero": 0.265,
+     "ens_zero": 0.265,
+     "json_within_1": 0.61,
+     "json_u16": 0.30700000000000005
+    },
+    "color_shift": {
+     "n": 200,
+     "json_zero": 0.335,
+     "ens_zero": 0.345,
+     "json_within_1": 0.625,
+     "json_u16": 0.32675
+    },
+    "darken": {
+     "n": 200,
+     "json_zero": 0.22,
+     "ens_zero": 0.215,
+     "json_within_1": 0.505,
+     "json_u16": 0.26875
+    },
+    "denoise": {
+     "n": 200,
+     "json_zero": 0.395,
+     "ens_zero": 0.34,
+     "json_within_1": 0.8,
+     "json_u16": 0.45100000000000007
+    },
+    "gaussian_blur": {
+     "n": 200,
+     "json_zero": 0.51,
+     "ens_zero": 0.515,
+     "json_within_1": 0.96,
+     "json_u16": 0.6060000000000001
+    },
+    "impulse_noise": {
+     "n": 200,
+     "json_zero": 0.305,
+     "ens_zero": 0.27,
+     "json_within_1": 0.72,
+     "json_u16": 0.345
+    },
+    "jitter": {
+     "n": 200,
+     "json_zero": 0.49,
+     "ens_zero": 0.45,
+     "json_within_1": 0.89,
+     "json_u16": 0.46825
+    },
+    "jpeg": {
+     "n": 200,
+     "json_zero": 0.21,
+     "ens_zero": 0.205,
+     "json_within_1": 0.54,
+     "json_u16": 0.27175000000000005
+    },
+    "jpeg2000": {
+     "n": 200,
+     "json_zero": 0.2,
+     "ens_zero": 0.2,
+     "json_within_1": 0.415,
+     "json_u16": 0.21400000000000002
+    },
+    "lens_blur": {
+     "n": 200,
+     "json_zero": 0.345,
+     "ens_zero": 0.335,
+     "json_within_1": 0.585,
+     "json_u16": 0.32300000000000006
+    },
+    "motion_blur": {
+     "n": 200,
+     "json_zero": 0.35,
+     "ens_zero": 0.285,
+     "json_within_1": 0.63,
+     "json_u16": 0.3285
+    },
+    "multiplicative_noise": {
+     "n": 200,
+     "json_zero": 0.53,
+     "ens_zero": 0.455,
+     "json_within_1": 0.95,
+     "json_u16": 0.6380000000000001
+    },
+    "patch_shuffle": {
+     "n": 200,
+     "json_zero": 0.29,
+     "ens_zero": 0.27,
+     "json_within_1": 0.58,
+     "json_u16": 0.27699999999999997
+    },
+    "pixelate": {
+     "n": 200,
+     "json_zero": 0.315,
+     "ens_zero": 0.405,
+     "json_within_1": 0.71,
+     "json_u16": 0.38175
+    },
+    "quantization": {
+     "n": 200,
+     "json_zero": 0.37,
+     "ens_zero": 0.315,
+     "json_within_1": 0.775,
+     "json_u16": 0.38825
+    },
+    "sharpen": {
+     "n": 200,
+     "json_zero": 0.37,
+     "ens_zero": 0.305,
+     "json_within_1": 0.725,
+     "json_u16": 0.373
+    },
+    "white_noise": {
+     "n": 200,
+     "json_zero": 0.455,
+     "ens_zero": 0.48,
+     "json_within_1": 0.945,
+     "json_u16": 0.54575
+    }
+   },
+   "mean": {
+    "json_zero": 0.3471739130434783,
+    "ens_zero": 0.32804347826086966,
+    "json_within_1": 0.7104347826086956,
+    "json_u16": 0.3746630434782609
+   },
+   "scales_where_json_is_at_least_ens": 18,
+   "scales": 23
   }
  },
  "verdict": {
-  "H42: creative-QA, jsondigits >= raw ens4d on the mean and on at least 3 of 5 rubrics": true
+  "H42: creative-QA, jsondigits >= raw ens4d on the mean and on at least 3 of 5 rubrics": true,
+  "H43a: KADID, jsondigits beats raw ens4d by >= 5 points": false,
+  "H43b: KADID, jsondigits stays below 0.50": true,
+  "DECISION (registered rule): jsondigits becomes the zero-shot default for `score`": true
  }
 }

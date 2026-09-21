@@ -1892,3 +1892,21 @@ groups rating calls by that forced start and passes it to the backend only when 
 Reachable as `options.score_method`, `glance score|fit --method jsondigits`, `--score-method`. `glance fit` and
 `fit --unlabeled` work with it because a calibration is keyed by method. The DEFAULT for `score` stays `ens4d` until the
 registered rule of entry 43 is decided by the KADID half, which is running. Full tests: 361 passed, 12 skipped.
+
+## 2026-09-21 05:15 Entry 43c: E17, second half and the DECISION: the one-pass read becomes the default for ratings with nothing fitted
+
+KADID-10k, `jsondigits` as registered, first 200 test and 100 calibration items of each severity distortion
+(`lab/runs/kadid_jsondigits.jsonl`, 7,500 rows; `results/lab/jsondigits_hard.md`), against the raw four-pass read on the same
+items: 0.347 against 0.328 exact (within one level 0.710; 0.375 with 16 unlabeled images); ahead or level on 17 of 23 types.
+- H43a (beats raw `ens4d` by at least 5 points on KADID): NOT SUPPORTED (+1.9 points).
+- H43b (stays below 0.50): SUPPORTED (0.347). Fine severity levels across 23 distortion types remain unsolved zero-shot, for
+  either read.
+- DECISION by the rule fixed in entry 43 (H42 holds, and KADID is not worse than raw `ens4d`): YES.
+Implemented exactly as registered: `score_method: "auto"` on the VLM now resolves PER RUBRIC (`Engine.auto_rating_methods`): a
+rubric with a labeled fit is scored with the method of that fit (`ens4d` first), one with only a label-free fit with that method
+(`jsondigits` first), anything else with the one-pass read; `glance score` defaults to auto, `glance fit` to `ens4d` and
+`glance fit --unlabeled` to `jsondigits`; an explicit method is still honoured. The eval harness keeps its pinned v0 method, so
+past runs reproduce. A question about several images is allowed under the default (no magnified crop) and its request then says
+"the images", a wording that has NOT been measured. What this buys on the measured benchmarks, zero-shot: quality scales 0.669
+against 0.570, non-quality rubrics 0.375 against 0.334, KADID 0.347 against 0.328, at one pass instead of four. Tests: 362
+passed, 12 skipped. A real-model smoke test of the default path is queued behind the running GPU job (`default-smoke`).

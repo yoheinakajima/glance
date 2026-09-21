@@ -436,8 +436,9 @@ LATENCY_QUESTIONS = {
 
 
 def latency_benchmark(engine: Engine, cfg: Config, backends: list[str]) -> dict[str, Any]:
-    """1 image + 5 questions (11 statements), p50/p95 over repeats. Images rotate and the prefix cache is cleared,
-    so every timed request pays for its image prefix."""
+    """1 image + 5 questions, p50/p95 over repeats, with the harness defaults (so the rating question uses the default
+    read: one pass since lab/NOTES.md entry 43c, four before; v0 used three statements). Images rotate and the prefix cache
+    is cleared, so every timed request pays for its image prefix."""
     from .metrics import latency_stats
 
     samples = ["samples/receipt.jpg", "samples/invoice.jpg", "samples/dog.jpg"]

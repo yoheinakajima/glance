@@ -306,8 +306,11 @@ JSON answer on the same images (0.672). A written answer is itself a logit read 
 `{"answer": 2}` takes the argmax after `{"answer": `. Reading the digit logits at that forced position in one pass
 (`jsondigits`) reaches 0.669, agrees with the written answer on 98.2% of items, within one level on 0.979 (ECE 0.248,
 uncalibrated). Paired on the same images it is ahead of Claude Opus 5 by 11.9 points [7.8, 16.0] and GPT-5.6 by 7.2
-[2.7, 11.8], and level with Gemini 3.1 Pro (+1.9 [-2.5, 6.3]); it is not yet the harness default for zero-shot
-ratings, pending a registered check on harder benchmarks (Section 7).
+[2.7, 11.8], and level with Gemini 3.1 Pro (+1.9 [-2.5, 6.3]). A registered check on harder benchmarks decided whether
+it becomes the harness default for a rubric with nothing fitted: on five rubrics that are not image quality it scores
+0.375 against 0.334 for the four-pass read (ahead on 3 of 5), and on KADID-10k 0.347 against 0.328; the rule fixed in
+advance (at least as good on the first, not worse on the second) was met, although the 5-point gain we had predicted
+on KADID-10k was not (+1.9). It is now the default; the four-pass read remains the method for labeled fits.
 <!-- src: results/lab/gen_accuracy.md, results/lab/jsondigits.md, docs/paper/METHODS.md section 14.2, docs/paper/RESULTS_ZEROSHOT.md section 3 -->
 
 ### 4.4 Zero labels, not zero-shot: self-calibration from unlabeled images
@@ -468,6 +471,7 @@ that this paper's evidence did not support.
 | A one-pass fitted read stays within 3 points of the four-pass fitted read at 32 labels | 3.1 points behind | 42b |
 | Every cheap hosted model stays within 5 points of its own flagship; cheap models score at or below their flagships on ratings | Claude Haiku 4.5 11-14 points behind Opus 5 on iNaturalist; every cheap model scored ABOVE its flagship on ratings, Flash-Lite reaching 0.763 | 45b |
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
+| The one-pass read beats the four-pass read zero-shot on KADID-10k by at least 5 points | +1.9 points (0.347 against 0.328) | 43c |
 | Interface screens: at least 0.90 on page type; one forward pass at least 10 points behind the best hosted model on one-step reasoning | page type 0.823 (every error is another page called an article); reasoning 0.910, so a 10-point gap is impossible | 49c |
 | Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |
 | A 0.9B model trained for image quality (Q-SiT-mini) is weak on exposure and resolution, and with our fit stays below the four-pass read (0.867) | it ranks all five scales (Spearman 0.86 to 0.95) and scores 0.869; on the same items with the same fit 0.869 against 0.863 (300 labels) and 0.853 against 0.846 (32 labels), both differences within 3 points of zero | 37c |
@@ -493,8 +497,8 @@ on fresh photographs sit near ceiling for every system (all near 0.93), so "leve
 that the task is currently easy, and on older, possibly contaminated benchmarks a hosted flagship led by 3 to 5 points
 (Section 3.2) - the harder insect-order test of Section 3.3 separates the hosted models and the open model holds, but
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
-2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 4.3 has not been checked on
-KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); and two open,
+2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 4.3, now the default, is still poor
+in absolute terms on KADID-10k (0.347) and on rubrics that are not image quality (0.375), and its request wording for a question about several images at once has not been measured (entry 43c); and two open,
 MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read (Section 7's table); the second was still running when this draft was written. <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 
 ## 8. Reproducibility

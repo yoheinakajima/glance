@@ -201,7 +201,7 @@ class KnowingBackend(FakeBackend):
         out.z = out.z + np.array([self._boost(s.text) for s in statements])
         return out
 
-    def score_labels(self, images, context, prompts, labels):
+    def score_labels(self, images, context, prompts, labels, assistant_prefix=""):  # the default rating read passes a forced answer start
         out = super().score_labels(images, context, prompts, labels)
         for r, prompt in enumerate(prompts):
             lines = [ln for ln in prompt.splitlines() if len(ln) > 2 and ln[1:3] == ". "]

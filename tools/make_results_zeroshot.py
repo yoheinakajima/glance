@@ -104,8 +104,9 @@ if h2h:
                            ("BCz, pool = 64 unlabeled (20 draws)", "64"), ("BCz, pool = all 500 unlabeled", "500"),
                            ("BCz, unbalanced pool of 100 (70% one level)", "100, badly unbalanced (70% one level)")):
             out.append(f"| {label} | {lf[key]['accuracy']:.3f} | {lf[key]['within_1']:.3f} |")
-        out += ["", "With the full unlabeled pool the open model is ahead of all three frontier models' zero-shot picks on the same 1,000 images (paired: +5.2 points "
-                "[+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`). Sixteen unlabeled images already give most of that gain; that row is "
+        out += ["", "With the full unlabeled pool the open model is ahead of the three FLAGSHIP hosted models' zero-shot picks on the same 1,000 images (paired: +5.2 points "
+                "[+1.3, +9.3] over Gemini 3.1 Pro, `results/lab/frontier_head_to_head.md`); it is NOT ahead of the providers' cheapest models, run later: Gemini 3.1 Flash-Lite "
+                "scores 0.763 and GPT-5.6 Luna 0.686 zero-shot (`lab/NOTES.md` entry 45b). Sixteen unlabeled images already give most of that gain; that row is "
                 "on the full test split and was not tested pairwise against the frontier models. The pool has to cover the range of the rubric: a badly "
                 "unbalanced pool gives back part of the gain.", ""]
     nullp = load("results/lab/null_prior.json")

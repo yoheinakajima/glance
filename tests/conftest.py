@@ -48,7 +48,7 @@ class FakeBackend:
             timing_ms={"prefix": 1.0, "score": 2.0}, cache_hit=True,
         )
 
-    def score_labels(self, images, context, prompts, labels):
+    def score_labels(self, images, context, prompts, labels, assistant_prefix=""):
         # Logit of a label depends on the text of the option printed next to it, not on its position.
         logits = np.zeros((len(prompts), len(labels)))
         for r, prompt in enumerate(prompts):

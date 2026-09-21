@@ -47,12 +47,16 @@ response shapes are in `HANDOFF.md` section 5; every call is logged to `logs/cal
 | --- | --- | --- |
 | yes/no, pick-one | none | level with hosted models on photos none of them has seen (table below) |
 | rating, you need the ORDER (sort, threshold, flag the worst) | none | within one level on 0.99 of images, rank agreement 0.93 with the true level |
-| rating, you need the EXACT level of your own scale | `glance fit --unlabeled --data folder_of_your_images/` (16 or more images, no labels) | removes the model's constant offset on your rubric: 0.57 -> 0.70 exact with the shipped read (0.67 -> 0.76 with the one-pass read below) |
+| rating, you need the EXACT level of your own scale | `glance fit --unlabeled --data folder_of_your_images/` (16 or more images, no labels) | removes the model's constant offset on your rubric: 0.67 -> 0.76 exact on the image-quality scales (it did not help on rubrics that are not image quality) |
 | rating, best accuracy and calibrated probabilities | `glance fit --data labels/ --rubric rubric.json` (about 32 labeled images, folders `labels/0/`, `labels/1/`, ...) | 0.86 exact, ECE about 0.03; fits are per rubric and do not transfer |
 
 `rubric.json` is `{"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}`. A fit changes
 nothing in the model; it writes a few hundred numbers to `calibration/ratings/`, tied to the exact rubric text and model
-revision. Rating modes (`--method`): `ens4d` (4 passes, the one to fit), `fast2` (2 passes), `digits` (1 pass).
+revision. Rating reads (`--method`, or `score_method` in a request): by default a rubric that has a labeled fit is read with the
+method it was fitted with, and anything else with `jsondigits`, one pass read at the position where the same model's written JSON
+answer puts its digit (the best read with nothing fitted: 0.669 against 0.570 for the four-pass read). `glance fit` uses `ens4d`
+(4 passes, the better input for a labeled fit), `glance fit --unlabeled` uses `jsondigits`; `fast2` (2 passes) and `digits` (1 pass)
+remain available.
 
 ## How good is it? (zero-shot, same items for every row, 95% intervals on the project page)
 
@@ -69,8 +73,8 @@ Photos were taken after every model's release and labelled by people outside thi
 questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the same picture, 0.945 / 0.940 for the open
 model, except that Claude Haiku 4.5 falls to 0.830 / 0.790 there; on a harder test, seven look-alike insect orders, the hosted
 models spread over 23 points and the open model, at 0.962 pick-one, is within 1 point of the best). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
-position, which lives in the lab code (`--methods jsondigits`) and moves into `glance ask` and `glance score` after one
-more registered check; the four-pass read those commands use today scores 0.570 zero-shot and is the one to fit. Read honestly: on yes/no and pick-one the open 4B model
+position, the default of `glance ask` and `glance score` for a rubric with nothing fitted (the registered check that decided
+this is `lab/NOTES.md` entry 43c); the four-pass read scores 0.570 zero-shot and is the one to fit with labels. Read honestly: on yes/no and pick-one the open 4B model
 is level with hosted models, cheap and expensive. On zero-shot ratings the cheapest Google model is 9 points ahead; the
 open model reaches 0.758 with 16 unlabeled images (half a point short of it) and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
 1.1 s (faster than five of the six hosted models) and is somewhat cheaper than the cheapest hosted models on a rented GPU,

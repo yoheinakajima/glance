@@ -75,9 +75,32 @@ def test_zoom_sentence_names_the_rated_image():
 # --- scoring ------------------------------------------------------------------------------------------------
 
 
-def test_ens4d_is_the_default_on_the_vlm_and_reads_four_members(cfg, png_b64):
+def test_the_default_is_the_one_pass_read_until_a_rubric_is_fitted(cfg, png_b64):
+    """The registered decision (lab/NOTES.md entries 43, 43c): nothing fitted -> `jsondigits`; a labeled fit -> the method it was fit with."""
+    backend = CountingBackend()
+    engine = Engine(cfg, backends={"vlm": backend})
+    noise = _rate("How noisy is `img0`?", LEVELS)
+    trace = engine.decide(_body(png_b64, {"blur": _rate(), "noise": noise}, calibrated="auto"))
+    assert {q: trace.scoring.scores[q].method for q in ("blur", "noise")} == {"blur": "jsondigits", "noise": "jsondigits"}
+    assert trace.response.usage.forward_passes == 2 and [c["assistant_prefix"] for c in backend.label_calls] == ['{"answer": ']
+    rating.save_calibration(cfg.path("calibration") / "ratings", _fit_for(engine, backend, _rate()))
+    trace = engine.decide(_body(png_b64, {"blur": _rate(), "noise": noise}, calibrated="auto"))
+    assert {q: trace.scoring.scores[q].method for q in ("blur", "noise")} == {"blur": "ens4d", "noise": "jsondigits"}
+    assert trace.response.answers["blur"].calibration is not None and trace.response.answers["noise"].calibration is None
+    assert trace.response.usage.forward_passes == 5  # four passes for the fitted rubric, one for the other
+    # a request that asks for no calibration gets the zero-shot read even for a fitted rubric
+    assert engine.decide(_body(png_b64, {"blur": _rate()}, calibrated=False)).scoring.scores["blur"].method == "jsondigits"
+    # a label-free fit of the one-pass read is preferred over nothing, and a labeled fit over a label-free one
+    free = rating.build_unlabeled_calibration(engine.rating_key(backend, "jsondigits", parse_request(_body(png_b64, {"q": noise})).questions["q"]),
+                                              np.random.default_rng(0).normal(size=(20, 4)), name="free")
+    rating.save_calibration(cfg.path("calibration") / "ratings", free)
+    trace = engine.decide(_body(png_b64, {"noise": noise}, calibrated="auto"))
+    assert trace.scoring.scores["noise"].method == "jsondigits" and trace.response.answers["noise"].calibration == free.version
+
+
+def test_ens4d_reads_four_members(cfg, png_b64):
     backend = CountingBackend(fixed={"Sharp": 2.0, "Slightly soft": 0.5, "Blurry": -1.0, "Very blurry": -3.0})
-    trace = Engine(cfg, backends={"vlm": backend}).decide(_body(png_b64, {"blur": _rate()}))
+    trace = Engine(cfg, backends={"vlm": backend}).decide(_body(png_b64, {"blur": _rate()}, score_method="ens4d"))
     qs = trace.scoring.scores["blur"]
     assert qs.method == "ens4d" and [s["member"] for s in qs.statements] == list(rating.MEMBERS["ens4d"])
     # reversed members are flipped back into level order, so all four agree with the fixed level logits
@@ -94,7 +117,7 @@ def test_questions_are_packed_behind_the_same_views(cfg, png_b64):
     backend = CountingBackend()
     questions = {"blur": _rate(), "noise": _rate("How noisy is `img0`?", ["Clean", "Some grain", "Noisy", "Very noisy"]),
                  "exposure": _rate("How dark is `img0`?", ["Fine", "Dim", "Dark"])}
-    trace = Engine(cfg, backends={"vlm": backend}).decide(_body(png_b64, questions))
+    trace = Engine(cfg, backends={"vlm": backend}).decide(_body(png_b64, questions, score_method="ens4d"))
     # one call per (view, number of levels): 4-level questions share calls, the 3-level one gets its own labels
     assert sorted((c["images"], len(c["prompts"]), len(c["labels"])) for c in backend.label_calls) == sorted([
         (["img0"], 4, 4), (["img0", "zoom"], 4, 4), (["img0"], 2, 3), (["img0", "zoom"], 2, 3)])
@@ -158,7 +181,7 @@ def test_dual_encoder_keeps_statements_and_rejects_explicit_ens4d(cfg, png_b64):
 
 def test_ens4d_needs_one_rated_image_and_a_free_zoom_id(cfg, png_b64):
     engine = Engine(cfg, backends={"vlm": CountingBackend()})
-    two = _body(png_b64, {"q": _rate("Which is blurrier?")})
+    two = _body(png_b64, {"q": _rate("Which is blurrier?")}, score_method="ens4d")
     two["state"]["images"].append({"id": "img1", "base64": png_b64})
     status, payload = engine.decide_json(two)
     assert status == 400 and "name exactly one image" in payload["message"]
@@ -168,7 +191,15 @@ def test_ens4d_needs_one_rated_image_and_a_free_zoom_id(cfg, png_b64):
     two["options"] = {"score_method": "digits"}
     two["questions"]["q"] = _rate("Which is blurrier?")
     assert engine.decide_json(two)[0] == 200
-    reserved = _body(png_b64, {"q": _rate("How blurry is `zoom`?")})
+    # the default one-pass read has no magnified crop, so a question about several images is allowed; its request then says "the images"
+    backend = CountingBackend()
+    two["options"] = {}
+    assert Engine(cfg, backends={"vlm": backend}).decide_json(two)[0] == 200
+    assert backend.label_calls[0]["prompts"][0].startswith("Answer every question about the images.")
+    two["questions"]["q"] = _rate("How blurry is `img1`?")
+    Engine(cfg, backends={"vlm": backend}).decide_json(two)
+    assert backend.label_calls[-1]["prompts"][0].startswith("Answer every question about `img1`.")
+    reserved = _body(png_b64, {"q": _rate("How blurry is `zoom`?")}, score_method="ens4d")
     reserved["state"]["images"][0]["id"] = "zoom"
     assert engine.decide_json(reserved)[0] == 400
 

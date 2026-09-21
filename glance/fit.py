@@ -152,7 +152,9 @@ def main_fit(args: Any) -> int:
 
     engine = Engine(cfg, source="fit")
     try:
-        cal, path = fit_rubric(engine, instructions, criteria, examples, method=args.method, name=args.name, progress=progress,
+        # defaults from the registered decision (lab/NOTES.md entry 43c): labels -> the four-pass read, no labels -> the one-pass read
+        method = args.method or (rating.ZERO_SHOT_METHOD if args.unlabeled else "ens4d")
+        cal, path = fit_rubric(engine, instructions, criteria, examples, method=method, name=args.name, progress=progress,
                                unlabeled=args.unlabeled)
     except ValueError as exc:
         print(f"cannot fit: {exc}", file=sys.stderr)

@@ -43,6 +43,12 @@ MEMBERS: dict[str, tuple[str, ...]] = {
     # weaker input for a labeled fit (0.822 against 0.853 at 32 labels), so ens4d stays the method to fit
     "jsondigits": ("jsondigits",),
 }
+# What `score_method: "auto"` resolves to on the VLM, per rubric (registered decision, lab/NOTES.md entries 43 and 43c): a rubric
+# with a LABELED fit is scored with the method that fit belongs to (ens4d first: the better input for a labeled fit); else a
+# rubric with a label-free fit uses that method (jsondigits first); with nothing fitted, the one-pass read, the best zero-shot.
+ZERO_SHOT_METHOD = "jsondigits"
+AUTO_LABELED_ORDER = ("ens4d", "fast2", "digits", "jsondigits")
+AUTO_UNLABELED_ORDER = ("jsondigits", "ens4d", "fast2", "digits")
 JSON_ANSWER_PREFIX = '{"answer": '  # the assistant turn is forced to begin here; the digit logits are read at the next position
 ZOOM_FACTOR = 3
 ZOOM_IMAGE_ID = "zoom"
@@ -85,11 +91,13 @@ def zoom_crop(image, factor: int = ZOOM_FACTOR):
     return image.crop((left, top, left + cw, top + ch)).resize((cw * factor, ch * factor), Image.NEAREST)
 
 
-def json_block(instructions: str, levels: list[str], image_id: str = "img0") -> tuple[str, list[str]]:
+def json_block(instructions: str, levels: list[str], image_id: str | None = "img0") -> tuple[str, list[str]]:
     """The written-answer baseline's own JSON request for one rating field (`glance.lab.gen_bench.json_prompt`, word for
-    word; a test pins the two together). Read with `JSON_ANSWER_PREFIX` as the start of the assistant turn."""
+    word; a test pins the two together). Read with `JSON_ANSWER_PREFIX` as the start of the assistant turn. `image_id` None
+    (a question about several images at once) says "the images" instead; that wording has not been measured."""
     allowed = "; ".join(f"{i} = {text}" for i, text in enumerate(levels)) + " (answer with the number)"
-    block = f"Answer every question about `{image_id}`. Reply with one JSON object and nothing else.\n\n\"answer\": {instructions} Allowed: {allowed}"
+    subject = f"`{image_id}`" if image_id else "the images"
+    block = f"Answer every question about {subject}. Reply with one JSON object and nothing else.\n\n\"answer\": {instructions} Allowed: {allowed}"
     return block, [str(i) for i in range(len(levels))]
 
 
@@ -98,7 +106,7 @@ def member_assistant_prefix(member: str) -> str:
     return JSON_ANSWER_PREFIX if member == "jsondigits" else ""
 
 
-def member_prompt(member: str, instructions: str, levels: list[str], image_id: str) -> tuple[str, list[str], bool]:
+def member_prompt(member: str, instructions: str, levels: list[str], image_id: str | None) -> tuple[str, list[str], bool]:
     """(prompt block, digit labels, reversed?) for one member readout."""
     if member == "jsondigits":
         block, labels = json_block(instructions, levels, image_id)
