@@ -13,7 +13,7 @@ import numpy as np
 from glance.logging_utils import read_jsonl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SUITES = ["fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice"]
+SUITES = ["fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice", "inat_orders_yesno", "inat_orders_choice"]  # the insect orders since E24 (entry 58)
 rng = np.random.default_rng(9)
 
 
@@ -34,16 +34,20 @@ def from_eval_runs(run_ids):
 
 
 def eval_run_of(size):
-    log = ROOT / f"lab/runs/scaling_{size}_eval.out"
-    found = re.search(r"run (\d{8}T\d{6}Z-[0-9a-f]+)", log.read_text()) if log.exists() else None
-    return [found.group(1)] if found else []
+    runs = []
+    for log in (ROOT / f"lab/runs/scaling_{size}_eval.out", ROOT / f"lab/runs/scaling_{size}_orders_eval.out"):
+        found = re.search(r"run (\d{8}T\d{6}Z-[0-9a-f]+)", log.read_text()) if log.exists() else None
+        runs += [found.group(1)] if found else []
+    return runs
 
 
-models = {"Qwen3-VL-2B": from_eval_runs(eval_run_of("2b")), "Qwen3-VL-4B": from_eval_runs(["20260920T205633Z-99f822", "20260920T232332Z-80efa7"]),
+models = {"Qwen3-VL-2B": from_eval_runs(eval_run_of("2b")), "Qwen3-VL-4B": from_eval_runs(["20260920T205633Z-99f822", "20260920T232332Z-80efa7", "20260921T061001Z-da85d6"]),
           "Qwen3-VL-8B": from_eval_runs(eval_run_of("8b"))}
 smol = {}
-for r in read_jsonl(ROOT / "lab/runs/smolvlm2_fresh.jsonl"):
-    smol.setdefault(r["suite"], []).append(bool(r["correct"]))
+orders_done = len(read_jsonl(ROOT / "lab/runs/smolvlm2_orders.jsonl")) >= 630  # a partial run is not reported
+for path in ["lab/runs/smolvlm2_fresh.jsonl"] + (["lab/runs/smolvlm2_orders.jsonl"] if orders_done else []):
+    for r in read_jsonl(ROOT / path):
+        smol.setdefault(r["suite"], []).append(bool(r["correct"]))
 models["SmolVLM2-2.2B (another family)"] = smol
 result = {name: {s: cell(h) for s, h in got.items()} for name, got in models.items() if got}
 (ROOT / "results/lab/other_models.json").write_text(json.dumps(result, indent=1))

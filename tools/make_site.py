@@ -162,14 +162,14 @@ def extras_table():
 def closed_set_table():
     other = load("results/lab/other_models.json") or {}
     order = [("Qwen3-VL-2B", "Qwen3-VL-2B"), ("Qwen3-VL-4B", "Qwen3-VL-4B"), ("Qwen3-VL-8B", "Qwen3-VL-8B"), ("SmolVLM2-2.2B, another family", "SmolVLM2-2.2B (another family)")]
-    out = ['<div class="table-scroll"><table><thead><tr><th>Open model, same questions</th><th class="n">yes/no · Commons</th><th class="n">yes/no · iNaturalist</th><th class="n">pick-one · Commons</th><th class="n">pick-one · iNaturalist</th></tr></thead><tbody>']
+    out = ['<div class="table-scroll"><table><thead><tr><th>Open model, same questions</th><th class="n">yes/no · Commons</th><th class="n">yes/no · iNaturalist</th><th class="n">yes/no · insect orders</th><th class="n">pick-one · Commons</th><th class="n">pick-one · iNaturalist</th><th class="n">pick-one · insect orders</th></tr></thead><tbody>']
     for label, key in order:
         e = other.get(key)
         if not e:
             out.append(f'<tr><td>{label}</td><td class="n pending" colspan="4">not in this snapshot</td></tr>')
             continue
         out.append(f'<tr{" class=own" if key == "Qwen3-VL-4B" else ""}><td>{label}</td>' + "".join(f'<td class="n">{e[k]["accuracy"]:.3f}</td>' if k in e else '<td class="n">–</td>'
-                                                                                                    for k in ("fresh_yesno", "inat_yesno", "fresh_choice", "inat_choice")) + "</tr>")
+                                                                                                    for k in ("fresh_yesno", "inat_yesno", "inat_orders_yesno", "fresh_choice", "inat_choice", "inat_orders_choice")) + "</tr>")
     return "".join(out) + "</tbody></table></div>"
 
 
@@ -275,6 +275,7 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+gap_2b = ((POOLED_EARLY := load("results/lab/pooled_photos.json"))["kinds"]["yesno"]["systems"].get("Qwen3-VL-2B, read") or {}).get("open_4b_minus_this_points", [float("nan")])[0]
 _open_read = [n for n in matrix["systems"] if n.startswith("Qwen") and not n.endswith("written")]
 _sizes = [n.split("-")[2].split(",")[0] for n in _open_read]  # "2B", "4B", "8B"
 open_rows_note = ("Qwen3-VL at " + ", ".join(_sizes[:-1]) + " and " + _sizes[-1] + " read with Glance, and the 4B model writing JSON without it") if len(_sizes) > 1 else "Qwen3-VL-4B read with Glance, and the same model writing JSON without it"
@@ -664,7 +665,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h2 id="models"><span class="num">6</span>Scale and family: zero-shot quality belongs to the model, and size does not buy boundary knowledge</h2>
   <p>The same prompts and readouts, not a word changed, on other sizes of the same family and on a model from a different family (different vision tower, different language model).</p>
   {closed_set_table()}
-  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the two fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family accuracy is flat from 2B upward, except the 13-way pick-one where the 2B model trails. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
+  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the three fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family the 4B and 8B models are level everywhere; the 2B model keeps up on the two easier sets and falls behind on the insect orders (pooled and paired, {gap_2b:.1f} points behind the 4B model on yes/no), which is why the headline chart carries all three sizes. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
   {models_table()}
   <p class="caption"><b>Table {t0 + 4}.</b> Ratings, the same 1,000 images: exact-level accuracy. From 2B to 4B zero-shot accuracy rises sharply; from 4B to 8B it does not rise at all, and after 32 labels the three sizes are within 1.4 points. We had predicted a monotone rise and were wrong. “Within one” is for the four-pass read.</p>
 </section>
