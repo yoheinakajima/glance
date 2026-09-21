@@ -2113,3 +2113,14 @@ the image is encoded either way, so the saving is steady (about a third on yes/n
 2.0 / 3.2 times: where the answer tokens are most of the work the saving DOES grow with size. Caveats on the page: one GPU price
 for every size; the 2B model's written answers are short and often invalid, which flatters its writing time. This was not a
 registered experiment (no hypothesis was written before the timings were taken); it is reported as a description.
+
+## 2026-09-21 08:35 Entry 58c: E24, the second family on the insect orders: it falls well below my floors
+
+SmolVLM2-2.2B, shipped readouts, all items (`lab/runs/smolvlm2_orders.jsonl`, 630 rows): yes/no 0.748 [0.707, 0.788], pick one of
+seven 0.648 [0.586, 0.710]; the 4B model 0.948 and 0.962. Pooled over the three sets on the hosted items its yes/no is 0.839.
+- H61 (at least 0.80 yes/no and 0.70 pick-one): NOT SUPPORTED, both floors missed (0.748, 0.648).
+- H61 (at least 8 points below the 4B model on pick-one): SUPPORTED, by far (31 points).
+Reading: the readout carries to another family without a change, but the ACCURACY does not: level on everyday photographs, 5 and
+12 points behind on nature photographs, 20 and 31 behind on look-alike insect orders. The finer the distinction, the more the
+model matters; "close to the best hosted models" is a statement about Qwen3-VL at 4B and above, and the page says so. SmolVLM2
+stays out of the headline chart (no idle-GPU photo timing; decided in entry 58 before its result) and is in the scale-and-family table.

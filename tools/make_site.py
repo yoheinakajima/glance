@@ -275,6 +275,10 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+_om = load("results/lab/other_models.json") or {}
+_so, _qo = _om.get("SmolVLM2-2.2B (another family)", {}), _om.get("Qwen3-VL-4B", {})
+smol_orders = (f" and falls well behind on the insect orders ({_so['inat_orders_yesno']['accuracy']:.2f} and {_so['inat_orders_choice']['accuracy']:.2f} against {_qo['inat_orders_yesno']['accuracy']:.2f} and {_qo['inat_orders_choice']['accuracy']:.2f})"
+               if "inat_orders_choice" in _so and "inat_orders_choice" in _qo else "")
 gap_2b = ((POOLED_EARLY := load("results/lab/pooled_photos.json"))["kinds"]["yesno"]["systems"].get("Qwen3-VL-2B, read") or {}).get("open_4b_minus_this_points", [float("nan")])[0]
 _open_read = [n for n in matrix["systems"] if n.startswith("Qwen") and not n.endswith("written")]
 _sizes = [n.split("-")[2].split(",")[0] for n in _open_read]  # "2B", "4B", "8B"
@@ -693,7 +697,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h2 id="models"><span class="num">6</span>Scale and family: quality belongs to the model, size above 4B buys time and cost but no accuracy</h2>
   <p>The same prompts and readouts, not a word changed, on other sizes of the same family and on a model from a different family (different vision tower, different language model).</p>
   {closed_set_table()}
-  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the three fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family the 4B and 8B models are level everywhere; the 2B model keeps up on the two easier sets and falls behind on the insect orders (pooled and paired, {gap_2b:.1f} points behind the 4B model on yes/no), which is why the headline chart carries all three sizes. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
+  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the three fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family the 4B and 8B models are level everywhere; the 2B model keeps up on the two easier sets and falls behind on the insect orders (pooled and paired, {gap_2b:.1f} points behind the 4B model on yes/no), which is why the headline chart carries all three sizes. The 2.2B model of another family is level with them on everyday photographs, trails on nature photographs (5 points on yes/no, 12 on pick-one){smol_orders}, so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
   {models_table()}
   <p class="caption"><b>Table {t0 + 4}.</b> Ratings, the same 1,000 images: exact-level accuracy. From 2B to 4B zero-shot accuracy rises sharply; from 4B to 8B it does not rise at all, and after 32 labels the three sizes are within 1.4 points. We had predicted a monotone rise and were wrong. “Within one” is for the four-pass read.</p>
   {size_speed()}
