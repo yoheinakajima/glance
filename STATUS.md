@@ -552,3 +552,6 @@ needs next, what is registered but not started.
 - D46. E1 result (entry 40): a fitted readout on the hidden state reaches 0.965 from one pass (token readout 0.867);
   it is label-hungry (worse below about 32 labels), so it sits in the "if you have examples" section; shipping it into
   the harness is approved in principle and not started.
+
+- D47. Owner's emphasis (2026-09-20 22:30): the paper and the page lead with yes/no and pick-one (they work with no setup);
+  ratings become Section 2, "the hard case", not dropped and not equal billing (`docs/paper/OUTLINE.md`, "Emphasis").

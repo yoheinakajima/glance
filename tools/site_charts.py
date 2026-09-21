@@ -110,9 +110,11 @@ MEASURES = (("acc", "Accuracy · longer is better", lambda v: f"{v:.2f}"), ("sec
             ("usd", "US dollars per 1,000 answers · shorter is better", lambda v: f"${v:.2f}"))
 
 
-def bars_by_type(rows, wide):
+def bars_by_type(rows, wide, tests=None):
     """The headline figure: bars bundled by question type, real quantities on scales that start at zero. An outlined bar is a
     provisional timing or an estimated cost; an estimate longer than the measured range is clipped and marked."""
+    tests = list(tests or TESTS)
+    rows = [r for r in rows if r["test"] in tests]
     names = list(dict.fromkeys(r["name"] for r in rows))
     tops = {"acc": 1.0, "sec": max(r["sec"] for r in rows), "usd": max([r["usd"] for r in rows if not r["estimate"]] or [1.0])}
 
@@ -127,19 +129,19 @@ def bars_by_type(rows, wide):
 
     if wide:
         g, y, col, span = [], 16, lambda j: 132 + j * 170, 96
-        g += [_t(col(j), 12, TESTS[t], "start", "m-head") for j, t in enumerate(TESTS)]
+        g += [_t(col(j), 12, TESTS[t], "start", "m-head") for j, t in enumerate(tests)]
         for key, title, fmt in MEASURES:
             g.append(_t(4, y + 18, title, "start", "m-tick"))
             y += 24
             for name in names:
                 own = name.startswith("Qwen")
                 g.append(_t(124, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if own else "m-lab"))
-                g += [bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, col(j), y, span) for j, t in enumerate(TESTS)]
+                g += [bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, col(j), y, span) for j, t in enumerate(tests)]
                 y += 14
             y += 6
         return f'<svg viewBox="0 0 640 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, by question type">{"".join(g)}</svg>'
     out = []
-    for t in TESTS:
+    for t in tests:
         g, y = [_t(4, 13, TESTS[t], "start", "m-head")], 22
         for key, title, fmt in MEASURES:
             g.append(_t(4, y + 10, title, "start", "m-tick"))

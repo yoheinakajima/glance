@@ -150,6 +150,19 @@ Two things are kept apart (2026-09-20 17:40, after a second round of outside rev
   zero-shot exact ratings); "a model"; "Jev for vision"; "works on any VLM" until E3 and E15 report; "zero-shot" for
   anything that saw images of the rubric; "0.87 on image quality assessment".
 
+## Emphasis, set by the owner (2026-09-20 22:30, STATUS D47): closed-set questions lead, ratings are "the hard case"
+
+Yes/no and pick-one are the headline because they work with no setup and no asterisk: level with hosted models (flagship
+and cheapest) on photos none of them has seen, same answers as the model writing, faster, local, with probabilities. They get
+the abstract's first half, Section 1 and Figure 1. Ratings are NOT dropped and NOT given equal billing: they are Section 2,
+"the hard case", told as one arc (every model gets the order, none knows the rubric's boundaries; a cheap hosted model leads
+zero-shot; reading at the JSON position matches writing; unlabeled images, then labels, then the hidden state). That section
+holds most of what is actually ours (self-calibration from unlabeled images, the failed content-free prior, written against
+read, the label curves), so cutting it would leave a paper whose only contribution is a measurement. Known weakness of the
+headline, to fix before submission: the fresh-photo tests are EASY (everyone is near 0.93), so "level with" partly reflects a
+ceiling; on older fine-grained benchmarks a flagship led by 3 to 5 points. A harder fresh closed-set test is the next
+experiment to register (finer taxa on iNaturalist, counting and spatial yes/no, documents).
+
 ## Results map for the paper (2026-09-20 evening): every completed experiment and where it goes
 
 Section numbers follow the owner's framing: the zero-shot comparison leads; label-based results are a later section.
