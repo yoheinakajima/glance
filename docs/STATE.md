@@ -33,6 +33,33 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**Update 22:18 (READ THIS BLOCK FIRST; older blocks below are history).**
+Results since 17:00, all in `lab/NOTES.md`: 32b (the same model WRITING beats the four-pass read zero-shot on ratings, 0.672 vs
+0.570; identical on yes/no and pick-one), 42b (one-pass read at the JSON answer position `jsondigits`: 0.669, 0.758 with 16
+unlabeled images), 44 (SmolVLM2: fitted recipe replicates, zero-shot weaker), 35c (frontier on iNaturalist: level), 45b (the
+providers' CHEAPEST models, owner's idea: level on yes/no and pick-one except Haiku on nature photos; every cheap model beats
+its flagship on ratings; Gemini 3.1 Flash-Lite 0.763 leads zero-shot; hosted cost $0.12 to $1.89 per 1,000, so the open
+model is about 5x cheaper on yes/no and NOT cheaper on ratings), 41/41b (positioning: same inference object as Simple Jev;
+Glance = calibration and measurement harness). E15 interim: Qwen3-VL-8B four-pass zero-shot 0.537 (NOT above 4B 0.570); its
+one-pass read, photo evals and the verdict entry are PENDING: when `DONE timing-single-idle` appears run
+`uv run python tools/scaling_report.py`, `tools/other_models_report.py`, `tools/make_matrix.py` (fills the pending timing
+cells from `lab/GENBENCH_SINGLE.json` and `lab/runs/jsondigits_timing.jsonl`), `tools/make_results_zeroshot.py`,
+`tools/make_site.py`, write the E15 entry with H33 to H36, republish the page.
+Lane A after the 8B window: `smol-fresh` (E19, entry 46: SmolVLM2 yes/no and pick-one; then `tools/other_models_report.py`),
+`generic-smoke` (three `glance --model-id ... ask` calls on SmolVLM2; read `$TMPDIR/glance/generic_smoke.out|.err`; if it works
+drop "experimental" caveats only after a real look), `written-inat` (then move the matrix's yes/no and pick-one columns to the
+iNaturalist set), `jsondigits-semantic` + `jsondigits-kadid` (E17, entry 43: decision rule for making `jsondigits` the harness
+zero-shot default), then kadid-ref, letters-lab, distort25, baselines. Lane B resumes after the window: qsit-lab, openjev-lab
+(E13), semantic-ens4d.
+New since 18:00: comparison matrix (`tools/make_matrix.py` -> `results/lab/matrix.*`), project page (`tools/make_site.py`,
+`tools/site_charts.py`, `docs/SITE_PLAN.md`; private preview https://claude.ai/artifact/HjAYTcWLY348UVL4rA447s; owner picked
+bars-by-question-type as the headline figure after the matrix, then cost-vs-speed and accuracy-vs-cost), README rewritten
+around use + `AGENTS.md` + `glance ask` command, GitHub Pages workflow + `site/CNAME` (glance.yohei.me; nothing is pushed,
+there is no remote; publishing is the owner's call), any-model backend (`glance/backends/generic_hf.py`, `--model-id`,
+`Glance(model_id=...)`; plumbing tested, GPU smoke test queued), one-paste frontier batches (`tools/frontier_batch.py --set
+cheap|inat`). Next on the owner-approved list: PyPI package `glance-vlm`, then a Hugging Face Space demo (needs the owner's
+HF login for the push).
+
 **Update 16:54.** `inat-eval` done (entry 35b: pick-one 0.940, yes/no 0.945; run `20260920T232332Z-80efa7`, copies `-gpt` and
 `-gemini` made for the owner's frontier calls; when they finish:
 `uv run python tools/fresh_report.py --set inat --run 20260920T232332Z-80efa7 --run 20260920T232332Z-80efa7-gpt --run 20260920T232332Z-80efa7-gemini`,
