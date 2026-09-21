@@ -8,8 +8,8 @@ Use it for private or offline image decisions, many questions per image, probabi
 rubrics you can fit from a few dozen images. Zero-shot, pooled over three sets of fresh photographs, the open 4B model is level with the
 best hosted models on coarse pick-one questions and about two points behind the best (both Gemini models) on yes/no; on exact rating levels a cheap hosted model (Gemini 3.1
 Flash-Lite, 0.763) is ahead zero-shot (0.669), about level once Glance has seen 16 unlabeled images of the rubric (0.758), and
-behind after 32 labels (0.857). Know its limits: it confuses mirror-image diagonal directions, misjudges relative size, slips
-when counting eight objects, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even a 300-label
+behind after 32 labels (0.857). Know its limits: it confuses mirror-image diagonal directions, misjudges relative size (the best hosted models are
+perfect on both), slips when counting eight objects, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even a 300-label
 fit reaches only 0.55. For image-quality scoring alone, a small trained quality model or hand-built features do as well or better.
 
 - README (install, usage, scorecard): README.md in the repository

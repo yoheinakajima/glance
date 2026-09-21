@@ -1,0 +1,93 @@
+{
+ "sets": {
+  "probe_stripes": {
+   "what": "stripe direction (1 of 4)",
+   "n": 150,
+   "chance": 0.25,
+   "token_read": [
+    0.6533333333333333,
+    0.5733333333333334,
+    0.7266666666666667
+   ],
+   "written_strict": [
+    0.7533333333333333,
+    0.6865,
+    0.82
+   ],
+   "written_lenient": [
+    0.7533333333333333,
+    0.6866666666666666,
+    0.82
+   ],
+   "written_invalid_share": 0.0,
+   "hidden_state_probe_cv": [
+    0.9933333333333333,
+    0.98,
+    1.0
+   ],
+   "probe_minus_read_points": 34.0,
+   "written_minus_read_points": 9.999999999999998
+  },
+  "probe_largest": {
+   "what": "largest of four shapes (1 of 4)",
+   "n": 150,
+   "chance": 0.25,
+   "token_read": [
+    0.52,
+    0.44,
+    0.6
+   ],
+   "written_strict": [
+    0.52,
+    0.44,
+    0.6
+   ],
+   "written_lenient": [
+    0.52,
+    0.44,
+    0.6
+   ],
+   "written_invalid_share": 0.006666666666666667,
+   "hidden_state_probe_cv": [
+    0.48,
+    0.4,
+    0.56
+   ],
+   "probe_minus_read_points": -4.0000000000000036,
+   "written_minus_read_points": 0.0
+  },
+  "probe_count": {
+   "what": "count the balls (1 of 8)",
+   "n": 150,
+   "chance": 0.125,
+   "token_read": [
+    0.9133333333333333,
+    0.8666666666666667,
+    0.9533333333333334
+   ],
+   "written_strict": [
+    0.86,
+    0.8,
+    0.9133333333333333
+   ],
+   "written_lenient": [
+    0.86,
+    0.8066666666666666,
+    0.9133333333333333
+   ],
+   "written_invalid_share": 0.0,
+   "hidden_state_probe_cv": [
+    0.9533333333333334,
+    0.9133333333333333,
+    0.98
+   ],
+   "probe_minus_read_points": 4.0000000000000036,
+   "written_minus_read_points": -5.333333333333334
+  }
+ },
+ "verdicts": {
+  "H65: written within 5 points of the read on all three sets": false,
+  "H66a: the hidden-state probe beats the token read by at least 15 points on stripes": true,
+  "H66b: and by less than 10 points on the largest shape": true
+ }
+}

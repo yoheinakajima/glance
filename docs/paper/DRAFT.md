@@ -20,7 +20,8 @@ labels reach 0.857. The hosted models were not given examples, so this is a comp
 image-quality benchmark (KADID-10k) the approach missed every target we registered, hand-built features and a small trained
 quality model do as well or better on low-level artefacts, and on rubrics that are not image quality (tilt, how much of a
 subject is cut off) even 300 labels reach only 0.55. On images drawn by program the open model reads text, coarse position and
-small counts reliably and fails on mirror-image direction and relative size. The open model's cost is of the same order as the low-cost hosted models and one to two orders below the
+small counts reliably and falls far behind the best hosted models, which are perfect, on line direction and relative size; a
+linear probe finds the direction in its hidden state (0.99) and does not find the relative size. The open model's cost is of the same order as the low-cost hosted models and one to two orders below the
 flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what
 is offered is the measurement, registered before it was run, with its misses.
 <!-- src: results/lab/matrix.md, results/lab/label_noise_proxy.md, results/lab/jsondigits.md, results/lab/scaling.md, docs/paper/RESULTS_GENERALIZATION.md; wording aligned with the page after the outside critique of 2026-09-21 (lab/NOTES.md entry 51) -->
@@ -252,9 +253,35 @@ while the two diagonal directions are confused (22 of 74 correct, below a coin f
 largest of four like shapes is found on 0.73 of images when it has twice the area of the others, falling to 0.59, 0.45
 and 0.32 at area ratios 1.5, 1.3 and 1.15 (chance 0.25). We had predicted at least 0.90 on stripes and on the twofold
 size difference, and a fall below 0.70 for six to eight balls (measured 0.78); all three predictions were wrong
-(Section 9). Hosted models had not been run on these sets when this draft was written, so whether they share these
-weaknesses is not known.
-<!-- src: results/lab/probes.md, results/lab/probes.json, lab/NOTES.md entries 50, 50b, 50c -->
+(Section 9).
+
+These are not limits of vision-language models. On the test half of each set (75 items, the same for every system), GPT-5.6
+and Gemini 3.1 Pro answer every question of all six sets correctly. Paired on those items, the best hosted model is ahead of
+the open model by 41 points [31, 52] on the largest shape, 43 [32, 53] on stripe direction, 7 [1, 13] on counting and 9 [4,
+16] on position; on the look-alike words every system is perfect. The confusion of the two diagonals is shared by Claude
+Opus 5 (0.38 on rising diagonals) and Claude Haiku 4.5 (0.17) and by no other hosted model, and the low-cost hosted models
+fail where the open model fails (the largest shape at the smallest ratio; counting seven or eight). We had predicted that
+most hosted models would share the diagonal confusion and that counting would be weak for every system; both were wrong.
+A hosted model writes its answer and may reason before it, while the open model gets one forward pass. No composite score
+is reported across the sets: they measure different abilities, and some items were built to be hard (entry 54).
+
+Are the open model's two large failures in the readout or in the model? A registered control (entry 61) ran three routes on
+the same 150 images per set: the token read, the same model writing its answer, and a linear probe on the final hidden
+state (PCA to 32 dimensions, logistic regression, 5-fold cross-validation).
+
+| Set | token read | written | hidden-state probe (cross-validated) |
+| --- | --- | --- | --- |
+| Stripe direction, 1 of 4 | 0.653 [0.573, 0.727] | 0.753 [0.686, 0.820] | 0.993 [0.980, 1.000] |
+| Largest of four shapes, 1 of 4 | 0.520 [0.440, 0.600] | 0.520 [0.440, 0.600] | 0.480 [0.400, 0.560] |
+| Count the balls, 1 of 8 | 0.913 [0.867, 0.953] | 0.860 [0.800, 0.913] | 0.953 [0.913, 0.980] |
+
+The two failures differ in kind. The model separates the four stripe directions almost perfectly in its hidden state, the
+two diagonals included, and no answer token gets it out: the information is there and the words "rising" and "falling" are
+not attached to it. On the largest shape all three routes fail alike: at this size and image resolution the model does not
+make that judgement (one linear probe on one vector can miss a relational property, so this is weaker evidence). The probe
+sees labels, so it shows that information is present, not that it can be read without examples. We had predicted that writing
+would stay within 5 points of reading on these sets; it is 10 points better on stripes and 5 worse on counting.
+<!-- src: results/lab/probes.md, results/lab/probes.json, results/lab/probe_controls.md, lab/NOTES.md entries 50, 50b, 50c, 50d, 54, 61, 61b -->
 
 Five hundred synthetic interface screens (five kinds of page, invented content, rendered from generated HTML so every
 label is exact; registered as entry 49) ask what an agent would ask of a screen.
@@ -559,6 +586,8 @@ that this paper's evidence did not support.
 | Rubrics that are not image quality: the fitted four-pass read reaches at least 0.75 exact and 0.95 within one | 0.548 and 0.897 with 300 labels per rubric; tilt 0.330 (tilt worst, as predicted) | 36c |
 | The one-pass read beats the four-pass read zero-shot on KADID-10k by at least 5 points | +1.9 points (0.347 against 0.328) | 43c |
 | Interface screens: at least 0.90 on page type; one forward pass at least 10 points behind the best hosted model on one-step reasoning | page type 0.823 (every error is another page called an article); reasoning 0.910, so a 10-point gap is impossible | 49c |
+| Hosted models on the probes: most share the diagonal confusion; counting is weak for every system | only the two Anthropic models share it; GPT-5.6 and Gemini 3.1 Pro are perfect on all six sets | 50d |
+| Written within 5 points of the read on the geometry probes | +10.0 on stripes, -5.3 on counting | 61b |
 | Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |
 | A 0.9B model trained for image quality (Q-SiT-mini) is weak on exposure and resolution, and with our fit stays below the four-pass read (0.867) | it ranks all five scales (Spearman 0.86 to 0.95) and scores 0.869; on the same items with the same fit 0.869 against 0.863 (300 labels) and 0.853 against 0.846 (32 labels), both differences within 3 points of zero | 37c |
 

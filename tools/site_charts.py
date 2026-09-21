@@ -230,5 +230,5 @@ svg .m-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.1}svg .m-arrow{str
 svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}
 .key svg{width:11px;height:11px;vertical-align:-1px;margin:0 3px 0 8px;display:inline}
 """
-KEY = ('<span class="key"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.8" class="m-s-host"/></svg>yes/no<svg viewBox="0 0 12 12"><rect x="3.4" y="3.4" width="5.2" height="5.2" class="m-s-host"/></svg>pick-one'
+KEY = ('<span class="key"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="2.8" class="m-s-host"/></svg>yes/no&ensp;<svg viewBox="0 0 12 12"><rect x="3.4" y="3.4" width="5.2" height="5.2" class="m-s-host"/></svg>pick-one&ensp;'
        '<svg viewBox="0 0 12 12"><polygon points="6,2.6 9.2,8.4 2.8,8.4" class="m-s-host"/></svg>rating</span>')

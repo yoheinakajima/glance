@@ -2203,3 +2203,22 @@ does not want the project centred on labels; both stay listed as limits); a labe
 the centre of the paper (same reason); splitting the site into / and /paper (the owner asked for the tool panel on top; the panel
 is marked site-only). OPEN, the owner's call: the tool's name (collision research in the next entry) and a descriptive PAPER
 title separate from the tool name, which all three reviewers asked for.
+
+## 2026-09-21 09:17 Entry 61b: E26 result: the two geometry failures are different in kind: direction is IN the model and no answer token gets it out; relative size is not there
+
+Qwen3-VL-4B, the same 150 images per set, three routes (`tools/probe_controls_report.py`, `results/lab/probe_controls.md`):
+| set | token read | written (strict = lenient, nothing malformed) | linear probe on the hidden state, 5-fold CV |
+| stripe direction, 1 of 4 | 0.653 | 0.753 | 0.993 [0.980, 1.000] |
+| largest of four shapes, 1 of 4 | 0.520 | 0.520 | 0.480 |
+| count the balls, 1 of 8 | 0.913 | 0.860 | 0.953 |
+- H65 (written within 5 points of the read on all three): NOT SUPPORTED: writing is 10.0 points better on stripes and 5.3 worse on
+  counting (identical on the largest shape). On these sets the two routes are less alike than on photographs.
+- H66a (the hidden-state probe at least 15 points above the token read on stripes): SUPPORTED, +34 points: the final hidden state
+  separates the four directions almost perfectly, the two diagonals included, while both token routes confuse them.
+- H66b (less than 10 points above on the largest shape): SUPPORTED (-4): no route finds the largest shape.
+By the reading fixed in entry 61: stripes = the information is there and no answer token exposes it (a naming problem: "rising"
+and "falling to the right" are not attached to what the model sees), so a fitted readout on the hidden state would fix it;
+largest shape = the model, at this size and image resolution, does not make the judgement (with the caveat that one linear probe
+on one vector can miss a relational property). Caveat on the probe: it is cross-validated WITH labels (120 images per fold), so it
+shows that the information is present, not that it can be read zero-shot. The reviewer who asked for this control was right that
+"the model stops at geometry" was not established; the answer is "it depends which geometry".

@@ -100,7 +100,9 @@ our own targets, hand-built features beat it on low-level artifacts when labels 
 image quality (Q-SiT-mini) is level with it under the same 32-label fit. And know where coarse recognition ends for the 4B
 model: on images drawn by program it reads look-alike words (1.00), left/right/above/below (0.94) and counts up to five
 (0.99), but it confuses the two diagonal directions (0.30), misjudges which of four shapes is largest (0.52; 0.73 even at
-twice the area) and slips at eight objects (0.56). Ratings on rubrics that are not image quality (tilt, cut-off,
+twice the area) and slips at eight objects (0.56). The best hosted models get all of these right (GPT-5.6 and Gemini 3.1 Pro are perfect on every probe set), so these are
+this small model's limits, not the field's; a control shows the stripe direction is present in its hidden state (0.99 by a linear probe) and
+the relative size is not. Ratings on rubrics that are not image quality (tilt, cut-off,
 occlusion, caption legibility, watermark) are poor zero-shot (0.38 exact) and a fit does not rescue them (0.55 exact with 300
 labels per rubric; tilt 0.33): a fit removes an offset, it cannot supply a geometric judgement the model does not make.
 

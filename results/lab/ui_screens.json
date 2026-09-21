@@ -1,6 +1,12 @@
 {
  "runs": [
-  "20260921T094322Z-62937c"
+  "20260921T094322Z-62937c",
+  "20260921T094322Z-62937c-opus",
+  "20260921T094322Z-62937c-haiku",
+  "20260921T094322Z-62937c-gpt",
+  "20260921T094322Z-62937c-gptsmall",
+  "20260921T094322Z-62937c-gemini",
+  "20260921T094322Z-62937c-flashlite"
  ],
  "suites": {
   "ui_click": {
@@ -12,6 +18,122 @@
       1.0
      ],
      "n": 300
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "anthropic/claude-opus-5": {
+    "all_items": {
+     "accuracy": 0.9933333333333333,
+     "ci95": [
+      0.98,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.9933333333333333,
+     "ci95": [
+      0.98,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "anthropic/claude-haiku-4-5": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "openai/gpt-5.6": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "openai/gpt-5.6-luna": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "openrouter/google/gemini-3.1-pro-preview": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    }
+   },
+   "openrouter/google/gemini-3.1-flash-lite": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 150
     }
    }
   },
@@ -24,6 +146,122 @@
       0.875
      ],
      "n": 200
+    },
+    "same_items": {
+     "accuracy": 0.83,
+     "ci95": [
+      0.75,
+      0.9
+     ],
+     "n": 100
+    }
+   },
+   "anthropic/claude-opus-5": {
+    "all_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    }
+   },
+   "anthropic/claude-haiku-4-5": {
+    "all_items": {
+     "accuracy": 0.85,
+     "ci95": [
+      0.78,
+      0.92
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.85,
+     "ci95": [
+      0.78,
+      0.92
+     ],
+     "n": 100
+    }
+   },
+   "openai/gpt-5.6": {
+    "all_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    }
+   },
+   "openai/gpt-5.6-luna": {
+    "all_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    }
+   },
+   "openrouter/google/gemini-3.1-pro-preview": {
+    "all_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.83,
+      0.95
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.89,
+     "ci95": [
+      0.82,
+      0.95
+     ],
+     "n": 100
+    }
+   },
+   "openrouter/google/gemini-3.1-flash-lite": {
+    "all_items": {
+     "accuracy": 0.86,
+     "ci95": [
+      0.79,
+      0.93
+     ],
+     "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.86,
+     "ci95": [
+      0.79,
+      0.93
+     ],
+     "n": 100
     }
    }
   },
@@ -33,9 +271,125 @@
      "accuracy": 0.8233333333333334,
      "ci95": [
       0.78,
-      0.8666666666666667
+      0.8633333333333333
      ],
      "n": 300
+    },
+    "same_items": {
+     "accuracy": 0.78,
+     "ci95": [
+      0.7133333333333334,
+      0.8466666666666667
+     ],
+     "n": 150
+    }
+   },
+   "anthropic/claude-opus-5": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.7466666666666667,
+      0.8666666666666667
+     ],
+     "n": 150
+    }
+   },
+   "anthropic/claude-haiku-4-5": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.7466666666666667,
+      0.8666666666666667
+     ],
+     "n": 150
+    }
+   },
+   "openai/gpt-5.6": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    }
+   },
+   "openai/gpt-5.6-luna": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    }
+   },
+   "openrouter/google/gemini-3.1-pro-preview": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    }
+   },
+   "openrouter/google/gemini-3.1-flash-lite": {
+    "all_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
+    },
+    "same_items": {
+     "accuracy": 0.8066666666666666,
+     "ci95": [
+      0.74,
+      0.8666666666666667
+     ],
+     "n": 150
     }
    }
   },
@@ -48,6 +402,122 @@
       0.96
      ],
      "n": 100
+    },
+    "same_items": {
+     "accuracy": 0.9,
+     "ci95": [
+      0.8,
+      0.98
+     ],
+     "n": 50
+    }
+   },
+   "anthropic/claude-opus-5": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    }
+   },
+   "anthropic/claude-haiku-4-5": {
+    "all_items": {
+     "accuracy": 0.98,
+     "ci95": [
+      0.94,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 0.98,
+     "ci95": [
+      0.94,
+      1.0
+     ],
+     "n": 50
+    }
+   },
+   "openai/gpt-5.6": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    }
+   },
+   "openai/gpt-5.6-luna": {
+    "all_items": {
+     "accuracy": 0.98,
+     "ci95": [
+      0.94,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 0.98,
+     "ci95": [
+      0.94,
+      1.0
+     ],
+     "n": 50
+    }
+   },
+   "openrouter/google/gemini-3.1-pro-preview": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    }
+   },
+   "openrouter/google/gemini-3.1-flash-lite": {
+    "all_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
+    },
+    "same_items": {
+     "accuracy": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "n": 50
     }
    }
   },
@@ -60,8 +530,186 @@
       0.944
      ],
      "n": 500
+    },
+    "same_items": {
+     "accuracy": 0.924,
+     "ci95": [
+      0.892,
+      0.956
+     ],
+     "n": 250
+    }
+   },
+   "anthropic/claude-opus-5": {
+    "all_items": {
+     "accuracy": 0.984,
+     "ci95": [
+      0.968,
+      0.996
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.984,
+     "ci95": [
+      0.968,
+      0.996
+     ],
+     "n": 250
+    }
+   },
+   "anthropic/claude-haiku-4-5": {
+    "all_items": {
+     "accuracy": 0.9,
+     "ci95": [
+      0.86,
+      0.936
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.9,
+     "ci95": [
+      0.86,
+      0.936
+     ],
+     "n": 250
+    }
+   },
+   "openai/gpt-5.6": {
+    "all_items": {
+     "accuracy": 0.944,
+     "ci95": [
+      0.912,
+      0.972
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.944,
+     "ci95": [
+      0.912,
+      0.972
+     ],
+     "n": 250
+    }
+   },
+   "openai/gpt-5.6-luna": {
+    "all_items": {
+     "accuracy": 0.916,
+     "ci95": [
+      0.88,
+      0.948
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.916,
+     "ci95": [
+      0.88,
+      0.948
+     ],
+     "n": 250
+    }
+   },
+   "openrouter/google/gemini-3.1-pro-preview": {
+    "all_items": {
+     "accuracy": 0.936,
+     "ci95": [
+      0.904,
+      0.964
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.936,
+     "ci95": [
+      0.904,
+      0.964
+     ],
+     "n": 250
+    }
+   },
+   "openrouter/google/gemini-3.1-flash-lite": {
+    "all_items": {
+     "accuracy": 0.916,
+     "ci95": [
+      0.88,
+      0.948
+     ],
+     "n": 250
+    },
+    "same_items": {
+     "accuracy": 0.916,
+     "ci95": [
+      0.88,
+      0.948
+     ],
+     "n": 250
     }
    }
+  }
+ },
+ "paired": {
+  "ui_state": {
+   "best_hosted": "anthropic/claude-opus-5",
+   "best_hosted_accuracy": 0.984,
+   "open_accuracy": 0.924,
+   "best_minus_open_points": [
+    6.0,
+    3.252032520325203,
+    9.01639344262295
+   ],
+   "n_items": 250,
+   "n_images": 201
+  },
+  "ui_page": {
+   "best_hosted": "anthropic/claude-opus-5",
+   "best_hosted_accuracy": 0.8066666666666666,
+   "open_accuracy": 0.78,
+   "best_minus_open_points": [
+    2.666666666666667,
+    -2.0,
+    7.333333333333333
+   ],
+   "n_items": 150,
+   "n_images": 150
+  },
+  "ui_click": {
+   "best_hosted": "anthropic/claude-haiku-4-5",
+   "best_hosted_accuracy": 1.0,
+   "open_accuracy": 1.0,
+   "best_minus_open_points": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "n_items": 150,
+   "n_images": 150
+  },
+  "ui_done": {
+   "best_hosted": "anthropic/claude-opus-5",
+   "best_hosted_accuracy": 0.89,
+   "open_accuracy": 0.83,
+   "best_minus_open_points": [
+    6.0,
+    1.9607843137254901,
+    11.0
+   ],
+   "n_items": 100,
+   "n_images": 74
+  },
+  "ui_reason": {
+   "best_hosted": "anthropic/claude-opus-5",
+   "best_hosted_accuracy": 1.0,
+   "open_accuracy": 0.9,
+   "best_minus_open_points": [
+    10.0,
+    2.0,
+    20.0
+   ],
+   "n_items": 50,
+   "n_images": 50
   }
  },
  "breakdowns": {
@@ -93,6 +741,162 @@
       "accuracy": 0.9191919191919192,
       "n": 99
      }
+    },
+    "anthropic/claude-opus-5": {
+     "checkbox_checked": {
+      "accuracy": 1.0,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 1.0,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.9069767441860465,
+      "n": 43
+     }
+    },
+    "anthropic/claude-haiku-4-5": {
+     "checkbox_checked": {
+      "accuracy": 0.8947368421052632,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 0.6585365853658537,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.8372093023255814,
+      "n": 43
+     }
+    },
+    "openai/gpt-5.6": {
+     "checkbox_checked": {
+      "accuracy": 0.9210526315789473,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 0.8292682926829268,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.9069767441860465,
+      "n": 43
+     }
+    },
+    "openai/gpt-5.6-luna": {
+     "checkbox_checked": {
+      "accuracy": 0.9210526315789473,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 0.7560975609756098,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.813953488372093,
+      "n": 43
+     }
+    },
+    "openrouter/google/gemini-3.1-pro-preview": {
+     "checkbox_checked": {
+      "accuracy": 0.9210526315789473,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 0.7804878048780488,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.9069767441860465,
+      "n": 43
+     }
+    },
+    "openrouter/google/gemini-3.1-flash-lite": {
+     "checkbox_checked": {
+      "accuracy": 0.9210526315789473,
+      "n": 38
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 43
+     },
+     "dialog_open": {
+      "accuracy": 1.0,
+      "n": 34
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "primary_disabled": {
+      "accuracy": 0.6585365853658537,
+      "n": 41
+     },
+     "signed_in": {
+      "accuracy": 0.9069767441860465,
+      "n": 43
+     }
     }
    }
   },
@@ -107,6 +911,66 @@
      "True": {
       "accuracy": 0.65,
       "n": 100
+     }
+    },
+    "anthropic/claude-opus-5": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.7755102040816326,
+      "n": 49
+     }
+    },
+    "anthropic/claude-haiku-4-5": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.6938775510204082,
+      "n": 49
+     }
+    },
+    "openai/gpt-5.6": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.7755102040816326,
+      "n": 49
+     }
+    },
+    "openai/gpt-5.6-luna": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.7755102040816326,
+      "n": 49
+     }
+    },
+    "openrouter/google/gemini-3.1-pro-preview": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.7755102040816326,
+      "n": 49
+     }
+    },
+    "openrouter/google/gemini-3.1-flash-lite": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 51
+     },
+     "True": {
+      "accuracy": 0.7142857142857143,
+      "n": 49
      }
     }
    }
@@ -126,6 +990,90 @@
      "stock": {
       "accuracy": 1.0,
       "n": 33
+     }
+    },
+    "anthropic/claude-opus-5": {
+     "pricing": {
+      "accuracy": 1.0,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 1.0,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
+     }
+    },
+    "anthropic/claude-haiku-4-5": {
+     "pricing": {
+      "accuracy": 1.0,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 0.9444444444444444,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
+     }
+    },
+    "openai/gpt-5.6": {
+     "pricing": {
+      "accuracy": 1.0,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 1.0,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
+     }
+    },
+    "openai/gpt-5.6-luna": {
+     "pricing": {
+      "accuracy": 0.9411764705882353,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 1.0,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
+     }
+    },
+    "openrouter/google/gemini-3.1-pro-preview": {
+     "pricing": {
+      "accuracy": 1.0,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 1.0,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
+     }
+    },
+    "openrouter/google/gemini-3.1-flash-lite": {
+     "pricing": {
+      "accuracy": 1.0,
+      "n": 17
+     },
+     "slots": {
+      "accuracy": 1.0,
+      "n": 18
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 15
      }
     }
    }
@@ -153,6 +1101,138 @@
      "sign_in": {
       "accuracy": 0.7166666666666667,
       "n": 60
+     }
+    },
+    "anthropic/claude-opus-5": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
+     }
+    },
+    "anthropic/claude-haiku-4-5": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
+     }
+    },
+    "openai/gpt-5.6": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
+     }
+    },
+    "openai/gpt-5.6-luna": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
+     }
+    },
+    "openrouter/google/gemini-3.1-pro-preview": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
+     }
+    },
+    "openrouter/google/gemini-3.1-flash-lite": {
+     "article": {
+      "accuracy": 0.84,
+      "n": 25
+     },
+     "cart": {
+      "accuracy": 0.7241379310344828,
+      "n": 29
+     },
+     "search_results": {
+      "accuracy": 0.7931034482758621,
+      "n": 29
+     },
+     "settings": {
+      "accuracy": 1.0,
+      "n": 35
+     },
+     "sign_in": {
+      "accuracy": 0.65625,
+      "n": 32
      }
     }
    }
