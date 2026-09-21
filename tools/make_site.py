@@ -231,6 +231,7 @@ REFS = [
     ("Wang, Chan and Loy, 2023", "CLIP-IQA: frozen CLIP with antonym prompts as an image-quality score", "https://arxiv.org/abs/2207.12396"),
     ("Wu et al., 2024a", "Q-Bench: a softmax over “good” and “poor” logits as a zero-shot quality score", "https://arxiv.org/abs/2309.14181"),
     ("Wu et al., 2024b", "Q-Align: fine-tuning an LMM on text-defined rating levels and reading the level tokens", "https://proceedings.mlr.press/v235/wu24ah.html"),
+    ("Zhang, Wu, Jia, Lin and Zhai, 2025", "Q-SiT: teaching LMMs for image quality scoring and interpreting (Q-SiT-mini, 0.9B, is the trained quality model we compared against)", "https://arxiv.org/abs/2503.09197"),
     ("Zhang et al., 2025", "YOFO: fine-tuned Qwen-VL judging many yes/no requirements in one forward pass", "https://arxiv.org/abs/2511.16600"),
     ("Zheng et al., 2024", "Large language models are not robust multiple choice selectors (option-letter bias)", "https://arxiv.org/abs/2309.03882"),
     ("vLLM project", "Automatic prefix caching, including multimodal inputs", "https://docs.vllm.ai/en/stable/design/prefix_caching/"),
@@ -266,6 +267,18 @@ def finer():
 def lower_keep(text):
     """Lower-case a test name for use inside a sentence, keeping proper nouns."""
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
+
+
+def outside_item():
+    """The registered comparison with outside open systems (entry 37), on the same items with the same fit."""
+    d = load("results/lab/external_same_items.json") or {}
+    q = next((e for name, e in d.items() if name.startswith("q-sit-mini")), None)
+    if not q:
+        return ""
+    a, b, g = q["32_labels"]["outside"], q["32_labels"]["ens4d"], q["32_labels"]["outside_minus_ens4d_points"]
+    return (f'    <li><span class="verdict miss">not supported</span> We expected a 0.9B model trained for image quality (Q-SiT-mini; Zhang, Wu, Jia, Lin and Zhai 2025), given our fit, to stay below the frozen 4B model on the five quality scales. '
+            f'On the same items with the same 32-label fit it scores {a[0]:.3f} against {b[0]:.3f} (difference {g[0]:+.1f} points [{g[1]:+.1f}, {g[2]:+.1f}]): indistinguishable, at a quarter of the size. '
+            'A general model read this way earns its place by answering any typed question with one set of frozen weights, not by being the best quality meter.</li>')
 
 
 _closed = [gen[k] for k in ("fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice") if k in gen]
@@ -428,6 +441,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
     <li><span class="verdict miss">not supported</span> We expected each provider’s cheapest model to score at or below its flagship on ratings. Every one beats its flagship, and {best_rating} ({best_rating_acc:.3f}, ${cheap_rating[0]:.2f} to ${hosted[best_rating]["usd_per_1000"]["rating"]["value"][0]:.2f} per 1,000 among the cheap models) is nine points ahead of the open model zero-shot. With 16 unlabeled images the open model reaches {jd['json_u16']:.3f}, {100 * (best_rating_acc - jd['json_u16']):.1f} points short of it; with 32 labels it leads.</li>
     <li><span class="verdict miss">not supported</span> On KADID-10k (23 distortion types, five levels, human scores) every registered target was missed: 0.527 exact with labels, 0.33 zero-shot.</li>
     <li><span class="verdict">supported</span> A fitted readout on the model’s hidden state reaches {r4a:.3f} from one pass, against 0.867 for the token readout: the model represents severity almost perfectly. It needs on the order of a hundred labels.</li>
+{outside_item()}
     <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. Two model families and three sizes are measured (Tables {t0 + 3} and {t0 + 4}); that is not “any model”.</li>
   </ul>
 </section>

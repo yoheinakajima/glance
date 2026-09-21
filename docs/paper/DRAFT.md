@@ -417,8 +417,9 @@ that this paper's evidence did not support.
 | A one-pass fitted read stays within 3 points of the four-pass fitted read at 32 labels | 3.1 points behind | 42b |
 | Every cheap hosted model stays within 5 points of its own flagship; cheap models score at or below their flagships on ratings | Claude Haiku 4.5 11-14 points behind Opus 5 on iNaturalist; every cheap model scored ABOVE its flagship on ratings, Flash-Lite reaching 0.763 | 45b |
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
+| A 0.9B model trained for image quality (Q-SiT-mini) is weak on exposure and resolution, and with our fit stays below the four-pass read (0.867) | it ranks all five scales (Spearman 0.86 to 0.95) and scores 0.869; on the same items with the same fit 0.869 against 0.863 (300 labels) and 0.853 against 0.846 (32 labels), both differences within 3 points of zero | 37c |
 
-<!-- src: lab/NOTES.md entries 26b, 27b, 28, 32b, 35b, 38c, 39b, 42b, 45b; docs/paper/RESULTS_GENERALIZATION.md -->
+<!-- src: lab/NOTES.md entries 26b, 27b, 28, 32b, 35b, 37c, 38c, 39b, 42b, 45b; docs/paper/RESULTS_GENERALIZATION.md; results/lab/external_same_items.md -->
 
 Two published errata sit behind this paper's cost numbers. First, a latency erratum: an earlier latency table reported
 the four-pass rating readout's cost as 609 ms next to 432 ms for the shipped v0 readout, implying the two costs were
@@ -441,7 +442,7 @@ that the task is currently easy, and on older, possibly contaminated benchmarks 
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
 2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 4.3 has not been checked on
 KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); and two open,
-MIT-licensed outside systems selected for a head-to-head on the lab scales have not yet been run (entry 37). <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
+MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read (Section 7's table); the second was still running when this draft was written. <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 
 ## 8. Reproducibility
 

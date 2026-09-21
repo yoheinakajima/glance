@@ -322,3 +322,7 @@ https://pypi.org/project/glance/ today: PyPI's `glance` (v32.0.0, released Apr 1
 Service, "an OpenStack project that provides services and associated libraries to store, browse, share, distribute
 and manage bootable disk images." Unrelated to this project. `glance-vlm` is unclaimed on PyPI (404 as of today).
 This project does not publish to PyPI yet; a different package name will be needed before it does.
+
+## Measured against (added 2026-09-21, entry 37c)
+
+Q-SiT (Zhang, Wu, Jia, Lin and Zhai, 2025, arxiv.org/abs/2503.09197; title and authors checked on arXiv on 2026-09-21): an LMM taught to score and explain image quality on a fixed five-word scale. Its 0.9B release, `zhangzicheng/q-sit-mini` (MIT), is the one trained outside system we ran. With our matrix scaling on its five level-word logits it is indistinguishable from the fitted four-pass read on our five quality scales (`results/lab/external_same_items.md`): on image-quality rubrics a small specialist does as well as a frozen general 4B model. It cannot take a rubric outside image quality, which is the case Glance is for.
