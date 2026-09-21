@@ -473,6 +473,16 @@ and three sizes is not "any model". The harness loads any Hugging Face image-tex
 backend (`--model-id`); that path was checked end to end on SmolVLM2-2.2B only (entry 46c), and any other model is untested.
 <!-- src: lab/SMOLVLM2_REPORT.md, lab/NOTES.md entries 44, 46 -->
 
+Speed and cost by size. Timed the same way at every size (one laptop, GPU otherwise idle), a read yes/no about a full-size
+photograph takes 0.66, 1.08 and 2.12 s at 2B, 4B and 8B: each doubling of the model roughly doubles the time and the cost, and
+above 4B it buys no accuracy. Whether reading saves more as the model grows depends on what dominates. On a full-size
+photograph the image is encoded either way, and writing costs 1.6, 1.5 and 1.4 times a read for yes/no (1.1, 1.3, 1.1 for
+pick-one): a steady saving, not a growing one. On 448-pixel images, where the answer tokens are most of the work, the saving
+grows with size, 1.4, 2.0 and 3.2 times for a rating, because every generated token costs a full pass of a larger model while a
+read stays one pass. The cost model uses one rented-GPU price for every size, and the 2B model's written answers are short and
+often invalid, which flatters its writing time. This is a description of timings already collected, not a registered test.
+<!-- src: results/lab/size_speed.md, lab/NOTES.md entry 60 -->
+
 ## 8. Related work and positioning
 
 Reading a candidate statement's logit at a forced answer position, with nothing decoded, is not a primitive we

@@ -2101,3 +2101,15 @@ fixed now, and both will be reported:
 - H64: lenient, its written rating accuracy is within 5 points of its one-pass read (0.492).
 The 8B model's written row is not collected now (about two hours alone on the GPU; its 40-image benchmark had no invalid output);
 the chart will pair 2B and 4B and show the 8B model read only, and says so.
+
+## 2026-09-21 08:28 Entry 60: speed and cost by model size, writing against reading (no new data: the idle-GPU timings already collected)
+
+The owner asked for the cost and speed analysis in the scale-and-family section, and earlier whether reading saves more as the
+model grows. `tools/size_speed_report.py` -> `results/lab/size_speed.md`, from `lab/PHOTO_TIMING{,_2B,_8B}.json` (full-size
+Commons photographs), `lab/GENBENCH_SINGLE{,_2B,_8B}.json` (rating, written) and `lab/runs/jsondigits_timing{,_2b,_8b}.jsonl`
+(rating, one-pass read): all one laptop, GPU otherwise idle. Read yes/no: 0.66 / 1.08 / 2.12 s at 2B / 4B / 8B (each doubling
+roughly doubles time and cost). Written over read, full-size photograph: yes/no 1.6 / 1.5 / 1.4 times, pick-one 1.1 / 1.3 / 1.1:
+the image is encoded either way, so the saving is steady (about a third on yes/no), not growing. Rating on 448 px images: 1.4 /
+2.0 / 3.2 times: where the answer tokens are most of the work the saving DOES grow with size. Caveats on the page: one GPU price
+for every size; the 2B model's written answers are short and often invalid, which flatters its writing time. This was not a
+registered experiment (no hypothesis was written before the timings were taken); it is reported as a description.

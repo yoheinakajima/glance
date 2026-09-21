@@ -413,6 +413,34 @@ def use_it():
 """
 
 
+def size_speed():
+    """Section 6: seconds and dollars by model size, writing against reading (results/lab/size_speed.json; all idle-GPU timings)."""
+    d = load("results/lab/size_speed.json")
+    if not d or len(d["sizes"]) < 2:
+        return ""
+    sizes = list(d["sizes"])
+    tasks = list(d["sizes"][sizes[0]])
+    rows = []
+    for task in tasks:
+        for i, size in enumerate(sizes):
+            c = d["sizes"][size][task]
+            rows.append(f'<tr{" class=sep" if i == 0 and task != tasks[0] else ""}><td>{task if i == 0 else ""}</td><td class="n">{size}</td><td class="n">{c["write_s"]:.2f} s</td><td class="n">{c["read_s"]:.2f} s</td>'
+                        f'<td class="n">{c["write_over_read"]:.1f}×</td><td class="n">${c["read_usd_per_1000"][0]:.2f}–{c["read_usd_per_1000"][1]:.2f}</td></tr>')
+    yn, rt = tasks[0], tasks[-1]
+    ratio = lambda task: ", ".join(f"{d['sizes'][z][task]['write_over_read']:.1f}" for z in sizes)  # noqa: E731
+    read_s = ", ".join(f"{d['sizes'][z][yn]['read_s']:.2f}" for z in sizes)
+    text = (f"<p><b>Speed and cost by size.</b> Timed the same way at every size (one laptop, GPU otherwise idle), a read yes/no about a full-size photograph takes {read_s} s at {', '.join(sizes[:-1])} and {sizes[-1]}: "
+            f"each doubling of the model roughly doubles the time and the cost, and above 4B it buys no accuracy (Tables {{t0 + 3}} and {{t0 + 4}}). Does reading save more as the model grows? It depends on what dominates. "
+            f"On a full-size photograph the image has to be encoded either way, so writing costs {ratio(yn)} times a read at the three sizes: a steady saving of about a third, not a growing one. "
+            f"On small images, where the answer tokens are most of the work, the saving grows with size ({ratio(rt)} times for a rating), because every generated token costs a full pass of a larger model while a read stays one pass.</p>")
+    table = ('<div class="table-scroll"><table><thead><tr><th>Seconds per answer, idle GPU</th><th class="n">size</th><th class="n">written</th><th class="n">read</th><th class="n">written / read</th><th class="n">read, $ per 1,000</th></tr></thead><tbody>'
+             + "".join(rows) + "</tbody></table></div>")
+    cap = (f'<p class="caption"><b>Table {{t0 + 5}}.</b> Qwen3-VL writing a JSON answer against the same model read with Glance. Yes/no and pick-one on the full-size Commons photographs, ratings on 448-pixel lab images (one-pass read). '
+           f'Cost is the measured seconds at a rented-GPU price of ${d["gpu_usd_per_hour"][0]:.2f} to ${d["gpu_usd_per_hour"][1]:.2f} per hour, the same for every size; a larger model may need a dearer GPU, which is not modelled. '
+           'In a 40-image benchmark the 2B model’s written answers were short and often invalid, which flatters its writing time.</p>')
+    return (text + table + cap).replace("{t0 + 3}", str(t0 + 3)).replace("{t0 + 4}", str(t0 + 4)).replace("{t0 + 5}", str(t0 + 5))
+
+
 def older():
     """On older public benchmarks one hosted flagship is ahead of the open model (entry 33); said next to the fresh-photo result."""
     v0 = load("results/v0/analysis/bootstrap_v0.json")
@@ -662,12 +690,13 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 </section>
 
 <section aria-labelledby="models">
-  <h2 id="models"><span class="num">6</span>Scale and family: zero-shot quality belongs to the model, and size does not buy boundary knowledge</h2>
+  <h2 id="models"><span class="num">6</span>Scale and family: quality belongs to the model, size above 4B buys time and cost but no accuracy</h2>
   <p>The same prompts and readouts, not a word changed, on other sizes of the same family and on a model from a different family (different vision tower, different language model).</p>
   {closed_set_table()}
   <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the three fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family the 4B and 8B models are level everywhere; the 2B model keeps up on the two easier sets and falls behind on the insect orders (pooled and paired, {gap_2b:.1f} points behind the 4B model on yes/no), which is why the headline chart carries all three sizes. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
   {models_table()}
   <p class="caption"><b>Table {t0 + 4}.</b> Ratings, the same 1,000 images: exact-level accuracy. From 2B to 4B zero-shot accuracy rises sharply; from 4B to 8B it does not rise at all, and after 32 labels the three sizes are within 1.4 points. We had predicted a monotone rise and were wrong. “Within one” is for the four-pass read.</p>
+  {size_speed()}
 </section>
 
 <section aria-labelledby="cost">
