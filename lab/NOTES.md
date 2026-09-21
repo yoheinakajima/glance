@@ -2276,3 +2276,10 @@ first; geometry: do not rely on this readout), every number from a result file; 
 out of the summary at the owner's wish. `glance-vlm` 0.3.1: no change to the package's behaviour since 0.3.0; it carries the README as
 it stands now (pooled headline, three sizes, the second family, the `num2words` note, the limits) and three lab-only tools
 (`gen_accuracy --config`, `generic_eval --suites`, `probe_hidden`). Published through the same token-free workflow, TestPyPI first.
+
+## 2026-09-21 10:34 Entry 65: the published version is frozen; paper work moves to its own branch
+
+The owner posted the launch. Tag `v0.3.1` marks the exact commit that is live at glance.yohei.me and on PyPI as `glance-vlm` 0.3.1
+(`main` at 8f36e06). From here `main` is left as published (the page deploys from `main`, by hand, on the owner's say), and work on a
+paper version for review and arXiv happens on branch `arxiv`: a PDF built from the same generated page (so every number still comes
+from a result file), without the website-only panel. Fixes to the live page, if any are needed, go to `main` deliberately and separately.
