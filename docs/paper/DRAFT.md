@@ -7,20 +7,22 @@
 
 ## Abstract
 
-We ask what a frozen, Apache-2.0 open vision-language model (Qwen3-VL-4B-Instruct) already does for typed image
-decisions when its answer is read from a single forward pass instead of generated, measured against hosted models on
-photographs none of them could have seen. On fresh Wikimedia Commons and iNaturalist photographs, reading is level
-with three hosted flagships (Gemini 3.1 Pro, Claude Opus 5, GPT-5.6) and with each provider's cheapest current model
-on yes/no and pick-one, gives the same answers as the same model writing JSON, and, timed on the same full-size photographs, answers a yes/no in
-1.1 s (faster than five of the six hosted models) at a rented-GPU cost somewhat below the cheapest hosted model, not the
-roughly fortyfold gap flagship prices alone would suggest. Ratings are
-the hard case. Every system gets a four-level rubric's order right zero-shot (rank agreement 0.93, within one level on
-0.99 of images) but the exact level often wrong, and the cheapest Google model we tested leads zero-shot (0.763
-against our reading's 0.669). Reading closes most of that gap without labels: with zero labels but not zero-shot,
-sixteen unlabeled images of the rubric bring it level with that model, and thirty-two labeled images put it ahead of
-every system measured. We describe the harness, Glance, as a calibration and measurement layer on a readout other
-training-free tools already use, and report every pre-registered hypothesis this paper's evidence did not support.
-<!-- src: results/lab/matrix.md, results/lab/fresh_commons.md, results/lab/fresh_inat.md, results/lab/gen_accuracy.md, results/lab/scaling.md, results/lab/jsondigits.md, results/lab/frontier_head_to_head.md, lab/NOTES.md entries 45, 45b, docs/paper/RELATED_WORK.md -->
+A typed question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level
+on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B-Instruct, Apache-2.0, on
+a laptop) and read the answer from the logits of one forward pass; nothing is generated. On photographs taken after every
+model's release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted
+models (three flagships, three low-cost) on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps
+every other). The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
+Reading gives the same answer as the same model writing JSON. Ratings behave differently. Zero-shot, every system orders
+images correctly (within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per
+rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read
+answer is a vector of logits it can be fitted: 16 unlabeled images of the rubric remove most of the offset (0.758) and 32
+labels reach 0.857. The hosted models were not given examples, so this is a comparison of products, not of models. On a real
+image-quality benchmark (KADID-10k) the approach missed every target we registered, and hand-built features remain better for
+low-level artefacts. The open model's cost is of the same order as the low-cost hosted models and one to two orders below the
+flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what
+is offered is the measurement, registered before it was run, with its misses.
+<!-- src: results/lab/matrix.md, results/lab/label_noise_proxy.md, results/lab/jsondigits.md, results/lab/scaling.md, docs/paper/RESULTS_GENERALIZATION.md; wording aligned with the page after the outside critique of 2026-09-21 (lab/NOTES.md entry 51) -->
 
 ## 1. Introduction
 
@@ -38,7 +40,7 @@ text and, in two cases, for images.
 
 1. A fresh-photograph, cross-provider measurement. On photographs taken after every evaluated model's release,
    labelled by people outside this project (Commons "depicts" statements, iNaturalist community identifications), the
-   open model read this way is level with three hosted flagships and with each provider's cheapest current model on
+   open model read this way is statistically indistinguishable (overlapping 95% intervals, n = 131 and 65) from three hosted flagships and each provider's cheapest current model on
    yes/no and pick-one (Section 3).
 2. Reading against writing on the same model. The same frozen model asked to generate a JSON answer gives identical
    yes/no and pick-one decisions on the items measured; reading is 2.4 to 6.1 times faster and returns probabilities
