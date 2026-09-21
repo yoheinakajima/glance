@@ -334,7 +334,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h2 id="models"><span class="num">5</span>Scale and family: zero-shot quality belongs to the model, and size does not buy boundary knowledge</h2>
   <p>The same prompts and readouts, not a word changed, on other sizes of the same family and on a model from a different family (different vision tower, different language model).</p>
   {closed_set_table()}
-  <p class="caption"><b>Table 6.</b> Yes/no and pick-one on the two fresh photo sets, all items, uncalibrated. Flat from 2B upward, except the 13-way pick-one where the 2B model trails.</p>
+  <p class="caption"><b>Table 6.</b> Yes/no and pick-one on the two fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family accuracy is flat from 2B upward, except the 13-way pick-one where the 2B model trails. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in Section 2 is a statement about this family, not about every small open model.</p>
   {models_table()}
   <p class="caption"><b>Table 7.</b> Ratings, the same 1,000 images: exact-level accuracy. From 2B to 4B zero-shot accuracy rises sharply; from 4B to 8B it does not rise at all, and after 32 labels the three sizes are within 1.4 points. We had predicted a monotone rise and were wrong. “Within one” is for the four-pass read.</p>
 </section>

@@ -1734,3 +1734,15 @@ finished in that batch, so the insect-order batch rewrote the Commons, iNaturali
 low-cost hosted models (working tree only; the committed reports, the matrix and the page were unaffected because the matrix
 reads run folders directly). Fixed: the rebuild now includes every run folder that exists for the set. Verified by re-running
 the three reports with the full lists: byte-identical to the committed files. No number changed.
+
+## 2026-09-21 00:55 Entry 46b: E19 result: the second family on yes/no and pick-one
+
+SmolVLM2-2.2B through the harness's own scorer (shipped statement and independent readouts, nothing reworded), uncalibrated,
+all items (`lab/runs/smolvlm2_fresh.jsonl`, 993 rows; `results/lab/other_models.md`):
+- Commons: yes/no 0.931 [0.901, 0.962] (n=262), pick-one 0.870 [0.809, 0.924] (n=131). The 4B model: 0.931 / 0.885.
+- iNaturalist: yes/no 0.892 [0.863, 0.923] (n=400), pick-one 0.815 [0.755, 0.865] (n=200). The 4B model: 0.945 / 0.940.
+- H47, floors (at least 0.85 yes/no, 0.75 pick-one on both sets): SUPPORTED. H47, "below the 4B model on every cell": three
+  of four cells; on Commons yes/no the two are TIED to the item count (0.931), so not strictly supported.
+Reading: the readout carries to a second family with no change, and on everyday photographs a 2.2B model of another family is
+level with the 4B model. On nature photographs it trails by 5 points on yes/no and 12 on pick-one (the pick-one intervals do not
+overlap), so "level with hosted models" is a statement about Qwen3-VL (2B to 8B), not about every small open model.

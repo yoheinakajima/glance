@@ -307,10 +307,17 @@ Apache-2.0). <!-- src: results/lab/scaling.md, results/lab/other_models.json, la
 | Qwen3-VL-2B | 0.939 [0.908, 0.966] | 0.832 [0.763, 0.893] | 0.925 [0.898, 0.950] | 0.940 [0.905, 0.970] |
 | Qwen3-VL-4B | 0.931 [0.901, 0.958] | 0.885 [0.832, 0.939] | 0.945 [0.923, 0.968] | 0.940 [0.905, 0.970] |
 | Qwen3-VL-8B | 0.924 [0.889, 0.954] | 0.878 [0.817, 0.931] | 0.935 [0.910, 0.958] | 0.955 [0.925, 0.980] |
+| SmolVLM2-2.2B (another family) | 0.931 [0.901, 0.962] | 0.870 [0.809, 0.924] | 0.892 [0.863, 0.923] | 0.815 [0.755, 0.865] |
 
-Yes/no is flat across size, every interval overlapping every other; pick-one is more sensitive, with the 2B model
-trailing on the 13-way Commons task while matching larger models on the 10-way iNaturalist task.
-<!-- src: results/lab/other_models.json -->
+Within the Qwen3-VL family yes/no is flat across size, every interval overlapping every other; pick-one is more
+sensitive, with the 2B model trailing on the 13-way Commons task while matching larger models on the 10-way iNaturalist
+task. The 2.2B model of another family, read through the same scorer with nothing reworded, is level with the 4B model
+on everyday photographs (tied on Commons yes/no to the item count) and trails it on nature photographs by 5 points on
+yes/no and 12 on pick-one, the pick-one intervals not overlapping. We had predicted floors of 0.85 and 0.75, which held,
+and that it would sit below the 4B model on every cell, which held on three of four. So the readout carries to another
+family unchanged, and the comparison with hosted models in Section 3 is a statement about Qwen3-VL, not about every
+small open model.
+<!-- src: results/lab/other_models.json, lab/NOTES.md entries 46, 46b -->
 
 | Open model | zero-shot exact, four-pass read | within one level | rank agreement | + 16 unlabeled images | + 32 labels |
 | --- | --- | --- | --- | --- | --- |
@@ -332,8 +339,7 @@ The fitted recipe also travels to that different family without a wording change
 and the four-pass ensemble with a matrix calibration 0.854 (200 labels/scale), the same registered ordering as on
 Qwen3-VL-4B. Zero-shot it is much weaker (raw four-pass read 0.419 exact, within one level 0.837, against 0.570 and
 0.987 for the 4B model): zero-shot quality is a property of the model being read, not of the harness. Two families
-and three sizes is not "any model"; SmolVLM2's own yes/no and pick-one accuracy on the fresh photographs was still
-collecting when this draft was written (Section 7).
+and three sizes is not "any model".
 <!-- src: lab/SMOLVLM2_REPORT.md, lab/NOTES.md entries 44, 46 -->
 
 ## 6. Related work and positioning
@@ -412,10 +418,8 @@ that the task is currently easy, and on older, possibly contaminated benchmarks 
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
 2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); written answers on iNaturalist were not collected, so Section 3.4 uses the Commons
 set only, iNaturalist being queued (entry 35c); the one-pass JSON-position read of Section 4.3 has not been checked on
-KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); two open,
-MIT-licensed outside systems selected for a head-to-head on the lab scales have not yet been run (entry 37); and
-SmolVLM2's own yes/no and pick-one accuracy on the fresh photographs was still being collected when this draft was
-written (entry 46). <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
+KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); and two open,
+MIT-licensed outside systems selected for a head-to-head on the lab scales have not yet been run (entry 37). <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 
 ## 8. Reproducibility
 
