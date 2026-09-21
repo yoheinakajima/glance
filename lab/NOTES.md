@@ -2060,3 +2060,22 @@ SmolVLM2 0.931 / 0.870 and 0.892 / 0.815; the 4B model on the insect orders 0.94
 - H61: SmolVLM2 on the insect orders: at least 0.80 yes/no and 0.70 pick-one, and at least 8 points below the 4B model on pick-one.
 Reporting rule fixed now: whatever they score, the 2B and 8B rows go into the headline chart and table next to the 4B rows
 (marked "+ Glance"), with their measured seconds and the same cost model; no row is dropped for looking bad.
+
+## 2026-09-21 08:19 Entry 58b: E24 result for the two other sizes: the finer test separates the 2B model; the 8B model buys nothing
+
+Insect orders, all items (420 yes/no, 210 pick-one): Qwen3-VL-2B 0.879 / 0.900, 4B 0.948 / 0.962, 8B 0.940 / 0.938. Pooled over the
+three photo sets on the hosted items, paired against the 4B model (`results/lab/pooled_photos.md`): 2B yes/no 0.904 [0.878,
+0.928], 3.5 points behind the 4B model [1.7, 5.5]; pick-one 0.907 [0.874, 0.941], 2.6 behind [0.0, 5.2]. 8B yes/no 0.933, 0.6
+behind [-1.1, +2.2]; pick-one 0.926, 0.7 behind [-1.5, +3.0].
+- H59 (2B within 2 points of the 4B model on pooled yes/no): NOT SUPPORTED (3.5 behind). I had called the 2B model "about level on
+  yes/no" from the two easier sets (0.939 and 0.925 against 0.931 and 0.945); the insect orders pull it apart (0.879 against
+  0.948). H59 (pick-one at least 3 points below): NOT SUPPORTED, narrowly (2.6). H59 (at least 5 points below on the insect
+  orders' pick-one): SUPPORTED (6.2).
+- H60 (8B within 1.5 points of the 4B model on both): SUPPORTED (0.6 and 0.7 behind). Size above 4B buys nothing here, as on ratings.
+Timings, idle GPU, same method as the 4B rows: 2B 0.66 s per yes/no, 0.85 s per pick-one, 0.22 s per one-pass rating; 8B 2.12 /
+2.65 / 0.64 s (`lab/PHOTO_TIMING_2B.json`, `..._8B.json`, `lab/runs/jsondigits_timing_2b.jsonl`, `..._8b.jsonl`, 80 images each).
+By the reporting rule of entry 58 both rows are in the headline chart and table ("Qwen3-VL-2B + Glance", "Qwen3-VL-8B + Glance"),
+next to the 4B rows: six hosted rows, four open ones. What the chart now shows: the 4B model is the sweet spot; the 2B model is
+the cheapest and fastest row on the chart (0.66 s, about $0.12 per 1,000) at 3 to 4 points less accuracy and a much weaker
+zero-shot rating read (0.49); the 8B model costs twice the time for no gain. SmolVLM2 on the insect orders failed at once because
+my environment sync this morning had removed `num2words` (its processor needs it); restored, re-queued, running; H61 pending.

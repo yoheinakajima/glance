@@ -15,6 +15,8 @@
    "missing_hosted_rows_counted_wrong": {
     "Qwen3-VL-4B, read": 0,
     "Qwen3-VL-4B, written": 0,
+    "Qwen3-VL-2B, read": 0,
+    "Qwen3-VL-8B, read": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -57,6 +59,50 @@
       "iNaturalist, ten groups": 0.945,
       "iNaturalist, insect orders": 0.9523809523809523
      }
+    },
+    "Qwen3-VL-2B, read": {
+     "pooled": [
+      0.9038817005545287,
+      0.878003696857671,
+      0.9279112754158965
+     ],
+     "equal_weight_per_set": [
+      0.9084532897128317,
+      0.8833545377438506,
+      0.9316378286683631
+     ],
+     "per_set": {
+      "Commons": 0.9389312977099237,
+      "iNaturalist, ten groups": 0.915,
+      "iNaturalist, insect orders": 0.8714285714285714
+     },
+     "open_4b_minus_this_points": [
+      3.512014787430684,
+      1.6635859519408502,
+      5.545286506469501
+     ]
+    },
+    "Qwen3-VL-8B, read": {
+     "pooled": [
+      0.933456561922366,
+      0.911275415896488,
+      0.9537892791127541
+     ],
+     "equal_weight_per_set": [
+      0.9323324851569126,
+      0.9089797649339634,
+      0.9533992941960499
+     ],
+     "per_set": {
+      "Commons": 0.9236641221374046,
+      "iNaturalist, ten groups": 0.94,
+      "iNaturalist, insect orders": 0.9333333333333333
+     },
+     "open_4b_minus_this_points": [
+      0.5545286506469501,
+      -1.1090573012939002,
+      2.2181146025878005
+     ]
     },
     "Claude Opus 5": {
      "pooled": [
@@ -214,6 +260,8 @@
    "missing_hosted_rows_counted_wrong": {
     "Qwen3-VL-4B, read": 0,
     "Qwen3-VL-4B, written": 0,
+    "Qwen3-VL-2B, read": 0,
+    "Qwen3-VL-8B, read": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -256,6 +304,50 @@
       "iNaturalist, ten groups": 0.93,
       "iNaturalist, insect orders": 0.9523809523809523
      }
+    },
+    "Qwen3-VL-2B, read": {
+     "pooled": [
+      0.9074074074074074,
+      0.8740740740740741,
+      0.9407407407407408
+     ],
+     "equal_weight_per_set": [
+      0.8960805860805859,
+      0.8557875457875458,
+      0.9336752136752136
+     ],
+     "per_set": {
+      "Commons": 0.8153846153846154,
+      "iNaturalist, ten groups": 0.93,
+      "iNaturalist, insect orders": 0.9428571428571428
+     },
+     "open_4b_minus_this_points": [
+      2.5925925925925926,
+      0.0,
+      5.185185185185185
+     ]
+    },
+    "Qwen3-VL-8B, read": {
+     "pooled": [
+      0.9259259259259259,
+      0.8925925925925926,
+      0.9555555555555556
+     ],
+     "equal_weight_per_set": [
+      0.91992673992674,
+      0.884186507936508,
+      0.9522344322344324
+     ],
+     "per_set": {
+      "Commons": 0.8769230769230769,
+      "iNaturalist, ten groups": 0.94,
+      "iNaturalist, insect orders": 0.9428571428571428
+     },
+     "open_4b_minus_this_points": [
+      0.7407407407407408,
+      -1.4814814814814816,
+      2.9629629629629632
+     ]
     },
     "Claude Opus 5": {
      "pooled": [

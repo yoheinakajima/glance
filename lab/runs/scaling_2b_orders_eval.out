@@ -1,0 +1,15 @@
+[eval 07:44:08] run 20260921T144408Z-8757e4 -> /Users/yoheinakajima/code/glance/runs/20260921T144408Z-8757e4
+[eval 07:44:08] suite inat_orders_yesno: 420 items (210 test)
+[eval 07:44:08] suite inat_orders_choice: 210 items (105 test)
+Loading weights:   0%|          | 0/625 [00:00<?, ?it/s]Loading weights:   0%|          | 1/625 [00:00<05:48,  1.79it/s]Loading weights:  36%|███▌      | 223/625 [00:00<00:00, 437.66it/s]Loading weights:  53%|█████▎    | 334/625 [00:00<00:00, 482.31it/s]Loading weights:  85%|████████▌ | 534/625 [00:00<00:00, 792.48it/s]Loading weights: 100%|██████████| 625/625 [00:01<00:00, 594.13it/s]
+[eval 07:44:15] warmup inat_orders_yesno|vlm|statement: 0.23 s/item
+[eval 07:44:18] warmup inat_orders_choice|vlm|independent: 0.34 s/item
+[eval 07:44:22] warmup inat_orders_choice|vlm|letter: 0.35 s/item
+[eval 07:44:22] ETA at n=500: 0.12 h; budget 4.0 h -> n per suite {'inat_orders_yesno': 500, 'inat_orders_choice': 500} (ETA 0.12 h)
+[eval 07:46:09] done inat_orders_yesno|vlm|statement: 420 items, 1.8 min, 0 failures
+[eval 07:47:18] done inat_orders_choice|vlm|independent: 210 items, 1.2 min, 0 failures
+[eval 07:48:33] done inat_orders_choice|vlm|letter: 210 items, 1.2 min, 0 failures
+[eval 07:49:37] permutation inat_orders_choice|vlm|independent: max |dp| = 0.00e+00 over 300 requests (1.1 min)
+[eval 07:50:53] permutation inat_orders_choice|vlm|letter: max |dp| = 8.36e-01 over 300 requests (1.3 min)
+[eval 07:51:10] latency vlm: p50 785 ms, p95 919 ms
+[eval 07:51:10] wrote /Users/yoheinakajima/code/glance/runs/20260921T144408Z-8757e4/report.md

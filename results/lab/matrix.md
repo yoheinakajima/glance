@@ -11,7 +11,9 @@
 | GPT-5.6 Luna | 0.906 [0.880, 0.930] | 0.881 [0.841, 0.919] | 0.686 [0.657, 0.715] |
 | Gemini 3.1 Flash-Lite | 0.961 [0.945, 0.976] | 0.933 [0.904, 0.959] | 0.763 [0.737, 0.789] |
 | Qwen3-VL-4B, written | 0.945 [0.924, 0.963] | 0.930 [0.900, 0.959] | 0.672 [0.643, 0.701] |
+| Qwen3-VL-2B, read (Glance) | 0.904 [0.878, 0.928] | 0.907 [0.874, 0.941] | 0.492 [0.461, 0.524] |
 | Qwen3-VL-4B, read (Glance) | 0.939 [0.917, 0.957] | 0.933 [0.904, 0.959] | 0.669 [0.640, 0.698] |
+| Qwen3-VL-8B, read (Glance) | 0.933 [0.911, 0.954] | 0.926 [0.893, 0.956] | 0.643 [0.614, 0.672] |
 
 ## Median seconds per answer
 
@@ -24,7 +26,9 @@
 | GPT-5.6 Luna | 1.22 s | 1.30 s | 1.10 s |
 | Gemini 3.1 Flash-Lite | 1.63 s | 1.89 s | 1.62 s |
 | Qwen3-VL-4B, written | 1.65 s | 1.87 s | 0.91 s |
+| Qwen3-VL-2B, read (Glance) | 0.66 s | 0.85 s | 0.22 s |
 | Qwen3-VL-4B, read (Glance) | 1.08 s | 1.43 s | 0.45 s |
+| Qwen3-VL-8B, read (Glance) | 2.12 s | 2.65 s | 0.64 s |
 
 ## US dollars per 1,000 answers
 
@@ -37,7 +41,9 @@
 | GPT-5.6 Luna | $0.38 | $0.40 | $0.12 |
 | Gemini 3.1 Flash-Lite | $0.31 | $0.34 | $0.33 |
 | Qwen3-VL-4B, written | $0.24 to $0.37 | $0.27 to $0.42 | $0.13 to $0.20 |
+| Qwen3-VL-2B, read (Glance) | $0.10 to $0.15 | $0.12 to $0.19 | $0.03 to $0.05 |
 | Qwen3-VL-4B, read (Glance) | $0.16 to $0.24 | $0.21 to $0.32 | $0.07 to $0.10 |
+| Qwen3-VL-8B, read (Glance) | $0.31 to $0.47 | $0.39 to $0.59 | $0.09 to $0.14 |
 
 ## What only the read row can add (rating accuracy)
 

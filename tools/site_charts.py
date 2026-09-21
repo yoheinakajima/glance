@@ -15,7 +15,7 @@ TESTS = {"yesno": "yes/no", "choice": "pick-one", "rating": "rating"}
 # display names: the model, and what is done with it ("+ Glance" = the answer is read from one forward pass; "written" = the same model generates JSON)
 LABEL = {"Qwen3-VL-4B, written": "Qwen3-VL-4B, written", "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance",
          "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}
-LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "4B written", "Qwen3-VL-4B, read (Glance)": "4B + Glance", "Qwen3-VL-2B, read (Glance)": "2B + Glance", "Qwen3-VL-8B, read (Glance)": "8B + Glance",
+LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "4B written", "Qwen3-VL-4B, read (Glance)": "4B", "Qwen3-VL-2B, read (Glance)": "2B", "Qwen3-VL-8B, read (Glance)": "8B",  # sizes: the caption says they are read with Glance
           "Claude Haiku 4.5": "H", "GPT-5.6 Luna": "L", "GPT-5 nano": "N", "Gemini 3.1 Flash-Lite": "F"}
 
 
@@ -113,7 +113,7 @@ def cost_speed(rows, w, h):
     g += big
     g.append(_t((x0 + x1) / 2, h - 6, "median seconds per answer, log scale"))
     g.append(f'<text transform="translate(11,{(y0 + y1) / 2:.0f}) rotate(-90)" text-anchor="middle" class="m-tick">US dollars per 1,000 answers, log scale</text>')
-    return f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Cost against speed for five systems; each system is three tests joined to their centre">{"".join(g)}</svg>'
+    return f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Cost against speed; each system is three tests joined to their centre">{"".join(g)}</svg>'
 
 
 def accuracy_cost(rows, w, h, tests):
@@ -121,7 +121,7 @@ def accuracy_cost(rows, w, h, tests):
     pw = (w - left - 8 - gap * (n - 1)) / n
     g = []
     for j, test in enumerate(tests):
-        lo, hi = (0.50, 0.75) if test == "rating" else (0.75, 1.00)
+        lo, hi = (0.45, 0.80) if test == "rating" else (0.75, 1.00)  # the 2B model rates at 0.49
         x0, x1, y0, y1 = left + j * (pw + gap), left + j * (pw + gap) + pw, 28, h - 40
         sx, sy = (lambda v, a=x0, b=x1: _log(v, 0.04, 30, a, b)), (lambda v, lo=lo, hi=hi: y1 + (v - lo) / (hi - lo) * (y0 - y1))
         g.append(_t(x0, 14, TESTS[test], "start", "m-head"))
