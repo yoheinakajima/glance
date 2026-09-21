@@ -275,8 +275,12 @@ def other_rubrics():
     if not d:
         return ""
     m = d["mean"]
+    e4 = (load("lab/SEMANTIC_REPORT.json") or {}).get("summary", {}).get("ens4d")
+    fitted = (f" A labeled fit does not rescue them either: with 300 labels per rubric the four-pass read reaches {e4['accuracy']:.2f} exact and {e4['within_1']:.2f} within one, where we had predicted 0.75 and 0.95. "
+              "A fit removes an offset; it cannot supply a judgement the model does not make, and the weakest rubrics are the geometric ones (tilt, how much of the subject is cut off).") if e4 else \
+        " Whether a labeled fit rescues them is a registered experiment still running."
     return (f" Nor does the pattern below extend to every rubric: on five synthetic rubrics that are not image quality (subject cut off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot read is "
-            f"exactly right on {m['json_zero']:.2f} of images and within one level on {m['json_within_1']:.2f} (chance 0.25), tilt and cut-off sit at chance, and unlabeled images do not help ({m['json_u16']:.2f}). Whether a labeled fit rescues them is a registered experiment still running.")
+            f"exactly right on {m['json_zero']:.2f} of images and within one level on {m['json_within_1']:.2f} (chance 0.25), tilt and cut-off sit at chance, and unlabeled images do not help ({m['json_u16']:.2f})." + fitted)
 
 
 def outside_item():
@@ -291,6 +295,7 @@ def outside_item():
             'A general model read this way earns its place by answering any typed question with one set of frozen weights, not by being the best quality meter.</li>')
 
 
+e4_acc = ((load("lab/SEMANTIC_REPORT.json") or {}).get("summary", {}).get("ens4d") or {}).get("accuracy", float("nan"))  # E4, lab/NOTES.md entry 36c
 _closed = [gen[k] for k in ("fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice") if k in gen]
 rw_gap = (min(abs(e["read_minus_written_points"][0]) for e in _closed), max(abs(e["read_minus_written_points"][0]) for e in _closed))
 rw_same = (min(e["same_outcome"] for e in _closed), max(e["same_outcome"] for e in _closed))
@@ -395,7 +400,7 @@ BODY = f"""
 <header>
   <p class="running">Working paper · snapshot {snapshot}, {today} · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
-  <p class="subtitle">Coarse recognition at the level of hosted models is already in a small open vision-language model, and it can be read without generating. What remains hard about ratings is where the rubric draws its lines.</p>
+  <p class="subtitle">Coarse recognition at the level of hosted models is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
   <p class="links"><a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
@@ -404,7 +409,7 @@ BODY = f"""
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
   <p class="abstract">On photographs taken after every model’s release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted models, three flagships and three low-cost ones, on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps every other). These questions are easy and the labels are imperfect: about 3 to 5% of items are answered “wrongly” by all seven systems. Reading is as accurate as the same model writing JSON.</p>
-  <p class="abstract">Ratings behave differently. Zero-shot, every system orders images correctly (the open model is within one level on {raw["within_1"]:.2f} of images) and places the level boundaries wrongly, by a constant offset per rubric; a low-cost hosted model leads ({best_rating_acc:.3f} against {jd["json_zero"]:.3f}), and an 8B model is no better than a 4B one. Because a read answer is a vector of logits, it can be fitted: 16 unlabeled images of the rubric remove most of the offset ({jd["json_u16"]:.3f}) and 32 labels reach {loc["+ Glance ens4d, 32 labels"]["mean_accuracy"]:.3f}; the hosted models were not given examples, so this is a comparison of products, not of models. On a real image-quality benchmark (KADID-10k) the approach missed every target we registered, and hand-built features remain better for low-level artefacts.</p>
+  <p class="abstract">Ratings behave differently. Zero-shot, every system orders images correctly (the open model is within one level on {raw["within_1"]:.2f} of images) and places the level boundaries wrongly, by a constant offset per rubric; a low-cost hosted model leads ({best_rating_acc:.3f} against {jd["json_zero"]:.3f}), and an 8B model is no better than a 4B one. Because a read answer is a vector of logits, it can be fitted: 16 unlabeled images of the rubric remove most of the offset ({jd["json_u16"]:.3f}) and 32 labels reach {loc["+ Glance ens4d, 32 labels"]["mean_accuracy"]:.3f}; the hosted models were not given examples, so this is a comparison of products, not of models. On a real image-quality benchmark (KADID-10k) the approach missed every target we registered, hand-built features and a small trained quality model do as well or better on low-level artefacts, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even 300 labels reach only {e4_acc:.2f}.</p>
   <p class="abstract">The open model’s cost is of the same order as the low-cost hosted models and one to two orders below the flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what is offered is the measurement, registered before it was run, with its misses.</p>
 </section>
 

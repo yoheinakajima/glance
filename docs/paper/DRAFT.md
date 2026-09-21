@@ -264,9 +264,12 @@ the synthetic scales against 0.867 for the fitted model: for low-level artefacts
 does the pattern of Section 4.1 extend to every rubric: on five synthetic rubrics that are not image quality (subject cut
 off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot one-pass read is exactly right on 0.375
 of images and within one level on 0.741 (chance 0.25; tilt and cut-off at chance), the four-pass read 0.334, and 16
-unlabeled images do not help (0.366). Whether a labeled fit rescues these rubrics is a registered experiment that was
-still running when this draft was written.
-<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/NOTES.md entries 20, 25, 28, 43b -->
+unlabeled images do not help (0.366). A labeled fit does not rescue them either: with 300 labels per rubric the
+four-pass read reaches 0.548 exact and 0.897 within one level, where we had predicted at least 0.75 and 0.95 (occlusion
+0.727, caption legibility 0.650, watermark 0.557, cut-off 0.477, tilt 0.330). A fit removes an offset; it cannot supply
+a judgement the model does not make, and the weakest rubrics are the geometric ones, in line with the drawn probes of
+Section 3.4.
+<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/SEMANTIC_REPORT.md, lab/NOTES.md entries 20, 25, 28, 36c, 43b -->
 
 ### 4.1 Order versus exact level
 
@@ -471,6 +474,7 @@ that this paper's evidence did not support.
 | A one-pass fitted read stays within 3 points of the four-pass fitted read at 32 labels | 3.1 points behind | 42b |
 | Every cheap hosted model stays within 5 points of its own flagship; cheap models score at or below their flagships on ratings | Claude Haiku 4.5 11-14 points behind Opus 5 on iNaturalist; every cheap model scored ABOVE its flagship on ratings, Flash-Lite reaching 0.763 | 45b |
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
+| Rubrics that are not image quality: the fitted four-pass read reaches at least 0.75 exact and 0.95 within one | 0.548 and 0.897 with 300 labels per rubric; tilt 0.330 (tilt worst, as predicted) | 36c |
 | The one-pass read beats the four-pass read zero-shot on KADID-10k by at least 5 points | +1.9 points (0.347 against 0.328) | 43c |
 | Interface screens: at least 0.90 on page type; one forward pass at least 10 points behind the best hosted model on one-step reasoning | page type 0.823 (every error is another page called an article); reasoning 0.910, so a 10-point gap is impossible | 49c |
 | Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |

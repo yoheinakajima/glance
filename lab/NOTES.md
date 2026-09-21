@@ -1910,3 +1910,23 @@ past runs reproduce. A question about several images is allowed under the defaul
 "the images", a wording that has NOT been measured. What this buys on the measured benchmarks, zero-shot: quality scales 0.669
 against 0.570, non-quality rubrics 0.375 against 0.334, KADID 0.347 against 0.328, at one pass instead of four. Tests: 362
 passed, 12 skipped. A real-model smoke test of the default path is queued behind the running GPU job (`default-smoke`).
+
+## 2026-09-21 05:44 Entry 36c: E4 result: a labeled fit does NOT rescue the rubrics that are not image quality (registered target missed)
+
+Five creative-QA rubrics (subject cut off by the frame, occlusion, tilt, caption legibility, watermark; four levels, exact ground
+truth from segmentation masks and drawing parameters; reviewed before any model saw them, entry 36), the four-pass read with a
+per-rubric matrix fit on the 300-image calibration split, test split scored once (`lab/SEMANTIC_REPORT.md`, no selection):
+exact 0.548, within one level 0.897, MAE 0.58 levels; per rubric: occlusion 0.727, caption legibility 0.650, watermark 0.557,
+cut-off 0.477, tilt 0.330. Zero-shot the same read scored 0.334 (one-pass 0.375, entry 43b).
+- Registered expectation (entry 20): at least 0.75 exact and at least 0.95 within one: NOT SUPPORTED (0.548 and 0.897).
+- Tilt expected worst: SUPPORTED (0.330, barely above chance even with 300 labels).
+- "The v0 readout as shipped below 0.55" cannot be scored yet: its collection covers 67 test items of one rubric; it resumes on
+  lane B after openjev. (On those 67 cut-off items the calibrated per-level statements score 0.896 against 0.477 for the fitted
+  four-pass read on the full cut-off set; partial, different items, so only a note to look at when the collection is complete.)
+Reading: on the image-quality scales 32 labels take the four-pass read from 0.57 to 0.86; here 300 labels take it from 0.33 to
+0.55. The fit removes an offset; it cannot supply a judgement the model does not make. Together with the drawn probes (entry
+50c: relative size 0.52, diagonal direction 0.30) the weak rubrics are the GEOMETRIC ones (tilt, how much of the subject is cut
+off), while the ones closer to recognition and reading (occlusion, caption legibility) do better. The page's claim that a few
+images of the rubric fix the offset is therefore scoped to the image-quality scales, and says so.
+Also today: the default path ran on the real model (`default-smoke`): `glance ask --levels` answered with method `jsondigits`
+in one forward pass with a full distribution; `glance score --method ens4d` and a yes/no still work.

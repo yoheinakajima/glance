@@ -48,7 +48,7 @@ response shapes are in `HANDOFF.md` section 5; every call is logged to `logs/cal
 | yes/no, pick-one | none | level with hosted models on photos none of them has seen (table below) |
 | rating, you need the ORDER (sort, threshold, flag the worst) | none | within one level on 0.99 of images, rank agreement 0.93 with the true level |
 | rating, you need the EXACT level of your own scale | `glance fit --unlabeled --data folder_of_your_images/` (16 or more images, no labels) | removes the model's constant offset on your rubric: 0.67 -> 0.76 exact on the image-quality scales (it did not help on rubrics that are not image quality) |
-| rating, best accuracy and calibrated probabilities | `glance fit --data labels/ --rubric rubric.json` (about 32 labeled images, folders `labels/0/`, `labels/1/`, ...) | 0.86 exact, ECE about 0.03; fits are per rubric and do not transfer |
+| rating, best accuracy and calibrated probabilities | `glance fit --data labels/ --rubric rubric.json` (about 32 labeled images, folders `labels/0/`, `labels/1/`, ...) | 0.86 exact, ECE about 0.03 on image-quality scales; fits are per rubric and do not transfer. On rubrics that are not image quality (tilt, cut-off, occlusion, caption legibility, watermark) a 300-label fit reached only 0.55 |
 
 `rubric.json` is `{"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}`. A fit changes
 nothing in the model; it writes a few hundred numbers to `calibration/ratings/`, tied to the exact rubric text and model
@@ -92,8 +92,9 @@ our own targets, hand-built features beat it on low-level artifacts when labels 
 image quality (Q-SiT-mini) is level with it under the same 32-label fit. And know where coarse recognition ends for the 4B
 model: on images drawn by program it reads look-alike words (1.00), left/right/above/below (0.94) and counts up to five
 (0.99), but it confuses the two diagonal directions (0.30), misjudges which of four shapes is largest (0.52; 0.73 even at
-twice the area) and slips at eight objects (0.56). Zero-shot ratings on rubrics that are not image quality (tilt, cut-off,
-occlusion) are poor (0.38 exact) until fitted; that fit is being measured.
+twice the area) and slips at eight objects (0.56). Ratings on rubrics that are not image quality (tilt, cut-off,
+occlusion, caption legibility, watermark) are poor zero-shot (0.38 exact) and a fit does not rescue them (0.55 exact with 300
+labels per rubric; tilt 0.33): a fit removes an offset, it cannot supply a geometric judgement the model does not make.
 
 ## What is and is not new
 
