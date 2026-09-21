@@ -2079,3 +2079,25 @@ next to the 4B rows: six hosted rows, four open ones. What the chart now shows: 
 the cheapest and fastest row on the chart (0.66 s, about $0.12 per 1,000) at 3 to 4 points less accuracy and a much weaker
 zero-shot rating read (0.49); the 8B model costs twice the time for no gain. SmolVLM2 on the insect orders failed at once because
 my environment sync this morning had removed `num2words` (its processor needs it); restored, re-queued, running; H61 pending.
+
+## 2026-09-21 08:24 Entry 59: E25, the 2B model WITHOUT Glance (writing JSON), so each open model can sit next to its own no-Glance row; registered before any output
+
+The owner asked for the headline chart to pair each open model read with Glance with the same model writing its answer. The 4B
+pair exists. For the 2B model: `glance.lab.gen_accuracy --config configs/scaling_qwen3vl_2b.yaml`, the identical JSON request and
+48-token cap as the 4B written row, on all items of the three photo sets and on the 1,000 lab rating images the hosted models saw;
+raw output text is now stored (an open local model's output, not a hosted one's). Write timings already exist from an idle GPU
+(`lab/PHOTO_TIMING_2B.json`: 1.08 s per yes/no, 0.94 s per pick-one; `lab/GENBENCH_SINGLE_2B.json`: 0.30 s per rating).
+NOT blind: that 40-image timing benchmark already showed the 2B model's written JSON failing to parse or validate on 47.5% of
+yes/no requests, 12.5% of pick-one and 65% of ratings (its raw text was not kept, so I do not know why). Two scores are therefore
+fixed now, and both will be reported:
+- STRICT, the rule every written row on the page already follows: an unparsable or invalid answer counts as wrong. This is the
+  number in the chart.
+- LENIENT, so the comparison cannot be blamed on formatting: if strict parsing fails, the answer is the first allowed answer that
+  appears in the raw text as a whole word, case-insensitive ("yes" / "no"; an option key; a digit in range); none found is wrong.
+- H62: strict, the 2B model's written answers are invalid on at least 25% of yes/no items and at least 40% of ratings; its strict
+  written accuracy is at least 20 points below its read accuracy on pooled yes/no (0.904) and below 0.35 on ratings (read 0.492).
+- H63: lenient scoring recovers yes/no and pick-one to within 3 points of the read; so the honest sentence would be "reading spares
+  a small model the formatting", not "reading makes it smarter".
+- H64: lenient, its written rating accuracy is within 5 points of its one-pass read (0.492).
+The 8B model's written row is not collected now (about two hours alone on the GPU; its 40-image benchmark had no invalid output);
+the chart will pair 2B and 4B and show the 8B model read only, and says so.
