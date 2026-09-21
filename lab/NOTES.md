@@ -1421,3 +1421,21 @@ invalid), against the raw zero-label read.
   pass.
 - Timing here was contended (second GPU job running): written p50 2.3 to 3.8 s. The clean speed comparison stays
   entry 27c.
+
+## 2026-09-20 17:58 Entry 42: E16, read the rating at the JSON answer position (one pass), registered before any code
+
+Motivation: entry 32b. Fixed now: a new readout `jsondigits`: the exact prompt of the written baseline
+(`glance.lab.gen_bench.json_prompt` for the one score question, unchanged), the assistant turn forced to start with
+`{"<name>": ` and the logits of the digit tokens 0..K-1 read at that position in ONE forward pass. No wording is tuned.
+Items: the first 200 test items and the first 100 calibration items of each lab scale (the E15 subset), so it pairs
+with the written answers, the frontier models and every model size.
+- H38: the argmax agrees with the written answer on >= 97% of items and the zero-shot exact accuracy is within 1.5
+  points of the written 0.672 (it should: greedy decoding takes the same argmax unless the model writes a quote or a
+  space first).
+- H39: `jsondigits` beats raw `ens4d` zero-shot by >= 8 points on the same items, in a quarter of the passes.
+- H40: self-calibration from 16 unlabeled images on top of `jsondigits` adds less than it adds to `ens4d` (a better
+  prompt leaves a smaller offset to remove), and lands at >= 0.70.
+- H41 (the labeled caveat): `jsondigits` + matrix with 32 labels is within 3 points of `ens4d` + matrix (0.853 on these
+  items) from one pass.
+If H38 and H39 hold, `jsondigits` becomes the zero-shot default for `score` after a check on KADID-10k and the
+creative-QA rubrics (registered when it is run), and the four-pass ensemble stays as the fitted option.
