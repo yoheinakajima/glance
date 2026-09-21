@@ -1439,3 +1439,25 @@ with the written answers, the frontier models and every model size.
   items) from one pass.
 If H38 and H39 hold, `jsondigits` becomes the zero-shot default for `score` after a check on KADID-10k and the
 creative-QA rubrics (registered when it is run), and the four-pass ensemble stays as the fitted option.
+
+## 2026-09-20 19:27 Entry 42b: E16 result: the one-pass read at the JSON answer position closes the gap to the written answer
+
+`results/lab/jsondigits.md`, same 1,000 lab images as the frontier models and the written baseline, scored once.
+- Zero-shot, ONE forward pass: 0.669 exact (written answer 0.672; raw four-pass `ens4d` 0.570). The argmax agrees with
+  the written answer on 98.2% of items; within one level 0.979; no probability mass outside the digits. So the read is
+  now as accurate as the same model writing, on every question type, in one pass, with probabilities. Those
+  probabilities are NOT calibrated zero-shot (ECE 0.248).
+- With 16 UNLABELED images of the rubric: 0.758 (`ens4d` with the same pools: 0.694). With 32 labels: 0.822 (`ens4d` +
+  matrix 0.853).
+- Verdicts: H38a (agreement >= 97%) SUPPORTED; H38b (within 1.5 points of written) SUPPORTED; H39 (beats raw `ens4d` by
+  >= 8 points) SUPPORTED (+9.9); H40a (unlabeled images add less than to `ens4d`) SUPPORTED (+8.9 against +12.4); H40b
+  (>= 0.70 with 16 unlabeled) SUPPORTED; H41 (within 3 points of `ens4d` + matrix at 32 labels) NOT SUPPORTED (3.1
+  behind): with labels the four-pass ensemble is still the better fitted option.
+- Paired with the frontier models on the same images: zero-shot +11.9 [7.8, 16.0] over Claude Opus 5, +7.2 [2.7, 11.8]
+  over GPT-5.6, level with Gemini 3.1 Pro (+1.9 [-2.5, 6.3]); with 16 unlabeled images +20.8, +16.1 and +10.8 [6.9,
+  14.6] over Gemini. JPEG is the weak scale for this prompt (0.345, the written answer's weakness too).
+- Lesson for the paper: the `ens4d` members were selected with a calibration in the loop, which forgives a constant
+  offset; that made a readout that is good to FIT and poor zero-shot. The plain JSON prompt is the better zero-shot
+  elicitation, and reading it costs one pass.
+- Not yet the harness default: as registered, it first gets a check on KADID-10k and the creative-QA rubrics (next
+  entry), and a clean timing in tonight's idle-GPU window.

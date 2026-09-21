@@ -1,0 +1,50 @@
+{
+ "mean": {
+  "written": 0.6719999999999999,
+  "json_zero": 0.669,
+  "ens_zero": 0.57,
+  "json_u16": 0.7584,
+  "ens_u16": 0.6939,
+  "json_l32": 0.8220000000000001,
+  "ens_l32": 0.85265,
+  "agree_with_written": 0.982,
+  "within_1": 0.9789999999999999,
+  "ece": 0.24758037923949033,
+  "off_mass": 4.5753822550020914e-07
+ },
+ "per_scale_zero_shot": {
+  "blur": {
+   "written": 0.755,
+   "json_zero": 0.73,
+   "ens_zero": 0.47
+  },
+  "exposure": {
+   "written": 0.81,
+   "json_zero": 0.805,
+   "ens_zero": 0.7
+  },
+  "jpeg": {
+   "written": 0.345,
+   "json_zero": 0.345,
+   "ens_zero": 0.45
+  },
+  "noise": {
+   "written": 0.7,
+   "json_zero": 0.715,
+   "ens_zero": 0.575
+  },
+  "resolution": {
+   "written": 0.75,
+   "json_zero": 0.75,
+   "ens_zero": 0.655
+  }
+ },
+ "verdicts": {
+  "H38a: argmax agrees with the written answer on >= 97% of items": true,
+  "H38b: zero-shot accuracy within 1.5 points of the written answer": true,
+  "H39: beats raw ens4d zero-shot by >= 8 points": true,
+  "H40a: 16 unlabeled images add less than they add to ens4d": true,
+  "H40b: with 16 unlabeled images it reaches >= 0.70": true,
+  "H41: with 32 labels within 3 points of ens4d + matrix": false
+ }
+}
