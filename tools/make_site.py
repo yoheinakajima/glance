@@ -269,6 +269,17 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+def older():
+    """On older public benchmarks one hosted flagship is ahead of the open model (entry 33); said next to the fresh-photo result."""
+    v0 = load("results/v0/analysis/bootstrap_v0.json")
+    if not v0:
+        return ""
+    g = v0["mean gap, yes/no and choice suites only (no blur_ladder)"]
+    return (f"On four older public benchmarks (POPE, a GQA yes/no subset, Oxford Pets, Caltech-101), which may sit in every model’s training data, the one hosted flagship we ran, Claude Opus 5, "
+            f"is ahead of the open model by {g['points']:.1f} points on average [{g['ci95'][0]:.1f}, {g['ci95'][1]:.1f}]. On photographs no model can have seen that gap is not there, "
+            "so the fresh-photo result is not a contamination effect in the open model’s favour. Why the gap appears only on the older sets is not established: contamination in the hosted model’s favour and harder items are both possible.")
+
+
 def other_rubrics():
     """Zero-shot on the five rubrics that are not image quality (entry 43b); stated next to the scope so the section's title is not read as a claim about rubrics in general."""
     d = (load("results/lab/jsondigits_hard.json") or {}).get("benches", {}).get("creative-QA rubrics")
@@ -279,8 +290,18 @@ def other_rubrics():
     fitted = (f" A labeled fit does not rescue them either: with 300 labels per rubric the four-pass read reaches {e4['accuracy']:.2f} exact and {e4['within_1']:.2f} within one, where we had predicted 0.75 and 0.95. "
               "A fit removes an offset; it cannot supply a judgement the model does not make, and the weakest rubrics are the geometric ones (tilt, how much of the subject is cut off).") if e4 else \
         " Whether a labeled fit rescues them is a registered experiment still running."
-    return (f"\n  <p><b>Rubrics that are not image quality.</b> The pattern below does not extend to every rubric. On five synthetic rubrics that are not image quality (subject cut off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot read is "
+    return (f"\n  <p><b>Rubrics that are not image quality.</b> The pattern of this section does not extend to every rubric. On five synthetic rubrics that are not image quality (subject cut off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot read is "
             f"exactly right on {m['json_zero']:.2f} of images and within one level on {m['json_within_1']:.2f} (chance 0.25), tilt and cut-off sit at chance, and unlabeled images do not help ({m['json_u16']:.2f})." + fitted + "</p>")
+
+
+def outside_sentence():
+    """One sentence on the trained quality model (entry 37c), for section 5.1; the ledger item in the limits section has the detail."""
+    d = load("results/lab/external_same_items.json") or {}
+    q = next((e for name, e in d.items() if name.startswith("q-sit-mini")), None)
+    if not q:
+        return ""
+    a, b = q["32_labels"]["outside"], q["32_labels"]["ens4d"]
+    return f" A 0.9B model trained for image quality (Q-SiT-mini; Zhang, Wu, Jia, Lin and Zhai 2025), given the same 32-label fit on the same items, scores {a[0]:.3f} against {b[0]:.3f} for the 4B model: indistinguishable, at a quarter of the size."
 
 
 def outside_item():
@@ -295,6 +316,8 @@ def outside_item():
             'A general model read this way earns its place by answering any typed question with one set of frozen weights, not by being the best quality meter.</li>')
 
 
+_kadid = ((load("results/lab/jsondigits_hard.json") or {}).get("benches", {}).get("KADID-10k (23 severity distortions)") or {}).get("mean", {})
+kadid_json, kadid_ens = _kadid.get("json_zero", float("nan")), _kadid.get("ens_zero", float("nan"))  # E17, lab/NOTES.md entry 43c
 e4_acc = ((load("lab/SEMANTIC_REPORT.json") or {}).get("summary", {}).get("ens4d") or {}).get("accuracy", float("nan"))  # E4, lab/NOTES.md entry 36c
 _closed = [gen[k] for k in ("fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice") if k in gen]
 rw_gap = (min(abs(e["read_minus_written_points"][0]) for e in _closed), max(abs(e["read_minus_written_points"][0]) for e in _closed))
@@ -387,7 +410,7 @@ def ui_text():
 
 finer_block = finer()
 beyond_block = beyond()
-beyond_section = f"  <h3>2.3 Where coarse recognition ends: drawn probes and interface screens</h3>\n  {beyond_text()}\n  {beyond_block}" if beyond_block else ""
+beyond_section = (f'<section aria-labelledby="stops">\n  <h2 id="stops"><span class="num">3</span>Where coarse recognition ends: geometry, not reading</h2>\n  {beyond_text()}\n  {beyond_block}\n</section>\n') if beyond_block else ""
 t0 = 5 if beyond_block else 4  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
@@ -402,7 +425,7 @@ BODY = f"""
   <h1>Glance</h1>
   <p class="subtitle">Coarse recognition at the level of hosted models is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+  <p class="links"><a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
 
 <section aria-labelledby="abstract">
@@ -426,7 +449,7 @@ BODY = f"""
     <dd><code>"answer": How … is the image? Allowed: 0 = …; 1 = …; (answer with the number)</code>, with the assistant turn forced to begin <code>{{"answer": </code><br>Read: the logits of the digits 0 to K−1 at the next position; a softmax; the score is the expected level. One pass.</dd>
   </dl>
   <p class="caption"><b>Table 1.</b> The three readouts. Images are resized to at most 768 visual tokens (28-pixel patches), which sets most of the latency. Several questions about one image reuse its key-value prefix and branch into independent suffixes, so they cannot influence each other; on 100 checked requests this changed no prediction. “Zero-shot” below means these raw probabilities, with nothing fitted.</p>
-  <p>Two fits are possible because the answer is a logit vector. <em>Without labels</em>: over a small pool of unlabeled images of the rubric, each level logit is centred and scaled by the pool’s mean and standard deviation before the softmax. This assumes the model’s ordering is right and removes a constant offset; it cannot move boundaries it has no evidence for. <em>With labels</em>: an affine map of the logits before the softmax (matrix scaling, Guo et al. 2017), L2-regularised, with its sharpness chosen on held-out folds; about 32 labels suffice. A research variant fits the same map on the model’s final hidden state (a linear probe). An earlier four-pass rating readout of ours (digits in both orders, with and without a magnified crop) is the better input for the labeled fit and is worse zero-shot; section 4 reports both.</p>
+  <p>Two fits are possible because the answer is a logit vector. <em>Without labels</em>: over a small pool of unlabeled images of the rubric, each level logit is centred and scaled by the pool’s mean and standard deviation before the softmax. This assumes the model’s ordering is right and removes a constant offset; it cannot move boundaries it has no evidence for. <em>With labels</em>: an affine map of the logits before the softmax (matrix scaling, Guo et al. 2017), L2-regularised, with its sharpness chosen on held-out folds; about 32 labels suffice. A research variant fits the same map on the model’s final hidden state (a linear probe). An earlier four-pass rating readout of ours (digits in both orders, with and without a magnified crop) is the better input for the labeled fit and is worse zero-shot; section 5 reports both.</p>
 <pre><code>decisive: a bold jumping spider, iNaturalist 402011619 (CC BY, antimatterbee)
   "Is the main subject a spider or other arachnid?"   P(yes) = 1.00     correct
   "What kind of organism is it?"  (10 options)        arachnid 1.00     correct
@@ -440,7 +463,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 
 <section aria-labelledby="evidence">
   <h2 id="evidence"><span class="num">2</span>On coarse yes/no and pick-one questions, a 4B open model is indistinguishable from hosted models</h2>
-  <p>The same items went to the open 4B model (read, and also writing its answer as JSON), to three hosted flagships and to each provider’s lowest-cost current vision model. Three tests, all zero-shot: {lower_keep(matrix["tests"]["yesno"])}; {lower_keep(matrix["tests"]["choice"])}; {lower_keep(matrix["tests"]["rating"])} (ratings are the subject of section 4).</p>
+  <p>The same items went to the open 4B model (read, and also writing its answer as JSON), to three hosted flagships and to each provider’s lowest-cost current vision model. Three tests, all zero-shot: {lower_keep(matrix["tests"]["yesno"])}; {lower_keep(matrix["tests"]["choice"])}; {lower_keep(matrix["tests"]["rating"])} (ratings are the subject of section 5).</p>
   <figure>{fig_bars}<figcaption><b>Figure 1.</b> Accuracy, seconds and dollars for every system, by question type, on scales that start at zero, on the items every system answered (Table 2 gives the counts). Dark bars are the open 4B model.{" An outlined bar is an estimated cost; an estimate beyond the measured range is cut short and marked ›." if has_est else ""}</figcaption></figure>
   <p>On yes/no and pick-one every 95% interval overlaps every other, so the defensible statement is “indistinguishable at this sample size”, not “equal”. Two cautions apply. The questions are coarse (is there a bridge; which of thirteen everyday things is this), so they measure a floor that all current systems clear. And the labels are not gold: {noise_n("fresh_yesno")} of 131 yes/no items and {noise_n("fresh_choice")} of 65 pick-one items are answered “wrongly” by all seven systems, which is more likely a wrong or ambiguous label than seven identical mistakes (a proxy; no human audit was done). On ratings there is no single best system.</p>
   {matrix_tables(ALL)}
@@ -450,17 +473,15 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   {fresh_table()}
   <p class="caption"><b>Table 3.</b> The open model on all items of each photo set, hosted models on the test half; 95% bootstrap intervals, uncalibrated decisions, nothing fitted. {apart()}</p>
   <figure>{fig1}<figcaption><b>Figure 2.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
+  <p>{older()}</p>
 
   <h3>2.2 A finer test</h3>
   {finer_block}
-{beyond_section}
-  <h3>{"2.4" if beyond_section else "2.3"} The same numbers in one plane</h3>
-  <figure>{fig_acc_cost}<figcaption><b>Figure 3.</b> Accuracy against cost, one panel per question type, 95% intervals. Open model: read (circle) and written (square). Hosted models: {site_charts.hosted_key(mrows)}.</figcaption></figure>
-  <figure>{fig_cost_speed}<figcaption><b>Figure 4.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per question type: {site_charts.KEY}. Filled marks are the open 4B model.</figcaption></figure>
 </section>
 
+{beyond_section}
 <section aria-labelledby="read">
-  <h2 id="read"><span class="num">3</span>Reading is as accurate as writing, and gives the same answer when the prompt is the same</h2>
+  <h2 id="read"><span class="num">4</span>Reading is as accurate as writing, and gives the same answer when the prompt is the same</h2>
   <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree. On yes/no and pick-one the accuracy is the same on both photo sets (differences of {rw_gap[0]:.1f} to {rw_gap[1]:.1f} points, every interval spanning zero; Table 3), and each item comes out the same way, right or wrong, on {rw_same[0]:.1%} to {rw_same[1]:.1%} of items; the few that differ reflect the prompts, which are not the same (a JSON request against one statement per option). On ratings, where the digits can be read at the very position where the written answer puts them, {jd["agree_with_written"]:.0%} of answers are identical: a written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
   <p>They stop agreeing when the prompts differ. Our earlier four-pass rating readout uses different wording from the JSON prompt and scores {100 * (written - jd["ens_zero"]):.0f} points lower zero-shot. And when one written JSON object carries 25 ratings, each field is conditioned on the fields already written, while 25 separate reads are independent: the two agree on only {genb["25 ratings"]["agreement_with_read_on_valid_fields"]:.0%} of fields (that request has no ground truth, so this is a difference, not an error rate). Reading is therefore not a free substitute for any prompt; it is a way to take the same decision without generating it.</p>
   <p>What reading changes is cost and form: about 1.5 times faster for one question about a full-size photograph (encoding the image dominates), 2 to 3 times on small images, more as questions per image grow; and the answer is a probability vector, which can be thresholded, ranked and fitted.</p>
@@ -469,38 +490,43 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 </section>
 
 <section aria-labelledby="ratings">
-  <h2 id="ratings"><span class="num">4</span>Ratings: models get the order right and the boundaries wrong; a few images of the rubric fix the offset</h2>
-  <p><b>Scope.</b> “Ratings” here means five synthetic, single-factor, four-level image-quality scales (blur, exposure, JPEG, noise, resolution), 1,000 held-out images, the same for every system. It does not mean aesthetic judgement. On a real image-quality benchmark, KADID-10k (23 distortion types, five levels, human scores), the fitted open model reached 0.527 exact against registered targets it missed in full, and 0.33 zero-shot; with plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model. For low-level artefacts, features remain the better tool.</p>{other_rubrics()}
+  <h2 id="ratings"><span class="num">5</span>Ratings: models get the order right and the boundaries wrong; a few images of the rubric fix the offset</h2>
+  <p><b>Scope.</b> “Ratings” in this section means five synthetic, single-factor, four-level image-quality scales (blur, exposure, JPEG, noise, resolution) on 1,000 held-out images, the same for every system; it does not mean aesthetic judgement. The pattern in the title holds on these scales and does not hold outside them: section 5.1 has KADID-10k, rubrics that are not image quality, and the specialised tools that do as well or better.</p>
   <p><b>Order against boundaries.</b> Zero-shot the open model is exactly right on {raw["accuracy"]:.2f} of images and within one level on {raw["within_1"]:.3f}; 97% of its errors are one step, in a direction that is constant per rubric (half a level harsh on blur, never the worst level on JPEG). The hosted models score {hosted_rating[0]:.2f} to {hosted_rating[-1]:.2f}; each provider’s low-cost model beats its own flagship, and {best_rating} leads. Where a rubric’s author drew the lines is a convention that no model can know unseen.</p>
-  <figure>{fig2}<figcaption><b>Figure 5.</b> Exact-level accuracy on the same 1,000 images, chance 0.25. Upper group: zero-shot. Lower group: the open model after seeing images of the rubric, first unlabeled (zero labels, but not zero-shot), then 32 labeled.</figcaption></figure>
+  <figure>{fig2}<figcaption><b>Figure 3.</b> Exact-level accuracy on the same 1,000 images, chance 0.25. Upper group: zero-shot. Lower group: the open model after seeing images of the rubric, first unlabeled (zero labels, but not zero-shot), then 32 labeled.</figcaption></figure>
   <p><b>Fitting the offset.</b> The two fits of section 1 act on this offset. The comparison is asymmetric by design: the hosted models stayed zero-shot, because a written pick offers nothing to fit and we did not give them few-shot examples. It shows what a local, fittable readout buys a user; it does not show that the open model sees better.</p>
   {extras_table()}
   <p class="caption"><b>Table {t0 + 2}.</b> Exact-level accuracy on the rating test of Table 2 (the last row uses the full test split and is a research result, not shipped). Unlabeled fitting roughly halves the calibration error (ECE 0.33 to about 0.2); only the labeled fit gives calibrated probabilities (ECE about 0.03).</p>
+  <h3>5.1 Outside the quality scales</h3>
+  <p><b>A real image-quality benchmark.</b> On KADID-10k (23 distortion types, five levels, human scores) the fitted open model reached 0.527 exact and missed every target we had registered. Zero-shot it is at {kadid_json:.2f} with the one-pass read and {kadid_ens:.2f} with the four-pass read; that check, together with the rubrics below, is what made the one-pass read the default for a rubric with nothing fitted, by a rule fixed in advance; the gain on KADID-10k was {100 * (kadid_json - kadid_ens):.1f} points where we had predicted at least five.</p>
+  <p><b>Specialised tools.</b> With plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model.{outside_sentence()} For low-level artefacts these remain the better tools; a general model read this way earns its place by answering any typed question with one set of frozen weights.</p>{other_rubrics()}
 </section>
 
 <section aria-labelledby="models">
-  <h2 id="models"><span class="num">5</span>Scale and family: zero-shot quality belongs to the model, and size does not buy boundary knowledge</h2>
+  <h2 id="models"><span class="num">6</span>Scale and family: zero-shot quality belongs to the model, and size does not buy boundary knowledge</h2>
   <p>The same prompts and readouts, not a word changed, on other sizes of the same family and on a model from a different family (different vision tower, different language model).</p>
   {closed_set_table()}
-  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the two fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family accuracy is flat from 2B upward, except the 13-way pick-one where the 2B model trails. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in Section 2 is a statement about this family, not about every small open model.</p>
+  <p class="caption"><b>Table {t0 + 3}.</b> Yes/no and pick-one on the two fresh photo sets, all items, uncalibrated. Within the Qwen3-VL family accuracy is flat from 2B upward, except the 13-way pick-one where the 2B model trails. The 2.2B model of another family is level with them on everyday photographs and trails on nature photographs (5 points on yes/no, 12 on pick-one), so the comparison with hosted models in section 2 is a statement about this family, not about every small open model.</p>
   {models_table()}
   <p class="caption"><b>Table {t0 + 4}.</b> Ratings, the same 1,000 images: exact-level accuracy. From 2B to 4B zero-shot accuracy rises sharply; from 4B to 8B it does not rise at all, and after 32 labels the three sizes are within 1.4 points. We had predicted a monotone rise and were wrong. “Within one” is for the four-pass read.</p>
 </section>
 
 <section aria-labelledby="cost">
-  <h2 id="cost"><span class="num">6</span>Cost and speed: same order as the low-cost hosted models, one to two orders below the flagships</h2>
+  <h2 id="cost"><span class="num">7</span>Cost and speed: same order as the low-cost hosted models, one to two orders below the flagships</h2>
   <p>The two sides of this comparison are not measured the same way, and the caveats come first. Hosted cost is the provider’s bill per call and includes nothing for an operator; hosted latency is wall time from one laptop and includes the network and the provider’s queue. Open-model cost is measured seconds on a laptop multiplied by an on-demand cloud GPU price, with no batching, no idle time and no operator counted; a different GPU price or image resolution moves it by more than the gap to the low-cost hosted models. Hosted cost also depends on image size (GPT-5.6: $7.55 per 1,000 on 1,280-pixel files, $1.86 on 500-pixel files).</p>
   <p>With that said: a yes/no about a full-size photograph takes the open 4B model {own["seconds"]["yesno"]["value"]:.1f} s on a laptop and costs ${own["usd_per_1000"]["yesno"]["value"][0]:.2f} to ${own["usd_per_1000"]["yesno"]["value"][1]:.2f} per 1,000 on a rented GPU; the low-cost hosted models cost ${cheap_yesno[0]:.2f} and up, the flagships several dollars. The durable differences are not the cents: the image never leaves the machine, there is no per-call bill, it works offline, and the answer can be fitted.</p>
+  <figure>{fig_acc_cost}<figcaption><b>Figure 4.</b> Accuracy against cost, one panel per question type, 95% intervals. Open model: read (circle) and written (square). Hosted models: {site_charts.hosted_key(mrows)}.</figcaption></figure>
+  <figure>{fig_cost_speed}<figcaption><b>Figure 5.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per question type: {site_charts.KEY}. Filled marks are the open 4B model.</figcaption></figure>
 </section>
 
 <section aria-labelledby="new">
-  <h2 id="new"><span class="num">7</span>What is not new, and the work this sits in</h2>
+  <h2 id="new"><span class="num">8</span>What is not new, and the work this sits in</h2>
   <p>Reading answer-token logits from a frozen generative model, with several questions sharing one image prefix, is what Simple Jev, jev-visual and LitJev also do. For yes/no and pick-one the forward pass here is not new, and the accuracy belongs to the open model. What this project adds is a harness on top: a fresh-photograph comparison with paid frontier calls, the same model writing against reading, self-calibration from unlabeled images and labeled fitting for rating levels (<code>glance fit</code>), and measured dollars and milliseconds. It trains no weights, unlike YOFO (Zhang et al. 2025), Laya Vision or OpenJev v2.</p>
   <p>The pieces are older than any of these tools. Scoring a closed set of candidate answers instead of generating is standard for language models (Kadavath et al. 2022) and its option-letter pitfalls are known (Zheng et al. 2024); VQAScore reads P(“Yes”) from a VQA model in one pass (Lin et al. 2024); a rubric score as a probability-weighted sum over rating tokens is G-Eval (Liu et al. 2023); level-token readouts for image quality are Q-Bench and Q-Align (Wu et al. 2024a, b), and frozen-CLIP quality scores are CLIP-IQA (Wang et al. 2023); the fits are matrix scaling and its relatives (Guo et al. 2017; Kull et al. 2019); the hidden-state variant is a linear probe (Alain and Bengio 2016); sharing an image prefix across questions is prefix caching (vLLM). Our additions are the contamination-controlled comparison, the read-against-write control, the unlabeled fit for ratings with the failed content-free prior as its contrast, and the registered misses.</p>
 </section>
 
 <section aria-labelledby="limits">
-  <h2 id="limits"><span class="num">8</span>Limits and misses</h2>
+  <h2 id="limits"><span class="num">9</span>Limits and misses</h2>
   <ul class="misses">
     <li><span class="verdict miss">not supported</span> A content-free prior (blank and noise images) was expected to help zero-shot ratings. It took exact accuracy from {nullp["table"]["raw zero-shot"]["accuracy"]:.3f} to {nullp["table"]["content-free prior, all six null images (registered)"]["accuracy"]:.3f}: for an image rubric there is no content-free image.</li>
     <li><span class="verdict miss">not supported</span> Our four-pass rating readout was expected to match the same model’s written answer zero-shot. It trailed it by ten points: a readout selected with a calibration in the loop is good to fit and poor zero-shot. <span class="verdict">supported</span> The registered fix, one pass read at the JSON answer position, matches the written answer ({jd["json_zero"]:.3f}) and reaches {jd["json_u16"]:.3f} with 16 unlabeled images.</li>
@@ -513,16 +539,17 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 </section>
 
 <section aria-labelledby="reproduce">
-  <h2 id="reproduce"><span class="num">9</span>Reproduce</h2>
+  <h2 id="reproduce"><span class="num">10</span>Reproduce</h2>
 <pre><code>uv sync &amp;&amp; uv run glance doctor
 uv run python tools/fetch_fresh_inat.py          # 200 photographs, about ten API calls
 uv run glance eval --suite inat_choice --suite inat_yesno --model vlm
-uv run python tools/make_results_zeroshot.py     # every table on this page</code></pre>
+uv run python tools/make_results_zeroshot.py     # every table on this page
+uv run glance --model-id &lt;any Hugging Face image-text model&gt; --revision &lt;commit&gt; ask photo.jpg "Is there a dog?"   # checked on SmolVLM2-2.2B only</code></pre>
   <p>The lab notebook records each hypothesis before its experiment, each verdict after, and its errata. Frontier model outputs are never stored; only whether each answer was right.</p>
 </section>
 
 <section aria-labelledby="refs">
-  <h2 id="refs"><span class="num">10</span>References</h2>
+  <h2 id="refs"><span class="num">11</span>References</h2>
   {refs_html()}
 </section>
 

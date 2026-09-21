@@ -61,22 +61,53 @@ def _small(test, x, y, cls):
     return f'<polygon points="{x:.1f},{y - 3.4:.1f} {x + 3.2:.1f},{y + 2.4:.1f} {x - 3.2:.1f},{y + 2.4:.1f}" class="{cls}"/>'
 
 
+class _Placer:
+    """Greedy label placement: marks are registered first, then each label takes the first of eight positions around its mark that
+    touches no mark and no earlier label and stays inside the plot. Labels of the open model are placed first by the callers."""
+
+    def __init__(self, x0, x1, y0, y1):
+        self.bounds, self.boxes = (x0, x1, y0, y1), []
+
+    def block(self, x, y, r):
+        self.boxes.append((x - r, y - r, x + r, y + r))
+
+    def place(self, x, y, text, r=7.0, char=6.3):
+        w, best, best_cost = len(text) * char, None, None
+        around = lambda d: ((x + d + 6, y + 4, "start"), (x - d - 6, y + 4, "end"), (x, y - d - 6, "middle"), (x, y + d + 14, "middle"),  # noqa: E731
+                            (x + d + 3, y - d - 3, "start"), (x + d + 3, y + d + 11, "start"), (x - d - 3, y - d - 3, "end"), (x - d - 3, y + d + 11, "end"))
+        for tx, ty, anchor in around(r) + around(r + 12):  # close positions first, then a ring further out
+            left = tx if anchor == "start" else tx - w if anchor == "end" else tx - w / 2
+            box = (left, ty - 10, left + w, ty + 3)
+            outside = max(0.0, self.bounds[0] - 2 - box[0]) + max(0.0, box[2] - self.bounds[1] - 12) + max(0.0, self.bounds[2] - 14 - box[1]) + max(0.0, box[3] - self.bounds[3] - 2)
+            overlap = sum(max(0.0, min(box[2], b[2]) - max(box[0], b[0])) * max(0.0, min(box[3], b[3]) - max(box[1], b[1])) for b in self.boxes)
+            cost = overlap + 40 * outside
+            if best is None or cost < best_cost - 1e-9:
+                best, best_cost = (tx, ty, anchor, box), cost
+            if cost == 0:
+                break
+        self.boxes.append(best[3])
+        return best[:3]
+
 def cost_speed(rows, w, h):
     x0, x1, y0, y1 = 50, w - 14, 12, h - 40
     sx, sy = (lambda v: _log(v, 0.25, 6, x0, x1)), (lambda v: _log(v, 0.04, 30, y1, y0))
     g = [f'<line x1="{sx(v):.1f}" x2="{sx(v):.1f}" y1="{y0}" y2="{y1}" class="m-grid"/>' + _t(sx(v), y1 + 16, f"{v:g} s") for v in (0.3, 1, 3)]
     g += [f'<line x1="{x0}" x2="{x1}" y1="{sy(v):.1f}" y2="{sy(v):.1f}" class="m-grid"/>' + _t(x0 - 7, sy(v) + 4, _money(v), "end") for v in (0.1, 1, 10)]
-    big = []
+    big, centres, placer = [], {}, _Placer(x0, x1, y0, y1)
     for name in dict.fromkeys(r["name"] for r in rows):
         mine = [r for r in rows if r["name"] == name]
         cx = sx(math.exp(statistics.mean(math.log(r["sec"]) for r in mine)))
         cy = sy(math.exp(statistics.mean(math.log(r["usd"]) for r in mine)))
+        centres[name] = (cx, cy, mine[0]["open"])
+        placer.block(cx, cy, 8)
+        for r in mine:
+            placer.block(sx(r["sec"]), sy(r["usd"]), 4)
         g += [f'<line x1="{cx:.1f}" y1="{cy:.1f}" x2="{sx(r["sec"]):.1f}" y2="{sy(r["usd"]):.1f}" class="m-spoke"/>' for r in mine]
         g += [_small(r["test"], sx(r["sec"]), sy(r["usd"]), "m-s-prov" if r["prov"] else ("m-s-own" if r["open"] else "m-s-host")) for r in mine]
-        left = cx > x0 + 0.72 * (x1 - x0)
-        big.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="7" class="{"m-own" if mine[0]["open"] else "m-host"}"/>'
-                   + (_t(cx + 6, cy - 13, LABEL.get(name, name), "end", "m-lab m-strong" if mine[0]["open"] else "m-lab") if left  # above the mark: its own small marks sit beside it
-                      else _t(cx + 13, cy + 4, LABEL.get(name, name), "start", "m-lab m-strong" if mine[0]["open"] else "m-lab")))
+        big.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="7" class="{"m-own" if mine[0]["open"] else "m-host"}"/>')
+    for name, (cx, cy, is_open) in sorted(centres.items(), key=lambda kv: not kv[1][2]):  # the open model's labels first
+        tx, ty, anchor = placer.place(cx, cy, LABEL.get(name, name), char=7.0 if is_open else 6.3)
+        big.append(_t(tx, ty, LABEL.get(name, name), anchor, "m-lab m-strong" if is_open else "m-lab"))
     g += big
     g.append(_t((x0 + x1) / 2, h - 6, "median seconds per answer, log scale"))
     g.append(f'<text transform="translate(11,{(y0 + y1) / 2:.0f}) rotate(-90)" text-anchor="middle" class="m-tick">US dollars per 1,000 answers, log scale</text>')
@@ -96,12 +127,19 @@ def accuracy_cost(rows, w, h, tests):
             v = lo + (hi - lo) * k / 2
             g.append(f'<line x1="{x0:.1f}" x2="{x1:.1f}" y1="{sy(v):.1f}" y2="{sy(v):.1f}" class="m-grid"/>' + _t(x0 - 6, sy(v) + 4, f"{v:.2f}", "end"))
         g += [f'<line x1="{sx(v):.1f}" x2="{sx(v):.1f}" y1="{y0}" y2="{y1}" class="m-grid"/>' + _t(sx(v), y1 + 16, _money(v)) for v in (0.1, 1, 10)]
-        for r in [r for r in rows if r["test"] == test]:
+        panel, placer = [r for r in rows if r["test"] == test], _Placer(x0, x1, y0, y1)
+        for r in panel:
+            placer.block(sx(r["usd"]), sy(r["acc"]), 6)
+            placer.boxes.append((sx(r["usd"]) - 1.5, sy(min(r["ci"][1], hi)), sx(r["usd"]) + 1.5, sy(max(r["ci"][0], lo))))  # the interval line: keep letters off it
+        for r in panel:
             x, y = sx(r["usd"]), sy(r["acc"])
             g.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{sy(max(r["ci"][0], lo)):.1f}" y2="{sy(min(r["ci"][1], hi)):.1f}" class="m-whisk"/>')
             cls = "m-prov" if r["prov"] else ("m-own" if r["open"] else "m-host")
             g.append(f'<rect x="{x - 4.5:.1f}" y="{y - 4.5:.1f}" width="9" height="9" class="{cls}"/>' if r["written"] else f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" class="{cls}"/>')
-            g.append(_t(x + 9, y + 4, LETTER.get(r["name"], r["name"][:1]), "start", "m-lab m-strong" if r["open"] else "m-lab"))
+        for r in sorted(panel, key=lambda r: not r["open"]):  # the open model's labels first
+            text = LETTER.get(r["name"], r["name"][:1])
+            tx, ty, anchor = placer.place(sx(r["usd"]), sy(r["acc"]), text, r=5.0, char=7.0 if r["open"] else 6.3)
+            g.append(_t(tx, ty, text, anchor, "m-lab m-strong" if r["open"] else "m-lab"))
     g.append(_t((left + w - 8) / 2, h - 6, "US dollars per 1,000 answers, log scale; vertical axis is accuracy"))
     return f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Accuracy against cost, {", ".join(TESTS[t] for t in tests)}">{"".join(g)}</svg>'
 
