@@ -4,7 +4,63 @@
   "l2": 0.05,
   "ens4d_accuracy": 0.867,
   "flip_sign_qsit": true,
-  "openjev": null,
+  "openjev": {
+    "per_scale": {
+      "blur": {
+        "n_fit": 300,
+        "n_test": 300,
+        "uncalibrated_accuracy": 0.42333333333333334,
+        "accuracy": 0.8366666666666667,
+        "within_1": 1.0,
+        "mae": 0.22792713915936574,
+        "median_ms": 5443.0672290036455
+      },
+      "noise": {
+        "n_fit": 300,
+        "n_test": 300,
+        "uncalibrated_accuracy": 0.49333333333333335,
+        "accuracy": 0.75,
+        "within_1": 0.9933333333333333,
+        "mae": 0.32699656930642523,
+        "median_ms": 6271.1733125615865
+      },
+      "jpeg": {
+        "n_fit": 300,
+        "n_test": 300,
+        "uncalibrated_accuracy": 0.39,
+        "accuracy": 0.6533333333333333,
+        "within_1": 0.9533333333333334,
+        "mae": 0.4363094638869714,
+        "median_ms": 5123.378271004185
+      },
+      "exposure": {
+        "n_fit": 300,
+        "n_test": 300,
+        "uncalibrated_accuracy": 0.38666666666666666,
+        "accuracy": 0.8766666666666667,
+        "within_1": 0.9966666666666667,
+        "mae": 0.1587460140042108,
+        "median_ms": 4969.335145899095
+      },
+      "resolution": {
+        "n_fit": 300,
+        "n_test": 300,
+        "uncalibrated_accuracy": 0.36666666666666664,
+        "accuracy": 0.7433333333333333,
+        "within_1": 0.99,
+        "mae": 0.3227187382092105,
+        "median_ms": 5345.72687454056
+      }
+    },
+    "summary": {
+      "scales": 5,
+      "mean_uncalibrated_accuracy": 0.41200000000000003,
+      "mean_accuracy": 0.772,
+      "mean_within_1": 0.9866666666666666,
+      "mean_mae": 0.29453958491323673,
+      "median_ms": 5296.782749937847
+    }
+  },
   "qsit": {
     "per_scale": {
       "blur": {
@@ -50,7 +106,14 @@
       "median_ms": 2207.8864795621485
     }
   },
-  "h31": null,
+  "h31": {
+    "supported": true,
+    "conditions": {
+      "uncalibrated mean accuracy < 0.60 (got 0.412)": true,
+      "calibrated - uncalibrated >= 0.10 points (got +0.360)": true,
+      "calibrated mean accuracy < ens4d 0.867 (got 0.772)": true
+    }
+  },
   "h32": {
     "supported": false,
     "conditions": {

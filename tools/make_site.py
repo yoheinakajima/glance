@@ -301,7 +301,19 @@ def outside_sentence():
     if not q:
         return ""
     a, b = q["32_labels"]["outside"], q["32_labels"]["ens4d"]
-    return f" A 0.9B model trained for image quality (Q-SiT-mini; Zhang, Wu, Jia, Lin and Zhai 2025), given the same 32-label fit on the same items, scores {a[0]:.3f} against {b[0]:.3f} for the 4B model: indistinguishable, at a quarter of the size."
+    out = f" A 0.9B model trained for image quality (Q-SiT-mini; Zhang, Wu, Jia, Lin and Zhai 2025), given the same 32-label fit on the same items, scores {a[0]:.3f} against {b[0]:.3f} for the 4B model: indistinguishable, at a quarter of the size."
+    return out
+
+
+def openjev_sentence():
+    """The second outside system (entry 37e): a trained general claim scorer, behind under the same fit; its own gain from the fit is the point."""
+    o = next((e for name, e in (load("results/lab/external_same_items.json") or {}).items() if name.startswith("openjev")), None)
+    raw = (((load("results/lab/external_systems.json") or {}).get("openjev") or {}).get("summary") or {}).get("mean_uncalibrated_accuracy")
+    if not o or raw is None:
+        return ""
+    g = o["32_labels"]["outside_minus_ens4d_points"]
+    return (f" The other outside system we ran, a 4B open model trained to score claims (openjev v2), is {abs(g[0]):.1f} points behind the 4B model under the same 32-label fit [{abs(g[2]):.1f}, {abs(g[1]):.1f}]; "
+            f"on its own it scores {raw:.2f} and with our fit {o['32_labels']['outside'][0]:.2f}, so the fit is a part that transfers to another system’s readout.")
 
 
 def outside_item():
@@ -499,7 +511,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <p class="caption"><b>Table {t0 + 2}.</b> Exact-level accuracy on the rating test of Table 2 (the last row uses the full test split and is a research result, not shipped). Unlabeled fitting roughly halves the calibration error (ECE 0.33 to about 0.2); only the labeled fit gives calibrated probabilities (ECE about 0.03).</p>
   <h3>5.1 Outside the quality scales</h3>
   <p><b>A real image-quality benchmark.</b> On KADID-10k (23 distortion types, five levels, human scores) the fitted open model reached 0.527 exact and missed every target we had registered. Zero-shot it is at {kadid_json:.2f} with the one-pass read and {kadid_ens:.2f} with the four-pass read; that check, together with the rubrics below, is what made the one-pass read the default for a rubric with nothing fitted, by a rule fixed in advance; the gain on KADID-10k was {100 * (kadid_json - kadid_ens):.1f} points where we had predicted at least five.</p>
-  <p><b>Specialised tools.</b> With plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model.{outside_sentence()} For low-level artefacts these remain the better tools; a general model read this way earns its place by answering any typed question with one set of frozen weights.</p>{other_rubrics()}
+  <p><b>Specialised tools.</b> With plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model.{outside_sentence()} For low-level artefacts these remain the better tools; a general model read this way earns its place by answering any typed question with one set of frozen weights.{openjev_sentence()}</p>{other_rubrics()}
 </section>
 
 <section aria-labelledby="models">

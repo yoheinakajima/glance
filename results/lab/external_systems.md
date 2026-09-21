@@ -5,7 +5,20 @@ Calibration: `glance.rating.fit_matrix`/`apply_matrix`, fit on the calibration s
 
 ## 1. OpenJevV2 (`AlexWortega/openjev`, v2 4B)
 
-not collected yet (`lab/runs/external_openjev.jsonl` has no rows)
+| Scale | n fit | n test | uncalibrated accuracy | calibrated accuracy | within 1 | MAE | median ms |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| blur | 300 | 300 | 0.423 | 0.837 | 1.000 | 0.228 | 5443 |
+| noise | 300 | 300 | 0.493 | 0.750 | 0.993 | 0.327 | 6271 |
+| jpeg | 300 | 300 | 0.390 | 0.653 | 0.953 | 0.436 | 5123 |
+| exposure | 300 | 300 | 0.387 | 0.877 | 0.997 | 0.159 | 4969 |
+| resolution | 300 | 300 | 0.367 | 0.743 | 0.990 | 0.323 | 5346 |
+| **mean** | | | **0.412** | **0.772** | 0.987 | 0.295 | 5297 |
+
+**H31: SUPPORTED**
+
+- yes: uncalibrated mean accuracy < 0.60 (got 0.412)
+- yes: calibrated - uncalibrated >= 0.10 points (got +0.360)
+- yes: calibrated mean accuracy < ens4d 0.867 (got 0.772)
 
 ## 2. QSitMini (`zhangzicheng/q-sit-mini`)
 

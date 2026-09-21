@@ -1930,3 +1930,18 @@ off), while the ones closer to recognition and reading (occlusion, caption legib
 images of the rubric fix the offset is therefore scoped to the image-quality scales, and says so.
 Also today: the default path ran on the real model (`default-smoke`): `glance ask --levels` answered with method `jsondigits`
 in one forward pass with a full distribution; `glance score --method ens4d` and a yes/no still work.
+
+## 2026-09-21 06:43 Entry 37e: E13, second outside system: openjev v2 behaves as predicted (H31 supported)
+
+`AlexWortega/openjev` v2 (4B, MIT, a trained open reproduction of the Jev idea that scores one claim per level), pinned
+revision 4395b29, its own claim wording, our matrix scaling; five lab scales, 300 calibration and 300 test items per scale
+(`lab/runs/external_openjev.jsonl`, 3,000 rows; `results/lab/external_systems.md`).
+- H31, all three parts SUPPORTED: uncalibrated mean accuracy 0.412 (predicted under 0.60; our v0 readout as shipped was 0.500);
+  with our calibration 0.772 (+36 points, predicted at least +10); below `ens4d` (0.867).
+Same items, same fit (`tools/external_same_items.py`, now with the same label draws for both outside systems so the `ens4d`
+column is identical): 0.772 against 0.863 with 300 labels per scale, -9.1 points [-11.4, -6.9]; 0.750 against 0.846 with 32
+labels, -9.7 [-11.5, -7.9]. Within one level 0.987, so it too orders the images and misplaces the boundaries. About 5.3 s per
+rating on a shared GPU (not an idle-GPU timing; its linear-attention kernels fell back to the reference implementation here).
+Reading of E13 as a whole: our calibration helps an outside readout a great deal (0.41 to 0.77), which supports the claim that
+the fit is the transferable part; of the two outside systems, the quality SPECIALIST matches the fitted 4B model (37c) and the
+general trained claim scorer is nine to ten points behind it.

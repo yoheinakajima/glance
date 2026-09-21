@@ -379,7 +379,10 @@ matrix scaling on its five level-word logits, the same 32 labels per scale and t
 0.846 for the frozen 4B model (difference +0.7 points [-1.1, +2.5]; with 300 labels 0.869 against 0.863): indistinguishable,
 at a quarter of the size. We had predicted it would rank only the three distortions it was trained for and stay below the
 4B model; it ranks all five scales (Spearman 0.86 to 0.95). A general model read this way earns its place by answering any
-typed question with one set of frozen weights, not by being the best quality meter.
+typed question with one set of frozen weights, not by being the best quality meter. The other outside system we ran, a 4B
+open model trained to score claims (openjev v2), behaved as predicted: 0.412 on its own, 0.772 with our fit, and on the same
+items with the same 32-label fit 0.750 against 0.846 for the frozen 4B model (-9.7 points [-11.5, -7.9]). The fit is a part
+that transfers to another system's readout.
 
 Nor does the pattern of Section 6.1 extend to every rubric. On five synthetic rubrics that are not image quality (subject
 cut off by the frame, occlusion, tilt, caption legibility, watermark; exact ground truth from segmentation masks and
@@ -389,7 +392,7 @@ does not rescue them either: with 300 labels per rubric the four-pass read reach
 where we had predicted at least 0.75 and 0.95 (occlusion 0.727, caption legibility 0.650, watermark 0.557, cut-off 0.477,
 tilt 0.330). A fit removes an offset; it cannot supply a judgement the model does not make, and the weakest rubrics are
 the geometric ones, in line with the drawn probes of Section 4.
-<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/SEMANTIC_REPORT.md, results/lab/external_same_items.md, lab/NOTES.md entries 20, 25, 28, 36c, 37c, 43b, 43c -->
+<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/SEMANTIC_REPORT.md, results/lab/external_same_items.md, results/lab/external_systems.md, lab/NOTES.md entries 20, 25, 28, 36c, 37c, 37e, 43b, 43c -->
 <!-- src: docs/paper/RESULTS_GENERALIZATION.md, docs/paper/RESULTS_ZEROSHOT.md section 3 -->
 
 ## 7. Does it depend on the model?
@@ -525,7 +528,7 @@ that the task is currently easy, and on older, possibly contaminated benchmarks 
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
 2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 6.3, now the default, is still poor
 in absolute terms on KADID-10k (0.347) and on rubrics that are not image quality (0.375), and its request wording for a question about several images at once has not been measured (entry 43c); and two open,
-MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read (Section 9's table); the second was still running when this draft was written. <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
+MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read, and the second, a 4B trained claim scorer, stayed 9 to 10 points behind it (Section 6.6). <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 
 ## 10. Reproducibility
 

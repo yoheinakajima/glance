@@ -52,6 +52,7 @@ for name, path in SYSTEMS.items():
         rows[r["ladder"]][r["item_id"]] = r
     if not all(len(rows.get(s, {})) >= 600 for s in SCALES):
         continue
+    rng = np.random.default_rng(7)  # the same label draws and bootstrap for every outside system, so the `ens4d` column is identical across them
     entry = {"per_scale": {}}
     for label, n_labels in (("all_300_labels", None), ("32_labels", 32)):
         theirs_all, ours_all = [], []
