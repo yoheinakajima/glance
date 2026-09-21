@@ -1,6 +1,6 @@
 # glance
 
-**Glance is how you ask an open vision-language model for a decision. It is not a model.**
+**Glance is how you ask an open vision-language model for a typed decision, plus `fit`. It is not a model.**
 
 You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
 rubric) and get probability distributions back, READ from single forward passes of a frozen open model you run
@@ -8,6 +8,11 @@ yourself (Qwen3-VL-4B by default, Apache-2.0). No text is generated, nothing is 
 or examples are needed. The model does the seeing; Glance is the asking: typed questions, a readout of the answer from
 the logits, many questions per image in one pass, probabilities instead of prose. The request and response shapes
 follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar; that is where the resemblance ends.
+
+Where this sits: in the same class as the training-free ask-layers that read answer-token logits from a frozen model
+(Simple Jev for text; jev-visual and LitJev for images). For yes/no and pick-one that forward pass is not new. It is not
+in the class of YOFO, Laya Vision or OpenJev v2, which train weights. What is Glance's own is the vision-first evidence
+below, the rating elicitation, and calibration as commands (`docs/paper/RELATED_WORK.md`, "Where Glance sits").
 
 Zero-shot, on a laptop (`docs/paper/RESULTS_ZEROSHOT.md`; result rows read "Qwen3-VL-4B + Glance"):
 

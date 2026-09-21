@@ -152,6 +152,28 @@ None of these are affiliated with TypeSafe. None claims to reproduce Jev's undis
   reordering the questions changes 8% of MMLU answers and 2.4% of RACE-H answers; a fitted temperature brings MMLU
   ECE from 5.4% to 2.1%. Vision: no. github.com/ikermoel/open-alternative-jev
 
+Added 2026-09-20 evening (each fetched and read that day, after two outside reviews named them):
+
+- YOFO, "You Only Forward Once: An Efficient Compositional Judging Paradigm" (Zhang et al., arXiv:2511.16600, v3
+  2026-02-02). TRAINS Qwen2-VL-2B-Instruct and Qwen3-VL-2B-Instruct with LoRA (vision encoder frozen, 1.2M SA-1B images,
+  cross-entropy on the answer positions) so that a template of N requirements is judged in ONE forward pass: the
+  yes/no logits are read at the position before each requirement's answer slot. Binary requirements only; evaluated on
+  fashion reranking (LAION-RVS-Fashion); no calibration; the paper names no released checkpoint (a reviewer's
+  "YOFO-Qwen3-VL-2B-Instruct" download could not be confirmed). Vision: yes, trained.
+- Laya Vision (independent fork, "not affiliated with Convai Innovations"): SmolVLM-256M-Instruct replaces Laya's text
+  encoder; "the vision tower is frozen, and the language model and decision head are trained, about 150M parameters";
+  about 72k examples (A-OKVQA, ScienceQA images, VQAv2 yes/no) with Laya's RLCD objective ("a policy gradient on
+  strictly proper scoring rules"); decisions come from a dedicated head, not vocabulary tokens; per-type temperatures
+  (choice 3.15, noul 1.56 on the card as fetched); `score` is untrained ("their outputs are meaningless"); own
+  validation: 75.9% accuracy, ECE 0.035 (VQAv2 yes/no 73.2%). Code Apache-2.0, WEIGHTS CC BY-NC-SA 4.0, so it cannot be
+  run under this project's license rule. github.com/r33drichards/laya-vision, huggingface.co/thaitea/laya-vision-smolvlm-256m
+- OpenJev on DiffusionGemma (razorback16): a server that "speaks the same wire API as TypeSafe's Jev", running
+  DiffusionGemma 26B-A4B with one read-only diffusion pass whose distribution over the answer tokens is the answer;
+  accepts up to 8 images per request as an extension; depends on an unmerged vLLM pull request (vllm-project/vllm#57250).
+  Apache-2.0. Not runnable on this project's laptop. A different project from AlexWortega's OpenJev above.
+  github.com/razorback16/openjev. LocalJev (kexi) is wire-compatible too but asks the model to WRITE its probabilities
+  as JSON, which is self-report, not a logit read. github.com/kexi/localjev
+
 Two more third-party entries are not Qwen reproductions at all, but small encoders trained from scratch for typed
 decisions, text-only, no image input: Laya (Convai Innovations), 421M parameters, Apache 2.0, non-autoregressive,
 ModernBERT-large (395M) backbone plus a small decision head for choice/score/noul with calibrated probabilities (a
@@ -189,6 +211,49 @@ no connection to glance, that the same bias affects Jev-adjacent evaluations. gi
   different numbers, no baseline ratio given) and jev-visual's 37.30 s -> 2.40 s at 64 decisions on Qwen3.5-0.8B
   (different model, different question count). Neither matches. Treat the 1.6 s / 4.6 s / Qwen3.5-2B figure as
   unconfirmed.
+
+### Where Glance sits: positioning statements (2026-09-20 evening, owner's zero-shot framing, STATUS D44)
+
+| | Glance | jev-visual, LitJev (nearest neighbours) | Simple Jev | YOFO | Laya Vision | TypeSafe Jev |
+| --- | --- | --- | --- | --- | --- | --- |
+| What it is | an ask-layer (library, CLI, server) around an open VLM | ask-layers around an open VLM | an ask-layer around any open LM | fine-tuned Qwen-VL 2B checkpoints | a trained 256M decision model | a hosted proprietary model |
+| Trains weights? | no | no | no | yes (LoRA) | yes (LM + decision head) | yes |
+| Images | yes, first | yes | no ("text only") | yes | yes | no (docs: text only) |
+| Question types | yes/no, pick-one, ratings | choice, score, noul | choice, score, noul | yes/no per requirement only | choice, noul (`score` untrained) | choice, score, noul |
+| How the answer is taken | logits of the allowed answer tokens at a forced answer position | the same | the same | yes/no logits at N positions of one packed template | a dedicated decision head | not disclosed |
+| Calibration | commands: `glance fit --unlabeled`, `glance fit`; generic calibration for yes/no and pick-one | none reported | "not calibrated probabilities of correctness" | none | temperature after proper-scoring-rule training | claimed by the vendor |
+| Several questions per image | one image prefill, independent branches (invariant by construction) | shared vision prefill | shared text prefix | one packed sequence | one image encode per call | n/a |
+| Backbone | yours (Qwen3-VL-4B measured; 2B / 8B and SmolVLM2 in progress) | yours | yours | fixed | fixed | fixed |
+| Credit line | "Qwen3-VL-4B + Glance" | - | "<model> + Simple Jev" | "YOFO" | "laya-vision-smolvlm-256m" | "Jev" |
+
+Statements we stand behind, in this order:
+1. **Same class as the training-free ask-layers.** Simple Jev (text), jev-visual and LitJev (images) and Glance all wrap
+   a frozen generative model, force it to the answer position, read the allowed tokens' logits and reuse the shared
+   prefix. For yes/no and pick-one, Glance's forward pass is NOT new and this repository says so. An outside review's
+   phrase is fair: Glance is that readout pointed at photos, with calibration commands and a frontier-VLM scoreboard.
+2. **Not the same class as YOFO, Laya Vision, OpenJev v2 or OpenJev-Vision.** Those train something. The trade is real
+   in both directions: a trained head can be calibrated by construction and cannot emit prose, but it is tied to its
+   backbone (a 256M specialist cannot borrow a 4B general model's perception); Glance's ceiling is whatever open VLM you
+   attach, and it moves when a better open VLM ships, with no retraining.
+3. **What is Glance's own, and only as far as it is measured:** (a) vision-first evidence: photos taken after every
+   model's release with labels nobody here made, the same items sent to three frontier VLMs, the same VLM writing its
+   answer against reading it, every experiment registered before it ran; (b) ratings: the elicitation (digits forward
+   and reversed, with and without a magnified crop) and calibration as verbs (unlabeled self-calibration, labeled fit),
+   printed with the caveat that Gemini 3.1 Pro leads by 8 points on zero-shot exact levels; (c) dollars and
+   milliseconds against hosted VLMs on photo tasks; (d) the credit line; (e) portability across backbones: a plan until
+   the second family (E3) and the size ladder (E15) are in the table.
+4. **Lead with the ask.** "Glance is how you ask an open vision-language model for a typed decision, plus `fit`."
+   "Decision engine" describes the open model being read, never Glance; led with as a product noun it files Glance
+   under the trained models above. "Jev for vision" stays banned: the Jev-shaped servers with image input already
+   exist (jev-visual, LitJev, OpenJev on DiffusionGemma), and Glance's difference from them is measurement and `fit`,
+   not the interface.
+
+Corrections to the relayed reviews, so their errors do not enter this repository: Simple Jev has no vision path (its
+README: "images, audio, video, and tool calls are unsupported"), so "Simple Jev (vision)" is not a system; the
+training-free image neighbours are jev-visual and LitJev. Jev is a typed decision API (choice, score, noul), not an
+"action and control space" paradigm; the DiffusionGemma and patched-vLLM details belong to razorback16's OpenJev, not to
+Jev. Glance's fits are matrix scaling on member logits and z-scoring over unlabeled images, not Platt or isotonic
+scaling. A released YOFO checkpoint could not be confirmed.
 
 ### How glance relates
 

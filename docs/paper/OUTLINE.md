@@ -126,7 +126,8 @@ calibrated, so it is context, not a head-to-head comparison.
 
 ## Positioning, revised by the project owner (2026-09-20 evening; STATUS D44, `lab/NOTES.md` entry 38). Supersedes the block below where they differ
 
-One sentence: **Glance is how you ask an open vision-language model for a decision. It is not a model.**
+One sentence: **Glance is how you ask an open vision-language model for a typed decision, plus `fit`. It is not a model.**
+Where it sits among Jev-style systems (same class as the training-free ask-layers Simple Jev, jev-visual and LitJev; not the same class as the trained YOFO, Laya Vision, OpenJev v2): `docs/paper/RELATED_WORK.md`, "Where Glance sits". For yes/no and pick-one the forward pass is not new; say so first.
 The claim: a frozen open 4B model, READ instead of generated, is a zero-shot general image decision engine: level with
 frontier models on yes/no and pick-one on photos no model has seen, with usable probabilities, several times faster than
 the same model writing its answer, at a small fraction of API cost; on ratings it matches frontier models zero-shot and

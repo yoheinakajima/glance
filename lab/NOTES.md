@@ -1364,3 +1364,21 @@ rubric there is no such input: every image is evidence about blur, noise or expo
 from 16 UNLABELED REAL images of the rubric, is 0.679 here (0.686 in entry 26, different draws). It does not ship.
 What this leaves for true zero-shot ratings: the raw read (exact 0.558, within one level 0.987, rank agreement 0.93), a
 better rubric text, or bigger models (E15, running next).
+
+## 2026-09-20 17:25 Entry 41: positioning against the Jev-style family, after checking two relayed reviews against the sources
+
+The owner relayed positioning notes from Gemini and Grok (Jev / OpenJev, Laya Vision, Simple Jev, YOFO). Every system
+named was fetched and read today before anything entered the docs. Confirmed: YOFO (arXiv:2511.16600: LoRA-trained
+Qwen2-VL-2B / Qwen3-VL-2B, binary requirements packed in one pass, no calibration, no checkpoint named); Laya Vision
+(trained 256M typed-decision model on SmolVLM-256M, RLCD policy gradient on proper scoring rules, `score` untrained,
+weights CC BY-NC-SA so not runnable under our rule); Simple Jev (training-free next-token logit read with shared-prefix
+KV reuse, "not calibrated probabilities of correctness"); a second, unrelated "OpenJev" on DiffusionGemma 26B-A4B with
+image input through an unmerged vLLM patch. Wrong or unconfirmed in the relayed notes: Simple Jev has NO vision path
+(README: text only), so "Simple Jev (vision)" is not a system and the training-free image neighbours are jev-visual
+and LitJev (already in `RELATED_WORK.md`); Jev is a typed decision API, not an action or control-space paradigm;
+Glance's fits are not Platt or isotonic scaling; a released YOFO checkpoint could not be confirmed.
+Adopted (it is sound): Glance is in the same class as the training-free ask-layers, and for yes/no and pick-one its
+forward pass is not new; it is not in the class of the trained systems; what is its own is measurement, the rating
+elicitation and calibration as commands; lead with "how you ask ... plus `fit`", never with "decision engine" as a
+noun for Glance. Written into `docs/paper/RELATED_WORK.md` ("Where Glance sits"), `docs/paper/OUTLINE.md`, the README
+and `docs/paper/COMPARABLE_SYSTEMS.md` (three systems added to "cite, do not run", with the reason for each).
