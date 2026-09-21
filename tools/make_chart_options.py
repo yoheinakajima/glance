@@ -91,6 +91,40 @@ def strips(pairs_only=False):
     return "".join(out)
 
 
+def option_d():
+    """The owner's design: cost (log) vertical, seconds (log) horizontal; per system three small marks (one per test) joined to
+    one large mark at their centre (geometric mean, which is the visual centre on log axes); mean accuracy printed beside it."""
+    x0, x1, y0, y1 = 46, 344, 20, 330
+    sx, sy = (lambda v: log(v, 0.25, 6, x0, x1)), (lambda v: log(v, 0.04, 30, y1, y0))
+    g = []
+    for v in (0.3, 1, 3):
+        g.append(f'<line x1="{sx(v):.1f}" x2="{sx(v):.1f}" y1="{y0}" y2="{y1}" class="grid"/>' + t(sx(v), y1 + 15, f"{v:g} s"))
+    for v in (0.1, 1, 10):
+        g.append(f'<line x1="{x0}" x2="{x1}" y1="{sy(v):.1f}" y2="{sy(v):.1f}" class="grid"/>' + t(x0 - 6, sy(v) + 4, money(v), "end"))
+    shapes = {"yesno": lambda x, y, c: f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.2" class="{c}"/>',
+              "choice": lambda x, y, c: f'<rect x="{x - 3:.1f}" y="{y - 3:.1f}" width="6" height="6" class="{c}"/>',
+              "rating": lambda x, y, c: f'<polygon points="{x:.1f},{y - 3.8:.1f} {x + 3.6:.1f},{y + 2.8:.1f} {x - 3.6:.1f},{y + 2.8:.1f}" class="{c}"/>'}
+    for name in m["systems"]:
+        mine = [r for r in rows if r["name"] == name]
+        gx = math.exp(statistics.mean(math.log(r["sec"]) for r in mine))
+        gy = math.exp(statistics.mean(math.log(r["usd"]) for r in mine))
+        acc = statistics.mean(r["acc"] for r in mine)
+        own = mine[0]["open"]
+        for r in mine:
+            g.append(f'<line x1="{sx(gx):.1f}" y1="{sy(gy):.1f}" x2="{sx(r["sec"]):.1f}" y2="{sy(r["usd"]):.1f}" class="spoke"/>')
+        for r in mine:
+            g.append(shapes[r["test"]](sx(r["sec"]), sy(r["usd"]), "prov" if r["prov"] else ("own" if own else "host")))
+        g.append(f'<circle cx="{sx(gx):.1f}" cy="{sy(gy):.1f}" r="7.5" class="{"own" if own else "host"}"/>')
+        label = {"Qwen3-VL-4B, written": "Open 4B, written", "Qwen3-VL-4B, read (Glance)": "Open 4B, read (Glance)"}.get(name, name)
+        left = sx(gx) > 245
+        g.append(t(sx(gx) + (-12 if left else 12), sy(gy) - 3, label, "end" if left else "start", "lab own")
+                 + t(sx(gx) + (-12 if left else 12), sy(gy) + 10, f"mean accuracy {acc:.2f}", "end" if left else "start", "tick"))
+    g.append(t((x0 + x1) / 2, y1 + 32, "median seconds per answer (log scale): left is faster") + f'<text transform="translate(12,{(y0 + y1) / 2:.0f}) rotate(-90)" text-anchor="middle" class="tick">US dollars per 1,000 answers (log scale): down is cheaper</text>')
+    key = ('<p class="legend"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="3.2" class="host"/></svg>yes/no <svg viewBox="0 0 12 12"><rect x="3" y="3" width="6" height="6" class="host"/></svg>pick-one '
+           '<svg viewBox="0 0 12 12"><polygon points="6,2.2 9.6,8.8 2.4,8.8" class="host"/></svg>rating <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" class="host"/></svg>centre of the three</p>')
+    return key + f'<svg viewBox="0 0 360 370" role="img" aria-label="cost against speed, three tests and their centre per system">{"".join(g)}</svg>'
+
+
 LEGEND = ('<p class="legend"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.6" class="own"/></svg>open 4B model, read (Glance) '
           '<svg viewBox="0 0 12 12"><rect x="1.6" y="1.6" width="8.8" height="8.8" class="own"/></svg>open 4B model, written '
           '<svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.2" class="host"/></svg>hosted: G Gemini, O Opus, P GPT '
@@ -110,12 +144,13 @@ h1{{font-size:1.7rem;font-weight:600;line-height:1.2}}h2{{font-size:1.2rem;font-
 .legend svg{{width:12px;height:12px;vertical-align:-1px;margin:0 3px 0 10px}}.legend svg:first-child{{margin-left:0}}
 svg{{width:100%;height:auto;display:block}}svg text{{font-family:"IBM Plex Sans",Arial,sans-serif}}
 .tick{{font-size:10.5px;fill:var(--muted)}}.lab{{font-size:11px;fill:var(--muted)}}.lab.own{{fill:var(--ink);font-weight:600}}.head{{font-size:12px;fill:var(--ink);font-weight:600}}
-.grid{{stroke:var(--rule);stroke-width:1}}.whisk{{stroke:var(--muted);stroke-width:1}}.link{{stroke:var(--ink);stroke-width:2;opacity:.35}}
+.grid{{stroke:var(--rule);stroke-width:1}}.spoke{{stroke:var(--muted);stroke-width:1}}.whisk{{stroke:var(--muted);stroke-width:1}}.link{{stroke:var(--ink);stroke-width:2;opacity:.35}}
 .host{{fill:var(--paper);stroke:var(--ink);stroke-width:1.4}}.own{{fill:var(--ink)}}.prov{{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}}
 </style>
 <main>
-<section><h1>Three ways to draw the comparison</h1>
+<section><h1>Four ways to draw the comparison</h1>
 <p class="note">Same data in each: three hosted frontier models, the open 4B model writing, the open 4B model read with Glance; three tests; accuracy, seconds, dollars. Zero-shot, same items in every row.</p>{LEGEND}</section>
+<section><h2>D. Cost against speed, per system</h2><p class="note">Your design. Each system is three small marks, one per test, joined to a large mark at their centre. Down and left is better. Filled is the open model; dashed is a provisional timing. Opus cost is a list-price estimate, the same for all three tests.</p>{option_d()}</section>
 <section><h2>A. Accuracy against cost</h2><p class="note">Up and left is better. One panel per test. Speed is not shown.</p>{option_a()}</section>
 <section><h2>B. Three strips</h2><p class="note">The matrix redrawn: one strip per measure, one row per test, every system a mark on a shared scale.</p>{strips()}</section>
 <section><h2>C. Headline gaps</h2><p class="note">Only two systems: the open model read, against the most accurate hosted model (Gemini).</p>{strips(pairs_only=True)}</section>
