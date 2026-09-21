@@ -1754,3 +1754,11 @@ question of each type: yes/no 0.992, pick-one "dog" 0.99995 over cat and car, a 
 distribution (method `ens4d`), each with the correct "uncalibrated" warning; exit 0 (`$TMPDIR/glance/generic_smoke.out`).
 Together with E19 (993 photo questions through the same backend and the shipped scorer) the option is checked end to end on one
 other family. The README and AGENTS.md now say exactly that instead of "experimental"; any other model is untested.
+
+## 2026-09-21 01:00 Entry 52: page erratum: two tables were both numbered 2
+
+Found while checking the draft's editor notes against the page: the comparison matrix and the photo-set table both carried
+"Table 2", and the insect-order table was "3b". The version the owner deployed at about 00:13 has this defect. Fixed in the
+generator: tables are numbered 1 to 8 in order (9 once the rendered-probe table has data), Figure 2 now points at Table 3, and
+Figure 1's caption says it is drawn on the items every system answered. No number or claim changed. Goes live with the owner's
+next deploy.
