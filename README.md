@@ -10,7 +10,15 @@ Project page with every result: https://glance.yohei.me · Coding agents: read [
 ## Try it
 
 ```bash
-git clone https://github.com/yoheinakajima/glance && cd glance && uv sync     # Python 3.11 and uv; about 10 GB of open weights download on first use
+pip install glance-vlm        # Python 3.11; the command and the import are `glance`. Then: glance doctor, glance ask photo.jpg "Is there a dog?"
+```
+
+An installed package keeps its logs and fitted calibrations in `~/.glance` (or `GLANCE_ROOT`) and uses the Hugging Face cache
+you already have; about 9 GB of open weights download on first use. Or from source, which also gives you the evaluations, the
+lab code and every result file (prefix the commands with `uv run`):
+
+```bash
+git clone https://github.com/yoheinakajima/glance && cd glance && uv sync     # Python 3.11 and uv
 uv run glance doctor                                     # picks the model for your hardware (Apple silicon or CUDA; CPU works, slowly)
 
 uv run glance ask photo.jpg "Is there a dog?"                                        # yes/no   -> {"noul": 0.98, ...}
