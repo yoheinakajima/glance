@@ -269,6 +269,8 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+basis_note = ("yes/no and pick-one accuracy pooled over the three fresh photo sets, Table 3; seconds and dollars as measured on the Commons photographs, because hosted cost depends on image size"
+              if matrix.get("accuracy_basis", "").startswith("three") else "the test half of the Commons set, the first of three photo sets; Table 3 pools all three")
 POOLED = load("results/lab/pooled_photos.json")
 SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B, read", "Qwen3-VL-4B, written": "Qwen3-VL-4B, written"}
 
@@ -540,7 +542,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <figure>{fig_bars}<figcaption><b>Figure 1.</b> Accuracy, seconds and dollars for every system, by question type, on scales that start at zero, on the items every system answered (Table 2 gives the counts). Dark bars are the open 4B model.{" An outlined bar is an estimated cost; an estimate beyond the measured range is cut short and marked ›." if has_est else ""}</figcaption></figure>
   <p>Within any one photo set every 95% interval overlaps every other, which says as much about sample size as about the systems. Pooled over the three photo sets and paired on the same items, differences appear. {pooled_sentence("yesno", "yes/no")} {pooled_sentence("choice", "pick-one")} Two cautions apply. The questions are coarse (is there a bridge; which of thirteen everyday things is this), so they measure a floor that all current systems clear. And the labels are not gold: {noise_n("fresh_yesno")} of 131 yes/no items and {noise_n("fresh_choice")} of 65 pick-one items are answered “wrongly” by all seven systems, which is more likely a wrong or ambiguous label than seven identical mistakes (a proxy; no human audit was done). On ratings there is no single best system.</p>
   {matrix_tables(ALL)}
-  <p class="caption"><b>Table 2.</b> The numbers behind Figure 1, on the items every system answered (the test half of the Commons set). Accuracy with 95% bootstrap intervals; bold rows are the open model. Hosted speed is wall time per call from one laptop, network included; hosted cost is the provider’s bill where it was logged (“est.” is a list-price upper estimate). The open model was timed on the same photographs with the GPU otherwise idle; its cost is those seconds at an on-demand cloud GPU price.{size_note} No few-shot prompt was tried for any written row.</p>
+  <p class="caption"><b>Table 2.</b> The numbers behind Figure 1, on the items every system answered ({basis_note}). Accuracy with 95% bootstrap intervals; bold rows are the open model. Hosted speed is wall time per call from one laptop, network included; hosted cost is the provider’s bill where it was logged (“est.” is a list-price upper estimate). The open model was timed on the same photographs with the GPU otherwise idle; its cost is those seconds at an on-demand cloud GPU price.{size_note} No few-shot prompt was tried for any written row.</p>
   {pooled_table()}
   <p class="caption"><b>Table 3.</b> The three fresh photo sets pooled (Commons, iNaturalist ten groups, iNaturalist insect orders), on the items the hosted models were asked; a failed call counts as wrong. Differences are paired on the same items, with 95% intervals from a bootstrap stratified by photo set. This pooling was added after the per-set results had been seen; its rule (every set, every system, nothing dropped) was fixed before it was computed.</p>
   <h3>2.1 The photographs</h3>
