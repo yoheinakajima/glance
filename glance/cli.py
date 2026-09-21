@@ -240,7 +240,7 @@ def _rubric_args(p: argparse.ArgumentParser) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="glance", description="Image decision harness v0")
+    parser = argparse.ArgumentParser(prog="glance", description="Glance: typed questions about images (yes/no, pick-one, rating), answered with probabilities from one forward pass of a frozen open vision-language model")
     parser.add_argument("--config", default=None, help="path to a config yaml (default: configs/default.yaml)")
     parser.add_argument("--model-id", help="use this Hugging Face image-text-to-text model for `vlm` instead of the built-in Qwen3-VL tiers "
                         "(any model with a chat template; only SmolVLM2 and Qwen3-VL are measured in this repository)")

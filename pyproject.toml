@@ -1,10 +1,21 @@
 [project]
-name = "glance"
-version = "0.2.1"
-description = "Image decision harness: typed questions about images answered from single forward passes (logit readout, no generation)."
+name = "glance-vlm"  # the distribution name on PyPI ("glance" is taken); the import name and the command stay `glance`
+version = "0.3.0"
+description = "Ask a frozen open vision-language model typed questions about images (yes/no, pick-one, rating) and read probabilities from one forward pass; nothing is generated or trained."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
 license = { text = "Apache-2.0" }
+authors = [{ name = "Yohei Nakajima" }]
+keywords = ["vision-language-model", "vlm", "image-classification", "calibration", "logits", "zero-shot", "structured-output"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "torch",
     "torchvision",
@@ -21,8 +32,15 @@ dependencies = [
     "matplotlib",
     "datasets",
     "pyyaml",
-    "pytest",
 ]
+
+[project.urls]
+Homepage = "https://glance.yohei.me"
+Repository = "https://github.com/yoheinakajima/glance"
+Documentation = "https://github.com/yoheinakajima/glance#readme"
+
+[dependency-groups]
+dev = ["pytest"]
 
 [project.scripts]
 glance = "glance.cli:main"
@@ -38,6 +56,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["glance"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/glance", "/configs", "/README.md", "/LICENSE", "/pyproject.toml"]  # code and its config only: no result files, runs or notebooks
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

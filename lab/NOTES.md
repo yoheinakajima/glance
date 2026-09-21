@@ -2027,3 +2027,16 @@ the three photo sets on the items the hosted models were asked: written 0.945 [0
 With every row covered, `tools/make_matrix.py` now takes its yes/no and pick-one accuracy from the pooled analysis
 (`accuracy_basis` in `results/lab/matrix.json`); seconds and dollars stay as measured on the Commons photographs, because hosted
 cost depends on image size. The page's Figure 1 and Table 2, the README scorecard and the draft's section 3.1 follow.
+
+## 2026-09-21 07:37 Entry 57: the package works from a wheel; PyPI release prepared (not published)
+
+The name `glance` is taken on PyPI; `glance-vlm` was free today (HTTP 404), so that is the distribution name (import name and
+command stay `glance`), version 0.3.0. The package could not run from a wheel: it looked for `configs/default.yaml` beside the
+source tree. Fixed: a packaged copy of the default config (`glance/default_config.yaml`, kept identical by a test), data (logs,
+fitted calibrations, runs) under `GLANCE_ROOT`, else the repository when run from a checkout, else `~/.glance` (created on first
+use); an installed package leaves `HF_HOME` alone so it uses the Hugging Face cache the user already has. `pytest` moved from
+the runtime dependencies to a dev group. Checked for real: wheel built, installed into a clean Python 3.11 environment with an
+empty home folder; `glance doctor` runs; `glance ask` on the real model gives the same answers as the checkout (yes/no 1.00;
+rating by the one-pass read, 0.996 on level 1). Tests: 364 passed, 12 skipped. `.github/workflows/publish.yml` publishes with
+Trusted Publishing (no token exists anywhere), manual trigger only; `docs/PYPI.md` is the step-by-step for the owner's
+browser-capable assistant (TestPyPI first, the owner's explicit go before PyPI). I did not publish anything.

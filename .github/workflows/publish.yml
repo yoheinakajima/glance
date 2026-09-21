@@ -1,0 +1,47 @@
+# Publishes the package `glance-vlm` to TestPyPI or PyPI with Trusted Publishing (OpenID Connect): no API token exists anywhere.
+# Manual only. One version can be uploaded once; to publish again, raise `version` in pyproject.toml first.
+# One-time setup on the PyPI side is in docs/PYPI.md.
+name: publish
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Where to publish"
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - run: uvx twine check dist/*
+      - name: The wheel must carry its default config and no result files
+        run: |
+          python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          assert "glance/default_config.yaml" in names, "packaged default config is missing"
+          assert not [n for n in names if n.startswith(("results/", "runs/", "lab/runs/", "gold/"))], "result files leaked into the wheel"
+          print(len(names), "files in the wheel")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    permissions:
+      id-token: write  # Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: ${{ inputs.target == 'testpypi' && 'https://test.pypi.org/legacy/' || 'https://upload.pypi.org/legacy/' }}

@@ -493,8 +493,8 @@ http = [
 ]
 
 [[package]]
-name = "glance"
-version = "0.2.1"
+name = "glance-vlm"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "accelerate" },
@@ -505,7 +505,6 @@ dependencies = [
     { name = "numpy" },
     { name = "pillow" },
     { name = "pydantic" },
-    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
@@ -520,6 +519,11 @@ lab = [
     { name = "num2words" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "accelerate" },
@@ -531,7 +535,6 @@ requires-dist = [
     { name = "numpy" },
     { name = "pillow" },
     { name = "pydantic", specifier = ">=2" },
-    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
@@ -541,6 +544,9 @@ requires-dist = [
     { name = "transformers" },
 ]
 provides-extras = ["lab"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest" }]
 
 [[package]]
 name = "h11"

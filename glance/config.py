@@ -13,12 +13,20 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
-PROJECT_ROOT = Path(os.environ.get("GLANCE_ROOT") or Path(__file__).resolve().parent.parent)
-DEFAULT_CONFIG_PATH = PROJECT_ROOT / "configs" / "default.yaml"
+_PACKAGE_DIR = Path(__file__).resolve().parent
+_CHECKOUT = _PACKAGE_DIR.parent if (_PACKAGE_DIR.parent / "configs" / "default.yaml").is_file() else None
+# Where logs, fitted calibrations and eval runs live: GLANCE_ROOT if set, the repository when running from a checkout, and
+# ~/.glance when installed from a wheel (pip install glance-vlm), where there is no repository around the package.
+INSTALLED = _CHECKOUT is None
+PROJECT_ROOT = Path(os.environ.get("GLANCE_ROOT") or _CHECKOUT or Path.home() / ".glance")
+_ROOT_CONFIG = PROJECT_ROOT / "configs" / "default.yaml"
+DEFAULT_CONFIG_PATH = _ROOT_CONFIG if _ROOT_CONFIG.is_file() else _PACKAGE_DIR / "default_config.yaml"  # the packaged copy is kept identical by a test
 
 # huggingface_hub reads HF_HOME when it is first imported, so point it at the project cache as early as possible.
-# load_config() sets the configured value too, which only differs if paths.hf_home was changed.
-os.environ.setdefault("HF_HOME", str(PROJECT_ROOT / ".cache" / "hf"))
+# load_config() sets the configured value too, which only differs if paths.hf_home was changed. An installed package leaves
+# HF_HOME alone, so it uses the Hugging Face cache the user already has instead of downloading the model a second time.
+if not INSTALLED:
+    os.environ.setdefault("HF_HOME", str(PROJECT_ROOT / ".cache" / "hf"))
 
 
 class _Strict(BaseModel):
@@ -142,7 +150,10 @@ def load_config(path: str | Path | None = None, overrides: dict[str, Any] | None
 
 def setup_environment(cfg: Config) -> None:
     """Read .env and point the Hugging Face cache at ./.cache/hf. Must run before importing transformers."""
+    if INSTALLED:
+        PROJECT_ROOT.mkdir(parents=True, exist_ok=True)  # ~/.glance (or GLANCE_ROOT): logs, fitted calibrations, eval runs
     load_dotenv(PROJECT_ROOT / ".env")
-    os.environ.setdefault("HF_HOME", str(cfg.path("hf_home")))
+    if not INSTALLED:
+        os.environ.setdefault("HF_HOME", str(cfg.path("hf_home")))
     os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
     os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
