@@ -80,6 +80,31 @@ def params_of(suite):
     return found
 
 
+def cluster_of(item_id):
+    """The image an item belongs to: items that share an image (two spatial questions, several state questions about one screen) are resampled together."""
+    base = item_id.split("__")[0]
+    return base[:-2] if base.endswith(("_h", "_v")) else base
+
+
+# Registered reporting rule (lab/NOTES.md entry 54): per suite, the paired difference best-hosted-minus-open on the items every
+# system answered, 95% interval from a bootstrap that resamples IMAGES (clusters), 10,000 draws.
+out["paired"] = {}
+for suite, systems in by_suite.items():
+    hosted = [n for n in systems if n not in ("open 4B model, read", "siglip")]
+    own = systems.get("open 4B model, read")
+    if not hosted or not own:
+        continue
+    shared = sorted(set.intersection(*(set(systems[n]) for n in hosted)) & set(own))
+    best = max(hosted, key=lambda n: np.mean([systems[n][i] for i in shared]))
+    clusters = collections.defaultdict(list)
+    for i in shared:
+        clusters[cluster_of(i)].append(float(systems[best][i]) - float(own[i]))
+    sums, sizes = np.array([sum(v) for v in clusters.values()]), np.array([len(v) for v in clusters.values()])
+    idx = rng.integers(0, len(sums), size=(10000, len(sums)))
+    boot = 100 * sums[idx].sum(1) / sizes[idx].sum(1)
+    out["paired"][suite] = {"best_hosted": best, "best_hosted_accuracy": float(np.mean([systems[best][i] for i in shared])), "open_accuracy": float(np.mean([own[i] for i in shared])),
+                            "best_minus_open_points": [100 * float(sums.sum() / sizes.sum()), float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))], "n_items": len(shared), "n_images": len(sums)}
+
 out["breakdowns"] = {}
 for spec in args.by:
     suite, key = spec.split("=", 1)
@@ -100,6 +125,11 @@ for suite, entry in out["suites"].items():
     for name, e in entry.items():
         s = e.get("same_items")
         md.append(f"| {name} | {f(s) if s else '-'} | {s['n'] if s else '-'} | {f(e['all_items'])} | {e['all_items']['n']} |")
+    md.append("")
+if out["paired"]:
+    md += ["## Best hosted model minus the open model, paired on the same items (95% interval, bootstrap over images)", "", "| Suite | best hosted | its accuracy | open model | difference, points | items |", "| --- | --- | --- | --- | --- | --- |"]
+    md += [f"| {s} | {e['best_hosted']} | {e['best_hosted_accuracy']:.3f} | {e['open_accuracy']:.3f} | {e['best_minus_open_points'][0]:+.1f} [{e['best_minus_open_points'][1]:+.1f}, {e['best_minus_open_points'][2]:+.1f}] | {e['n_items']} |"
+           for s, e in out["paired"].items()]
     md.append("")
 for suite, b in out["breakdowns"].items():
     values = sorted({v for g in b["systems"].values() for v in g}, key=order)

@@ -72,6 +72,17 @@
 | openrouter/google/gemini-3.1-pro-preview | 1.000 [1.000, 1.000] | 75 | 1.000 [1.000, 1.000] | 75 |
 | openrouter/google/gemini-3.1-flash-lite | 1.000 [1.000, 1.000] | 75 | 1.000 [1.000, 1.000] | 75 |
 
+## Best hosted model minus the open model, paired on the same items (95% interval, bootstrap over images)
+
+| Suite | best hosted | its accuracy | open model | difference, points | items |
+| --- | --- | --- | --- | --- | --- |
+| probe_count | anthropic/claude-opus-5 | 1.000 | 0.933 | +6.7 [+1.3, +13.3] | 75 |
+| probe_count_color | anthropic/claude-opus-5 | 1.000 | 0.880 | +12.0 [+5.3, +20.0] | 75 |
+| probe_spatial | anthropic/claude-opus-5 | 1.000 | 0.907 | +9.3 [+3.8, +16.0] | 75 |
+| probe_largest | openai/gpt-5.6 | 1.000 | 0.587 | +41.3 [+30.7, +52.0] | 75 |
+| probe_stripes | openai/gpt-5.6 | 1.000 | 0.573 | +42.7 [+32.0, +53.3] | 75 |
+| probe_text | anthropic/claude-opus-5 | 1.000 | 1.000 | +0.0 [+0.0, +0.0] | 75 |
+
 ## probe_count, by count (accuracy, items)
 
 | System | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |

@@ -2124,3 +2124,43 @@ Reading: the readout carries to another family without a change, but the ACCURAC
 12 points behind on nature photographs, 20 and 31 behind on look-alike insect orders. The finer the distinction, the more the
 model matters; "close to the best hosted models" is a statement about Qwen3-VL at 4B and above, and the page says so. SmolVLM2
 stays out of the headline chart (no idle-GPU photo timing; decided in entry 58 before its result) and is in the scale-and-family table.
+
+## 2026-09-21 09:01 Entry 50d: E22, the hosted half: the best hosted models SOLVE the drawn probes; the open model's geometry failures are its own
+
+Six hosted models on the test half of each probe set (75 items per set; the owner's batch this morning), reported by the rule of
+entry 54: per set, same items, paired difference best-hosted-minus-open with a 95% interval from a bootstrap over images
+(`results/lab/probes.md`). No composite.
+GPT-5.6 and Gemini 3.1 Pro score 1.000 on all six sets. Claude Opus 5 is perfect on four, 0.933 on the largest shape and 0.800 on
+stripes. Best hosted minus the open 4B model: count +6.7 points [+1.3, +13.3], count red +12.0 [+5.3, +20.0], spatial +9.3 [+3.8,
++16.0], largest shape +41.3 [+30.7, +52.0], stripes +42.7 [+32.0, +53.3], look-alike words 0.0 (both 1.000).
+- H54, hosted half (the best hosted model at least 10 points ahead on counting; counting is the weak spot for EVERY system): NOT
+  SUPPORTED: three hosted models count one to eight balls without an error; the lead over the open model is 6.7 points. The weak
+  counters are the low-cost ones: Gemini 3.1 Flash-Lite 0.773 (0.10 at seven balls), Claude Haiku 4.5 0.893 (0.30 at seven).
+- H56 (the mirror-image confusion is general: at least 4 of 6 hosted models under 0.80 on the two diagonals): NOT SUPPORTED: only
+  the two Anthropic models share it (rising diagonals 0.38 for Opus 5, 0.17 for Haiku 4.5, falling 1.00 and 0.94); GPT-5.6, GPT-5.6
+  Luna and Gemini 3.1 Pro are perfect on all four directions, Flash-Lite about 0.9.
+- H57 (the best hosted model at least 15 points ahead on the largest shape): SUPPORTED, by far (41 points). By area ratio the best
+  hosted models are perfect even at 1.15; the open model goes 0.32, 0.45, 0.59, 0.73; Haiku 4.5 and Flash-Lite look like the open
+  model (0.29 / 0.38 at 1.15) and recover at ratio 2.
+What this changes: I had written that "where the model itself stops is geometry", which suggested a limit of VLMs. It is not: the
+best hosted models are perfect on these probes. It is where a small open model READ THIS WAY falls far behind the best hosted
+models, while the low-cost hosted models fail in similar places. Caveat: hosted models write their answer and may reason before
+it; the open model gets one forward pass. Whether the open model's failure is in the readout or in the model is E26 (next entry).
+
+## 2026-09-21 09:01 Entry 61: E26, is the geometry failure in the readout or in the model? registered before any output
+
+A reviewer's point, and a fair one: our own hidden-state probe lifted ratings from 0.867 to 0.965, so a poor token readout does
+not show that the model lacks the information. Two controls on the two sets where the open model is furthest behind
+(`probe_stripes`, `probe_largest`) and on `probe_count`, same 150 images per set, Qwen3-VL-4B:
+(a) WRITTEN: the same model generating its answer as JSON (`glance.lab.gen_accuracy --suites probe_stripes,probe_largest,probe_count`,
+the identical request and token cap as every written row; strict and lenient scores, entry 59).
+(b) HIDDEN STATE: a linear probe on the final hidden state at the answer position of the shipped pick-one prompt (one vector per
+image, the statement of the first option; PCA to 32 dimensions then multinomial logistic regression, L2 1.0), 5-fold
+cross-validated accuracy over the 150 images, folds stratified by label, seed 7. For `probe_largest` the label is the COLOUR of
+the largest shape; for stripes the direction; for count the number.
+Reading of the four outcomes, fixed now: written good and read bad = a readout bottleneck; hidden good and both token routes bad =
+the information is there but no answer token exposes it; all three bad = the model (at this size, at this image resolution) does
+not make the judgement.
+- H65: written is within 5 points of the read on all three sets (the read-against-write result of section 4 carries to probes).
+- H66: the hidden-state probe beats the token read by at least 15 points on stripes (direction is linearly there) and by less than
+  10 on the largest shape (relative size is not).
