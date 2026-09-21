@@ -12,8 +12,10 @@ from glance.logging_utils import read_jsonl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TESTS = {"yesno": "yes/no", "choice": "pick-one", "rating": "rating"}
-LABEL = {"Qwen3-VL-4B, written": "Open 4B, written", "Qwen3-VL-4B, read (Glance)": "Open 4B, read"}
-LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "written", "Qwen3-VL-4B, read (Glance)": "read",
+# display names: the model, and what is done with it ("+ Glance" = the answer is read from one forward pass; "written" = the same model generates JSON)
+LABEL = {"Qwen3-VL-4B, written": "Qwen3-VL-4B, written", "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance",
+         "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}
+LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "4B written", "Qwen3-VL-4B, read (Glance)": "4B + Glance", "Qwen3-VL-2B, read (Glance)": "2B + Glance", "Qwen3-VL-8B, read (Glance)": "8B + Glance",
           "Claude Haiku 4.5": "H", "GPT-5.6 Luna": "L", "GPT-5 nano": "N", "Gemini 3.1 Flash-Lite": "F"}
 
 
@@ -177,7 +179,7 @@ def bars_by_type(rows, wide, tests=None):
                 g += [bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, col(j), y, span) for j, t in enumerate(tests)]
                 y += 14
             y += 6
-        return f'<svg viewBox="0 0 640 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, by question type">{"".join(g)}</svg>'
+        return f'<svg viewBox="-30 0 670 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, by question type">{"".join(g)}</svg>'  # 30 px more on the left: the longest bold row name
     out = []
     for t in tests:
         g, y = [_t(4, 13, TESTS[t], "start", "m-head")], 22
@@ -189,7 +191,7 @@ def bars_by_type(rows, wide, tests=None):
                 g.append(bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, 128, y, 150))
                 y += 14
             y += 8
-        out.append(f'<svg viewBox="0 0 360 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, {TESTS[t]}">{"".join(g)}</svg>')
+        out.append(f'<svg viewBox="-16 0 376 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, {TESTS[t]}">{"".join(g)}</svg>')
     return "".join(out)
 
 

@@ -55,7 +55,7 @@ jd = load("results/lab/jsondigits.json")["mean"]
 rows1 = []
 for suite, key, tag in (("fresh_yesno", "vlm:statement", "yes/no"), ("fresh_choice", "vlm:independent", "pick one of 13")):
     s = fresh["suites"][suite]
-    rows1.append((f"Qwen3-VL-4B, read · {tag}", s[key]["accuracy"], s[key]["ci95"], True, suite == "fresh_choice"))
+    rows1.append((f"Qwen3-VL-4B + Glance · {tag}", s[key]["accuracy"], s[key]["ci95"], True, suite == "fresh_choice"))
     rows1 += [(f"{name} · {tag}", s[m]["accuracy"], s[m]["ci95"], False, False) for m, name in FRONTIER.items() if m in s]
 fig1 = dot_plot(rows1, 0.75, 1.0, "Accuracy on photos taken after every model's release")
 
@@ -63,7 +63,7 @@ fig1 = dot_plot(rows1, 0.75, 1.0, "Accuracy on photos taken after every model's 
 written = sum(gen[k]["written"][0] for k in gen if k.startswith("ladder_")) / 5
 loc = h2h["local"]
 rows2 = [(FRONTIER.get(r["model"], r["model"]) + ", written pick", r["mean_accuracy"], None, False, False) for r in h2h["runs"].values()]
-rows2 += [("Qwen3-VL-4B, written answer", written, None, True, False), ("Qwen3-VL-4B, read, one pass", jd["json_zero"], None, True, False),
+rows2 += [("Qwen3-VL-4B, written answer", written, None, True, False), ("Qwen3-VL-4B + Glance, one-pass read", jd["json_zero"], None, True, False),
           ("… earlier four-pass read", jd["ens_zero"], None, True, False),
           ("… one-pass read + 16 unlabeled images", jd["json_u16"], None, True, True),
           ("… four-pass read + 32 labels", loc["+ Glance ens4d, 32 labels"]["mean_accuracy"], None, True, False)]
@@ -76,9 +76,9 @@ def fresh_table():
         return f'{e[0]:.3f} <span class="ci">[{e[1]:.3f}, {e[2]:.3f}]</span>'
 
     def block(title, note, y, c, wy, wc, sep):
-        rows = [f'<tr class="own{" sep" if sep else ""}"><td>Qwen3-VL-4B, read <span class="note">{title}, {note}</span></td><td class="n">{ci(y["vlm:statement"])}</td><td class="n">{ci(c["vlm:independent"])}</td></tr>']
+        rows = [f'<tr class="own{" sep" if sep else ""}"><td>Qwen3-VL-4B + Glance <span class="note">{title}, {note}</span></td><td class="n">{ci(y["vlm:statement"])}</td><td class="n">{ci(c["vlm:independent"])}</td></tr>']
         if wy and wc:
-            rows.append(f'<tr class="own"><td>Qwen3-VL-4B, written <span class="note">same items</span></td><td class="n">{t3(wy["written"])}</td><td class="n">{t3(wc["written"])}</td></tr>')
+            rows.append(f'<tr class="own"><td>Qwen3-VL-4B, writing JSON <span class="note">same items, no Glance</span></td><td class="n">{t3(wy["written"])}</td><td class="n">{t3(wc["written"])}</td></tr>')
         rows += [f'<tr><td>{name}</td><td class="n">{ci(y[m])}</td><td class="n">{ci(c[m])}</td></tr>' for m, name in ALL_HOSTED.items() if m in y and m in c]
         return rows
 
@@ -147,7 +147,7 @@ def matrix_tables(tests):
         for name, sysrow in matrix["systems"].items():
             own = ' class="own"' if name.startswith("Qwen") else ""
             sep = ' class="own sep"' if name.endswith("written") else own
-            out.append(f"<tr{sep}><td>{html.escape(name)}</td>" + "".join(f'<td class="n">{fmt(field, sysrow[field][t])}</td>' for t in tests) + "</tr>")
+            out.append(f"<tr{sep}><td>{html.escape(SHORT.get(name, name))}</td>" + "".join(f'<td class="n">{fmt(field, sysrow[field][t])}</td>' for t in tests) + "</tr>")
         out.append("</tbody></table></div>")
     return "".join(out)
 
@@ -256,7 +256,7 @@ def finer():
     out = []
     if orders:
         y, c = orders["suites"]["inat_orders_yesno"], orders["suites"]["inat_orders_choice"]
-        rows = [("Qwen3-VL-4B, read", y.get("vlm:statement"), c.get("vlm:independent")), ("SigLIP2 (open dual encoder)", None, c.get("siglip:independent"))]
+        rows = [("Qwen3-VL-4B + Glance", y.get("vlm:statement"), c.get("vlm:independent")), ("SigLIP2 (open dual encoder)", None, c.get("siglip:independent"))]
         rows += [(n, y.get(k), c.get(k)) for k, n in list(FRONTIER.items()) + [("anthropic/claude-haiku-4-5", "Claude Haiku 4.5"), ("openai/gpt-5.6-luna", "GPT-5.6 Luna"), ("openrouter/google/gemini-3.1-flash-lite", "Gemini 3.1 Flash-Lite")] if k in y or k in c]
         hosted_c = sorted((c[k]["accuracy"], n) for k, n in [(k, n) for _, _, _ in [(0, 0, 0)] for k, n in list(FRONTIER.items()) + [("anthropic/claude-haiku-4-5", "Claude Haiku 4.5"), ("openai/gpt-5.6-luna", "GPT-5.6 Luna"), ("openrouter/google/gemini-3.1-flash-lite", "Gemini 3.1 Flash-Lite")]] if k in c)
         spread = (f" This test does separate systems: on pick-one the hosted models range from {hosted_c[0][0]:.3f} ({hosted_c[0][1]}) to {hosted_c[-1][0]:.3f} ({hosted_c[-1][1]}), and the open 4B model, at "
@@ -278,7 +278,8 @@ def lower_keep(text):
 basis_note = ("yes/no and pick-one accuracy pooled over the three fresh photo sets, Table 3; seconds and dollars as measured on the Commons photographs, because hosted cost depends on image size"
               if matrix.get("accuracy_basis", "").startswith("three") else "the test half of the Commons set, the first of three photo sets; Table 3 pools all three")
 POOLED = load("results/lab/pooled_photos.json")
-SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B, read", "Qwen3-VL-4B, written": "Qwen3-VL-4B, written"}
+SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Qwen3-VL-4B, writing JSON", "Qwen3-VL-2B, read": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read": "Qwen3-VL-8B + Glance",
+         "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance", "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}  # display names
 
 
 def pooled_groups(kind):
@@ -329,7 +330,7 @@ def pooled_table():
             d = r.get("open_minus_this_points")
             return (f'<td class="n">{r["pooled"][0]:.3f} <span class="ci">[{r["pooled"][1]:.3f}, {r["pooled"][2]:.3f}]</span></td>'
                     + (f'<td class="n">{d[0]:+.1f} <span class="ci">[{d[1]:+.1f}, {d[2]:+.1f}]</span></td>' if d else '<td class="n">–</td>'))
-        return f'<tr{" class=own" if name.startswith("Qwen") else ""}><td>{name}</td>{cell("yesno")}{cell("choice")}</tr>'
+        return f'<tr{" class=own" if name.startswith("Qwen") else ""}><td>{SHORT.get(name, name)}</td>{cell("yesno")}{cell("choice")}</tr>'
     e = {k: POOLED["kinds"][k]["systems"] for k in ("yesno", "choice")}
     names = list(dict.fromkeys(list(e["yesno"]) + list(e["choice"])))
     n = {k: POOLED["kinds"][k]["n_total"] for k in e}
@@ -453,7 +454,7 @@ def beyond():
             body.append(f'<tr><td>{question}</td><td class="n">{options}</td><td class="n own">{ci(own["all_items"], 2)} <span class="ci">n={own["all_items"]["n"]}</span></td>'
                         + "".join(f'<td class="n">{cell(e[k]["all_items"]) if k in e else "–"}</td>' for k in hosted) + "</tr>")
     note = "Hosted models answered the test half of each set." if hosted else "Hosted models have not been run on these sets."
-    return ('<div class="table-scroll"><table><thead><tr><th>Question, zero-shot</th><th class="n">options</th><th class="n">Qwen3-VL-4B, read</th>' + head + "</tr></thead><tbody>" + "".join(body) + "</tbody></table></div>"
+    return ('<div class="table-scroll"><table><thead><tr><th>Question, zero-shot</th><th class="n">options</th><th class="n">Qwen3-VL-4B + Glance</th>' + head + "</tr></thead><tbody>" + "".join(body) + "</tbody></table></div>"
             + f'<p class="caption"><b>Table 6.</b> Exact-answer accuracy on images whose labels are exact by construction (drawn or rendered by program; no photographs, no people). {note}</p>')
 
 
@@ -615,7 +616,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h2 id="cost"><span class="num">7</span>Cost and speed: same order as the low-cost hosted models, one to two orders below the flagships</h2>
   <p>The two sides of this comparison are not measured the same way, and the caveats come first. Hosted cost is the provider’s bill per call and includes nothing for an operator; hosted latency is wall time from one laptop and includes the network and the provider’s queue. Open-model cost is measured seconds on a laptop multiplied by an on-demand cloud GPU price, with no batching, no idle time and no operator counted; a different GPU price or image resolution moves it by more than the gap to the low-cost hosted models. Hosted cost also depends on image size (GPT-5.6: $7.55 per 1,000 on 1,280-pixel files, $1.86 on 500-pixel files).</p>
   <p>With that said: a yes/no about a full-size photograph takes the open 4B model {own["seconds"]["yesno"]["value"]:.1f} s on a laptop and costs ${own["usd_per_1000"]["yesno"]["value"][0]:.2f} to ${own["usd_per_1000"]["yesno"]["value"][1]:.2f} per 1,000 on a rented GPU; the low-cost hosted models cost ${cheap_yesno[0]:.2f} and up, the flagships several dollars. The durable differences are not the cents: the image never leaves the machine, there is no per-call bill, it works offline, and the answer can be fitted.</p>
-  <figure>{fig_acc_cost}<figcaption><b>Figure 4.</b> Accuracy against cost, one panel per question type, 95% intervals. Open model: read (circle) and written (square). Hosted models: {site_charts.hosted_key(mrows)}.</figcaption></figure>
+  <figure>{fig_acc_cost}<figcaption><b>Figure 4.</b> Accuracy against cost, one panel per question type, 95% intervals. The open model read with Glance (filled circles) and the 4B model writing JSON (filled square). Hosted models: {site_charts.hosted_key(mrows)}.</figcaption></figure>
   <figure>{fig_cost_speed}<figcaption><b>Figure 5.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per question type: {site_charts.KEY}. Filled marks are the open 4B model.</figcaption></figure>
 </section>
 
