@@ -1500,3 +1500,18 @@ Measured cost and speed, all three with cost logging this time: yes/no $3.37 / $
 cost depends on image size (GPT-5.6 cost $7.55 per 1,000 on the 1280 px Commons files against $1.62 on these 500 px
 files). The comparison matrix will move its yes/no and pick-one columns to this photo set once the same model's WRITTEN
 answers are collected on it (queued), because it has cleaner labels, more items and measured cost for every hosted row.
+
+## 2026-09-20 20:16 Entry 45: E18, the providers' CHEAPEST models on the same three tests (owner's idea), registered before any of their answers were seen
+
+The owner's point: comparing a 4B open model with the most expensive hosted models flatters the cost gap; if each
+provider's cheapest current vision model scores as high as its flagship, THAT is the honest hosted baseline. Fixed now
+(the owner's batch, `tools/frontier_batch.py --set cheap`, has started; I have seen only its key-check log lines):
+Claude Haiku 4.5, GPT-5.6 Luna (fallback GPT-5 nano) and Gemini 3.1 Flash-Lite, zero-shot, the same constrained written
+pick, on the Commons photos, the iNaturalist photos and the same 1,000 lab rating images; a failed call counts as wrong.
+- H44: on yes/no and pick-one (both photo sets) every cheap model is within 5 points of its flagship, intervals
+  overlapping: closed-set questions about photos are easy for the whole hosted range.
+- H45: on the lab ratings the cheap models are at or below their flagships (none above 0.65 exact), so the open 4B model
+  read in one pass (0.669) is ahead of all three cheap models.
+- H46: measured cost per 1,000 answers of the cheap models is below $1.50 on every test, which shrinks the open model's
+  cost advantage on yes/no from about 40x (against Gemini 3.1 Pro) to under 15x. If H44 and H46 hold, the page and the
+  paper must lead the cost comparison with the CHEAP hosted rows, not the flagships.
