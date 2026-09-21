@@ -1,0 +1,13 @@
+{
+ "yesno": {
+  "n": 38,
+  "write_p50_ms": 3008.6607709527016,
+  "read_p50_ms": 2117.697229492478
+ },
+ "choice": {
+  "n": 38,
+  "write_p50_ms": 3020.5387914320454,
+  "read_p50_ms": 2653.246061876416
+ },
+ "model": "Qwen/Qwen3-VL-8B-Instruct@0c351dd01ed87e9c1b53cbc748cba10e6187ff3b"
+}
