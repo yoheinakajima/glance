@@ -1634,3 +1634,21 @@ yes/no with look-alike negatives 0.948 [0.926, 0.969] (0.919 on yes, 0.976 on no
 - Consequence: this test does not yet cure the ceiling problem of the headline. If the hosted models are also near 0.95
   the next harder candidate is the synthetic-UI benchmark the owner proposed (state, page type, which element to click),
   which needs reading text and layout, not fine-grained biology.
+
+## 2026-09-20 23:48 Entry 49: E21, decisions an agent makes about a SCREEN (owner's idea), registered before any code or data
+
+Why: the photo tests sit near a ceiling for every system (entries 35c, 47b), and the natural use of fast typed decisions is
+an agent looking at a user interface. Fixed now: 300 synthetic screens rendered from HTML templates we generate (five page
+types: sign-in, search results, cart / checkout, settings, article; varied theme, font, accent colour, density; 1024 x 768),
+with EXACT ground truth from the generator's parameters, no labels by anyone, nothing any model can have seen. Five suites:
+`ui_state` (yes/no: is a dialog open, is an error message shown, is the primary button disabled, is a named checkbox
+checked, is the user signed in, is a cookie banner visible), `ui_page` (pick one of the five page types), `ui_click` (a
+goal in words and numbered marks drawn on 6 to 8 interactive elements: pick the mark that serves the goal), `ui_done`
+(yes/no: has the stated goal been accomplished on this screen; paired before / after screens), `ui_reason` (pick-one
+questions that need one step of reasoning over what is read: the cheaper of two plans, the item that is out of stock, the
+earliest date). Synthetic screens are cleaner than real applications and the page will say so.
+- H50: the open 4B model read with Glance scores at least 0.90 on `ui_state` and `ui_page`, and at least 0.75 on `ui_click`.
+- H51: on `ui_reason` it is at least 10 points below the best hosted model (a single forward pass does not reason; hosted
+  models that think before answering should).
+- H52: the systems separate more here than on photographs: at least 8 points between best and worst on `ui_click`.
+Local run on the GPU queue; hosted rows need the owner's paste in the morning. This does NOT block publication.
