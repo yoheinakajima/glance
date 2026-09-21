@@ -12,6 +12,7 @@ import pathlib
 import re
 
 import numpy as np
+import written_scoring
 
 from glance.logging_utils import read_jsonl
 
@@ -25,6 +26,7 @@ NAMES = {"anthropic/claude-opus-5": "Claude Opus 5", "openai/gpt-5.6": "GPT-5.6"
 OPEN = "Qwen3-VL-4B, read"
 WRITTEN = "Qwen3-VL-4B, written"
 WRITTEN_RUNS = ["lab/runs/gen_accuracy.jsonl", "lab/runs/gen_accuracy_inat.jsonl", "lab/runs/gen_accuracy_orders.jsonl"]  # the same model writing JSON (entries 32b, 32c, 55b)
+OTHER_WRITTEN = {"Qwen3-VL-2B, written": ["lab/runs/gen_accuracy_2b.jsonl"]}  # E25 (entry 59): strict in the table, lenient reported beside it
 # other open models read the same way (E24, notebook entry 58): eval runs named in these logs, or per-item files with a `correct` flag
 OTHER_OPEN = {"Qwen3-VL-2B, read": ["lab/runs/scaling_2b_eval.out", "lab/runs/scaling_2b_orders_eval.out"],
               "Qwen3-VL-8B, read": ["lab/runs/scaling_8b_eval.out", "lab/runs/scaling_8b_orders_eval.out"],
@@ -77,13 +79,22 @@ for name, sources in OTHER_OPEN.items():
                 set_name, kind = suite_home[suite]
                 hits[kind][set_name][name][item_id] = ok
 
+lenient_hits = {"yesno": collections.defaultdict(lambda: collections.defaultdict(dict)), "choice": collections.defaultdict(lambda: collections.defaultdict(dict))}
+for name, sources in OTHER_WRITTEN.items():
+    for src in sources:
+        for r in (read_jsonl(ROOT / src) if (ROOT / src).exists() else []):
+            if r["suite"] in suite_home:
+                set_name, kind = suite_home[r["suite"]]
+                hits[kind][set_name][name][r["item_id"]] = written_scoring.strict(r)
+                lenient_hits[kind][set_name][name][r["item_id"]] = written_scoring.lenient(r)
+
 out = {"sets": {k: v[0] for k, v in SETS.items()}, "kinds": {}}
 for kind, by_set in hits.items():
     hosted = [n for n in NAMES.values() if any(n in by_set[s] for s in by_set)]
     # the items the hosted models were asked: the union over hosted models per set; a hosted model without a row for one of them failed that call
     asked = {s: sorted(set().union(*(set(by_set[s][n]) for n in hosted if n in by_set[s]))) for s in SETS}
     written_complete = all(i in by_set[s].get(WRITTEN, {}) for s in SETS for i in asked[s])  # the written row joins only when it covers every set
-    others = [n for n in OTHER_OPEN if all(i in by_set[s].get(n, {}) for s in SETS for i in asked[s])]  # only models that cover every set
+    others = [n for n in list(OTHER_OPEN) + list(OTHER_WRITTEN) if all(i in by_set[s].get(n, {}) for s in SETS for i in asked[s])]  # only rows that cover every set
     systems = [OPEN] + ([WRITTEN] if written_complete else []) + others + hosted
     table = {s: {n: np.array([bool(by_set[s].get(n, {}).get(i, False)) for i in asked[s]], dtype=float) for n in systems} for s in SETS}
     missing = {n: int(sum(i not in by_set[s].get(n, {}) for s in SETS for i in asked[s])) for n in systems}
@@ -103,6 +114,11 @@ for kind, by_set in hits.items():
         e = {"pooled": stat(pooled(n)), "equal_weight_per_set": stat(macro(n)), "per_set": {s: float(table[s][n].mean()) for s in SETS}}
         if n in others:
             e["open_4b_minus_this_points"] = stat(diff(n))
+            if n in OTHER_WRITTEN:
+                lt = {s: np.array([bool(lenient_hits[kind][s][n].get(i, False)) for i in asked[s]], dtype=float) for s in SETS}
+                e["lenient_pooled"] = stat(lambda idx, lt=lt: float(np.concatenate([lt[s][idx[s]] for s in SETS]).mean()))
+                e["invalid_share"] = float(np.mean([not r["valid"] for src in OTHER_WRITTEN[n] for r in read_jsonl(ROOT / src)
+                                                    if r["suite"] in suite_home and suite_home[r["suite"]][1] == kind and r["item_id"] in set(asked[suite_home[r["suite"]][0]])]))
         elif n not in (OPEN, WRITTEN):
             d = stat(diff(n))
             e["open_minus_this_points"] = d
