@@ -214,8 +214,13 @@ Scope first. "Ratings" in this section means five synthetic, single-factor, four
 exposure, JPEG artifacts, noise, resolution) on 1,000 held-out images, the same for every system. It does not mean
 aesthetic judgement or any naturally occurring, multi-factor score. On a real image-quality benchmark, KADID-10k, the
 method missed every target we registered (Section 4.6), and with plentiful labels 29 hand-built features score 0.979 on
-the synthetic scales against 0.867 for the fitted model: for low-level artefacts, features remain the better tool.
-<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, lab/NOTES.md entries 25, 28 -->
+the synthetic scales against 0.867 for the fitted model: for low-level artefacts, features remain the better tool. Nor
+does the pattern of Section 4.1 extend to every rubric: on five synthetic rubrics that are not image quality (subject cut
+off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot one-pass read is exactly right on 0.375
+of images and within one level on 0.741 (chance 0.25; tilt and cut-off at chance), the four-pass read 0.334, and 16
+unlabeled images do not help (0.366). Whether a labeled fit rescues these rubrics is a registered experiment that was
+still running when this draft was written.
+<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/NOTES.md entries 20, 25, 28, 43b -->
 
 ### 4.1 Order versus exact level
 

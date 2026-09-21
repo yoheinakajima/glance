@@ -269,6 +269,16 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+def other_rubrics():
+    """Zero-shot on the five rubrics that are not image quality (entry 43b); stated next to the scope so the section's title is not read as a claim about rubrics in general."""
+    d = (load("results/lab/jsondigits_hard.json") or {}).get("benches", {}).get("creative-QA rubrics")
+    if not d:
+        return ""
+    m = d["mean"]
+    return (f" Nor does the pattern below extend to every rubric: on five synthetic rubrics that are not image quality (subject cut off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot read is "
+            f"exactly right on {m['json_zero']:.2f} of images and within one level on {m['json_within_1']:.2f} (chance 0.25), tilt and cut-off sit at chance, and unlabeled images do not help ({m['json_u16']:.2f}). Whether a labeled fit rescues them is a registered experiment still running.")
+
+
 def outside_item():
     """The registered comparison with outside open systems (entry 37), on the same items with the same fit."""
     d = load("results/lab/external_same_items.json") or {}
@@ -404,7 +414,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 
 <section aria-labelledby="ratings">
   <h2 id="ratings"><span class="num">4</span>Ratings: models get the order right and the boundaries wrong; a few images of the rubric fix the offset</h2>
-  <p><b>Scope.</b> “Ratings” here means five synthetic, single-factor, four-level image-quality scales (blur, exposure, JPEG, noise, resolution), 1,000 held-out images, the same for every system. It does not mean aesthetic judgement. On a real image-quality benchmark, KADID-10k (23 distortion types, five levels, human scores), the fitted open model reached 0.527 exact against registered targets it missed in full, and 0.33 zero-shot; with plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model. For low-level artefacts, features remain the better tool.</p>
+  <p><b>Scope.</b> “Ratings” here means five synthetic, single-factor, four-level image-quality scales (blur, exposure, JPEG, noise, resolution), 1,000 held-out images, the same for every system. It does not mean aesthetic judgement. On a real image-quality benchmark, KADID-10k (23 distortion types, five levels, human scores), the fitted open model reached 0.527 exact against registered targets it missed in full, and 0.33 zero-shot; with plentiful labels, 29 hand-built features score 0.979 on the synthetic scales against 0.867 for the fitted model. For low-level artefacts, features remain the better tool.{other_rubrics()}</p>
   <p><b>Order against boundaries.</b> Zero-shot the open model is exactly right on {raw["accuracy"]:.2f} of images and within one level on {raw["within_1"]:.3f}; 97% of its errors are one step, in a direction that is constant per rubric (half a level harsh on blur, never the worst level on JPEG). The hosted models score {hosted_rating[0]:.2f} to {hosted_rating[-1]:.2f}; each provider’s low-cost model beats its own flagship, and {best_rating} leads. Where a rubric’s author drew the lines is a convention that no model can know unseen.</p>
   <figure>{fig2}<figcaption><b>Figure 5.</b> Exact-level accuracy on the same 1,000 images, chance 0.25. Upper group: zero-shot. Lower group: the open model after seeing images of the rubric, first unlabeled (zero labels, but not zero-shot), then 32 labeled.</figcaption></figure>
   <p><b>Fitting the offset.</b> The two fits of section 1 act on this offset. The comparison is asymmetric by design: the hosted models stayed zero-shot, because a written pick offers nothing to fit and we did not give them few-shot examples. It shows what a local, fittable readout buys a user; it does not show that the open model sees better.</p>
