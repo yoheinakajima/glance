@@ -112,6 +112,113 @@
       ]
     }
   },
+  "same_model_write_vs_read_per_1000_requests": {
+    "1 yes/no": {
+      "questions_per_image": 1,
+      "write_json": {
+        "seconds_per_1000_requests": 798.0797283817083,
+        "cloud_gpu_usd": [
+          0.11660831586910517,
+          0.17841515705599967
+        ],
+        "laptop_amortized_usd": [
+          0.016871294782295543,
+          0.10122776869377326
+        ]
+      },
+      "read_fast2": {
+        "seconds_per_1000_requests": 337.71058346610516,
+        "cloud_gpu_usd": [
+          0.049343268584214256,
+          0.07549707710375594
+        ],
+        "laptop_amortized_usd": [
+          0.007139154901617308,
+          0.04283492940970385
+        ]
+      },
+      "saving_read_fast2": 0.5768460575350138,
+      "answers_agree": 1.0
+    },
+    "5 mixed": {
+      "questions_per_image": 5,
+      "write_json": {
+        "seconds_per_1000_requests": 3477.7011040132493,
+        "cloud_gpu_usd": [
+          0.5081307724197137,
+          0.7774594023638508
+        ],
+        "laptop_amortized_usd": [
+          0.07351811905997906,
+          0.4411087143598743
+        ]
+      },
+      "read_fast2": {
+        "seconds_per_1000_requests": 1001.0039580520242,
+        "cloud_gpu_usd": [
+          0.14625780053760135,
+          0.2237799959556303
+        ],
+        "laptop_amortized_usd": [
+          0.021161084856503136,
+          0.12696650913901883
+        ]
+      },
+      "saving_read_fast2": 0.712165040032661,
+      "answers_agree": 0.92,
+      "read_ens4d": {
+        "seconds_per_1000_requests": 2229.844999848865,
+        "cloud_gpu_usd": [
+          0.3258051305334731,
+          0.4984942377439907
+        ],
+        "laptop_amortized_usd": [
+          0.04713861406749673,
+          0.28283168440498035
+        ]
+      },
+      "saving_read_ens4d": 0.35881637519807685
+    },
+    "25 ratings": {
+      "questions_per_image": 25,
+      "write_json": {
+        "seconds_per_1000_requests": 20045.96954199951,
+        "cloud_gpu_usd": [
+          2.92893888308104,
+          4.481387857611446
+        ],
+        "laptop_amortized_usd": [
+          0.4237690161931234,
+          2.5426140971587405
+        ]
+      },
+      "read_fast2": {
+        "seconds_per_1000_requests": 3260.6062294216827,
+        "cloud_gpu_usd": [
+          0.47641079907661255,
+          0.7289266370662695
+        ],
+        "laptop_amortized_usd": [
+          0.0689287635172857,
+          0.41357258110371425
+        ]
+      },
+      "saving_read_fast2": 0.8373435506529034,
+      "answers_agree": 0.59,
+      "read_ens4d": {
+        "seconds_per_1000_requests": 8380.261020502076,
+        "cloud_gpu_usd": [
+          1.2244492491066923,
+          1.8734539081389083
+        ],
+        "laptop_amortized_usd": [
+          0.1771575558198477,
+          1.0629453349190863
+        ]
+      },
+      "saving_read_ens4d": 0.5819478323089293
+    }
+  },
   "api_list_price_upper_estimates_usd_per_1000": {
     "anthropic/claude-opus-5": 18.7,
     "openai/gpt-5.6": 14.96,

@@ -75,7 +75,7 @@ On KADID-10k (23 distortion types at 5 severity levels, human-scored, chance 0.2
 | 25 ratings | 20046 | 3261 | 6.1x | 59% |
 
 Reads here use the two-pass `fast2` rating readout; 40 images, one laptop, GPU otherwise idle (`lab/GENBENCH.md`).
-Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): pending (collection queued).
+Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): see `results/lab/gen_accuracy.md`.
 
 ## 5. Speed and cost per 1,000 answers
 
