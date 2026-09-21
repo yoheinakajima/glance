@@ -233,10 +233,15 @@ def finer():
         out.append("<p>Insect orders on iNaturalist (beetle, true bug, fly, …; 210 photographs; every “no” question names a look-alike order) ask for finer distinctions than the ten-group test." + spread + " The open dual encoder falls to 0.71 here.</p>")
         out.append('<div class="table-scroll"><table><thead><tr><th>Insect orders, zero-shot</th><th class="n">yes/no</th><th class="n">pick one of 7</th></tr></thead><tbody>'
                    + "".join(f'<tr{" class=own" if n.startswith("Qwen") else ""}><td>{n}</td><td class="n">{ci(a) if a else "–"}</td><td class="n">{ci(b_) if b_ else "–"}</td></tr>' for n, a, b_ in rows) + "</tbody></table></div>")
-        out.append('<p class="caption"><b>Table 4.</b> The open model on all items; hosted models, where present, on the test half.</p>')
+        out.append('<p class="caption"><b>Table 4.</b> Seven insect orders, zero-shot, 95% bootstrap intervals. The open model answered all items (420 yes/no questions, 210 photographs); hosted models, where present, the test half (210 and 105).</p>')
     if not probes and not load("results/lab/ui_screens.json"):
         out.append("<p>Tests that need more than coarse recognition (counting, spatial relations, relative size, reading, and which element of a screen to click) are registered and built from images drawn by program, with labels exact by construction; their results are not in this snapshot.</p>")
     return "\n  ".join(out)
+
+
+def lower_keep(text):
+    """Lower-case a test name for use inside a sentence, keeping proper nouns."""
+    return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
 ALL_HOSTED = {**FRONTIER, "anthropic/claude-haiku-4-5": "Claude Haiku 4.5", "openai/gpt-5.6-luna": "GPT-5.6 Luna", "openrouter/google/gemini-3.1-flash-lite": "Gemini 3.1 Flash-Lite"}
@@ -329,7 +334,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 
 <section aria-labelledby="evidence">
   <h2 id="evidence"><span class="num">2</span>On coarse yes/no and pick-one questions, a 4B open model is indistinguishable from hosted models</h2>
-  <p>The same items went to the open 4B model (read, and also writing its answer as JSON), to three hosted flagships and to each provider’s lowest-cost current vision model. Three tests, all zero-shot: {matrix["tests"]["yesno"].lower()}; {matrix["tests"]["choice"].lower()}; {matrix["tests"]["rating"].lower()} (ratings are the subject of section 4).</p>
+  <p>The same items went to the open 4B model (read, and also writing its answer as JSON), to three hosted flagships and to each provider’s lowest-cost current vision model. Three tests, all zero-shot: {lower_keep(matrix["tests"]["yesno"])}; {lower_keep(matrix["tests"]["choice"])}; {lower_keep(matrix["tests"]["rating"])} (ratings are the subject of section 4).</p>
   <figure>{fig_bars}<figcaption><b>Figure 1.</b> Accuracy, seconds and dollars for every system, by question type, on scales that start at zero, on the items every system answered (Table 2 gives the counts). Dark bars are the open 4B model.{" An outlined bar is an estimated cost; an estimate beyond the measured range is cut short and marked ›." if has_est else ""}</figcaption></figure>
   <p>On yes/no and pick-one every 95% interval overlaps every other, so the defensible statement is “indistinguishable at this sample size”, not “equal”. Two cautions apply. The questions are coarse (is there a bridge; which of thirteen everyday things is this), so they measure a floor that all current systems clear. And the labels are not gold: {noise_n("fresh_yesno")} of 131 yes/no items and {noise_n("fresh_choice")} of 65 pick-one items are answered “wrongly” by all seven systems, which is more likely a wrong or ambiguous label than seven identical mistakes (a proxy; no human audit was done). On ratings there is no single best system.</p>
   {matrix_tables(ALL)}
@@ -392,10 +397,10 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <ul class="misses">
     <li><span class="verdict miss">not supported</span> A content-free prior (blank and noise images) was expected to help zero-shot ratings. It took exact accuracy from {nullp["table"]["raw zero-shot"]["accuracy"]:.3f} to {nullp["table"]["content-free prior, all six null images (registered)"]["accuracy"]:.3f}: for an image rubric there is no content-free image.</li>
     <li><span class="verdict miss">not supported</span> Our four-pass rating readout was expected to match the same model’s written answer zero-shot. It trailed it by ten points: a readout selected with a calibration in the loop is good to fit and poor zero-shot. <span class="verdict">supported</span> The registered fix, one pass read at the JSON answer position, matches the written answer ({jd["json_zero"]:.3f}) and reaches {jd["json_u16"]:.3f} with 16 unlabeled images.</li>
-    <li><span class="verdict miss">not supported</span> We expected each provider’s cheapest model to score at or below its flagship on ratings. Every one beats its flagship, and {best_rating} ({best_rating_acc:.3f}, ${cheap_rating[0]:.2f} to ${hosted[best_rating]["usd_per_1000"]["rating"]["value"][0]:.2f} per 1,000 among the cheap models) is nine points ahead of the open model zero-shot. The open model needs 16 unlabeled images to draw level and 32 labels to lead.</li>
+    <li><span class="verdict miss">not supported</span> We expected each provider’s cheapest model to score at or below its flagship on ratings. Every one beats its flagship, and {best_rating} ({best_rating_acc:.3f}, ${cheap_rating[0]:.2f} to ${hosted[best_rating]["usd_per_1000"]["rating"]["value"][0]:.2f} per 1,000 among the cheap models) is nine points ahead of the open model zero-shot. With 16 unlabeled images the open model reaches {jd['json_u16']:.3f}, {100 * (best_rating_acc - jd['json_u16']):.1f} points short of it; with 32 labels it leads.</li>
     <li><span class="verdict miss">not supported</span> On KADID-10k (23 distortion types, five levels, human scores) every registered target was missed: 0.527 exact with labels, 0.33 zero-shot.</li>
     <li><span class="verdict">supported</span> A fitted readout on the model’s hidden state reaches {r4a:.3f} from one pass, against 0.867 for the token readout: the model represents severity almost perfectly. It needs on the order of a hundred labels.</li>
-    <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. Two model families and two sizes measured so far (Tables 5 and 6); that is not “any model”.</li>
+    <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. Two model families and three sizes are measured (Tables {t0 + 3} and {t0 + 4}); that is not “any model”.</li>
   </ul>
 </section>
 
@@ -405,7 +410,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 uv run python tools/fetch_fresh_inat.py          # 200 photographs, about ten API calls
 uv run glance eval --suite inat_choice --suite inat_yesno --model vlm
 uv run python tools/make_results_zeroshot.py     # every table on this page</code></pre>
-  <p>The lab notebook records each hypothesis before its experiment, each verdict after, and two errata. Frontier model outputs are never stored; only whether each answer was right.</p>
+  <p>The lab notebook records each hypothesis before its experiment, each verdict after, and its errata. Frontier model outputs are never stored; only whether each answer was right.</p>
 </section>
 
 <section aria-labelledby="refs">
