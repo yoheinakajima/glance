@@ -294,16 +294,21 @@ label is exact; registered as entry 49) ask what an agent would ask of a screen.
 | Is this goal already done? | 1 of 2 | 0.825 [0.770, 0.875] (n=200) |
 | What kind of page is this? | 1 of 5 | 0.823 [0.780, 0.867] (n=300) |
 
-Finding the element that serves a stated goal is nearly perfect, and one step of reasoning costs eight points (out of
-stock 1.00, cheaper plan 0.94, earliest date 0.79). The weak spots are one-sided. The disabled state of the main button
-is reported on only 0.07 of the screens that have it (the other five states 0.92 to 1.00); our screens draw it as a
-pale tint of the accent colour while the question says "greyed out", so part of that miss may belong to the test, which
-we did not change after seeing the result. "Already done" is right on every not-done screen and on 0.65 of done
-screens. Every page-type error is another page called an article, an uncalibrated bias toward one option of the kind a
-fit removes. We had predicted at least 0.90 on page type, and that a single forward pass would trail the best hosted
-model by ten points on the reasoning screens; at 0.910 the second cannot hold whatever the hosted models score. They
-had not been run on these screens when this draft was written.
-<!-- src: results/lab/ui_screens.md, results/lab/ui_screens.json, lab/NOTES.md entries 49, 49b, 49c -->
+Finding the element that serves a stated goal does not separate systems: on the shared screens the open model and every
+hosted model score 0.99 to 1.00. One step of reasoning does: the open model scores 0.90 and the best hosted model 1.00, 10
+points ahead [2, 20], as we had predicted (earliest date 0.79 against 1.00 for five of six hosted models; out of stock 1.00;
+cheaper plan 0.94). On state questions the best hosted model is 6 points ahead [3, 9].
+
+The hosted results also exposed three weaknesses of our own test, which we report rather than remove; each is picked out by
+a rule of the generator, not by any model's answers. (1) A disabled main button, which our screens draw as a pale tint, is
+reported by the open model on 0.07 of the screens that have it and by five of the six hosted models on fewer than 0.80 (only
+Claude Opus 5 sees it every time). (2) On page type every hosted model scores 0.807 and the open model 0.780, because on the
+67 of 300 screens where a dialog is open its backdrop hides the page; on the other screens every system is perfect, the open
+model included (233 of 233). An earlier version of this section read the open model's page-type errors as an uncalibrated
+bias toward one option; that was wrong. (3) For the goal "go to the next page of results" the after-screen does not show that
+anything was done; without it the open model is at 0.92 on "already done" and the hosted models at 0.95 to 1.00. The table
+keeps the registered numbers on all items.
+<!-- src: results/lab/ui_screens.md, results/lab/ui_defects.md, lab/NOTES.md entries 49, 49b, 49c, 49d, 54 -->
 
 ## 5. Reading against writing
 
@@ -585,7 +590,7 @@ that this paper's evidence did not support.
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
 | Rubrics that are not image quality: the fitted four-pass read reaches at least 0.75 exact and 0.95 within one | 0.548 and 0.897 with 300 labels per rubric; tilt 0.330 (tilt worst, as predicted) | 36c |
 | The one-pass read beats the four-pass read zero-shot on KADID-10k by at least 5 points | +1.9 points (0.347 against 0.328) | 43c |
-| Interface screens: at least 0.90 on page type; one forward pass at least 10 points behind the best hosted model on one-step reasoning | page type 0.823 (every error is another page called an article); reasoning 0.910, so a 10-point gap is impossible | 49c |
+| Interface screens: at least 0.90 on page type; systems separate by at least 8 points on the click target | page type 0.823, which turned out to be a defect of the test (a dialog hides the page on 67 of 300 screens; 1.000 without them); every system finds the click target (spread 0.7 points) | 49c, 49d |
 | Hosted models on the probes: most share the diagonal confusion; counting is weak for every system | only the two Anthropic models share it; GPT-5.6 and Gemini 3.1 Pro are perfect on all six sets | 50d |
 | Written within 5 points of the read on the geometry probes | +10.0 on stripes, -5.3 on counting | 61b |
 | Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |
