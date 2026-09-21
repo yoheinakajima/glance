@@ -64,3 +64,12 @@ Table 1 + Figure 1; 1.2 ratings: Figure 2 + the exact-versus-within-one paragrap
 - Author line and affiliation (now: "Yohei Nakajima"); whether and how to credit AI assistance.
 - Where it is hosted and under what address; when it becomes public.
 - Whether the page should carry the project name alone or a paper title once the paper has one.
+
+## Website-only elements (added 2026-09-21)
+
+The "Use it" panel under the header (`use_it()` in `tools/make_site.py`) belongs to the website, not to the paper: it links the
+repository, says what a reader can do with it, and shows the commands. It is the only element with class `site-only`; a paper
+version (PDF or arXiv) drops it and begins at the abstract. Its install line follows the truth: `pip install glance-vlm` appears
+only once the package is on PyPI (checked when the page is built; last answer kept in `results/lab/pypi_status.json`), and
+until then it shows the install from source. After the package goes live: rebuild (`uv run python tools/make_site.py`), commit,
+deploy.

@@ -356,6 +356,58 @@ def speed_context():
             "None of the outside figures is our measurement, and raw milliseconds do not transfer between a hosted text model and a 4B vision model on a laptop.</p>")
 
 
+def pip_live():
+    """Is `glance-vlm` on PyPI? Checked when the page is built (3 s), so the install line is never ahead of the truth; without a
+    network the last recorded answer is used."""
+    import urllib.error
+    import urllib.request
+    state = ROOT / "results/lab/pypi_status.json"
+    last = (json.loads(state.read_text()) if state.exists() else {}).get("glance-vlm on PyPI", False)
+    try:
+        with urllib.request.urlopen("https://pypi.org/pypi/glance-vlm/json", timeout=3) as r:
+            live = r.status == 200
+    except urllib.error.HTTPError as e:
+        live = False if e.code == 404 else last
+    except Exception:
+        return last
+    if live != last or not state.exists():
+        state.write_text(json.dumps({"glance-vlm on PyPI": live, "changed": datetime.date.today().isoformat()}) + "\n")
+    return live
+
+
+def use_it():
+    """A panel that belongs to the WEBSITE, not to the paper: what the repository lets a reader do, with the commands. The paper
+    version drops this block (it is the only element with class `site-only`)."""
+    repo = "https://github.com/yoheinakajima/glance"
+    live = pip_live()
+    install = ("# install: Python 3.11; about 9 GB of open weights download on first use\npip install glance-vlm" if live else
+               f"# install: Python 3.11 and uv; about 9 GB of open weights download on first use\ngit clone {repo} && cd glance && uv sync")
+    run = "" if live else "uv run "
+    return f"""<aside class="useit site-only" aria-labelledby="useit">
+  <div class="useit-top"><h2 id="useit" class="plain">Use it</h2><a class="gh" href="{repo}">github.com/yoheinakajima/glance&nbsp;→</a></div>
+  <p>Glance is also a tool you can run: the readout and the fits measured on this page, packaged. One open model on your own machine, typed answers with probabilities, no image leaves it, no per-call bill. Apache-2.0.</p>
+<pre><code>{install}
+
+# yes/no: a probability
+{run}glance ask photo.jpg "Is there a dog?"
+# pick one: a distribution over your options
+{run}glance ask photo.jpg "What is it?" --options dog cat car
+# a rating, with its distribution
+{run}glance ask photo.jpg "How blurry is it?" --levels Sharp Soft Blurry
+# fit your own rubric from a few dozen images
+{run}glance fit --rubric rubric.json --data labels/</code></pre>
+  <ul>
+    <li><b>Ask</b> from the command line, from Python (<code>from glance import Glance</code>) or over a local HTTP server (<code>glance serve</code>); several questions about one image share the cost of reading it.</li>
+    <li><b>Fit your own rubric</b> from 16 unlabeled or about 32 labeled images. A fit is a few hundred numbers; the model stays frozen. Section 5 says where this works and where it does not.</li>
+    <li><b>Swap the model</b>: any Hugging Face image-text model with a chat template loads with <code>--model-id</code> (checked on one other family).</li>
+    <li><b>Check us</b>: every table and figure here regenerates from result files in the repository, which also holds the notebook of registered experiments and their misses.</li>
+    <li><b>Hand it to an agent</b>: <a href="{repo}/blob/main/AGENTS.md">AGENTS.md</a> is a one-page operating guide, and <a href="llms.txt">llms.txt</a> summarises the project and its limits.</li>
+  </ul>
+  <p class="useit-foot">This panel belongs to the website. The paper begins below.</p>
+</aside>
+"""
+
+
 def older():
     """On older public benchmarks one hosted flagship is ahead of the open model (entry 33); said next to the fresh-photo result."""
     v0 = load("results/v0/analysis/bootstrap_v0.json")
@@ -524,9 +576,10 @@ BODY = f"""
   <h1>Glance</h1>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+  <p class="links"><a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
 
+{use_it()}
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
@@ -700,6 +753,10 @@ svg .grid{stroke:var(--rule);stroke-width:1}svg .whisk{stroke:var(--ink);stroke-
 svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:var(--own)}
 .misses{list-style:none;padding:0;display:flex;flex-direction:column;gap:.85rem}
 .verdict{display:block;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}.verdict.miss{color:var(--miss)}
+.useit{border:1px solid var(--rule);background:var(--tint);padding:1.05rem 1.25rem .95rem;margin:1.4rem 0 2.4rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.useit-top{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem 1rem;flex-wrap:wrap}.useit h2{margin:0;border:0;padding:0}.useit .gh{font-weight:500;white-space:nowrap}
+.useit p{margin:.55rem 0}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
+.useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
 pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
 code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
 footer{font-size:.8rem;line-height:1.55;color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem}
