@@ -31,14 +31,19 @@ from scipy.optimize import minimize
 from scipy.special import log_softmax, softmax
 
 RATING_PROMPT_VERSION = "s1"
-SCORE_METHODS = ("statements", "digits", "fast2", "ens4d")
+SCORE_METHODS = ("statements", "digits", "fast2", "ens4d", "jsondigits")
 MEMBERS: dict[str, tuple[str, ...]] = {
     "digits": ("digits",),
     # two passes, no magnified crop: the cheap choice when a request carries many rubrics (0.833 on the lab scales
     # against 0.867 for ens4d; weak on compression artifacts, where the crop matters; lab/NOTES.md entry 21)
     "fast2": ("digits", "digitsrev"),
     "ens4d": ("digits", "zoom_digits", "digitsrev", "zoom_digitsrev"),
+    # one pass, read at the position where the same model's WRITTEN JSON answer puts its digit: the best zero-shot read
+    # measured (0.669 on the lab scales against 0.570 for ens4d and 0.672 written; lab/NOTES.md entries 42b, 43b), and the
+    # weaker input for a labeled fit (0.822 against 0.853 at 32 labels), so ens4d stays the method to fit
+    "jsondigits": ("jsondigits",),
 }
+JSON_ANSWER_PREFIX = '{"answer": '  # the assistant turn is forced to begin here; the digit logits are read at the next position
 ZOOM_FACTOR = 3
 ZOOM_IMAGE_ID = "zoom"
 L2 = 0.05
@@ -80,8 +85,24 @@ def zoom_crop(image, factor: int = ZOOM_FACTOR):
     return image.crop((left, top, left + cw, top + ch)).resize((cw * factor, ch * factor), Image.NEAREST)
 
 
+def json_block(instructions: str, levels: list[str], image_id: str = "img0") -> tuple[str, list[str]]:
+    """The written-answer baseline's own JSON request for one rating field (`glance.lab.gen_bench.json_prompt`, word for
+    word; a test pins the two together). Read with `JSON_ANSWER_PREFIX` as the start of the assistant turn."""
+    allowed = "; ".join(f"{i} = {text}" for i, text in enumerate(levels)) + " (answer with the number)"
+    block = f"Answer every question about `{image_id}`. Reply with one JSON object and nothing else.\n\n\"answer\": {instructions} Allowed: {allowed}"
+    return block, [str(i) for i in range(len(levels))]
+
+
+def member_assistant_prefix(member: str) -> str:
+    """Text the assistant turn is forced to begin with before the logits are read ("" for every member but `jsondigits`)."""
+    return JSON_ANSWER_PREFIX if member == "jsondigits" else ""
+
+
 def member_prompt(member: str, instructions: str, levels: list[str], image_id: str) -> tuple[str, list[str], bool]:
     """(prompt block, digit labels, reversed?) for one member readout."""
+    if member == "jsondigits":
+        block, labels = json_block(instructions, levels, image_id)
+        return block, labels, False
     reverse = member.endswith("rev")
     text = with_zoom(instructions, image_id) if member.startswith("zoom_") else instructions
     block, labels = digits_block(text, levels, reverse=reverse)

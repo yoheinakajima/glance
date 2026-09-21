@@ -1883,3 +1883,12 @@ screen and on 0.65 of done screens. Caveat on the first, from looking at the scr
 disabled button as a pale tint of the accent colour, while the question says "greyed out"; a person can tell next to an enabled
 button but it is subtle, so part of this miss may belong to the test's wording. The test is NOT changed after the fact.
 Hosted paste: `uv run python tools/frontier_batch.py --set ui` (its report keeps the same breakdowns).
+
+## 2026-09-21 04:01 Entry 42c: the one-pass read is in the shipped package as an OPT-IN rating method (default unchanged)
+
+`glance/rating.py`: method `jsondigits` (one member; `json_block` is the written baseline's JSON request word for word, pinned
+to `glance.lab.gen_bench.json_prompt` by a test; the assistant turn is forced to begin `{"answer": `). `glance/scorer.py`
+groups rating calls by that forced start and passes it to the backend only when it is used, so other backends are untouched.
+Reachable as `options.score_method`, `glance score|fit --method jsondigits`, `--score-method`. `glance fit` and
+`fit --unlabeled` work with it because a calibration is keyed by method. The DEFAULT for `score` stays `ens4d` until the
+registered rule of entry 43 is decided by the KADID half, which is running. Full tests: 361 passed, 12 skipped.

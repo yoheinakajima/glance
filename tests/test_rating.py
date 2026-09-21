@@ -24,8 +24,8 @@ class CountingBackend(FakeBackend):
         super().__init__(fixed)
         self.label_calls = []
 
-    def score_labels(self, images, context, prompts, labels):
-        self.label_calls.append({"images": [img.id for img in images], "prompts": list(prompts), "labels": list(labels)})
+    def score_labels(self, images, context, prompts, labels, assistant_prefix=""):
+        self.label_calls.append({"images": [img.id for img in images], "prompts": list(prompts), "labels": list(labels), "assistant_prefix": assistant_prefix})
         return super().score_labels(images, context, prompts, labels)
 
 
@@ -109,6 +109,34 @@ def test_digits_is_one_pass_and_statements_is_v0(cfg, png_b64):
     v0 = engine.decide(_body(png_b64, {"blur": _rate()}, score_method="statements"))
     assert v0.scoring.scores["blur"].method == "statement" and v0.response.answers["blur"].method == "statements"
     assert v0.response.usage.forward_passes == 4 and len(backend.label_calls) == 1  # no new label call
+
+
+def test_jsondigits_prompt_is_the_written_baselines_own_request():
+    """The one-pass read was measured with the written baseline's exact JSON request (lab/NOTES.md entry 42); the shipped
+    block must stay that request, word for word, and the assistant turn must begin where the written answer puts its digit."""
+    from glance.lab.gen_bench import json_prompt
+
+    block, labels = rating.json_block(QUESTION, LEVELS)
+    assert block == json_prompt({"answer": {"type": "score", "instructions": QUESTION, "criteria": LEVELS}})
+    assert labels == ["0", "1", "2", "3"] and rating.member_assistant_prefix("jsondigits") == '{"answer": ' == rating.JSON_ANSWER_PREFIX
+    assert all(rating.member_assistant_prefix(m) == "" for m in rating.MEMBERS["ens4d"])
+    assert "`photo`" in rating.json_block("How blurry is `photo`?", LEVELS, "photo")[0] and "img0" not in rating.json_block("x", LEVELS, "photo")[0]
+
+
+def test_jsondigits_is_one_pass_with_the_forced_answer_prefix_and_is_opt_in(cfg, png_b64):
+    backend = CountingBackend()
+    engine = Engine(cfg, backends={"vlm": backend})
+    questions = {"blur": _rate(), "noise": _rate("How noisy is `img0`?", ["Clean", "Some grain", "Noisy", "Very noisy"])}
+    trace = engine.decide(_body(png_b64, questions, score_method="jsondigits"))
+    # one call on the image alone (no magnified crop), both questions packed behind it, the assistant turn forced to `{"answer": `
+    assert [(c["images"], len(c["prompts"]), c["assistant_prefix"]) for c in backend.label_calls] == [(["img0"], 2, '{"answer": ')]
+    assert backend.label_calls[0]["prompts"][0] == rating.json_block(QUESTION, LEVELS)[0]
+    assert trace.response.usage.forward_passes == 2 and trace.scoring.scores["blur"].features.shape == (4,)
+    assert trace.response.answers["blur"].method == "jsondigits" and trace.response.answers["blur"].calibration is None
+    # every other method still calls the backend WITHOUT the extra argument, so third-party backends keep working
+    backend.label_calls.clear()
+    engine.decide(_body(png_b64, {"blur": _rate()}, score_method="fast2"))
+    assert [c["assistant_prefix"] for c in backend.label_calls] == [""]
 
 
 def test_fast2_is_two_passes_on_the_image_alone(cfg, png_b64):

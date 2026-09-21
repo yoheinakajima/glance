@@ -318,8 +318,8 @@ def _score_ratings(backend, images, context, questions: dict[str, ScoreQuestion]
     if needs_zoom and any(img.id == rating.ZOOM_IMAGE_ID for img in images):
         raise UnsupportedQuestionError(f"image id `{rating.ZOOM_IMAGE_ID}` is reserved by score_method `{score_method}`")
 
-    # (view key, K) -> [(qid, member, reversed?, block)], with the image list of each view
-    calls: dict[tuple[str, int], list[tuple[str, str, bool, str]]] = {}
+    # (view key, K, forced start of the assistant turn) -> [(qid, member, reversed?, block)], with the image list of each view
+    calls: dict[tuple[str, int, str], list[tuple[str, str, bool, str]]] = {}
     views: dict[str, list[LoadedImage]] = {"": images}
     labels_for: dict[int, list[str]] = {}
     for qid, q in questions.items():
@@ -331,14 +331,16 @@ def _score_ratings(backend, images, context, questions: dict[str, ScoreQuestion]
                 view = target.id
                 if view not in views:
                     views[view] = images + [_zoom_image(target)]
-            block, labels, reverse = rating.member_prompt(member, q.instructions, levels, target.id if target else "img0")
+            image_id = target.id if target else (images[0].id if len(images) == 1 else "img0")
+            block, labels, reverse = rating.member_prompt(member, q.instructions, levels, image_id)
             labels_for[len(levels)] = labels
-            calls.setdefault((view, len(levels)), []).append((qid, member, reverse, block))
+            calls.setdefault((view, len(levels), rating.member_assistant_prefix(member)), []).append((qid, member, reverse, block))
 
     member_logits: dict[str, dict[str, np.ndarray]] = {qid: {} for qid in questions}
     records: dict[str, list[dict[str, Any]]] = {qid: [] for qid in questions}
-    for (view, k), entries in calls.items():
-        result = backend.score_labels(views[view], context, [block for *_, block in entries], labels_for[k])
+    for (view, k, prefix), entries in calls.items():
+        extra = {"assistant_prefix": prefix} if prefix else {}  # only passed when used, so backends without the parameter keep working
+        result = backend.score_labels(views[view], context, [block for *_, block in entries], labels_for[k], **extra)
         usage.add(result.usage)
         for key, ms in result.timing_ms.items():
             timing[key] = timing.get(key, 0.0) + ms

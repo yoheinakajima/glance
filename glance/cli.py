@@ -232,7 +232,7 @@ def _rubric_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--rubric", help='JSON file: {"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}')
     p.add_argument("--instructions", help="the question, naming the image as `img0` (alternative to --rubric)")
     p.add_argument("--criteria", nargs="+", help="level descriptions, lowest first (alternative to --rubric)")
-    p.add_argument("--method", choices=["ens4d", "fast2", "digits"], default="ens4d", help="4 forward passes (default), 2 without the magnified crop, or 1")
+    p.add_argument("--method", choices=["ens4d", "fast2", "digits", "jsondigits"], default="ens4d", help="4 forward passes (default), 2 without the magnified crop, 1, or 1 pass read at the JSON answer position (best with nothing fitted)")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")
     p.add_argument("--prefix-cache", action="store_true", help="VLM: share the image prefill between readouts (faster)")
 
@@ -255,7 +255,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("request", help="path to a request JSON file")
     p.add_argument("--model", choices=["siglip", "vlm", "frontier"], help="override the request's model")
     p.add_argument("--choice-method", choices=["independent", "letter"], help="override options.choice_method")
-    p.add_argument("--score-method", choices=["auto", "statements", "digits", "fast2", "ens4d"], help="override options.score_method")
+    p.add_argument("--score-method", choices=["auto", "statements", "digits", "fast2", "ens4d", "jsondigits"], help="override options.score_method")
     p.add_argument("--calibrated", action=argparse.BooleanOptionalAction, default=None, help="override options.calibrated")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path (every statement a full prompt)")
     p.add_argument("--confirm-spend", action="store_true", help="allow --model frontier: sends the image to a paid API")
