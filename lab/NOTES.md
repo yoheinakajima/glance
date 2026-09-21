@@ -1474,3 +1474,16 @@ reference-anchored experiment uses). Compared with raw `ens4d` on the same items
   stays below 0.50: fine severity levels of 23 distortion types remain hard zero-shot.
 - Decision rule fixed now: if H42 holds and KADID is not worse than raw `ens4d`, `jsondigits` becomes the zero-shot default
   for `score` in the harness (one pass), `fit --unlabeled` applies to it, and `ens4d` stays the default for labeled fits.
+
+## 2026-09-20 19:45 Entry 44: E3 result: the recipe replicates on a second model family (SmolVLM2-2.2B), no wording changed
+
+`lab/SMOLVLM2_REPORT.md`: HuggingFaceTB/SmolVLM2-2.2B-Instruct (SigLIP vision tower, SmolLM2 language model, Apache-2.0),
+the first 400 items per lab scale (200 fit / 200 test), the prompts and readouts exactly as used for Qwen3-VL-4B.
+- v0 readout as shipped 0.384; v0 with its best calibration 0.762; `digits` + matrix 0.775; `fast2` + matrix 0.800;
+  `ens4d` + matrix 0.854 (within one level 0.996, pooled ECE 0.023). The registered order (naive < best-calibrated naive
+  < `digits` + matrix < `ens4d` + matrix) REPLICATES; reversal helps (0.800 against 0.775). A model half the size, of a
+  different family, lands 1.3 points under the 4B model's 0.867 once it is fitted with 200 labels.
+- Zero-shot it is much weaker than the 4B model: raw `ens4d` 0.419 exact, 0.837 within one level (4B: 0.570 / 0.987).
+  So the FITTED recipe is portable across families; the zero-shot quality is a property of the model, which is what the
+  owner's scaling question (E15, running) is about. `jsondigits` was not collected for this model.
+- "Works on any VLM" stays unsaid: two families, one fitted recipe.
