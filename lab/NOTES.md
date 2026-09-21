@@ -1573,3 +1573,20 @@ The owner ran the batch (about 4,500 calls). Same items, same constrained writte
   pass 0.45 s (four passes 1.08 s). NOTE: the hosted models were timed on the larger Commons photographs; a timing of the
   open model on those same photographs, for all three sizes, is running (`glance.lab.photo_timing`) and replaces the
   matrix's yes/no and pick-one speed and cost cells when it lands.
+
+## 2026-09-20 22:50 Entry 47: E20, a HARDER fresh closed-set test (the headline's known weakness), registered before any code or data
+
+On the two fresh photo sets every system scores about 0.93, so "level with hosted models" partly reflects a ceiling; on
+older fine-grained benchmarks a flagship led by 3 to 5 points. Fixed now: iNaturalist research-grade observations, same
+source rules as entry 35 (observed on or after 2026-08-15, photo licence cc0 / cc-by / cc-by-sa, one photo per observer
+per class, medium size, at most 1 request per second), but at the level of INSECT ORDERS, where classes look alike:
+beetle (Coleoptera), butterfly or moth (Lepidoptera), bee, wasp or ant (Hymenoptera), fly (Diptera), dragonfly or
+damselfly (Odonata), true bug (Hemiptera), grasshopper or cricket (Orthoptera); 30 photos per class, 210 in total.
+Suites `inat_orders_choice` (pick one of seven, one-line descriptions) and `inat_orders_yesno` (one yes question and one
+no question per photo, the no drawn from the OTHER six orders, so every negative is a look-alike, not a fish).
+- H48: the open 4B model scores at least 0.80 on pick-one and 0.85 on yes/no, clearly below its 0.94 on the easy set.
+- H49: the systems separate: at least 8 points between the best and the worst of the open model and the hosted models on
+  pick-one, and the best hosted model is ahead of the open 4B model by 3 to 10 points. If the open model is within 3 points
+  of the best hosted model here too, the headline stands on a harder test; if it trails by more than 10, the headline must
+  say "on everyday photographs".
+Hosted rows need the owner's paste (`tools/frontier_batch.py`, a new set); the local run goes on the GPU queue.
