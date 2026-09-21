@@ -24,6 +24,11 @@ def load_backend(name: str, cfg: Config, **kwargs) -> Backend:
         from .siglip import SiglipBackend
 
         return SiglipBackend(cfg, **kwargs)
+    if name == "vlm" and cfg.models.generic is not None:  # the caller chose a model by id: the any-model backend
+        from .generic_hf import GenericVlmBackend
+
+        g = cfg.models.generic
+        return GenericVlmBackend(cfg, model_id=g.id, revision=g.revision, longest_edge=g.image_longest_edge, dtype=g.dtype, **kwargs)
     if name == "vlm":
         from .vlm_hf import VlmBackend
 

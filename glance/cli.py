@@ -34,6 +34,9 @@ def _config_overrides(args: argparse.Namespace) -> dict:
         overrides.setdefault("vlm", {})["prefix_cache"] = True
     if getattr(args, "no_prefix_cache", False):
         overrides.setdefault("vlm", {})["prefix_cache"] = False
+    if getattr(args, "model_id", None):  # any Hugging Face VLM instead of the tier table
+        overrides.setdefault("models", {})["generic"] = {"id": args.model_id, "revision": getattr(args, "revision", None),
+                                                          "dtype": getattr(args, "dtype", None) or "auto", "image_longest_edge": getattr(args, "image_longest_edge", None)}
     return overrides
 
 
@@ -237,6 +240,11 @@ def _rubric_args(p: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="glance", description="Image decision harness v0")
     parser.add_argument("--config", default=None, help="path to a config yaml (default: configs/default.yaml)")
+    parser.add_argument("--model-id", help="use this Hugging Face image-text-to-text model for `vlm` instead of the built-in Qwen3-VL tiers "
+                        "(any model with a chat template; only SmolVLM2 and Qwen3-VL are measured in this repository)")
+    parser.add_argument("--revision", help="commit of --model-id to pin (recommended)")
+    parser.add_argument("--image-longest-edge", type=int, help="image size handed to --model-id's image processor")
+    parser.add_argument("--dtype", help="auto (default), bfloat16, float16 or float32 for --model-id")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("doctor", help="detect device, pick the model tier, write logs/doctor.json")

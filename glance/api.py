@@ -36,7 +36,8 @@ def _image_refs(images: ImageInput) -> list[dict[str, Any]]:
 
 class Glance:
     def __init__(self, model: str = "vlm", config: Config | str | Path | None = None, prefix_cache: bool = True,
-                 calibrated: bool | str = "auto", score_method: str = "auto"):
+                 calibrated: bool | str = "auto", score_method: str = "auto", model_id: str | None = None, revision: str | None = None,
+                 image_longest_edge: int | None = None, dtype: str = "auto"):
         """`prefix_cache=True` shares the image prefill between questions (about 3 to 4 times faster on requests with
         several questions; changes no decision in our checks, see docs/paper/RESULTS_LAB.md section 9). The CLI and the
         server keep the hand-off's default (off) unless started with --prefix-cache."""
@@ -45,7 +46,10 @@ class Glance:
         if isinstance(config, Config):
             cfg = config
         else:
-            cfg = load_config(config, {"vlm": {"prefix_cache": prefix_cache}})
+            overrides: dict[str, Any] = {"vlm": {"prefix_cache": prefix_cache}}
+            if model_id:  # any Hugging Face image-text-to-text model instead of the built-in tiers
+                overrides["models"] = {"generic": {"id": model_id, "revision": revision, "dtype": dtype, "image_longest_edge": image_longest_edge}}
+            cfg = load_config(config, overrides)
         self.model = model
         self.options = {"calibrated": calibrated, "score_method": score_method}
         self.engine = Engine(cfg, source="python")

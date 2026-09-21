@@ -24,6 +24,7 @@ limits:
   max_image_mb: 20
   max_side: 2048
 models:
+  generic: null
   image_token_budget_override: null
   siglip:
     id: google/siglip2-base-patch16-256

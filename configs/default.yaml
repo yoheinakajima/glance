@@ -37,6 +37,10 @@ models:
       image_token_budget: 384
   # Optional overrides. Leave null to use what `glance doctor` selects.
   tier_override: null
+  # Any Hugging Face image-text-to-text model with a chat template instead of the tiers above (same as --model-id).
+  # Only Qwen3-VL and SmolVLM2 are measured in this repository. Example:
+  #   generic: {id: HuggingFaceTB/SmolVLM2-2.2B-Instruct, revision: 482adb537c021c86670beed01cd58990d01e72e4, image_longest_edge: 768}
+  generic: null
   image_token_budget_override: null
 
 vlm:

@@ -47,10 +47,20 @@ class VlmTierConfig(_Strict):
     image_token_budget: int
 
 
+class GenericModelConfig(_Strict):
+    """Any Hugging Face image-text-to-text model with a chat template, instead of the tier table (`--model-id`)."""
+
+    id: str
+    revision: str | None = None  # pin it for reproducible results; when empty the loaded commit is recorded
+    dtype: str = "auto"
+    image_longest_edge: int | None = None  # handed to the model's image processor; None keeps the model's default
+
+
 class ModelsConfig(_Strict):
     siglip: SiglipModelConfig
     vlm_tiers: dict[str, VlmTierConfig]
     tier_override: str | None = None
+    generic: GenericModelConfig | None = None
     image_token_budget_override: int | None = None
 
 
