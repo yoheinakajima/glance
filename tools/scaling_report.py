@@ -19,6 +19,8 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MEMBERS = rating.MEMBERS["ens4d"]
 SOURCES = {"2B": "lab/runs/scaling_2b.jsonl", "4B": "lab/data/main_stagesAB.jsonl.gz", "8B": "lab/runs/scaling_8b.jsonl"}
+JSON_SOURCES = {"2B": "lab/runs/scaling_2b.jsonl", "4B": "lab/runs/lab_jsondigits.jsonl", "8B": "lab/runs/scaling_8b.jsonl"}  # the one-pass read (entry 42)
+OTHER_FAMILY = {"SmolVLM2-2.2B (another family)": "lab/runs/smolvlm2_lab.jsonl"}  # E3, entry 44: same items, same prompts
 SCALES = ["blur", "exposure", "jpeg", "noise", "resolution"]
 N_TEST, N_CAL = 200, 100
 
@@ -26,6 +28,22 @@ N_TEST, N_CAL = 200, 100
 def subset(scale):
     items = [json.loads(line) for line in (ROOT / "lab/manifests" / f"{scale}.jsonl").read_text().splitlines() if line.strip()]
     return [i["item_id"] for i in items if i["split"] == "test"][:N_TEST], [i["item_id"] for i in items if i["split"] == "calibration"][:N_CAL]
+
+
+def evaluate_json(path):
+    """Zero-shot exact accuracy of the one-pass JSON-position read, and with 16 unlabeled images, on the same subset."""
+    rows = {(r["ladder"], r["item_id"]): r["logits"] for r in read_jsonl(ROOT / path) if r.get("method_key") == "jsondigits"}
+    rng, zero, u16 = np.random.default_rng(7), [], []
+    for scale in SCALES:
+        test_ids, cal_ids = subset(scale)
+        if not all((scale, i) in rows for i in test_ids + cal_ids):
+            return None
+        items = {i["item_id"]: i["level"] for i in (json.loads(line) for line in (ROOT / "lab/manifests" / f"{scale}.jsonl").read_text().splitlines() if line.strip())}
+        xt, xc, yt = np.array([rows[(scale, i)] for i in test_ids]), np.array([rows[(scale, i)] for i in cal_ids]), np.array([items[i] for i in test_ids])
+        zero.append(float(np.mean(xt.argmax(1) == yt)))
+        pools = [rng.choice(N_CAL, 16, replace=False) for _ in range(20)]
+        u16.append(float(np.mean([np.mean(((xt - xc[i].mean(0)) / (xc[i].std(0) + 1e-6)).argmax(1) == yt) for i in pools])))
+    return {"json_zero_shot": float(np.mean(zero)), "json_unlabeled_16": float(np.mean(u16))}
 
 
 def evaluate(path):
@@ -65,7 +83,7 @@ def boot(hits, rng):
 
 def main():
     rng, result = np.random.default_rng(11), {}
-    for size, path in SOURCES.items():
+    for size, path in {**SOURCES, **OTHER_FAMILY}.items():
         per = evaluate(path) if (ROOT / path).exists() else None
         if per is None:
             continue
@@ -76,6 +94,8 @@ def main():
         row["within_1"] = float(np.mean([per[s]["within_1"] for s in SCALES]))
         row["spearman"] = float(np.mean([per[s]["spearman"] for s in SCALES]))
         row["gain_from_32_labels_points"] = round(100 * (row["labels_32"] - row["zero_shot"]), 1)
+        js = JSON_SOURCES.get(size)
+        row.update((evaluate_json(js) or {}) if js and (ROOT / js).exists() else {})
         result[size] = row
     frontier = json.loads((ROOT / "results/lab/frontier_head_to_head.json").read_text())["runs"]
     verdicts = {}
@@ -90,17 +110,19 @@ def main():
     (ROOT / "results/lab/scaling.json").write_text(json.dumps({"sizes": result, "verdicts": verdicts}, indent=1))
     f = lambda r, k: f"{r[k]:.3f} [{r[k + '_ci95'][0]:.3f}, {r[k + '_ci95'][1]:.3f}]"  # noqa: E731
     md = ["# Does the zero-shot read improve with model size? (E15; Qwen3-VL, identical prompts and settings; the 1,000 lab images the frontier models saw)", "",
-          "| Model | zero-shot exact | within one level | rank agreement (Spearman) | + 16 unlabeled images | + 32 labels | gain from 32 labels, points |",
-          "| --- | --- | --- | --- | --- | --- | --- |"]
-    for size in SOURCES:
+          "| Model | zero-shot exact, four-pass read | zero-shot exact, one-pass read | within one level | rank agreement (Spearman) | + 16 unlabeled images | + 32 labels | gain from 32 labels, points |",
+          "| --- | --- | --- | --- | --- | --- | --- | --- |"]
+    for size in list(SOURCES) + list(OTHER_FAMILY):
+        label = f"Qwen3-VL-{size}" if size in SOURCES else size
         if size in result:
             r = result[size]
-            md.append(f"| Qwen3-VL-{size} + Glance `ens4d` | {f(r, 'zero_shot')} | {r['within_1']:.3f} | {r['spearman']:.3f} | {f(r, 'unlabeled_16')} | {f(r, 'labels_32')} | {r['gain_from_32_labels_points']:+.1f} |")
+            one = f"{r['json_zero_shot']:.3f} ({r['json_unlabeled_16']:.3f} with 16 unlabeled)" if "json_zero_shot" in r else "not collected"
+            md.append(f"| {label} | {f(r, 'zero_shot')} | {one} | {r['within_1']:.3f} | {r['spearman']:.3f} | {f(r, 'unlabeled_16')} | {f(r, 'labels_32')} | {r['gain_from_32_labels_points']:+.1f} |")
         else:
-            md.append(f"| Qwen3-VL-{size} | pending | | | | | |")
-    md += [f"| {run['model']}, zero-shot written pick | {run['mean_accuracy']:.3f} | not stored | not stored | - | - | - |" for run in frontier.values()]
+            md.append(f"| {label} | pending | | | | | | |")
+    md += [f"| {run['model']}, zero-shot written pick | {run['mean_accuracy']:.3f} | | not stored | not stored | - | - | - |" for run in frontier.values()]
     md += ["", "Per scale, zero-shot exact accuracy:", "", "| Model | " + " | ".join(SCALES) + " |", "| --- | " + " | ".join("---" for _ in SCALES) + " |"]
-    md += [f"| Qwen3-VL-{s} | " + " | ".join(f"{result[s]['per_scale_zero_shot'][c]:.3f}" for c in SCALES) + " |" for s in SOURCES if s in result]
+    md += [f"| {'Qwen3-VL-' + s if s in SOURCES else s} | " + " | ".join(f"{result[s]['per_scale_zero_shot'][c]:.3f}" for c in SCALES) + " |" for s in list(SOURCES) + list(OTHER_FAMILY) if s in result]
     if verdicts:
         md += ["", "Registered predictions (`lab/NOTES.md` entry 38):", ""] + [f"- {k}: {'SUPPORTED' if v else 'NOT SUPPORTED'}" for k, v in verdicts.items()]
     (ROOT / "results/lab/scaling.md").write_text("\n".join(md) + "\n")

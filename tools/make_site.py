@@ -133,6 +133,22 @@ def extras_table():
     return "".join(out) + "</tbody></table></div>"
 
 
+def models_table():
+    sizes = (scaling or {}).get("sizes", {})
+    order = [("Qwen3-VL-2B", "2B"), ("Qwen3-VL-4B", "4B"), ("Qwen3-VL-8B", "8B"), ("SmolVLM2-2.2B, another family", "SmolVLM2-2.2B (another family)")]
+    out = ['<div class="table-scroll"><table><thead><tr><th>Open model, same prompts</th><th class="n">zero-shot</th><th class="n">within one</th><th class="n">+16 unlabeled</th><th class="n">+32 labels</th></tr></thead><tbody>']
+    for label, key in order:
+        r = sizes.get(key)
+        if not r:
+            out.append(f'<tr><td>{label}</td><td class="n pending" colspan="4">running tonight</td></tr>')
+            continue
+        zero = r.get("json_zero_shot", r["zero_shot"])
+        u16 = r.get("json_unlabeled_16", r["unlabeled_16"])
+        note = "" if "json_zero_shot" in r else '<span class="note">four-pass read; the one-pass read was not collected</span>'
+        out.append(f'<tr{" class=own" if key == "4B" else ""}><td>{label}{note}</td><td class="n">{zero:.3f}</td><td class="n">{r["within_1"]:.3f}</td><td class="n">{u16:.3f}</td><td class="n">{r["labels_32"]:.3f}</td></tr>')
+    return "".join(out) + "</tbody></table></div>"
+
+
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
 raw = lf["raw (0 labels, no pool)"]
@@ -151,7 +167,7 @@ BODY = f"""
 
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
-  <p class="abstract">A frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) is asked typed questions about an image: is this true, which one, where on this rubric. The answer is <em>read</em> from the logits of a single forward pass, not generated. On photographs taken after every model’s release, with labels nobody on this project made, it is level with Gemini 3.1 Pro, Claude Opus 5 and GPT-5.6 on yes/no and pick-one questions. On ratings it orders images almost perfectly zero-shot (rank agreement {0.93:.2f}, within one level on {raw["within_1"]:.2f} of images); exact levels depend on where a rubric draws its lines, which no model can know unseen. Reading gives the same answers as the same model writing JSON, {genb["1 yes/no"]["speedup_vs_write_fast2"]:.1f} to {genb["25 ratings"]["speedup_vs_write_fast2"]:.1f} times faster, with probabilities. Glance is the calibration and measurement harness around that readout; the readout itself is shared with other training-free tools and is not claimed as new.</p>
+  <p class="abstract">A frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) is asked typed questions about an image: is this true, which one, where on this rubric. The answer is <em>read</em> from the logits of a single forward pass, not generated. On photographs taken after every model’s release, with labels nobody on this project made, it is level with Gemini 3.1 Pro, Claude Opus 5 and GPT-5.6 on yes/no and pick-one questions. On ratings it orders images almost perfectly zero-shot (rank agreement {0.93:.2f}, within one level on {raw["within_1"]:.2f} of images); exact levels depend on where a rubric draws its lines, which no model can know unseen. The fitted recipe carries to a smaller model and to a second model family without changing a word; zero-shot quality grows with the model. Reading gives the same answers as the same model writing JSON, {genb["1 yes/no"]["speedup_vs_write_fast2"]:.1f} to {genb["25 ratings"]["speedup_vs_write_fast2"]:.1f} times faster, with probabilities. Glance is the calibration and measurement harness around that readout; the readout itself is shared with other training-free tools and is not claimed as new.</p>
 </section>
 
 <section aria-labelledby="evidence">
@@ -183,6 +199,10 @@ BODY = f"""
   {cost_table()}
   <p class="caption"><b>Table 4.</b> The open model writing against reading, cost per 1,000 images on a rented GPU assumed no faster than the laptop; self-hosted cost is GPU time, so the saving is the measured time saving. For comparison, the frontier calls on these tasks measured ${api_lo:.2f} to ${api_hi:.2f} per 1,000 answers.</p>
   <p>On yes/no and pick-one the read and the written answers are identical item for item. Reading adds probabilities (accuracy on the most confident 80% of answers is 0.975 on the iNaturalist set), and it is the only route to fitting: a written pick has nothing to calibrate.</p>
+  <h3>1.7 Other open models: size and family</h3>
+  <p>The same prompts and readouts, not a word changed, on a smaller model of the same family and on a model from a different family (different vision tower, different language model). Ratings, the same 1,000 images.</p>
+  {models_table()}
+  <p class="caption"><b>Table 5.</b> Exact-level accuracy. Zero-shot quality belongs to the model and grows with it; once a few dozen labels exist the models land within a few points of each other, so the fitted recipe carries across sizes and families. “Within one” is for the four-pass read. The 8B model of the same family is running.</p>
 </section>
 
 <section aria-labelledby="new">
@@ -197,7 +217,7 @@ BODY = f"""
     <li><span class="verdict miss">not supported</span> Our four-pass rating readout was expected to match the same model’s written answer zero-shot. It trailed it by ten points: a readout selected with a calibration in the loop is good to fit and poor zero-shot. <span class="verdict">supported</span> The registered fix, one pass read at the JSON answer position, matches the written answer ({jd["json_zero"]:.3f}) and reaches {jd["json_u16"]:.3f} with 16 unlabeled images.</li>
     <li><span class="verdict miss">not supported</span> On KADID-10k (23 distortion types, five levels, human scores) every registered target was missed: 0.527 exact with labels, 0.33 zero-shot.</li>
     <li><span class="verdict">supported</span> A fitted readout on the model’s hidden state reaches {r4a:.3f} from one pass, against 0.867 for the token readout: the model represents severity almost perfectly. It needs on the order of a hundred labels.</li>
-    <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. One model family measured so far; a second family and a 2B / 4B / 8B ladder are running.</li>
+    <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. Two model families and two sizes measured so far (Table 5); that is not “any model”.</li>
   </ul>
 </section>
 

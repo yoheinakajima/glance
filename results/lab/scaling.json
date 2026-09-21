@@ -1,0 +1,90 @@
+{
+ "sizes": {
+  "2B": {
+   "per_scale_zero_shot": {
+    "blur": 0.265,
+    "exposure": 0.25,
+    "jpeg": 0.47,
+    "noise": 0.595,
+    "resolution": 0.36
+   },
+   "zero_shot": 0.388,
+   "zero_shot_ci95": [
+    0.358,
+    0.417
+   ],
+   "unlabeled_16": 0.6440000000000001,
+   "unlabeled_16_ci95": [
+    0.6183500000000001,
+    0.6688525
+   ],
+   "labels_32": 0.84155,
+   "labels_32_ci95": [
+    0.8247000000000001,
+    0.8583012499999999
+   ],
+   "within_1": 0.893,
+   "spearman": 0.8929507103218389,
+   "gain_from_32_labels_points": 45.4,
+   "json_zero_shot": 0.4920000000000001,
+   "json_unlabeled_16": 0.6232
+  },
+  "4B": {
+   "per_scale_zero_shot": {
+    "blur": 0.47,
+    "exposure": 0.7,
+    "jpeg": 0.45,
+    "noise": 0.575,
+    "resolution": 0.655
+   },
+   "zero_shot": 0.57,
+   "zero_shot_ci95": [
+    0.54,
+    0.601
+   ],
+   "unlabeled_16": 0.6939,
+   "unlabeled_16_ci95": [
+    0.66935,
+    0.7181
+   ],
+   "labels_32": 0.85265,
+   "labels_32_ci95": [
+    0.83454875,
+    0.8701012499999999
+   ],
+   "within_1": 0.9879999999999999,
+   "spearman": 0.9337104965578382,
+   "gain_from_32_labels_points": 28.3,
+   "json_zero_shot": 0.669,
+   "json_unlabeled_16": 0.7579
+  },
+  "SmolVLM2-2.2B (another family)": {
+   "per_scale_zero_shot": {
+    "blur": 0.345,
+    "exposure": 0.515,
+    "jpeg": 0.305,
+    "noise": 0.485,
+    "resolution": 0.445
+   },
+   "zero_shot": 0.41899999999999993,
+   "zero_shot_ci95": [
+    0.388,
+    0.45
+   ],
+   "unlabeled_16": 0.5192,
+   "unlabeled_16_ci95": [
+    0.49164749999999996,
+    0.5460025000000001
+   ],
+   "labels_32": 0.8144,
+   "labels_32_ci95": [
+    0.7947000000000001,
+    0.83325125
+   ],
+   "within_1": 0.837,
+   "spearman": 0.8329961786862187,
+   "gain_from_32_labels_points": 39.5
+  }
+ },
+ "verdicts": {}
+}

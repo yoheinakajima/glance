@@ -103,7 +103,7 @@ Frontier APIs, measured on the owner's runs: Gemini 3.1 Pro $6.15 per 1,000, 4.0
 
 ## 6. Does zero-shot improve with model size? (E15, Qwen3-VL 2B / 4B / 8B, identical prompts and settings)
 
-Pending: registered in `lab/NOTES.md` entry 38 with a prediction that can fail (8B stays below 0.70 exact on the lab scales zero-shot). The 8B model must run alone on this 32 GB machine.
+See `results/lab/scaling.md`.
 
 ## 6b. Does the recipe carry to another model family? (E3, SmolVLM2-2.2B, no wording changed)
 
