@@ -283,10 +283,10 @@
      "n": 65
     },
     "rating": {
-     "accuracy": 0.57,
+     "accuracy": 0.669,
      "ci95": [
-      0.539,
-      0.6
+      0.639,
+      0.698
      ],
      "n": 1000
     }
@@ -301,8 +301,8 @@
      "how": "clean timing scheduled (idle-GPU window tonight)"
     },
     "rating": {
-     "value": 1.0891686045797542,
-     "how": "measured on the laptop, GPU otherwise idle"
+     "value": null,
+     "how": "clean timing scheduled (idle-GPU window tonight)"
     }
    },
    "usd_per_1000": {
@@ -318,25 +318,22 @@
      "how": "pending the timing"
     },
     "rating": {
-     "value": [
-      0.15913963500248632,
-      0.24348969249049612
-     ],
-     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+     "value": null,
+     "how": "pending the timing"
     }
    }
   }
  },
  "only_the_read_row_can_add": [
   {
-   "what": "UNLABELED images of the rubric (`glance fit --unlabeled`)",
-   "rating_accuracy": 0.702,
-   "note": "zero labels, but not zero-shot; 500 unlabeled images here, and 16 already give 0.686 on the full test split; probabilities improve but are not calibrated"
+   "what": "16 UNLABELED images of the rubric (`glance fit --unlabeled`)",
+   "rating_accuracy": 0.7584,
+   "note": "zero labels, but not zero-shot; same 1,000 images, one pass; probabilities improve but are not calibrated"
   },
   {
    "what": "32 labeled images of the rubric (`glance fit`)",
    "rating_accuracy": 0.8573000000000001,
-   "note": "same 1,000 images; calibrated probabilities (ECE about 0.03)"
+   "note": "same 1,000 images, the four-pass readout; calibrated probabilities (ECE about 0.03)"
   },
   {
    "what": "500 labels, readout fitted on the hidden state (research result, not shipped)",
@@ -345,6 +342,7 @@
   }
  ],
  "caveats": [
+  "The rating read is one forward pass at the JSON answer position (registered and scored once, notebook entry 42b). The four-pass readout shipped earlier scores 0.570 zero-shot on these images and remains the better option once labels exist.",
   "Frontier models were run once, zero-shot, with a constrained written pick; a failed call counts as wrong. No few-shot prompt was tried for any written row.",
   "Yes/no and pick-one: photographs taken after every model's release; labels are uploaders' structured 'depicts' statements (pick-one labels are noisy). Ratings: five synthetic 4-level scales.",
   "Hosted latency includes the network from one laptop; hosted cost is the provider's bill per call where logged, otherwise a list-price upper estimate.",

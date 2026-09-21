@@ -58,6 +58,7 @@ for r in read_jsonl(ROOT / "lab/data/main_stagesAB.jsonl.gz"):
     if r["method_key"] in members:
         by[(f"ladder_{r['ladder']}", r["item_id"])][r["method_key"]] = r
 
+JSON_ROWS = {(r["ladder"], r["item_id"]): r["logits"] for r in read_jsonl(ROOT / "lab/runs/lab_jsondigits.jsonl") if r["method_key"] == "jsondigits"}
 systems = {name: {"kind": "hosted frontier model, zero-shot, answer written"} for name, *_ in FRONTIER}
 systems["Qwen3-VL-4B, written"] = {"kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)"}
 systems["Qwen3-VL-4B, read (Glance)"] = {"kind": "the same open model, zero-shot, answer read from one forward pass (four for a rating)"}
@@ -81,6 +82,8 @@ for test, (suite, _) in TESTS.items():
         read_hits = [read_hit(local[k]) for k in sorted(shared)]
     else:
         read_hits = [int(np.mean([by[k][m]["logits"] for m in members], axis=0).argmax()) == by[k]["digits"]["level"] for k in sorted(shared)]
+    if not suite and JSON_ROWS:  # E16 (entry 42b): the one-pass read at the JSON answer position is the zero-shot rating read
+        read_hits = [int(np.argmax(JSON_ROWS[(k[0].removeprefix("ladder_"), k[1])])) == by[k]["digits"]["level"] for k in sorted(shared)]
     systems["Qwen3-VL-4B, read (Glance)"].setdefault("accuracy", {})[test] = cell(read_hits)
 
 # ---- speed and cost of the open model: only clean (idle GPU) timings are used --------------------------------
@@ -88,11 +91,17 @@ gen = json.loads((ROOT / "lab/GENBENCH.json").read_text())
 single = ROOT / "lab/GENBENCH_SINGLE.json"
 single = json.loads(single.read_text()) if single.exists() else {}
 pack = json.loads((ROOT / "lab/PACKING.json").read_text())
-clean = {"written": {"yesno": gen["1 yes/no"]["write_p50_ms"]}, "read": {"yesno": gen["1 yes/no"]["read_fast2_p50_ms"], "rating": pack["ens4d packed, 1 question"]["p50_ms_per_question"]}}
+timing = [r["latency_ms"] for r in read_jsonl(ROOT / "lab/runs/jsondigits_timing.jsonl") if r["method_key"] == "jsondigits"]  # idle-GPU window
+clean = {"written": {"yesno": gen["1 yes/no"]["write_p50_ms"]}, "read": {"yesno": gen["1 yes/no"]["read_fast2_p50_ms"]}}
+if timing:
+    clean["read"]["rating"] = statistics.median(timing)
+elif not JSON_ROWS:
+    clean["read"]["rating"] = pack["ens4d packed, 1 question"]["p50_ms_per_question"]
 for test, shape in (("yesno", "1 yes/no"), ("choice", "1 pick-one"), ("rating", "1 rating")):
     if shape in single:
         clean["written"][test] = single[shape]["write_p50_ms"]
-        clean["read"][test] = single[shape].get("read_ens4d_p50_ms", single[shape]["read_fast2_p50_ms"]) if test == "rating" else single[shape]["read_fast2_p50_ms"]
+        if test != "rating":
+            clean["read"][test] = single[shape]["read_fast2_p50_ms"]
 for label, key in (("Qwen3-VL-4B, written", "written"), ("Qwen3-VL-4B, read (Glance)", "read")):
     for test in TESTS:
         ms = clean[key].get(test)
@@ -103,14 +112,18 @@ for label, key in (("Qwen3-VL-4B, written", "written"), ("Qwen3-VL-4B, read (Gla
 h2h = json.loads((ROOT / "results/lab/frontier_head_to_head.json").read_text())["local"]
 LF16 = json.loads((ROOT / "results/lab/label_free_test.json").read_text())["BCz, pool = 16 unlabeled (20 draws)"]["accuracy"]
 ladder = json.loads((ROOT / "lab/READOUT_LADDER.json").read_text())["summary"]
+JD = json.loads((ROOT / "results/lab/jsondigits.json").read_text())["mean"] if (ROOT / "results/lab/jsondigits.json").exists() else None
 extras = [
-    {"what": "UNLABELED images of the rubric (`glance fit --unlabeled`)", "rating_accuracy": h2h["+ Glance ens4d, 0 labels + unlabeled images"]["mean_accuracy"],
-     "note": f"zero labels, but not zero-shot; 500 unlabeled images here, and 16 already give {LF16:.3f} on the full test split; probabilities improve but are not calibrated"},
-    {"what": "32 labeled images of the rubric (`glance fit`)", "rating_accuracy": h2h["+ Glance ens4d, 32 labels"]["mean_accuracy"], "note": "same 1,000 images; calibrated probabilities (ECE about 0.03)"},
+    ({"what": "16 UNLABELED images of the rubric (`glance fit --unlabeled`)", "rating_accuracy": JD["json_u16"],
+      "note": "zero labels, but not zero-shot; same 1,000 images, one pass; probabilities improve but are not calibrated"} if JD else
+     {"what": "UNLABELED images of the rubric (`glance fit --unlabeled`)", "rating_accuracy": h2h["+ Glance ens4d, 0 labels + unlabeled images"]["mean_accuracy"],
+      "note": f"zero labels, but not zero-shot; 500 unlabeled images here, and 16 already give {LF16:.3f} on the full test split; probabilities improve but are not calibrated"}),
+    {"what": "32 labeled images of the rubric (`glance fit`)", "rating_accuracy": h2h["+ Glance ens4d, 32 labels"]["mean_accuracy"], "note": "same 1,000 images, the four-pass readout; calibrated probabilities (ECE about 0.03)"},
     {"what": "500 labels, readout fitted on the hidden state (research result, not shipped)", "rating_accuracy": ladder["R4a"]["accuracy"], "note": "full test split, ONE forward pass; needs on the order of a hundred labels to beat the row above"},
 ]
 out = {"tests": {k: v[1] for k, v in TESTS.items()}, "systems": systems, "only_the_read_row_can_add": extras,
-       "caveats": ["Frontier models were run once, zero-shot, with a constrained written pick; a failed call counts as wrong. No few-shot prompt was tried for any written row.",
+       "caveats": ["The rating read is one forward pass at the JSON answer position (registered and scored once, notebook entry 42b). The four-pass readout shipped earlier scores 0.570 zero-shot on these images and remains the better option once labels exist.",
+                   "Frontier models were run once, zero-shot, with a constrained written pick; a failed call counts as wrong. No few-shot prompt was tried for any written row.",
                    "Yes/no and pick-one: photographs taken after every model's release; labels are uploaders' structured 'depicts' statements (pick-one labels are noisy). Ratings: five synthetic 4-level scales.",
                    "Hosted latency includes the network from one laptop; hosted cost is the provider's bill per call where logged, otherwise a list-price upper estimate.",
                    "Open-model cost is arithmetic on measured seconds and an on-demand cloud GPU price; several questions about one image share its cost and get cheaper per answer (see the cost model)."]}

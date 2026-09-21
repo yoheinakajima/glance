@@ -45,6 +45,7 @@ fresh, inat = load("results/lab/fresh_commons.json"), load("results/lab/fresh_in
 h2h, gen, lf = load("results/lab/frontier_head_to_head.json"), load("results/lab/gen_accuracy.json"), load("results/lab/label_free_test.json")
 cost, measured, ladder = load("results/lab/cost_model.json"), load("results/lab/frontier_cost_measured.json"), load("lab/READOUT_LADDER.json")
 nullp, scaling, genb = load("results/lab/null_prior.json"), load("results/lab/scaling.json"), load("lab/GENBENCH.json")
+jd = load("results/lab/jsondigits.json")["mean"]
 
 # ---- Figure 1: fresh photos ------------------------------------------------------------------------
 rows1 = []
@@ -58,10 +59,11 @@ fig1 = dot_plot(rows1, 0.75, 1.0, "Accuracy on photos taken after every model's 
 written = sum(gen[k]["written"][0] for k in gen if k.startswith("ladder_")) / 5
 loc = h2h["local"]
 rows2 = [(FRONTIER.get(r["model"], r["model"]) + ", written pick", r["mean_accuracy"], None, False, False) for r in h2h["runs"].values()]
-rows2 += [("Qwen3-VL-4B, written answer", written, None, True, False), ("Qwen3-VL-4B, read (no labels)", loc["+ Glance ens4d, 0 labels"]["mean_accuracy"], None, True, False),
-          ("… read + unlabeled images", loc["+ Glance ens4d, 0 labels + unlabeled images"]["mean_accuracy"], None, True, True),
-          ("… read + 32 labels", loc["+ Glance ens4d, 32 labels"]["mean_accuracy"], None, True, False)]
-fig2 = dot_plot(rows2, 0.5, 1.0, "Exact-level accuracy on five 4-level rating scales, same 1,000 images")
+rows2 += [("Qwen3-VL-4B, written answer", written, None, True, False), ("Qwen3-VL-4B, read, one pass", jd["json_zero"], None, True, False),
+          ("… earlier four-pass read", jd["ens_zero"], None, True, False),
+          ("… one-pass read + 16 unlabeled images", jd["json_u16"], None, True, True),
+          ("… four-pass read + 32 labels", loc["+ Glance ens4d, 32 labels"]["mean_accuracy"], None, True, False)]
+fig2 = dot_plot(rows2, 0.5, 1.0, "Exact-level accuracy on five 4-level rating scales, same 1,000 images", label_w=262)
 
 # ---- tables ----------------------------------------------------------------------------------------
 def fresh_table():
@@ -158,9 +160,9 @@ BODY = f"""
   <figure>{fig1}<figcaption><b>Figure 1.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
 
   <h3>1.4 Ratings against a rubric in words</h3>
-  <p>Five synthetic four-level scales (blur, exposure, JPEG, noise, resolution), the same 1,000 held-out images for every system. Zero-shot, the open model’s <em>written</em> answer is ahead of Claude Opus 5 by {paired["Claude Opus 5"]} points and of GPT-5.6 by {paired["GPT-5.6"]}, and level with Gemini 3.1 Pro ({paired["Gemini 3.1 Pro"]}), paired on the same images. Our own zero-shot <em>read</em> is {100 * (written - loc["+ Glance ens4d, 0 labels"]["mean_accuracy"]):.0f} points worse than the same model’s written answer, a prompt effect we registered, measured and report against ourselves.</p>
+  <p>Five synthetic four-level scales (blur, exposure, JPEG, noise, resolution), the same 1,000 held-out images for every system. Zero-shot, the open model’s <em>written</em> answer is ahead of Claude Opus 5 by {paired["Claude Opus 5"]} points and of GPT-5.6 by {paired["GPT-5.6"]}, and level with Gemini 3.1 Pro ({paired["Gemini 3.1 Pro"]}), paired on the same images. Read in one forward pass at the position where the written answer puts its digit, the open model gives the same answers as when it writes ({jd["agree_with_written"]:.0%} identical, {jd["json_zero"]:.3f} against {written:.3f}), with probabilities. An earlier four-pass readout of ours, tuned with a calibration in the loop, was {100 * (written - jd["ens_zero"]):.0f} points worse zero-shot; we registered that comparison, lost it, and report it.</p>
   <figure>{fig2}<figcaption><b>Figure 2.</b> Exact-level accuracy, chance 0.25. The lower group has seen images of the rubric: unlabeled ones (zero labels, but not zero-shot), then 32 labeled ones. Intervals for n = 1,000 are about ±0.03; paired differences are in the repository.</figcaption></figure>
-  <p>Exact level is a hard target for any model because level boundaries are a convention. Zero-shot the open model is exactly right on {raw["accuracy"]:.2f} of images but within one level on {raw["within_1"]:.3f}, and 97% of its errors are one step, in a direction that is constant per rubric. Sixteen <em>unlabeled</em> images of the rubric remove that offset ({raw["accuracy"]:.3f} → {lf["BCz, pool = 16 unlabeled (20 draws)"]["accuracy"]:.3f}).</p>
+  <p>Exact level is a hard target for any model because level boundaries are a convention. Zero-shot the open model is exactly right on {raw["accuracy"]:.2f} of images but within one level on {raw["within_1"]:.3f}, and 97% of its errors are one step, in a direction that is constant per rubric. Sixteen <em>unlabeled</em> images of the rubric remove most of that offset (one-pass read: {jd["json_zero"]:.3f} → {jd["json_u16"]:.3f}, ahead of every frontier model’s zero-shot pick).</p>
 
   <h3>1.5 When several questions share one image</h3>
   {cost_table()}
@@ -177,7 +179,7 @@ BODY = f"""
   <h2 id="limits"><span class="num">3</span>Limits and misses</h2>
   <ul class="misses">
     <li><span class="verdict miss">not supported</span> A content-free prior (blank and noise images) was expected to help zero-shot ratings. It took exact accuracy from {nullp["table"]["raw zero-shot"]["accuracy"]:.3f} to {nullp["table"]["content-free prior, all six null images (registered)"]["accuracy"]:.3f}: for an image rubric there is no content-free image.</li>
-    <li><span class="verdict miss">not supported</span> The rating readout was expected to match the written answer zero-shot. It trails it by ten points; a one-pass read at the JSON answer position is registered as the follow-up.</li>
+    <li><span class="verdict miss">not supported</span> Our four-pass rating readout was expected to match the same model’s written answer zero-shot. It trailed it by ten points: a readout selected with a calibration in the loop is good to fit and poor zero-shot. <span class="verdict">supported</span> The registered fix, one pass read at the JSON answer position, matches the written answer ({jd["json_zero"]:.3f}) and reaches {jd["json_u16"]:.3f} with 16 unlabeled images.</li>
     <li><span class="verdict miss">not supported</span> On KADID-10k (23 distortion types, five levels, human scores) every registered target was missed: 0.527 exact with labels, 0.33 zero-shot.</li>
     <li><span class="verdict">supported</span> A fitted readout on the model’s hidden state reaches {r4a:.3f} from one pass, against 0.867 for the token readout: the model represents severity almost perfectly. It needs on the order of a hundred labels.</li>
     <li><span class="verdict">known</span> Hand-built image features beat the VLM on low-level artifacts when labels are plentiful (0.979). A calibration fitted on one rubric does not transfer to another. One model family measured so far; a second family and a 2B / 4B / 8B ladder are running.</li>
