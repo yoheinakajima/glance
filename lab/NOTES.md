@@ -1652,3 +1652,20 @@ earliest date). Synthetic screens are cleaner than real applications and the pag
   models that think before answering should).
 - H52: the systems separate more here than on photographs: at least 8 points between best and worst on `ui_click`.
 Local run on the GPU queue; hosted rows need the owner's paste in the morning. This does NOT block publication.
+
+## 2026-09-20 23:49 Entry 50: E22, procedural probes with labels by construction (owner's idea), registered before any code or data
+
+Images drawn by program (PIL only, 640 x 480, seeded), so every label is exact, nothing can be in any training set, and the
+difficulty can be dialled. Six suites, 150 items each:
+`probe_count` (pick one of 1..8: how many balls; non-overlapping coloured discs, varied size and colour, plain or lightly
+textured ground), `probe_count_color` (how many RED balls among balls of several colours, 0..6), `probe_spatial` (yes/no:
+is the red ball to the left of / above the blue square; one true and one false question per image), `probe_largest` (pick
+the colour of the largest of four shapes, size ratios from 1.15 to 2), `probe_stripes` (pick one: horizontal, vertical,
+diagonal rising, diagonal falling; varied width, contrast and colour), `probe_text` (pick which of six look-alike words is
+printed, varied font size, slight rotation and noise).
+- H53: the open 4B model scores at least 0.90 on `probe_spatial`, `probe_stripes` and `probe_text`.
+- H54: counting is the weak spot for every system: at least 0.90 for 1 to 3 balls, under 0.70 for 6 to 8, and the best hosted
+  model is ahead of the open model by at least 10 points on `probe_count`.
+- H55: `probe_largest` falls with the size ratio: at least 0.90 at ratio 2, under 0.75 at ratio 1.15.
+Local run on the GPU queue; hosted rows need the owner's paste. Does NOT block publication; the page will present E21 and E22
+together as "beyond photographs" once both the local and the hosted rows exist.
