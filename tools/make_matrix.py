@@ -122,10 +122,17 @@ for test, shape in (("yesno", "1 yes/no"), ("choice", "1 pick-one"), ("rating", 
         clean["written"][test] = single[shape]["write_p50_ms"]
         if test != "rating":
             clean["read"][test] = single[shape]["read_fast2_p50_ms"]
+photo = ROOT / "lab/PHOTO_TIMING.json"  # clean timing ON the matrix's own photographs (glance.lab.photo_timing); hosted models were timed on them too
+photo = json.loads(photo.read_text()) if photo.exists() else None
+if photo:
+    for test in ("yesno", "choice"):
+        clean["written"][test], clean["read"][test] = photo[test]["write_p50_ms"], photo[test]["read_p50_ms"]
 for label, key in (("Qwen3-VL-4B, written", "written"), ("Qwen3-VL-4B, read (Glance)", "read")):
     for test in TESTS:
         ms = clean[key].get(test)
-        systems[label].setdefault("seconds", {})[test] = {"value": ms / 1000 if ms else None, "how": "measured on the laptop, GPU otherwise idle" if ms else "clean timing scheduled (idle-GPU window tonight)"}
+        systems[label].setdefault("seconds", {})[test] = {"value": ms / 1000 if ms else None, "how": ("measured on the laptop, GPU otherwise idle, " + ("on these photographs" if (photo and test != "rating") else "on the 448 px lab images" if test == "rating"
+                                                                        else "on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"))
+                                                               if ms else "clean timing scheduled (idle-GPU window tonight)"}
         systems[label].setdefault("usd_per_1000", {})[test] = {"value": local_usd(ms / 1000) if ms else None, "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop" if ms else "pending the timing"}
 
 # ---- what only the read row can add ------------------------------------------------------------------------

@@ -23,8 +23,8 @@
 | Claude Haiku 4.5 | 0.87 s | 0.92 s | 0.72 s |
 | GPT-5.6 Luna | 1.22 s | 1.30 s | 1.10 s |
 | Gemini 3.1 Flash-Lite | 1.63 s | 1.89 s | 1.62 s |
-| Qwen3-VL-4B, written | 0.80 s | pending | pending |
-| Qwen3-VL-4B, read (Glance) | 0.34 s | pending | pending |
+| Qwen3-VL-4B, written | 0.78 s | 1.00 s | 0.91 s |
+| Qwen3-VL-4B, read (Glance) | 0.33 s | 0.38 s | 0.45 s |
 
 ## US dollars per 1,000 answers
 
@@ -36,8 +36,8 @@
 | Claude Haiku 4.5 | $1.75 | $1.89 | $0.55 |
 | GPT-5.6 Luna | $0.38 | $0.40 | $0.12 |
 | Gemini 3.1 Flash-Lite | $0.31 | $0.34 | $0.33 |
-| Qwen3-VL-4B, written | $0.12 to $0.18 | pending | pending |
-| Qwen3-VL-4B, read (Glance) | $0.05 to $0.08 | pending | pending |
+| Qwen3-VL-4B, written | $0.11 to $0.17 | $0.15 to $0.22 | $0.13 to $0.20 |
+| Qwen3-VL-4B, read (Glance) | $0.05 to $0.07 | $0.05 to $0.08 | $0.07 to $0.10 |
 
 ## What only the read row can add (rating accuracy)
 

@@ -1549,3 +1549,27 @@ The owner ran the batch (about 4,500 calls). Same items, same constrained writte
   a $0.33-per-1,000 hosted model is 9 points ahead. What remains for the open model is not price: it runs on your own
   machine (no image leaves it, no per-call bill, works offline), answers a yes/no in 0.34 s against 0.9 to 1.9 s,
   returns probabilities, and can be fitted (0.857 with 32 labels, which no hosted row offers through a written pick).
+
+## 2026-09-20 22:49 Entry 38c: E15 result: within one open family, more parameters do not remove the need for examples
+
+`results/lab/scaling.md`, `results/lab/other_models.json`: Qwen3-VL 2B / 4B / 8B, identical prompts, readouts and settings, the
+1,000 lab images the hosted models saw; the 8B model ran with the GPU to itself.
+- Ratings, zero-shot exact level. Four-pass read: 0.388 / 0.570 / 0.537. One-pass read at the JSON position: 0.492 / 0.669 /
+  0.643. Within one level (four-pass): 0.893 / 0.988 / 0.979; rank agreement 0.893 / 0.934 / 0.915. Going from 2B to 4B
+  helps a lot; going from 4B to 8B does not help at all.
+- With images of the rubric: 16 unlabeled 0.644 / 0.694 / 0.714 (four-pass), 0.623 / 0.758 / 0.677 (one-pass); 32 labels
+  0.842 / 0.853 / 0.839. With labels the three sizes are within 1.4 points of each other.
+- Yes/no and pick-one on the fresh photos (Commons, iNaturalist): 2B 0.939 / 0.832 and 0.925 / 0.940; 4B 0.931 / 0.885 and
+  0.945 / 0.940; 8B 0.924 / 0.878 and 0.935 / 0.955. Flat from 2B up, except the 13-way pick-one where 2B trails.
+- Verdicts. H33a (zero-shot rises with size): NOT SUPPORTED (8B is below 4B on both reads). H33b (8B below 0.70):
+  SUPPORTED. H34a (within one >= 0.97 at 4B and 8B): SUPPORTED. H34b (rank agreement rises): NOT SUPPORTED. H35a (gain
+  from 32 labels shrinks with size): NOT SUPPORTED (45, 28, 30 points). H35b (gain still >= 15 at 8B): SUPPORTED. H36 (8B >=
+  4B >= 2B on the photo questions): NOT SUPPORTED as an ordering; every difference is inside the intervals.
+- Answer to the owner's question, on this evidence: no. Between 4B and 8B nothing about exact rating levels improves
+  zero-shot, which fits the reading that the missing piece is where the rubric's author drew the lines, not perception.
+  What does move zero-shot ratings is on the hosted side and is not size either: each provider's CHEAP model beats its
+  flagship (entry 45b). Limits of this test: one family, three sizes, synthetic scales; 32B and larger were not run.
+- Clean timings (GPU idle, 448 px lab images, 4B): yes/no written 0.78 s, read 0.33 s; rating written 0.91 s, read in one
+  pass 0.45 s (four passes 1.08 s). NOTE: the hosted models were timed on the larger Commons photographs; a timing of the
+  open model on those same photographs, for all three sizes, is running (`glance.lab.photo_timing`) and replaces the
+  matrix's yes/no and pick-one speed and cost cells when it lands.

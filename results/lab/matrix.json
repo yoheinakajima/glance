@@ -431,33 +431,39 @@
    },
    "seconds": {
     "yesno": {
-     "value": 0.7980797283817083,
-     "how": "measured on the laptop, GPU otherwise idle"
+     "value": 0.7785184165695682,
+     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
     },
     "choice": {
-     "value": null,
-     "how": "clean timing scheduled (idle-GPU window tonight)"
+     "value": 0.9979771664366126,
+     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
     },
     "rating": {
-     "value": null,
-     "how": "clean timing scheduled (idle-GPU window tonight)"
+     "value": 0.9066312500508502,
+     "how": "measured on the laptop, GPU otherwise idle, on the 448 px lab images"
     }
    },
    "usd_per_1000": {
     "yesno": {
      "value": [
-      0.11660831586910517,
-      0.17841515705599967
+      0.11375019086544247,
+      0.17404211712644121
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "choice": {
-     "value": null,
-     "how": "pending the timing"
+     "value": [
+      0.14581555265157176,
+      0.22310333987449607
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "rating": {
-     "value": null,
-     "how": "pending the timing"
+     "value": [
+      0.13246889931298536,
+      0.20268245278914562
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     }
    }
   },
@@ -491,33 +497,39 @@
    },
    "seconds": {
     "yesno": {
-     "value": 0.33771058346610516,
-     "how": "measured on the laptop, GPU otherwise idle"
+     "value": 0.328441750141792,
+     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
     },
     "choice": {
-     "value": null,
-     "how": "clean timing scheduled (idle-GPU window tonight)"
+     "value": 0.37641170783899724,
+     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
     },
     "rating": {
-     "value": null,
-     "how": "clean timing scheduled (idle-GPU window tonight)"
+     "value": 0.4463122294982895,
+     "how": "measured on the laptop, GPU otherwise idle, on the 448 px lab images"
     }
    },
    "usd_per_1000": {
     "yesno": {
      "value": [
-      0.049343268584214256,
-      0.07549707710375594
+      0.04798898904849516,
+      0.07342497792058728
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "choice": {
-     "value": null,
-     "how": "pending the timing"
+     "value": [
+      0.05499793286758683,
+      0.0841489284635625
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "rating": {
-     "value": null,
-     "how": "pending the timing"
+     "value": [
+      0.06521117575447231,
+      0.09977557841672874
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     }
    }
   }
