@@ -470,6 +470,15 @@ behind this paper. <!-- src: docs/paper/DATASETS.md -->
 
 ## Draft notes for the editor
 
+**Status of these notes on 2026-09-21 00:59.** Resolved since they were written: (a)4 (`docs/CLAIMS.md` now separates 16
+images, 0.686, from the full unlabeled pool, 0.697); (a)7 (`tools/frontier_cost.py` covers every hosted run, low-cost
+models included); (b)1 (the iNaturalist run is archived under `results/lab/fresh_inat_run/` as the source of the 0.975
+selective-accuracy figure); (b)2 and (c)2 (the "five times cheaper" and 0.33 s cells were withdrawn, entry 48; timings now
+come from `lab/PHOTO_TIMING.json` and `lab/runs/jsondigits_timing.jsonl`, named in the matrix); (c)1 (the page no longer
+says "level" for 0.758 against 0.763; it gives both numbers); (c)3 (item counts are stated next to Figure 1 and in the
+table captions). Still open: (a)1 and (a)2 (two bootstrap runs of the same data differ in the third decimal of one bound;
+harmless, but one source should feed both tables), (a)3, (a)5, (a)6, (a)8 to (a)10, (b)3, (b)4.
+
 **(a) Places where two source files disagreed on a number.**
 
 1. Claude Opus 5's Commons yes/no accuracy 95% interval: `results/lab/fresh_commons.md` gives 0.924 [0.878, 0.962];
