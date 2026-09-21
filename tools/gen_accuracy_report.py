@@ -14,13 +14,15 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 rng = np.random.default_rng(7)
 written = read_jsonl(ROOT / "lab/runs/gen_accuracy.jsonl")
+INAT = ROOT / "lab/runs/gen_accuracy_inat.jsonl"  # written answers on the iNaturalist set (entry 35c), all items
+written += read_jsonl(INAT) if INAT.exists() else []
 M = rating.MEMBERS["ens4d"]
 lab = collections.defaultdict(dict)
 for r in read_jsonl(ROOT / "lab/data/main_stagesAB.jsonl.gz"):
     if r["method_key"] in M:
         lab[(r["ladder"], r["item_id"])][r["method_key"]] = r
-fresh = {(r["suite"], r["item_id"]): r for r in read_jsonl(ROOT / "runs/20260920T205633Z-99f822/predictions.jsonl")
-         if r["backend"] == "vlm" and r["method"] in ("statement", "independent")}
+fresh = {(r["suite"], r["item_id"]): r for run in ("20260920T205633Z-99f822", "20260920T232332Z-80efa7")  # the Commons and the iNaturalist local runs
+         for r in read_jsonl(ROOT / "runs" / run / "predictions.jsonl") if r["backend"] == "vlm" and r["method"] in ("statement", "independent")}
 
 
 def read_correct(row):
