@@ -227,7 +227,10 @@ def finer():
         y, c = orders["suites"]["inat_orders_yesno"], orders["suites"]["inat_orders_choice"]
         rows = [("Qwen3-VL-4B, read", y.get("vlm:statement"), c.get("vlm:independent")), ("SigLIP2 (open dual encoder)", None, c.get("siglip:independent"))]
         rows += [(n, y.get(k), c.get(k)) for k, n in list(FRONTIER.items()) + [("anthropic/claude-haiku-4-5", "Claude Haiku 4.5"), ("openai/gpt-5.6-luna", "GPT-5.6 Luna"), ("openrouter/google/gemini-3.1-flash-lite", "Gemini 3.1 Flash-Lite")] if k in y or k in c]
-        out.append("<p>Insect orders on iNaturalist (beetle, true bug, fly, …; 210 photographs, every “no” question names a look-alike order) were meant to be harder. For the open model they are not: it scores higher than on the ten-group test, while the dual encoder falls to 0.71.</p>")
+        hosted_c = sorted((c[k]["accuracy"], n) for k, n in [(k, n) for _, _, _ in [(0, 0, 0)] for k, n in list(FRONTIER.items()) + [("anthropic/claude-haiku-4-5", "Claude Haiku 4.5"), ("openai/gpt-5.6-luna", "GPT-5.6 Luna"), ("openrouter/google/gemini-3.1-flash-lite", "Gemini 3.1 Flash-Lite")]] if k in c)
+        spread = (f" This test does separate systems: on pick-one the hosted models range from {hosted_c[0][0]:.3f} ({hosted_c[0][1]}) to {hosted_c[-1][0]:.3f} ({hosted_c[-1][1]}), and the open 4B model, at "
+                  f"{c['vlm:independent']['accuracy']:.3f}, is within {abs(hosted_c[-1][0] - c['vlm:independent']['accuracy']) * 100:.0f} point of the best.") if hosted_c else ""
+        out.append("<p>Insect orders on iNaturalist (beetle, true bug, fly, …; 210 photographs; every “no” question names a look-alike order) ask for finer distinctions than the ten-group test." + spread + " The open dual encoder falls to 0.71 here.</p>")
         out.append('<div class="table-scroll"><table><thead><tr><th>Insect orders, zero-shot</th><th class="n">yes/no</th><th class="n">pick one of 7</th></tr></thead><tbody>'
                    + "".join(f'<tr{" class=own" if n.startswith("Qwen") else ""}><td>{n}</td><td class="n">{ci(a) if a else "–"}</td><td class="n">{ci(b_) if b_ else "–"}</td></tr>' for n, a, b_ in rows) + "</tbody></table></div>")
         out.append('<p class="caption"><b>Table 3b.</b> The open model on all items; hosted models, where present, on the test half.</p>')

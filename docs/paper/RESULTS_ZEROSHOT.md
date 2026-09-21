@@ -19,11 +19,11 @@ Mean gap over these four suites: 3.2 points [1.0, 5.4] in the frontier model's f
 
 | System | yes/no | n | pick-one | n |
 | --- | --- | --- | --- | --- |
-| Qwen3-VL-4B + Glance (open, local) | 0.931 [0.901, 0.958] | 262 | 0.885 [0.824, 0.939] | 131 |
+| Qwen3-VL-4B + Glance (open, local) | 0.931 [0.897, 0.962] | 262 | 0.885 [0.824, 0.939] | 131 |
 | SigLIP2 (open dual encoder) | - | - | 0.855 [0.794, 0.908] | 131 |
-| Claude Opus 5 | 0.924 [0.878, 0.962] | 131 | 0.908 [0.831, 0.969] | 65 |
-| GPT-5.6 | 0.893 [0.840, 0.939] | 131 | 0.892 [0.815, 0.954] | 65 |
-| Gemini 3.1 Pro | 0.947 [0.908, 0.985] | 131 | 0.923 [0.846, 0.985] | 65 |
+| Claude Opus 5 | 0.924 [0.878, 0.969] | 131 | 0.908 [0.831, 0.969] | 65 |
+| GPT-5.6 | 0.893 [0.840, 0.947] | 131 | 0.892 [0.815, 0.954] | 65 |
+| Gemini 3.1 Pro | 0.947 [0.908, 0.977] | 131 | 0.923 [0.846, 0.985] | 65 |
 
 The frontier models were scored on the test half only (their n is smaller).
 
@@ -46,9 +46,6 @@ The frontier models were scored on the test half only (their n is smaller).
 | Claude Opus 5, written pick | 0.560 | 0.750 | 0.285 | 0.525 | 0.630 | **0.550** |
 | GPT-5.6, written pick | 0.645 | 0.610 | 0.555 | 0.670 | 0.505 | **0.597** |
 | Gemini 3.1 Pro, written pick | 0.665 | 0.655 | 0.645 | 0.590 | 0.695 | **0.650** |
-| anthropic/claude-haiku-4-5, written pick | 0.680 | 0.730 | 0.405 | 0.535 | 0.695 | **0.609** |
-| openai/gpt-5.6-luna, written pick | 0.800 | 0.735 | 0.475 | 0.840 | 0.580 | **0.686** |
-| openrouter/google/gemini-3.1-flash-lite, written pick | 0.885 | 0.730 | 0.695 | 0.710 | 0.795 | **0.763** |
 | Qwen3-VL-4B, v0 readout (one yes/no per level) | 0.625 | 0.530 | 0.365 | 0.550 | 0.480 | **0.510** |
 | Qwen3-VL-4B + Glance (open, local), `ens4d` | 0.470 | 0.700 | 0.450 | 0.575 | 0.655 | **0.570** |
 | Qwen3-VL-4B, WRITTEN JSON answer (no Glance) | 0.755 | 0.810 | 0.345 | 0.700 | 0.750 | **0.672** |
@@ -102,7 +99,7 @@ Identical on yes/no and pick-one. On ratings the four-pass read loses to the wri
 ## 5. Speed and cost per 1,000 answers
 
 Open model, self-hosted: $0.000 (electricity, several rubrics per image) to $0.24 (rented cloud GPU, one rubric per image) per 1,000 ratings; arithmetic on measured seconds and stated assumptions (`results/lab/cost_model.md`).
-Frontier APIs, measured on the owner's runs: Gemini 3.1 Pro $6.15 per 1,000, 4.0 s median (lab scales); GPT-5.6 $7.64 per 1,000, 1.2 s median (fresh photos); Gemini 3.1 Pro $3.03 per 1,000, 2.9 s median (fresh photos). The open model answers one rating in 1.1 s and 0.34 to 0.58 s per rating when several rubrics share an image.
+Frontier APIs, measured on the owner's runs: Gemini 3.1 Pro $6.15 per 1,000, 4.0 s median (lab scales); GPT-5.6 $7.64 per 1,000, 1.2 s median (fresh photos); Gemini 3.1 Pro $3.03 per 1,000, 2.9 s median (fresh photos); Claude Opus 5 $3.74 per 1,000, 2.3 s median (iNaturalist photos (about 500 px)); GPT-5.6 $1.86 per 1,000, 1.2 s median (iNaturalist photos (about 500 px)); Gemini 3.1 Pro $3.11 per 1,000, 2.8 s median (iNaturalist photos (about 500 px)); anthropic/claude-haiku-4-5 $0.60 per 1,000, 0.7 s median (iNaturalist photos (about 500 px)); openai/gpt-5.6-luna $0.10 per 1,000, 0.9 s median (iNaturalist photos (about 500 px)); openrouter/google/gemini-3.1-flash-lite $0.33 per 1,000, 1.5 s median (iNaturalist photos (about 500 px)); anthropic/claude-haiku-4-5 $1.79 per 1,000, 0.9 s median (fresh photos); openai/gpt-5.6-luna $0.38 per 1,000, 1.2 s median (fresh photos); openrouter/google/gemini-3.1-flash-lite $0.32 per 1,000, 1.8 s median (fresh photos); anthropic/claude-haiku-4-5 $0.55 per 1,000, 0.7 s median (lab scales); openai/gpt-5.6-luna $0.12 per 1,000, 1.1 s median (lab scales); openrouter/google/gemini-3.1-flash-lite $0.33 per 1,000, 1.6 s median (lab scales). The open model answers one rating in 1.1 s and 0.34 to 0.58 s per rating when several rubrics share an image.
 
 ## 6. Does zero-shot improve with model size? (E15, Qwen3-VL 2B / 4B / 8B, identical prompts and settings)
 

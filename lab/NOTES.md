@@ -1700,3 +1700,17 @@ works verified in `RELATED_WORK.md`, a snapshot id, no "tonight" cells ("not in 
 Not done: a human label audit (two readers, 100 items). Proxy instead (`tools/label_noise_proxy.py`): items that ALL seven
 systems answer "wrongly": Commons 4 of 131 yes/no and 3 of 65 pick-one; iNaturalist 5 of 200 and 3 of 100 (2.5 to 4.6%).
 That is a rough floor on label noise and part of why everyone sits near 0.93 to 0.96.
+
+## 2026-09-21 00:47 Entry 47c: E20 complete: on a finer test that separates the hosted models by 23 points, the open 4B model is in the top group
+
+`results/lab/fresh_inat_orders.md` (the owner ran six hosted models; test half, 210 yes/no and 105 pick-one; the open model on
+all 420 / 210). Pick one of seven insect orders: Gemini 3.1 Pro 0.971, Claude Opus 5 0.962, open Qwen3-VL-4B read 0.962
+[0.933, 0.986], Gemini 3.1 Flash-Lite 0.952, GPT-5.6 0.905, GPT-5.6 Luna 0.886, Claude Haiku 4.5 0.743; SigLIP2 0.710. Yes/no
+with look-alike negatives: Gemini Pro 0.967, Flash-Lite 0.962, open model 0.948 [0.926, 0.967], GPT-5.6 0.943, Opus 5 0.938,
+Luna 0.867, Haiku 0.786 (Haiku answers "yes" on only 57% of true cases).
+- H49, first half (the systems separate by at least 8 points on pick-one): SUPPORTED (22.8 points between Gemini Pro and
+  Haiku). Second half (the best hosted model ahead of the open model by 3 to 10 points): NOT SUPPORTED: the gap is 0.9 points.
+- By the rule fixed in entry 47, the headline stands on a finer test: this one is NOT at ceiling for every system, and the
+  open 4B model sits with the two strongest hosted models, ahead of GPT-5.6, GPT-5.6 Luna and Claude Haiku 4.5. It answers
+  the critique that "level with" only reflected an easy test, for fine-grained recognition; counting, spatial relations,
+  reading and interface screens are the separate probes (entries 49, 50).
