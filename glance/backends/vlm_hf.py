@@ -357,12 +357,15 @@ class VlmBackend:
         )
 
     def score_labels(
-        self, images: list[LoadedImage], context: dict[str, Any] | None, blocks: list[str], labels: list[str]
+        self, images: list[LoadedImage], context: dict[str, Any] | None, blocks: list[str], labels: list[str],
+        assistant_prefix: str = "",
     ) -> LabelScores:
-        """`letter` method: logits over the label tokens (A, B, C, ...) for each rendered option block."""
+        """`letter` method: logits over the label tokens (A, B, C, ...) for each rendered option block.
+        `assistant_prefix` forces the start of the assistant turn (e.g. `{"answer": `), so the labels are read at the
+        position where a written structured answer would put its value (lab/NOTES.md entry 42)."""
         from scipy.special import logsumexp
 
-        texts = [self.render_prompt(images, context, block) for block in blocks]
+        texts = [self.render_prompt(images, context, block) + assistant_prefix for block in blocks]
         for label in labels:  # letters are prebuilt; any other single-token label (digits) is added on first use
             if label not in self._label_ids:
                 self._label_ids[label] = self._single_token_ids([label, " " + label])

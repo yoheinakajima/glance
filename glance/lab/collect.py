@@ -155,6 +155,13 @@ class Collector:
             out = self.backend.score_labels(images, None, blocks, prompts.LETTER_LABELS[:k])
             per_option = np.stack([[out.logits[r, (i - s) % k] for i in range(k)] for r, s in enumerate(shifts)])
             logits, off = per_option.mean(axis=0), out.off_mass
+        elif method == "jsondigits":
+            # E16 (lab/NOTES.md entry 42): the written baseline's exact prompt, read at the forced JSON answer position.
+            from .gen_bench import json_prompt
+
+            block = json_prompt({"answer": {"type": "score", "instructions": instructions, "criteria": list(levels)}})
+            out = self.backend.score_labels(images, None, [block], [str(i) for i in range(len(levels))], assistant_prefix='{"answer": ')
+            logits, off = out.logits[0], out.off_mass
         else:
             reverse = method.endswith("digitsrev")
             block, labels = sm.digits_block(instructions, levels, reverse=reverse)
