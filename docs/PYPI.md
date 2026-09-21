@@ -1,5 +1,8 @@
 # Publishing `glance-vlm` to PyPI (instructions for an assistant with a browser, written 2026-09-21)
 
+**DONE on 2026-09-21: `glance-vlm` 0.3.0 is on PyPI.** For the next release: raise `version` in `pyproject.toml`, commit, push, and run Steps 4 and 5 again
+(the trusted publishers and the two environments already exist; Steps 1 to 3 are history). The repository is public now; the sentence in Rule 3 about it being private is history too.
+
 You are publishing a Python package for Yohei Nakajima. Read all of this before doing anything.
 
 **What is already done** (do not redo): the package builds as `glance-vlm` version 0.3.0 (the name `glance` is taken on PyPI;

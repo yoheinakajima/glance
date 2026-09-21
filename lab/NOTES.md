@@ -2259,3 +2259,12 @@ the name. Checked: no arXiv result for "GlanceVLM" or "Glance-VLM", no GitHub re
 free. Decision (owner's): keep it. `glance-vlm` is the unique, searchable handle (package, citation file, README title, the page's
 running head); "Glance" stays the short name and the command; the paper carries a descriptive title of its own ("Reading typed
 visual judgements from a frozen open vision-language model"), so a citation never depends on the word "Glance".
+
+## 2026-09-21 09:40 Entry 36d: E4, the last open part: the v0 readout as shipped on the rubrics that are not image quality
+
+The collection finished earlier than I had noticed (`lab/runs/semantic.jsonl` now holds all five readouts on both splits, 1,500 items
+each). `lab/SEMANTIC_REPORT.md` rebuilt: the v0 per-level statement readout as shipped 0.292 exact (within one 0.729); the same
+readout with its best per-rubric calibration 0.486; the fitted four-pass read 0.548 (unchanged).
+- Entry 20's "the v0 readout as shipped stays below 0.55": SUPPORTED (0.292).
+The note in entry 36c about 67 cut-off items (calibrated statements 0.896) did NOT hold up on the full data: over all five rubrics
+that readout is below the four-pass read. It was flagged as partial for that reason.

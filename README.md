@@ -128,8 +128,12 @@ uv run glance --model-id HuggingFaceTB/SmolVLM2-2.2B-Instruct --revision 482adb5
 ```
 
 Same questions, same readout, nothing model-specific; `Glance(model_id=...)` in Python. Only Qwen3-VL (2B, 4B, 8B) and SmolVLM2-2.2B are
-MEASURED here, and zero-shot quality is the model's: on fresh photographs SmolVLM2 answers yes/no and pick-one at 0.931 / 0.870 (everyday
-photos, level with Qwen3-VL-4B) and 0.892 / 0.815 (nature photos, 5 and 12 points behind it), and on ratings it is clearly weaker until it is fitted. Only Apache-2.0 or MIT weights are used;
+MEASURED here, and zero-shot quality is the model's. Pooled over three fresh photo sets, Qwen3-VL-2B scores 0.904 / 0.907 on yes/no and
+pick-one at 0.66 s per yes/no, the 4B model 0.939 / 0.933 at 1.08 s, and the 8B model 0.933 / 0.926 at 2.12 s: above 4B, size buys time and cost
+but no accuracy. SmolVLM2 is level with the 4B model on everyday photos (0.931 / 0.870), 5 and 12 points behind on nature photos (0.892 /
+0.815) and far behind on look-alike insect orders (0.748 / 0.648 against 0.948 / 0.962); on ratings it is clearly weaker until it is fitted.
+SmolVLM-family processors also need `pip install num2words`. A small model gains most from being read: the 2B model writing JSON gets the
+braces wrong on a third of its yes/no answers (0.58 strict, 0.92 if its text is scored leniently, 0.90 read). Only Apache-2.0 or MIT weights are used;
 pins, licenses and check dates are in `MODELS.md` and `DATASETS.md`. After the first download everything runs offline.
 
 ## Where things are

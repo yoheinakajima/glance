@@ -15,7 +15,7 @@ Going public and turning on the page are the owner's actions. The assistant push
 - Author line and affiliation on the page (`tools/make_site.py`, search for `byline`) and in `CITATION.cff`.
 - `git log --oneline | head -30` on `main` (the work branch `score-lab` is fast-forwarded into `main`).
 
-## 2. The repository exists and is PRIVATE
+## 2. History: the repository was created PRIVATE (it is PUBLIC since 2026-09-21)
 
 At the owner's request (2026-09-20, late evening) the assistant created `github.com/yoheinakajima/glance` as a PRIVATE
 repository and pushed `main` (fast-forwarded from `score-lab`) and `score-lab`. Nothing is public. To publish the code:
