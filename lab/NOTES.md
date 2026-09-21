@@ -1515,3 +1515,13 @@ pick, on the Commons photos, the iNaturalist photos and the same 1,000 lab ratin
 - H46: measured cost per 1,000 answers of the cheap models is below $1.50 on every test, which shrinks the open model's
   cost advantage on yes/no from about 40x (against Gemini 3.1 Pro) to under 15x. If H44 and H46 hold, the page and the
   paper must lead the cost comparison with the CHEAP hosted rows, not the flagships.
+
+## 2026-09-20 20:47 Entry 46: E19, yes/no and pick-one for the other open models (owner's question), registered before the second family's output
+
+E3 measured the second family (SmolVLM2-2.2B) on ratings only. The owner asked about yes/no and pick-one. Fixed now:
+SmolVLM2-2.2B through the harness's own scorer (`glance.scorer.score_questions`: the shipped yes/no statement and the
+independent pick-one readout, no wording changed), uncalibrated, on all items of the two fresh photo sets (Commons 262 /
+131, iNaturalist 400 / 200). Already collected with the same suites for Qwen3-VL-2B as part of E15 (seen just now:
+Commons 0.939 / 0.832, iNaturalist 0.925 / 0.940; the 4B model: 0.931 / 0.885 and 0.945 / 0.940); 8B runs tonight.
+- H47: SmolVLM2 reaches at least 0.85 on yes/no and 0.75 on pick-one on both photo sets, below the 4B model on every
+  cell: closed-set questions are easy for small open models too, with pick-one the more sensitive to model quality.
