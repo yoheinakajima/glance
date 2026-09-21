@@ -1680,3 +1680,23 @@ largest true area). Fixed by drawing four shapes of ONE kind per image (the kind
 exactly r and the label is unambiguous; entry 50 only says "four shapes", so the registration stands. At ratio 1.15 the
 difference is one to two pixels of radius: hard on purpose (H55). Suites registered as opt-in (`SYNTHETIC_SUITES`); the
 local run is queued; hosted rows need the owner's paste (`tools/frontier_batch.py --set probes`).
+
+## 2026-09-21 00:27 Entry 51: an outside critique of the live page (relayed by the owner), what was adopted, and a label-quality proxy
+
+A long review (Grok) of the page as deployed at 00:13. Adopted, because it is right: (1) the abstract overclaimed: "level
+with" becomes "statistically indistinguishable on coarse yes/no and pick-one questions (n = 131 and 65; every interval
+overlaps)", with the two cautions stated (the questions are easy; the labels are not gold); (2) the rating work is the
+contribution and was under-specified: the page now gives the exact prompts, the tokens scored, the image budget, how
+questions share an image, the softmax and temperature, and both estimators; (3) the supervision is asymmetric (hosted
+models zero-shot, the open model fitted): now said in the abstract and in section 4 as "a comparison of products, not of
+models"; a few-shot control for the low-cost hosted models is NOT run (the owner had set it aside; it is the obvious next
+control and is listed as such); (4) the 59% read/write agreement on 25 ratings was walked past: section 3 now explains it
+(one written JSON object conditions each field on the previous ones, and the prompts differ; with the same prompt and one
+question the two agree on 98 to 100%); (5) KADID-10k and the hand-built-features ceiling move to the front of the ratings
+section as its scope; (6) cost is softened to "same order as the low-cost hosted models, one to two orders below the
+flagships", with the measurement caveats first; (7) finding-stating section titles, a definition of "typed", a colder
+register, an uncertain example next to the decisive one (including a confident miss), a reference list built from the
+works verified in `RELATED_WORK.md`, a snapshot id, no "tonight" cells ("not in this snapshot").
+Not done: a human label audit (two readers, 100 items). Proxy instead (`tools/label_noise_proxy.py`): items that ALL seven
+systems answer "wrongly": Commons 4 of 131 yes/no and 3 of 65 pick-one; iNaturalist 5 of 200 and 3 of 100 (2.5 to 4.6%).
+That is a rough floor on label noise and part of why everyone sits near 0.93 to 0.96.

@@ -1,0 +1,53 @@
+{
+ "fresh_yesno": {
+  "photo_set": "Commons",
+  "items_answered_by_all_7_systems": 131,
+  "every_system_wrong": 4,
+  "every_system_right": 111,
+  "share_every_system_wrong": 0.030534351145038167,
+  "items": [
+   "train_114bf7a0__mountain",
+   "dog_5abeff59__dog",
+   "beach_3db6bf61__beach",
+   "bridge_fd860db6__bridge"
+  ]
+ },
+ "fresh_choice": {
+  "photo_set": "Commons",
+  "items_answered_by_all_7_systems": 65,
+  "every_system_wrong": 3,
+  "every_system_right": 53,
+  "share_every_system_wrong": 0.046153846153846156,
+  "items": [
+   "car_cae03a13",
+   "bird_086777f1",
+   "bird_1f941b23"
+  ]
+ },
+ "inat_yesno": {
+  "photo_set": "iNaturalist",
+  "items_answered_by_all_7_systems": 200,
+  "every_system_wrong": 5,
+  "every_system_right": 162,
+  "share_every_system_wrong": 0.025,
+  "items": [
+   "insect_402013250__insect",
+   "mammal_401992485__mammal",
+   "arachnid_402000146__plant",
+   "arachnid_402001146__arachnid",
+   "fungus_401954606__fungus"
+  ]
+ },
+ "inat_choice": {
+  "photo_set": "iNaturalist",
+  "items_answered_by_all_7_systems": 100,
+  "every_system_wrong": 3,
+  "every_system_right": 77,
+  "share_every_system_wrong": 0.03,
+  "items": [
+   "mammal_401992485",
+   "arachnid_402000146",
+   "fungus_401954606"
+  ]
+ }
+}
