@@ -83,8 +83,13 @@ Use it when images must stay on your machine, when you want no per-call bill or 
 matters (about 1 s for a yes/no about a full-size photo on a laptop, 0.3 s on small images), when you want probabilities to threshold, abstain or rank on, when you ask
 many questions about each image, or when you have a rubric of your own and a few dozen examples to fit it. Do NOT reach
 for it to save money against the cheapest hosted models on one-off ratings, or when you need the best zero-shot exact
-rating with nothing to fit: call Gemini 3.1 Flash-Lite. It is also not an image-quality metric (on KADID-10k it misses
-our own targets) and hand-built features beat it on low-level artifacts when labels are plentiful.
+rating with nothing to fit: call Gemini 3.1 Flash-Lite. It is also not an image-quality metric: on KADID-10k it misses
+our own targets, hand-built features beat it on low-level artifacts when labels are plentiful, and a 0.9B model trained for
+image quality (Q-SiT-mini) is level with it under the same 32-label fit. And know where coarse recognition ends for the 4B
+model: on images drawn by program it reads look-alike words (1.00), left/right/above/below (0.94) and counts up to five
+(0.99), but it confuses the two diagonal directions (0.30), misjudges which of four shapes is largest (0.52; 0.73 even at
+twice the area) and slips at eight objects (0.56). Zero-shot ratings on rubrics that are not image quality (tilt, cut-off,
+occlusion) are poor (0.38 exact) until fitted; that fit is being measured.
 
 ## What is and is not new
 
