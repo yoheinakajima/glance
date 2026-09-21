@@ -33,24 +33,31 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
-**Progress 03:58 on 2026-09-21 (overnight; the owner is asleep and may publish in the morning).** DONE tonight, all in
-`lab/NOTES.md` with verdicts, on the page, in the draft, pushed to the PRIVATE repository: insect orders with six hosted models
-(47c); SmolVLM2 on photographs (46b) and its one-pass rating read (44b); any-model option checked on the GPU (46c); written
-answers on iNaturalist (32c) and the erratum "identical answers" -> measured per-item agreement (32d); q-sit-mini, a 0.9B trained
-quality model, MATCHES the fitted 4B model on the quality scales (37c, a published miss; `tools/external_same_items.py`); the
-one-pass read on the non-quality rubrics (43b: H42 supported, but both reads are poor zero-shot there); rendered probes (50c:
-words, position and small counts fine; diagonal direction and relative size fail; three predictions wrong); synthetic interface
-screens (49c: click target 0.993, reasoning 0.910, page type 0.823; H50 not supported, H51 refuted by arithmetic); page errata
-(52: duplicate table number; 53: Table 3 now shows all six hosted models and names the one that is not level); batch-tool fix
-(47d). RUNNING: lane A `jsondigits-kadid` (about 05:00) -> `uv run python tools/jsondigits_hard_report.py` prints H43 and the
-registered DECISION (if YES: wire `jsondigits` as the zero-shot `score` method in `glance/rating.py` + `scorer.py`, tests,
-keep `ens4d` for fits); then `semantic-ens4d-cal` -> `uv run python -m glance.lab.bench_report --bench semantic --in
-lab/runs/semantic.jsonl --out lab/SEMANTIC_REPORT` (E4, entry 20: at least 0.75 fitted, tilt worst); lane B
-`openjev-lab-retry` (about 06:00; adapter fixed, entry 37d) -> `uv run python tools/external_report.py --out
-results/lab/external_systems` and `uv run python tools/external_same_items.py` (H31), then `semantic-ens4d` (resumable).
-OWNER'S OPTIONAL PASTES (hosted models on the new sets; each asks for the three keys once, hidden input):
-`uv run python tools/frontier_batch.py --set probes` and `uv run python tools/frontier_batch.py --set ui`. To put tonight's
-page live: `gh workflow run pages --repo yoheinakajima/glance` (`docs/PUBLISH.md` section 3b).
+**MORNING HAND-OVER, written 05:46 on 2026-09-21 (the owner was asleep; nothing is public, the live page was NOT redeployed).**
+All of the following is in `lab/NOTES.md` with verdicts, on the page (`site/`, private preview republished), in `docs/paper/DRAFT.md`,
+`README.md`, `docs/CLAIMS.md`, and pushed to the PRIVATE repository (`main` = `score-lab`). Tests: 362 passed, 12 skipped.
+Held up: insect orders with six hosted models (47c: hosted models spread over 23 points, the open 4B model within 1 of the best);
+written answers on iNaturalist (32c: reading as accurate as writing); SmolVLM2 level on everyday photos, behind on nature photos
+(46b); any-model option checked on the GPU (46c); one-pass read at or above the four-pass read zero-shot on four models (44b) and
+on the harder benchmarks, so by the registered rule it is now the DEFAULT for a rubric with nothing fitted (43b, 43c;
+`Engine.auto_rating_methods`, checked on the real model).
+Misses published tonight: a 0.9B trained quality model (q-sit-mini) with our 32-label fit is level with the fitted 4B model on
+the quality scales (37c); a 300-label fit does NOT rescue the rubrics that are not image quality: 0.548, target 0.75 (36c);
+drawn probes: diagonal direction 0.30, largest-of-four 0.52, three predictions wrong (50c); interface screens: page type 0.823
+(predicted 0.90), and "one pass trails hosted models by 10 points on reasoning" refuted by arithmetic at 0.910 (49c; click
+target 0.993); KADID gain of the one-pass read +1.9, predicted 5 (43c).
+Errata found and fixed tonight: "identical answers" written against read -> same accuracy, 95% to 99.5% same outcome (32d);
+two tables numbered 2 on the live page (52); Table 3 hid the one hosted model that is NOT level, Claude Haiku 4.5 on iNaturalist
+(53); "ahead of every hosted model" in CLAIMS was stale since the cheap models (43c); a batch-tool rebuild dropped rows (47d).
+STILL RUNNING at 05:46: lane B `openjev-lab-retry` (about 06:35; then `uv run python tools/external_report.py --out
+results/lab/external_systems && uv run python tools/external_same_items.py`, verdict H31, entry 37), then `semantic-ens4d`
+(completes the v0 readout on the non-quality rubrics; then re-run `uv run python -m glance.lab.bench_report --bench semantic --in
+lab/runs/semantic.jsonl --out lab/SEMANTIC_REPORT`); lane A: kadid-ref, letters-lab, distort25, baselines (low priority).
+OWNER'S STEPS: (1) put tonight's page live: `cd ~/code/glance && gh workflow run pages --repo yoheinakajima/glance`; (2) optional
+hosted rows for the new sets (three keys, hidden input, each set its own estimate before it spends):
+`uv run python tools/frontier_batch.py --set probes` and `uv run python tools/frontier_batch.py --set ui` (they fill H52, H54 and
+the hosted columns of Table 5); (3) going public: `docs/PUBLISH.md`. Open decisions: author line and affiliation, few-shot
+control for hosted models (low priority by the owner's call), Hugging Face Space, PyPI name `glance-vlm`.
 
 **OVERNIGHT PLAN, written 23:52 on 2026-09-20. The owner is asleep and may PUBLISH in the morning. READ THIS BLOCK FIRST.**
 Goal by morning: every blank on the page filled from runs that have finished, the paper draft consistent with the page, `main`
