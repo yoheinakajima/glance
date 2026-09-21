@@ -98,7 +98,14 @@ for kind, by_set in hits.items():
     systems = [OPEN] + ([WRITTEN] if written_complete else []) + others + hosted
     table = {s: {n: np.array([bool(by_set[s].get(n, {}).get(i, False)) for i in asked[s]], dtype=float) for n in systems} for s in SETS}
     missing = {n: int(sum(i not in by_set[s].get(n, {}) for s in SETS for i in asked[s])) for n in systems}
-    draws = [[rng.integers(0, len(asked[s]), size=len(asked[s])) for s in SETS] for _ in range(10000)]
+    # The resampling unit is the PHOTOGRAPH, not the question (a reviewer's point, adopted 2026-09-21, notebook entry 62): a photo can
+    # carry more than one yes/no question and its answers are correlated, so every draw takes whole photos, within each set.
+    photo_rows = {s: collections.defaultdict(list) for s in SETS}
+    for s in SETS:
+        for pos, item_id in enumerate(asked[s]):
+            photo_rows[s][item_id.split("__")[0]].append(pos)
+    groups = {s: [np.array(v) for v in photo_rows[s].values()] for s in SETS}
+    draws = [[np.concatenate([groups[s][g] for g in rng.integers(0, len(groups[s]), size=len(groups[s]))]) for s in SETS] for _ in range(10000)]
 
     def stat(f):
         point = f({s: np.arange(len(asked[s])) for s in SETS})
@@ -108,7 +115,8 @@ for kind, by_set in hits.items():
     pooled = lambda n: (lambda idx: float(np.concatenate([table[s][n][idx[s]] for s in SETS]).mean()))  # noqa: E731
     macro = lambda n: (lambda idx: float(np.mean([table[s][n][idx[s]].mean() for s in SETS])))  # noqa: E731
     diff = lambda n: (lambda idx: 100 * float(np.concatenate([table[s][OPEN][idx[s]] - table[s][n][idx[s]] for s in SETS]).mean()))  # noqa: E731
-    entry = {"n_items": {s: len(asked[s]) for s in SETS}, "n_total": int(sum(len(v) for v in asked.values())), "missing_hosted_rows_counted_wrong": missing,
+    entry = {"n_items": {s: len(asked[s]) for s in SETS}, "n_total": int(sum(len(v) for v in asked.values())), "n_photos": {s: len(groups[s]) for s in SETS},
+             "bootstrap": "10,000 draws, stratified by photo set, resampling photographs (all questions of a photo together), paired across systems", "missing_hosted_rows_counted_wrong": missing,
              "written_row_complete": bool(written_complete), "systems": {}}
     for n in systems:
         e = {"pooled": stat(pooled(n)), "equal_weight_per_set": stat(macro(n)), "per_set": {s: float(table[s][n].mean()) for s in SETS}}
@@ -122,7 +130,7 @@ for kind, by_set in hits.items():
         elif n not in (OPEN, WRITTEN):
             d = stat(diff(n))
             e["open_minus_this_points"] = d
-            e["verdict"] = "indistinguishable" if d[1] <= 0 <= d[2] else ("open model ahead" if d[1] > 0 else "open model behind")
+            e["verdict"] = "no difference detected" if d[1] <= 0 <= d[2] else ("open model ahead" if d[1] > 0 else "open model behind")  # an interval spanning zero is NOT equivalence; "within 3 points" below is the equivalence-style statement
             e["within_3_points"] = bool(-3 <= d[1] and d[2] <= 3)
         entry["systems"][n] = e
     out["kinds"][kind] = entry
@@ -130,7 +138,7 @@ for kind, by_set in hits.items():
 
 f = lambda t: f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"  # noqa: E731
 md = ["# Three fresh photo sets pooled (E23, `lab/NOTES.md` entry 54; NOT blind: the per-set results were seen before the rule was fixed)", "",
-      "Items: the test halves the hosted models were asked, the open model on the same items; a failed hosted call counts as wrong. 95% intervals from a bootstrap stratified by photo set. "
+      "Items: the test halves the hosted models were asked, the open model on the same items; a failed hosted call counts as wrong. 95% intervals from a bootstrap stratified by photo set that resamples photographs (all questions of a photo together). "
       "The difference column is paired on the same items.", ""]
 for kind, title in (("yesno", "Yes/no"), ("choice", "Pick-one")):
     e = out["kinds"][kind]

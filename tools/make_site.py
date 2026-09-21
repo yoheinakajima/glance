@@ -300,9 +300,10 @@ SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Q
 
 
 def pooled_groups(kind):
-    """Hosted models by the registered reading of the paired difference (entry 54): behind / indistinguishable / ahead."""
+    """Hosted models by the reading of the paired difference (entries 54 and 62): behind / no difference detected / ahead. An interval that
+    spans zero is not equivalence; the equivalence-style statement is `within_3_points` (the whole interval inside +-3)."""
     e = POOLED["kinds"][kind]["systems"]
-    g = {"open model behind": [], "indistinguishable": [], "open model ahead": []}
+    g = {"open model behind": [], "no difference detected": [], "open model ahead": []}
     for name, row in e.items():
         if "verdict" in row:
             g[row["verdict"]].append((name, row["open_minus_this_points"]))
@@ -315,14 +316,26 @@ def _names(items, with_gap=False):
 
 
 def pooled_sentence(kind, label):
-    g, own = pooled_groups(kind), POOLED["kinds"][kind]["systems"]["Qwen3-VL-4B, read"]["pooled"]
-    out = f"On {label} ({POOLED['kinds'][kind]['n_total']} items) the open model scores {own[0]:.3f} [{own[1]:.3f}, {own[2]:.3f}]: indistinguishable from {_names(g['indistinguishable'])}"
-    if g["open model behind"]:
-        out += f"; behind {_names(g['open model behind'], True)}"
-    if g["open model ahead"]:
-        out += f"; ahead of {_names(g['open model ahead'], True)}"
-    return out + "."
+    g, e = pooled_groups(kind), POOLED["kinds"][kind]["systems"]
+    own = e["Qwen3-VL-4B, read"]["pooled"]
 
+    def join(parts):
+        return ", ".join(parts[:-1]) + (" or " if len(parts) > 1 else "") + parts[-1] if parts else ""
+
+    out = f"On {label} ({POOLED['kinds'][kind]['n_total']} items) the open model scores {own[0]:.3f} [{own[1]:.3f}, {own[2]:.3f}]."
+    same = g["no difference detected"]
+    if same:
+        within = [n for n, _ in same if e[n].get("within_3_points")]
+        out += " We detect no difference from " + join([f"{n} ({d[0]:+.1f} points [{d[1]:+.1f}, {d[2]:+.1f}])" for n, d in same])
+        out += ("; " + ("all of these intervals lie" if len(within) == len(same) else f"the intervals for {_names([(n, None) for n in within])} lie") + " within three points, the closest this sample comes to showing equivalence." if within else ".")
+    rest = []
+    if g["open model behind"]:
+        rest.append(f"behind {_names(g['open model behind'], True)}")
+    if g["open model ahead"]:
+        rest.append(f"ahead of {_names(g['open model ahead'], True)}")
+    if rest:
+        out += " It is " + " and ".join(rest) + "."
+    return out
 
 def abstract_photos():
     """The abstract's sentence on photographs, from the pooled analysis (entry 55)."""
@@ -331,11 +344,11 @@ def abstract_photos():
     hosted = lambda e: {n: r["pooled"][0] for n, r in e["systems"].items() if "verdict" in r}  # noqa: E731
     best_y, best_c = max(hosted(y).items(), key=lambda kv: kv[1]), max(hosted(c).items(), key=lambda kv: kv[1])
     gy, gc = pooled_groups("yesno"), pooled_groups("choice")
-    level_both = [n for n, _ in gy["indistinguishable"] if n in {m for m, _ in gc["indistinguishable"]}]
+    level_both = [n for n, _ in gy["no difference detected"] if n in {m for m, _ in gc["no difference detected"]}]
     ahead_both = [n for n, _ in gy["open model ahead"] if n in {m for m, _ in gc["open model ahead"]}]
     return (f"On photographs taken after every model’s release, labelled by people outside this project (three sets, {y['n_total']} yes/no questions and {c['n_total']} pick-one photographs put to every system), "
             f"the open model is level with the best hosted models on pick-one ({own_c:.3f} against {best_c[1]:.3f} for {best_c[0]}) and about two points behind the best on yes/no ({own_y:.3f} against {best_y[1]:.3f} for {best_y[0]}; "
-            f"the paired difference excludes zero for both Gemini models). It is indistinguishable from {_names([(n, None) for n in level_both])} on both, and ahead of {_names([(n, None) for n in ahead_both])} on both.")
+            f"the paired difference excludes zero for both Gemini models). We detect no difference from {_names([(n, None) for n in level_both])} on either, and it is ahead of {_names([(n, None) for n in ahead_both])} on both.")
 
 
 def pooled_table():
@@ -578,7 +591,30 @@ def beyond_text():
     hosted = any(k != "open 4B model, read" for v in d["suites"].values() for k in v)
     out += (" We had predicted at least 0.90 on stripes and on the twofold size difference, and a steeper fall in counting; all three predictions were wrong."
             + ("" if hosted else " Hosted models have not been run on these sets, so whether they share these weaknesses is not known."))
-    return "<p>" + out + "</p>" + ui_text()
+    return "<p>" + out + "</p>" + probes_hosted_text(d) + ui_text()
+
+
+def probes_hosted_text(d):
+    """The hosted half of the drawn probes (entry 50d), by the rule of entry 54: per set, same items, best hosted minus open, no composite."""
+    pr = d.get("paired") or {}
+    if not pr:
+        return ""
+    same = lambda suite, name: d["suites"][suite][name]["same_items"]["accuracy"]  # noqa: E731
+    hosted = [k for k in ALL_HOSTED if all(k in d["suites"][s] for s in pr)]
+    perfect = [ALL_HOSTED[k] for k in hosted if all(same(s, k) >= 0.9995 for s in pr)]
+    gap = lambda s: f"{pr[s]['best_minus_open_points'][0]:.0f} points [{pr[s]['best_minus_open_points'][1]:.0f}, {pr[s]['best_minus_open_points'][2]:.0f}]"  # noqa: E731
+    b = d.get("breakdowns", {}).get("probe_stripes", {}).get("systems", {})
+    diag = {ALL_HOSTED[k]: (v["diagonal_rising"]["accuracy"] + v["diagonal_falling"]["accuracy"]) / 2 for k, v in b.items() if k in ALL_HOSTED}
+    confused = [n for n, v in diag.items() if v < 0.8]
+    out = (f"These are not limits of vision-language models. On the same items {_names([(n, None) for n in perfect])} answer every question of all six sets correctly. "
+           f"Paired on the items every system answered, the best hosted model is ahead of the open model by {gap('probe_largest')} on the largest shape and {gap('probe_stripes')} on stripe direction, "
+           f"and by {gap('probe_count')} on counting and {gap('probe_spatial')} on position; on the look-alike words every system is perfect. "
+           + (f"The confusion of the two diagonals is shared by {_names([(n, None) for n in confused])} and by no other hosted model. " if confused else "")
+           + "The low-cost hosted models fail where the open model fails: on the largest shape at the smallest ratio, and when counting seven or eight. "
+           "We had predicted that most hosted models would share the diagonal confusion and that counting would be weak for every system; both predictions were wrong. "
+           "One difference in the setup should be kept in mind: a hosted model writes its answer and may reason before it, while the open model gets one forward pass. "
+           "Whether the open model’s failures sit in this readout or in the model is the subject of a registered control that is running.")
+    return "\n  <p>" + out + "</p>"
 
 
 def ui_text():
@@ -606,7 +642,7 @@ def ui_text():
 
 finer_block = finer()
 beyond_block = beyond()
-beyond_section = (f'<section aria-labelledby="stops">\n  <h2 id="stops"><span class="num">3</span>Where coarse recognition ends: geometry, not reading</h2>\n  {beyond_text()}\n  {beyond_block}\n</section>\n') if beyond_block else ""
+beyond_section = (f'<section aria-labelledby="stops">\n  <h2 id="stops"><span class="num">3</span>Where the small open model falls behind: geometric judgements</h2>\n  {beyond_text()}\n  {beyond_block}\n</section>\n') if beyond_block else ""
 t0 = 6 if beyond_block else 5  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
@@ -619,7 +655,7 @@ BODY = f"""
 <header>
   <p class="running">Working paper · snapshot {snapshot}, {today} · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
-  <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines; where the model itself stops is geometry: tilt, relative size, mirror-image direction.</p>
+  <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
   <p class="links"><a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>

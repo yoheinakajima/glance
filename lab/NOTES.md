@@ -2183,3 +2183,23 @@ So the sentence the page uses is the one fixed in advance: reading spares a smal
 smarter. The 4B model never produced a malformed answer on these sets, which is why its two rows coincide. In the headline chart
 the written rows are drawn lighter above their "+ Glance" pair (2B and 4B; the 8B written row was not collected), the 2B written
 row uses the strict score like every other written row, and the caption gives the lenient numbers next to it.
+
+## 2026-09-21 09:07 Entry 62: three outside reviews of the live page (Grok, Muse, ChatGPT): what was checked, adopted, declined
+
+Relayed by the owner. Factual claims checked before use: the name collision is real (arXiv 2609.00355, 31 Aug 2026: a one-pass
+block drafter for VLMs called GLANCE; also 2601.13942, "Glance-or-Gaze", LMM visual search); "the repository 404s and the package is
+not on PyPI" was true of an earlier hour and is no longer.
+ADOPTED now: (1) resampling unit: the pooled bootstrap resampled question rows; a photograph can carry two yes/no questions, so it
+now resamples PHOTOGRAPHS within each set (`tools/pooled_photos.py`); intervals moved by at most 0.3 points and no reading
+changed (e.g. Gemini 3.1 Pro on yes/no -2.0 [-3.9, -0.2], was [-3.7, -0.4]); `tools/suite_report.py` clusters by image too.
+(2) wording: an interval that spans zero is "no difference detected", never "indistinguishable" or equivalence; the
+equivalence-style statement is the registered "within three points" (whole interval inside +-3); changed on the page, README,
+CLAIMS (with a do-not-say line) and draft. (3) "where the model itself stops is geometry" overclaimed twice: the hosted results
+(entry 50d) show the best hosted models are perfect on the probes, and a poor token readout does not show the information is
+absent (our own hidden-state result); subtitle and section title changed, and E26 (entry 61) runs the written and hidden-state
+controls. (4) hosted models on the diagnostic sets: done for the probes (50d); the interface screens finish today.
+DECLINED or deferred, with reasons: a human label audit and few-shot prompts for hosted models (not AI-only work, and the owner
+does not want the project centred on labels; both stay listed as limits); a label learning curve and making rubric calibration
+the centre of the paper (same reason); splitting the site into / and /paper (the owner asked for the tool panel on top; the panel
+is marked site-only). OPEN, the owner's call: the tool's name (collision research in the next entry) and a descriptive PAPER
+title separate from the tool name, which all three reviewers asked for.

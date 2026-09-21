@@ -11,7 +11,7 @@ a laptop) and read the answer from the logits of one forward pass; nothing is ge
 model's release, labelled by people outside this project (three sets, 541 yes/no questions and 270 pick-one photographs put
 to every system), the open model is level with the best hosted models on pick-one (0.933 against 0.937) and about two points
 behind the best on yes/no (0.939 against 0.961; the paired difference excludes zero for both Gemini models); it is
-indistinguishable from Claude Opus 5 and GPT-5.6 on both and ahead of two of the three low-cost hosted models on both. The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
+no difference is detected from Claude Opus 5 or GPT-5.6 on either, and it is ahead of two of the three low-cost hosted models on both. The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
 Reading is as accurate as the same model writing JSON. Ratings behave differently. On five image-quality scales, zero-shot, every system orders
 images correctly (within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per
 rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read
@@ -42,7 +42,7 @@ text and, in two cases, for images.
 1. A fresh-photograph, cross-provider measurement. On photographs taken after every evaluated model's release,
    labelled by people outside this project (Commons "depicts" statements, iNaturalist community identifications), the
    open model read this way is, pooled over three sets and paired on the same items, level with the best hosted models on
-   pick-one and about two points behind the two Gemini models on yes/no, indistinguishable from Claude Opus 5 and GPT-5.6,
+   pick-one and about two points behind the two Gemini models on yes/no, with no difference detected from Claude Opus 5 or GPT-5.6,
    and ahead of two of the three low-cost hosted models; one of the sets is a harder insect-order test on which the hosted
    models spread over 23 points (Section 3).
 2. Where that stops. On images drawn by program and on synthetic interface screens, with labels exact by construction,
@@ -111,19 +111,24 @@ supported; we report both, and collect the misses in Section 9.
 
 ### 3.1 The headline matrix
 
-On the same items, across three tests and eight systems (three hosted flagships, three of the same providers'
-cheapest current models, and the open model both read and written):
+On the same items, across three tests and eleven rows (three hosted flagships, three of the same providers'
+cheapest current models, and the open models: Qwen3-VL at 2B, 4B and 8B read with Glance, and the 2B and 4B models writing
+JSON without it; a written answer that does not parse counts as wrong for every system, which is what sinks the 2B written
+row (scored leniently it reaches 0.915, 0.907 and 0.495, Section 5):
 
 | System | Yes/no, 541 questions, three fresh photo sets pooled | Pick one, 270 photographs, three sets pooled | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
 | Gemini 3.1 Pro | 0.959 [0.941, 0.976] | 0.937 [0.907, 0.963] | 0.650 [0.621, 0.679] |
-| Claude Opus 5 | 0.937 [0.915, 0.957] | 0.937 [0.907, 0.963] | 0.550 [0.519, 0.581] |
-| GPT-5.6 | 0.928 [0.906, 0.948] | 0.904 [0.867, 0.937] | 0.597 [0.567, 0.627] |
-| Claude Haiku 4.5 (cheapest Anthropic) | 0.839 [0.808, 0.869] | 0.785 [0.737, 0.833] | 0.609 [0.579, 0.639] |
-| GPT-5.6 Luna (cheapest OpenAI) | 0.906 [0.880, 0.930] | 0.881 [0.841, 0.919] | 0.686 [0.657, 0.715] |
-| Gemini 3.1 Flash-Lite (cheapest Google) | 0.961 [0.945, 0.976] | 0.933 [0.904, 0.959] | 0.763 [0.737, 0.789] |
-| Qwen3-VL-4B, written | 0.945 [0.924, 0.963] | 0.930 [0.900, 0.959] | 0.672 [0.643, 0.701] |
-| Qwen3-VL-4B, read (Glance) | 0.939 [0.917, 0.957] | 0.933 [0.904, 0.959] | 0.669 [0.640, 0.698] |
+| Claude Opus 5 | 0.937 [0.914, 0.958] | 0.937 [0.907, 0.963] | 0.550 [0.519, 0.581] |
+| GPT-5.6 | 0.928 [0.904, 0.951] | 0.904 [0.867, 0.937] | 0.597 [0.567, 0.627] |
+| Claude Haiku 4.5 (cheapest Anthropic) | 0.839 [0.809, 0.869] | 0.785 [0.733, 0.833] | 0.609 [0.579, 0.639] |
+| GPT-5.6 Luna (cheapest OpenAI) | 0.906 [0.881, 0.930] | 0.881 [0.841, 0.919] | 0.686 [0.657, 0.715] |
+| Gemini 3.1 Flash-Lite (cheapest Google) | 0.961 [0.944, 0.977] | 0.933 [0.904, 0.963] | 0.763 [0.737, 0.789] |
+| Qwen3-VL-2B, writing JSON (strict scoring) | 0.584 [0.548, 0.621] | 0.841 [0.796, 0.885] | 0.056 [0.043, 0.071] |
+| Qwen3-VL-2B + Glance | 0.904 [0.877, 0.930] | 0.907 [0.874, 0.941] | 0.492 [0.461, 0.524] |
+| Qwen3-VL-4B, writing JSON | 0.945 [0.925, 0.963] | 0.930 [0.900, 0.959] | 0.672 [0.643, 0.701] |
+| Qwen3-VL-4B + Glance | 0.939 [0.917, 0.959] | 0.933 [0.904, 0.959] | 0.669 [0.640, 0.698] |
+| Qwen3-VL-8B + Glance | 0.933 [0.910, 0.955] | 0.926 [0.893, 0.956] | 0.643 [0.614, 0.671] |
 
 The yes/no and pick-one columns pool the three fresh photo sets on the items the hosted models were shown (the test
 halves), for every system including the open model; Section 3.2 gives the paired differences and Section 3.3 the sets
@@ -150,20 +155,22 @@ Within any one photo set every 95% interval overlaps every other, which says as 
 systems. Pooling the three fresh sets (Commons, iNaturalist ten groups, iNaturalist insect orders; the items the hosted
 models were asked; a failed call counts as wrong) and pairing on the same items gives 541 yes/no questions and 270
 pick-one photographs per system. This pooling was added after the per-set results had been seen; its rule (every set,
-every system, nothing dropped; intervals from a bootstrap stratified by set) was fixed before it was computed (entry 54).
+every system, nothing dropped) was fixed before it was computed (entry 54). Intervals come from a bootstrap stratified by set that
+resamples photographs, all questions of a photograph together (entry 62); an interval that spans zero is reported as "no difference
+detected", never as equivalence.
 
 | System | yes/no, n=541 | open minus this, points | pick-one, n=270 | open minus this, points |
 | --- | --- | --- | --- | --- |
-| Qwen3-VL-4B, read | 0.939 [0.917, 0.957] | - | 0.933 [0.904, 0.959] | - |
-| Claude Opus 5 | 0.937 [0.915, 0.957] | +0.2 [-1.7, +1.8] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
-| GPT-5.6 | 0.928 [0.906, 0.948] | +1.1 [-0.7, +3.1] | 0.904 [0.867, 0.937] | +3.0 [+0.0, +6.3] |
-| Gemini 3.1 Pro | 0.959 [0.941, 0.976] | -2.0 [-3.7, -0.4] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
-| Claude Haiku 4.5 | 0.839 [0.808, 0.869] | +10.0 [+7.2, +12.8] | 0.785 [0.737, 0.833] | +14.8 [+10.4, +19.3] |
-| GPT-5.6 Luna | 0.906 [0.880, 0.930] | +3.3 [+1.1, +5.5] | 0.881 [0.841, 0.919] | +5.2 [+1.5, +8.9] |
-| Gemini 3.1 Flash-Lite | 0.961 [0.945, 0.976] | -2.2 [-3.9, -0.6] | 0.933 [0.904, 0.959] | +0.0 [-3.0, +3.0] |
+| Qwen3-VL-4B + Glance | 0.939 [0.917, 0.959] | - | 0.933 [0.904, 0.959] | - |
+| Claude Opus 5 | 0.937 [0.914, 0.958] | +0.2 [-1.7, +2.1] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
+| GPT-5.6 | 0.928 [0.904, 0.951] | +1.1 [-0.7, +3.0] | 0.904 [0.867, 0.937] | +3.0 [+0.0, +6.3] |
+| Gemini 3.1 Pro | 0.959 [0.941, 0.976] | -2.0 [-3.9, -0.2] | 0.937 [0.907, 0.963] | -0.4 [-3.0, +2.2] |
+| Claude Haiku 4.5 | 0.839 [0.809, 0.869] | +10.0 [+7.3, +12.8] | 0.785 [0.733, 0.833] | +14.8 [+10.4, +19.3] |
+| GPT-5.6 Luna | 0.906 [0.881, 0.930] | +3.3 [+1.1, +5.7] | 0.881 [0.841, 0.919] | +5.2 [+1.5, +8.9] |
+| Gemini 3.1 Flash-Lite | 0.961 [0.944, 0.977] | -2.2 [-4.0, -0.6] | 0.933 [0.904, 0.963] | +0.0 [-3.0, +3.0] |
 
-On pick-one the open model is indistinguishable from the four best hosted models and within three points of three of
-them. On yes/no it is indistinguishable from Claude Opus 5 and GPT-5.6, about two points behind both Gemini models (a
+On pick-one we detect no difference from the four best hosted models, and for three of them the whole paired interval lies
+within three points. On yes/no we detect no difference from Claude Opus 5 or GPT-5.6 (both intervals within three points); the open model is about two points behind both Gemini models (a
 small lead that no single set could show), and ahead of GPT-5.6 Luna and Claude Haiku 4.5. The equal-weight-per-set means
 tell the same story (0.938 against 0.958 and 0.960), so the result is not an artefact of two of the three sets being
 nature photographs.
@@ -402,7 +409,7 @@ of Section 6.3 scores 0.347 zero-shot against 0.328 for the four-pass read.
 Specialised tools do as well or better on low-level artefacts. With plentiful labels 29 hand-built features score 0.979 on
 the synthetic scales against 0.867 for the fitted model. A 0.9B model trained for image quality (Q-SiT-mini), given our
 matrix scaling on its five level-word logits, the same 32 labels per scale and the same test items, scores 0.853 against
-0.846 for the frozen 4B model (difference +0.7 points [-1.1, +2.5]; with 300 labels 0.869 against 0.863): indistinguishable,
+0.846 for the frozen 4B model (difference +0.7 points [-1.1, +2.5]; with 300 labels 0.869 against 0.863): no difference detected,
 at a quarter of the size. We had predicted it would rank only the three distortions it was trained for and stay below the
 4B model; it ranks all five scales (Spearman 0.86 to 0.95). A general model read this way earns its place by answering any
 typed question with one set of frozen weights, not by being the best quality meter. The other outside system we ran, a 4B
