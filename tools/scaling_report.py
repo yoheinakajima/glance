@@ -19,7 +19,8 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MEMBERS = rating.MEMBERS["ens4d"]
 SOURCES = {"2B": "lab/runs/scaling_2b.jsonl", "4B": "lab/data/main_stagesAB.jsonl.gz", "8B": "lab/runs/scaling_8b.jsonl"}
-JSON_SOURCES = {"2B": "lab/runs/scaling_2b.jsonl", "4B": "lab/runs/lab_jsondigits.jsonl", "8B": "lab/runs/scaling_8b.jsonl"}  # the one-pass read (entry 42)
+JSON_SOURCES = {"2B": "lab/runs/scaling_2b.jsonl", "4B": "lab/runs/lab_jsondigits.jsonl", "8B": "lab/runs/scaling_8b.jsonl",  # the one-pass read (entry 42)
+                "SmolVLM2-2.2B (another family)": "lab/runs/smolvlm2_lab.jsonl"}
 OTHER_FAMILY = {"SmolVLM2-2.2B (another family)": "lab/runs/smolvlm2_lab.jsonl"}  # E3, entry 44: same items, same prompts
 SCALES = ["blur", "exposure", "jpeg", "noise", "resolution"]
 N_TEST, N_CAL = 200, 100

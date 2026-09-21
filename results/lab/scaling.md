@@ -5,7 +5,7 @@
 | Qwen3-VL-2B | 0.388 [0.358, 0.417] | 0.492 (0.623 with 16 unlabeled) | 0.893 | 0.893 | 0.644 [0.618, 0.669] | 0.842 [0.825, 0.858] | +45.4 |
 | Qwen3-VL-4B | 0.570 [0.540, 0.601] | 0.669 (0.758 with 16 unlabeled) | 0.988 | 0.934 | 0.694 [0.669, 0.718] | 0.853 [0.835, 0.870] | +28.3 |
 | Qwen3-VL-8B | 0.537 [0.506, 0.568] | 0.643 (0.677 with 16 unlabeled) | 0.979 | 0.915 | 0.714 [0.690, 0.737] | 0.839 [0.820, 0.857] | +30.2 |
-| SmolVLM2-2.2B (another family) | 0.419 [0.389, 0.449] | not collected | 0.837 | 0.833 | 0.519 [0.493, 0.547] | 0.814 [0.794, 0.833] | +39.5 |
+| SmolVLM2-2.2B (another family) | 0.419 [0.389, 0.449] | 0.440 (0.609 with 16 unlabeled) | 0.837 | 0.833 | 0.519 [0.493, 0.547] | 0.814 [0.794, 0.833] | +39.5 |
 | anthropic/claude-opus-5, zero-shot written pick | 0.550 | | not stored | not stored | - | - | - |
 | openai/gpt-5.6, zero-shot written pick | 0.597 | | not stored | not stored | - | - | - |
 | openrouter/google/gemini-3.1-pro-preview, zero-shot written pick | 0.650 | | not stored | not stored | - | - | - |

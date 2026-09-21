@@ -112,7 +112,9 @@
    ],
    "within_1": 0.837,
    "spearman": 0.8329961786862187,
-   "gain_from_32_labels_points": 39.5
+   "gain_from_32_labels_points": 39.5,
+   "json_zero_shot": 0.43999999999999995,
+   "json_unlabeled_16": 0.6093
   }
  },
  "verdicts": {

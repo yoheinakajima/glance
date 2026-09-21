@@ -1762,3 +1762,11 @@ Found while checking the draft's editor notes against the page: the comparison m
 generator: tables are numbered 1 to 8 in order (9 once the rendered-probe table has data), Figure 2 now points at Table 3, and
 Figure 1's caption says it is drawn on the items every system answered. No number or claim changed. Goes live with the owner's
 next deploy.
+
+## 2026-09-21 01:29 Entry 44b: the one-pass read on the second family (descriptive; no prediction was registered for it)
+
+SmolVLM2-2.2B, the one-pass read at the JSON answer position, the same 1,000 lab images and 500 calibration images as every
+other row (`lab/runs/smolvlm2_lab.jsonl`, 1,500 new rows; `results/lab/scaling.md`): 0.440 zero-shot against 0.419 for its
+four-pass read, and 0.609 with 16 unlabeled images against 0.519. So on all four open models measured the one-pass read is at
+or above the four-pass read zero-shot (2B +10.4, 4B +9.9, 8B +10.6, SmolVLM2 +2.1 points) and gains more from unlabeled images.
+This was a table cell to fill, not a hypothesis; it does not enter the registered tally.
