@@ -44,6 +44,10 @@ def newest_run_with(cfg, suite: str):
 JOBS = {
     "orders": {"what": "The HARDER fresh test (insect orders on iNaturalist, lab/NOTES.md entry 47): three flagships and three cheapest models, about 315 calls each.",
                "providers": FLAGSHIP_AND_CHEAP, "bases": [("@inat_orders_choice", None)]},
+    "probes": {"what": "Procedural probes (counting, spatial, size, stripes, text; lab/NOTES.md entry 50): three flagships and three cheapest models, about 450 calls each, small images.",
+               "providers": FLAGSHIP_AND_CHEAP, "bases": [("@probe_count", None)]},
+    "ui": {"what": "Synthetic UI screens (state, page type, which element to click, goal done, one-step reasoning; lab/NOTES.md entry 49): three flagships and three cheapest models.",
+           "providers": FLAGSHIP_AND_CHEAP, "bases": [("@ui_click", None)]},
     "cheap": {"what": "The cheapest current vision model of each provider on all three tests: Commons photos (196 calls), iNaturalist photos (300), lab ratings (1,000).",
               "providers": [("Anthropic", "console.anthropic.com -> API keys", [(["anthropic/claude-haiku-4-5"], "haiku")]),
                             ("OpenAI", "platform.openai.com -> API keys", [(["openai/gpt-5.6-luna", "openai/gpt-5-nano"], "gptsmall")]),
@@ -122,6 +126,9 @@ def main() -> int:
     for run_id, model, state in done:
         print(f"  {model} on {run_id}: {state}")
     finished = [run_id for run_id, _, state in done if state == "finished"]
+    if args.set in ("probes", "ui") and finished:
+        subprocess.run(["uv", "run", "python", "tools/suite_report.py", "--name", {"probes": "probes", "ui": "ui_screens"}[args.set], "--prefix", {"probes": "probe_", "ui": "ui_"}[args.set],
+                        "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
     if args.set == "orders" and finished:
         subprocess.run(["uv", "run", "python", "tools/fresh_report.py", "--set", "orders", "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
     for cmd in REPORTS:
