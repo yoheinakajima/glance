@@ -71,18 +71,42 @@ fig2 = dot_plot(rows2, 0.5, 1.0, "Exact-level accuracy on five 4-level rating sc
 
 # ---- tables ----------------------------------------------------------------------------------------
 def fresh_table():
+    """Both photo sets, every system: the open model read and (where collected) written, then all hosted models on the test half."""
+    def t3(e):
+        return f'{e[0]:.3f} <span class="ci">[{e[1]:.3f}, {e[2]:.3f}]</span>'
+
+    def block(title, note, y, c, wy, wc, sep):
+        rows = [f'<tr class="own{" sep" if sep else ""}"><td>Qwen3-VL-4B, read <span class="note">{title}, {note}</span></td><td class="n">{ci(y["vlm:statement"])}</td><td class="n">{ci(c["vlm:independent"])}</td></tr>']
+        if wy and wc:
+            rows.append(f'<tr class="own"><td>Qwen3-VL-4B, written <span class="note">same items</span></td><td class="n">{t3(wy["written"])}</td><td class="n">{t3(wc["written"])}</td></tr>')
+        rows += [f'<tr><td>{name}</td><td class="n">{ci(y[m])}</td><td class="n">{ci(c[m])}</td></tr>' for m, name in ALL_HOSTED.items() if m in y and m in c]
+        return rows
+
     out = ['<div class="table-scroll"><table><thead><tr><th>System, zero-shot</th><th class="n">yes/no</th><th class="n">pick-one</th></tr></thead><tbody>']
-    y, c = fresh["suites"]["fresh_yesno"], fresh["suites"]["fresh_choice"]
-    out.append(f'<tr class="own"><td>Qwen3-VL-4B, read <span class="note">Commons, 131 photos</span></td><td class="n">{ci(y["vlm:statement"])}</td><td class="n">{ci(c["vlm:independent"])}</td></tr>')
-    out += [f'<tr><td>{name} <span class="note">same photos, test half</span></td><td class="n">{ci(y[m])}</td><td class="n">{ci(c[m])}</td></tr>' for m, name in FRONTIER.items() if m in y]
+    out += block("Commons", "131 photos", fresh["suites"]["fresh_yesno"], fresh["suites"]["fresh_choice"], gen.get("fresh_yesno"), gen.get("fresh_choice"), False)
     if inat:
-        yi, cj = inat["suites"]["inat_yesno"], inat["suites"]["inat_choice"]
-        out.append(f'<tr class="own sep"><td>Qwen3-VL-4B, read <span class="note">iNaturalist, 200 photos</span></td><td class="n">{ci(yi["vlm:statement"])}</td><td class="n">{ci(cj["vlm:independent"])}</td></tr>')
-        extra = [m for m in FRONTIER if m in yi]
-        out += [f'<tr><td>{FRONTIER[m]}</td><td class="n">{ci(yi[m])}</td><td class="n">{ci(cj[m])}</td></tr>' for m in extra]
-        if not extra:
-            out.append('<tr><td>Frontier models <span class="note">iNaturalist</span></td><td class="n pending" colspan="2">paid calls not yet run</td></tr>')
+        out += block("iNaturalist", "200 photos", inat["suites"]["inat_yesno"], inat["suites"]["inat_choice"], gen.get("inat_yesno"), gen.get("inat_choice"), True)
     return "".join(out) + "</tbody></table></div>"
+
+
+def apart():
+    """Hosted models whose interval does not overlap the open model's, per photo set; stated on the page rather than left for the reader to find."""
+    found = []
+    for title, d, ys, cs in (("Commons", fresh, "fresh_yesno", "fresh_choice"), ("iNaturalist", inat, "inat_yesno", "inat_choice")):
+        if not d:
+            continue
+        for suite, own, kind in ((ys, "vlm:statement", "yes/no"), (cs, "vlm:independent", "pick-one")):
+            e = d["suites"][suite]
+            for m, name in ALL_HOSTED.items():
+                if m in e and (e[m]["ci95"][1] < e[own]["ci95"][0] or e[m]["ci95"][0] > e[own]["ci95"][1]):
+                    found.append((title, kind, name, e[m]["accuracy"], e[own]["accuracy"], e[m]["accuracy"] < e[own]["accuracy"]))
+    if not found:
+        return "Every hosted interval overlaps the open model’s on both sets."
+    by = {}
+    for title, kind, name, a, o, below in found:
+        by.setdefault((title, name, below), []).append(f"{a:.3f} against {o:.3f} on {kind}")
+    parts = [f"{name} is {'below' if below else 'above'} the open model on the {title} set ({', '.join(v)}; the intervals do not overlap)" for (title, name, below), v in by.items()]
+    return "One exception to “indistinguishable”: " + "; ".join(parts) + ". Every other hosted interval overlaps the open model’s on both sets."
 
 
 def cost_table():
@@ -342,7 +366,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h3>2.1 The photographs</h3>
   <p>Wikimedia Commons photographs taken after 15 August 2026, labelled by their uploaders’ structured “depicts” statements, and iNaturalist observations uploaded on the day of the test, labelled by community identification. No labels were made by us or by any model.</p>
   {fresh_table()}
-  <p class="caption"><b>Table 3.</b> All items of each photo set (the frontier models answered the test half), 95% bootstrap intervals, uncalibrated decisions, nothing fitted.</p>
+  <p class="caption"><b>Table 3.</b> The open model on all items of each photo set, hosted models on the test half; 95% bootstrap intervals, uncalibrated decisions, nothing fitted. {apart()}</p>
   <figure>{fig1}<figcaption><b>Figure 2.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
 
   <h3>2.2 A finer test, and tests beyond photographs</h3>

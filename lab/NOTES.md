@@ -1770,3 +1770,12 @@ other row (`lab/runs/smolvlm2_lab.jsonl`, 1,500 new rows; `results/lab/scaling.m
 four-pass read, and 0.609 with 16 unlabeled images against 0.519. So on all four open models measured the one-pass read is at
 or above the four-pass read zero-shot (2B +10.4, 4B +9.9, 8B +10.6, SmolVLM2 +2.1 points) and gains more from unlabeled images.
 This was a table cell to fill, not a hypothesis; it does not enter the registered tally.
+
+## 2026-09-21 01:31 Entry 53: the page now shows the one hosted result that is NOT level
+
+Found in a proof-read: the page's photo-set table listed only the three flagships on iNaturalist, so a reader could not see
+that Claude Haiku 4.5 sits below everything else there (0.830 / 0.790 against the open model's 0.945 / 0.940; intervals do not
+overlap; entry 45b). That favours the open model, and leaving it out still made "indistinguishable from six hosted models" read
+as broader than the data. Table 3 now lists all six hosted models on both sets, and its caption names every hosted interval that
+does not overlap the open model's, computed from the result files (today: that one model, on that one set). Written rows for
+iNaturalist will join the table when `written-inat` finishes.
