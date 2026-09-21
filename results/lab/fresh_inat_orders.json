@@ -1,0 +1,135 @@
+{
+  "runs": [
+    "20260921T061001Z-da85d6"
+  ],
+  "suites": {
+    "inat_orders_choice": {
+      "vlm:independent": {
+        "accuracy": 0.9619047619047619,
+        "ci95": [
+          0.9333333333333333,
+          0.9857142857142858
+        ],
+        "n": 210,
+        "per_class": {
+          "bee_wasp_or_ant": [
+            0.9666666666666667,
+            30
+          ],
+          "beetle": [
+            1.0,
+            30
+          ],
+          "butterfly_or_moth": [
+            1.0,
+            30
+          ],
+          "dragonfly_or_damselfly": [
+            1.0,
+            30
+          ],
+          "fly": [
+            0.9,
+            30
+          ],
+          "grasshopper_or_cricket": [
+            1.0,
+            30
+          ],
+          "true_bug": [
+            0.8666666666666667,
+            30
+          ]
+        }
+      },
+      "vlm:letter": {
+        "accuracy": 0.9476190476190476,
+        "ci95": [
+          0.9142857142857143,
+          0.9761904761904762
+        ],
+        "n": 210,
+        "per_class": {
+          "bee_wasp_or_ant": [
+            0.9666666666666667,
+            30
+          ],
+          "beetle": [
+            0.9666666666666667,
+            30
+          ],
+          "butterfly_or_moth": [
+            1.0,
+            30
+          ],
+          "dragonfly_or_damselfly": [
+            1.0,
+            30
+          ],
+          "fly": [
+            0.7666666666666667,
+            30
+          ],
+          "grasshopper_or_cricket": [
+            1.0,
+            30
+          ],
+          "true_bug": [
+            0.9333333333333333,
+            30
+          ]
+        }
+      },
+      "siglip:independent": {
+        "accuracy": 0.7095238095238096,
+        "ci95": [
+          0.6476190476190476,
+          0.7714285714285715
+        ],
+        "n": 210,
+        "per_class": {
+          "bee_wasp_or_ant": [
+            0.9333333333333333,
+            30
+          ],
+          "beetle": [
+            0.8333333333333334,
+            30
+          ],
+          "butterfly_or_moth": [
+            0.9,
+            30
+          ],
+          "dragonfly_or_damselfly": [
+            0.9,
+            30
+          ],
+          "fly": [
+            0.23333333333333334,
+            30
+          ],
+          "grasshopper_or_cricket": [
+            0.7,
+            30
+          ],
+          "true_bug": [
+            0.4666666666666667,
+            30
+          ]
+        }
+      }
+    },
+    "inat_orders_yesno": {
+      "vlm:statement": {
+        "accuracy": 0.9476190476190476,
+        "ci95": [
+          0.9261904761904762,
+          0.969047619047619
+        ],
+        "n": 420,
+        "on_yes_questions": 0.919047619047619,
+        "on_no_questions": 0.9761904761904762
+      }
+    }
+  }
+}

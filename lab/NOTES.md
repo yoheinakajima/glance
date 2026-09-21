@@ -1621,3 +1621,16 @@ and read, GPU otherwise idle).
 1.3 and 1.1 times. So on full-size photographs the RATIO does not grow with model size (if anything it shrinks, because
 reading the image grows with the model while the written answer stays about ten tokens); the absolute saving per yes/no
 grows (0.41, 0.57, 0.89 s). The large multiples (3.5 and 6 times) belong to requests with many questions per image.
+
+## 2026-09-20 23:33 Entry 47b: E20 local result: the "harder" test is not harder for the open VLM (hosted rows pending)
+
+Run `20260921T061001Z-da85d6`, 210 fresh iNaturalist photographs of seven insect orders, uncalibrated, all items
+(`results/lab/fresh_inat_orders.md`). Qwen3-VL-4B read: pick-one of seven 0.962 [0.933, 0.986] (lettered prompt 0.948);
+yes/no with look-alike negatives 0.948 [0.926, 0.969] (0.919 on yes, 0.976 on no). SigLIP2: 0.710 [0.648, 0.771].
+- H48 (at least 0.80 / 0.85, and clearly below the 0.94 of the easy set): the floor holds, the "clearly below" does NOT:
+  the open model scores HIGHER here than on the ten-group test. The test is harder for the dual encoder (0.88 -> 0.71),
+  not for the VLM. H49 (the systems separate) waits for the hosted rows (the owner's paste, `frontier_batch.py --set
+  orders`).
+- Consequence: this test does not yet cure the ceiling problem of the headline. If the hosted models are also near 0.95
+  the next harder candidate is the synthetic-UI benchmark the owner proposed (state, page type, which element to click),
+  which needs reading text and layout, not fine-grained biology.
