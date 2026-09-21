@@ -33,6 +33,20 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**Progress 00:58 on 2026-09-21 (overnight; newest first).** DONE tonight: insect-order test with all six hosted models (entry
+47c, on the page), E19 SmolVLM2 on the photographs (entry 46b: level on everyday photos, trails on nature photos; on the page and
+in the draft), any-model option checked on the GPU (entry 46c; "experimental" replaced by what was checked), E21 UI screens built,
+reviewed, registered and queued (entry 49b; `ui-eval` on lane A), E22 probes built and queued (entry 50b), a batch-tool defect
+fixed before it reached the page (entry 47d), `tools/suite_report.py --by SUITE=KEY` for the per-count / per-ratio verdicts,
+`beyond()` in `tools/make_site.py` (a data-driven Table 3c for probes and UI screens; NOT yet placed in the page body: place it
+under section 2 once `results/lab/probes.json` or `ui_screens.json` exists, with a sentence per registered prediction).
+STILL TO DO as jobs finish: `smol-json` -> `tools/scaling_report.py`; `written-inat` -> written rows for the iNaturalist
+table; `jsondigits-semantic` + `jsondigits-kadid` -> `tools/jsondigits_hard_report.py` (E17 DECISION); `probes-eval` ->
+`uv run python tools/suite_report.py --name probes --prefix probe_ --run <run> --by probe_count=count --by probe_count_color=label --by probe_largest=ratio`
+(H53 to H55); `ui-eval` -> `uv run python tools/suite_report.py --name ui_screens --prefix ui_ --run <run>` (H50; H51 / H52 need
+the owner's hosted paste `uv run python tools/frontier_batch.py --set ui`); `qsit-lab` + `openjev-lab` ->
+`tools/external_report.py` (H31 / H32).
+
 **OVERNIGHT PLAN, written 23:52 on 2026-09-20. The owner is asleep and may PUBLISH in the morning. READ THIS BLOCK FIRST.**
 Goal by morning: every blank on the page filled from runs that have finished, the paper draft consistent with the page, `main`
 fast-forwarded and pushed to the PRIVATE repository `github.com/yoheinakajima/glance` (created at the owner's request; going
