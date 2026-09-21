@@ -346,6 +346,11 @@ at 32 labels, so the fitted recipe travels across sizes even though zero-shot qu
 those 32 labels did not shrink with size as expected (45.4, 28.3, 30.2 points for 2B, 4B, 8B).
 <!-- src: results/lab/scaling.md, lab/NOTES.md entry 38c -->
 
+The one-pass read of Section 4.3 shows the same picture and is at or above the four-pass read zero-shot on every model
+measured: 0.492, 0.669 and 0.643 for Qwen3-VL-2B, 4B and 8B (against 0.388, 0.570, 0.537), and 0.440 against 0.419 for
+SmolVLM2-2.2B; with 16 unlabeled images it reaches 0.623, 0.758, 0.677 and 0.609. The 8B model is again not above the
+4B model. <!-- src: results/lab/scaling.md, lab/NOTES.md entries 38c, 42b, 44b -->
+
 The fitted recipe also travels to that different family without a wording change: the v0 readout as shipped scores
 0.384, the same readout with its best calibration 0.762, the one-pass digit readout with a matrix calibration 0.775,
 and the four-pass ensemble with a matrix calibration 0.854 (200 labels/scale), the same registered ordering as on
