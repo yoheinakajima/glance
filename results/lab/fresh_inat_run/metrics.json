@@ -108,7 +108,7 @@
       "top_errors": [
         {
           "item_id": "plant_402006975",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/plant_402006975.jpg",
+          "image_path": ".cache/eval_images/inat_choice/plant_402006975.jpg",
           "true": "plant",
           "predicted": "fungus",
           "confidence": 0.9981022921890803,
@@ -116,7 +116,7 @@
         },
         {
           "item_id": "arachnid_401973419",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_401973419.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_401973419.jpg",
           "true": "arachnid",
           "predicted": "insect",
           "confidence": 0.9878525168610884,
@@ -124,7 +124,7 @@
         },
         {
           "item_id": "mollusc_401913800",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mollusc_401913800.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mollusc_401913800.jpg",
           "true": "mollusc",
           "predicted": "fungus",
           "confidence": 0.9648817216369737,
@@ -132,7 +132,7 @@
         },
         {
           "item_id": "mammal_401992485",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401992485.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401992485.jpg",
           "true": "mammal",
           "predicted": "plant",
           "confidence": 0.9179569386749421,
@@ -140,7 +140,7 @@
         },
         {
           "item_id": "arachnid_402001146",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402001146.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_402001146.jpg",
           "true": "arachnid",
           "predicted": "fungus",
           "confidence": 0.8209238745791644,
@@ -148,7 +148,7 @@
         },
         {
           "item_id": "fungus_401954606",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fungus_401954606.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fungus_401954606.jpg",
           "true": "fungus",
           "predicted": "plant",
           "confidence": 0.6253794607473511,
@@ -156,7 +156,7 @@
         },
         {
           "item_id": "insect_402005675",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/insect_402005675.jpg",
+          "image_path": ".cache/eval_images/inat_choice/insect_402005675.jpg",
           "true": "insect",
           "predicted": "arachnid",
           "confidence": 0.6107691053751276,
@@ -164,7 +164,7 @@
         },
         {
           "item_id": "arachnid_402000146",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402000146.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_402000146.jpg",
           "true": "arachnid",
           "predicted": "fungus",
           "confidence": 0.5986482234961333,
@@ -172,7 +172,7 @@
         },
         {
           "item_id": "fish_401907986",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fish_401907986.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fish_401907986.jpg",
           "true": "fish",
           "predicted": "reptile",
           "confidence": 0.47740803150557876,
@@ -180,7 +180,7 @@
         },
         {
           "item_id": "plant_402017186",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/plant_402017186.jpg",
+          "image_path": ".cache/eval_images/inat_choice/plant_402017186.jpg",
           "true": "plant",
           "predicted": "insect",
           "confidence": 0.4498550507271091,
@@ -188,7 +188,7 @@
         },
         {
           "item_id": "amphibian_401957150",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/amphibian_401957150.jpg",
+          "image_path": ".cache/eval_images/inat_choice/amphibian_401957150.jpg",
           "true": "amphibian",
           "predicted": "bird",
           "confidence": 0.410727720212512,
@@ -196,7 +196,7 @@
         },
         {
           "item_id": "mammal_401965558",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401965558.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401965558.jpg",
           "true": "mammal",
           "predicted": "bird",
           "confidence": 0.40048699919347275,
@@ -204,7 +204,7 @@
         },
         {
           "item_id": "reptile_401958370",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/reptile_401958370.jpg",
+          "image_path": ".cache/eval_images/inat_choice/reptile_401958370.jpg",
           "true": "reptile",
           "predicted": "mammal",
           "confidence": 0.38849368550782293,
@@ -212,7 +212,7 @@
         },
         {
           "item_id": "mammal_401977210",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401977210.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401977210.jpg",
           "true": "mammal",
           "predicted": "reptile",
           "confidence": 0.2788655688044207,
@@ -220,7 +220,7 @@
         },
         {
           "item_id": "mammal_402010073",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_402010073.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_402010073.jpg",
           "true": "mammal",
           "predicted": "amphibian",
           "confidence": 0.23263095849539106,
@@ -317,7 +317,7 @@
       "top_errors": [
         {
           "item_id": "fungus_401954606",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fungus_401954606.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fungus_401954606.jpg",
           "true": "fungus",
           "predicted": "plant",
           "confidence": 0.9722689668875073,
@@ -325,7 +325,7 @@
         },
         {
           "item_id": "arachnid_402000146",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402000146.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_402000146.jpg",
           "true": "arachnid",
           "predicted": "plant",
           "confidence": 0.933761220857326,
@@ -333,7 +333,7 @@
         },
         {
           "item_id": "mammal_401992485",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401992485.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401992485.jpg",
           "true": "mammal",
           "predicted": "plant",
           "confidence": 0.7218202023890254,
@@ -341,7 +341,7 @@
         },
         {
           "item_id": "arachnid_401973419",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_401973419.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_401973419.jpg",
           "true": "arachnid",
           "predicted": "insect",
           "confidence": 0.6813825204856548,
@@ -349,7 +349,7 @@
         },
         {
           "item_id": "fish_401907986",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fish_401907986.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fish_401907986.jpg",
           "true": "fish",
           "predicted": "reptile",
           "confidence": 0.437806083192678,
@@ -357,7 +357,7 @@
         },
         {
           "item_id": "mammal_401977210",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401977210.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401977210.jpg",
           "true": "mammal",
           "predicted": "plant",
           "confidence": 0.4153635770643924,
@@ -365,7 +365,7 @@
         },
         {
           "item_id": "arachnid_402001146",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402001146.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_402001146.jpg",
           "true": "arachnid",
           "predicted": "insect",
           "confidence": 0.23528054677694177,
@@ -373,7 +373,7 @@
         },
         {
           "item_id": "mammal_402010073",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_402010073.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_402010073.jpg",
           "true": "mammal",
           "predicted": "bird",
           "confidence": 0.17832268852714506,
@@ -470,7 +470,7 @@
       "top_errors": [
         {
           "item_id": "fungus_401954606",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fungus_401954606.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fungus_401954606.jpg",
           "true": "fungus",
           "predicted": "plant",
           "confidence": 0.9564253264432631,
@@ -478,7 +478,7 @@
         },
         {
           "item_id": "arachnid_402000146",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402000146.jpg",
+          "image_path": ".cache/eval_images/inat_choice/arachnid_402000146.jpg",
           "true": "arachnid",
           "predicted": "plant",
           "confidence": 0.8975432523423097,
@@ -486,7 +486,7 @@
         },
         {
           "item_id": "mammal_401992485",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401992485.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401992485.jpg",
           "true": "mammal",
           "predicted": "plant",
           "confidence": 0.7962625279707978,
@@ -494,7 +494,7 @@
         },
         {
           "item_id": "mammal_401977210",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401977210.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_401977210.jpg",
           "true": "mammal",
           "predicted": "plant",
           "confidence": 0.7113274055267411,
@@ -502,7 +502,7 @@
         },
         {
           "item_id": "reptile_402000750",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/reptile_402000750.jpg",
+          "image_path": ".cache/eval_images/inat_choice/reptile_402000750.jpg",
           "true": "reptile",
           "predicted": "amphibian",
           "confidence": 0.6336418578221044,
@@ -510,7 +510,7 @@
         },
         {
           "item_id": "mammal_402010073",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_402010073.jpg",
+          "image_path": ".cache/eval_images/inat_choice/mammal_402010073.jpg",
           "true": "mammal",
           "predicted": "bird",
           "confidence": 0.5707697454874219,
@@ -518,7 +518,7 @@
         },
         {
           "item_id": "fish_401907986",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fish_401907986.jpg",
+          "image_path": ".cache/eval_images/inat_choice/fish_401907986.jpg",
           "true": "fish",
           "predicted": "reptile",
           "confidence": 0.3203742672351739,
@@ -628,7 +628,7 @@
       "top_errors": [
         {
           "item_id": "arachnid_402000146__plant",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402000146__plant.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/arachnid_402000146__plant.jpg",
           "true": "no",
           "predicted": "yes",
           "confidence": 0.9874484362353222,
@@ -636,7 +636,7 @@
         },
         {
           "item_id": "fungus_401954606__fungus",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401954606__fungus.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/fungus_401954606__fungus.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.9725436928053345,
@@ -644,7 +644,7 @@
         },
         {
           "item_id": "insect_402013250__insect",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/insect_402013250__insect.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/insect_402013250__insect.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.9560256500453481,
@@ -652,7 +652,7 @@
         },
         {
           "item_id": "mammal_401992485__mammal",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/mammal_401992485__mammal.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/mammal_401992485__mammal.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.9472926916704528,
@@ -660,7 +660,7 @@
         },
         {
           "item_id": "arachnid_401985234__insect",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_401985234__insect.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/arachnid_401985234__insect.jpg",
           "true": "no",
           "predicted": "yes",
           "confidence": 0.6424284965793399,
@@ -668,7 +668,7 @@
         },
         {
           "item_id": "amphibian_401891426__reptile",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/amphibian_401891426__reptile.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/amphibian_401891426__reptile.jpg",
           "true": "no",
           "predicted": "yes",
           "confidence": 0.6382104836726181,
@@ -676,7 +676,7 @@
         },
         {
           "item_id": "arachnid_402001146__arachnid",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402001146__arachnid.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/arachnid_402001146__arachnid.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.5635711054053775,
@@ -684,7 +684,7 @@
         },
         {
           "item_id": "fungus_401937340__fungus",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401937340__fungus.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/fungus_401937340__fungus.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.43425751145627356,
@@ -692,7 +692,7 @@
         },
         {
           "item_id": "arachnid_402017421__insect",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402017421__insect.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/arachnid_402017421__insect.jpg",
           "true": "no",
           "predicted": "yes",
           "confidence": 0.22883860772145947,
@@ -700,7 +700,7 @@
         },
         {
           "item_id": "mammal_402010073__mammal",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/mammal_402010073__mammal.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/mammal_402010073__mammal.jpg",
           "true": "yes",
           "predicted": "no",
           "confidence": 0.18832987841386895,
@@ -708,7 +708,7 @@
         },
         {
           "item_id": "fungus_401937340__insect",
-          "image_path": "/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401937340__insect.jpg",
+          "image_path": ".cache/eval_images/inat_yesno/fungus_401937340__insect.jpg",
           "true": "no",
           "predicted": "yes",
           "confidence": 0.02428669865114874,

@@ -129,14 +129,14 @@ Most common confusions: mammal → plant (2); arachnid → insect (2); mammal �
 
 | Item | True | Predicted | Confidence | Top probability | Image |
 | --- | --- | --- | --- | --- | --- |
-| fungus_401954606 | fungus | plant | 0.972 | 0.992 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fungus_401954606.jpg` |
-| arachnid_402000146 | arachnid | plant | 0.934 | 0.976 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402000146.jpg` |
-| mammal_401992485 | mammal | plant | 0.722 | 0.874 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401992485.jpg` |
-| arachnid_401973419 | arachnid | insect | 0.681 | 0.697 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_401973419.jpg` |
-| fish_401907986 | fish | reptile | 0.438 | 0.645 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/fish_401907986.jpg` |
-| mammal_401977210 | mammal | plant | 0.415 | 0.672 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_401977210.jpg` |
-| arachnid_402001146 | arachnid | insect | 0.235 | 0.318 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/arachnid_402001146.jpg` |
-| mammal_402010073 | mammal | bird | 0.178 | 0.300 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_choice/mammal_402010073.jpg` |
+| fungus_401954606 | fungus | plant | 0.972 | 0.992 | `.cache/eval_images/inat_choice/fungus_401954606.jpg` |
+| arachnid_402000146 | arachnid | plant | 0.934 | 0.976 | `.cache/eval_images/inat_choice/arachnid_402000146.jpg` |
+| mammal_401992485 | mammal | plant | 0.722 | 0.874 | `.cache/eval_images/inat_choice/mammal_401992485.jpg` |
+| arachnid_401973419 | arachnid | insect | 0.681 | 0.697 | `.cache/eval_images/inat_choice/arachnid_401973419.jpg` |
+| fish_401907986 | fish | reptile | 0.438 | 0.645 | `.cache/eval_images/inat_choice/fish_401907986.jpg` |
+| mammal_401977210 | mammal | plant | 0.415 | 0.672 | `.cache/eval_images/inat_choice/mammal_401977210.jpg` |
+| arachnid_402001146 | arachnid | insect | 0.235 | 0.318 | `.cache/eval_images/inat_choice/arachnid_402001146.jpg` |
+| mammal_402010073 | mammal | bird | 0.178 | 0.300 | `.cache/eval_images/inat_choice/mammal_402010073.jpg` |
 
 ### inat_yesno · vlm · statement
 
@@ -144,15 +144,15 @@ Most common confusions: yes → no (6); no → yes (5)
 
 | Item | True | Predicted | Confidence | Top probability | Image |
 | --- | --- | --- | --- | --- | --- |
-| arachnid_402000146__plant | no | yes | 0.987 | 0.994 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402000146__plant.jpg` |
-| fungus_401954606__fungus | yes | no | 0.973 | 0.986 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401954606__fungus.jpg` |
-| insect_402013250__insect | yes | no | 0.956 | 0.978 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/insect_402013250__insect.jpg` |
-| mammal_401992485__mammal | yes | no | 0.947 | 0.974 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/mammal_401992485__mammal.jpg` |
-| arachnid_401985234__insect | no | yes | 0.642 | 0.821 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_401985234__insect.jpg` |
-| amphibian_401891426__reptile | no | yes | 0.638 | 0.819 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/amphibian_401891426__reptile.jpg` |
-| arachnid_402001146__arachnid | yes | no | 0.564 | 0.782 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402001146__arachnid.jpg` |
-| fungus_401937340__fungus | yes | no | 0.434 | 0.717 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401937340__fungus.jpg` |
-| arachnid_402017421__insect | no | yes | 0.229 | 0.614 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/arachnid_402017421__insect.jpg` |
-| mammal_402010073__mammal | yes | no | 0.188 | 0.594 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/mammal_402010073__mammal.jpg` |
-| fungus_401937340__insect | no | yes | 0.024 | 0.512 | `/Users/yoheinakajima/code/glance/.cache/eval_images/inat_yesno/fungus_401937340__insect.jpg` |
+| arachnid_402000146__plant | no | yes | 0.987 | 0.994 | `.cache/eval_images/inat_yesno/arachnid_402000146__plant.jpg` |
+| fungus_401954606__fungus | yes | no | 0.973 | 0.986 | `.cache/eval_images/inat_yesno/fungus_401954606__fungus.jpg` |
+| insect_402013250__insect | yes | no | 0.956 | 0.978 | `.cache/eval_images/inat_yesno/insect_402013250__insect.jpg` |
+| mammal_401992485__mammal | yes | no | 0.947 | 0.974 | `.cache/eval_images/inat_yesno/mammal_401992485__mammal.jpg` |
+| arachnid_401985234__insect | no | yes | 0.642 | 0.821 | `.cache/eval_images/inat_yesno/arachnid_401985234__insect.jpg` |
+| amphibian_401891426__reptile | no | yes | 0.638 | 0.819 | `.cache/eval_images/inat_yesno/amphibian_401891426__reptile.jpg` |
+| arachnid_402001146__arachnid | yes | no | 0.564 | 0.782 | `.cache/eval_images/inat_yesno/arachnid_402001146__arachnid.jpg` |
+| fungus_401937340__fungus | yes | no | 0.434 | 0.717 | `.cache/eval_images/inat_yesno/fungus_401937340__fungus.jpg` |
+| arachnid_402017421__insect | no | yes | 0.229 | 0.614 | `.cache/eval_images/inat_yesno/arachnid_402017421__insect.jpg` |
+| mammal_402010073__mammal | yes | no | 0.188 | 0.594 | `.cache/eval_images/inat_yesno/mammal_402010073__mammal.jpg` |
+| fungus_401937340__insect | no | yes | 0.024 | 0.512 | `.cache/eval_images/inat_yesno/fungus_401937340__insect.jpg` |
 

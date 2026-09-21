@@ -1,0 +1,48 @@
+[eval 19:59:25] run 20260921T025925Z-689481 -> runs/20260921T025925Z-689481
+[eval 19:59:25] suite fresh_choice: 131 items (65 test)
+[eval 19:59:25] suite fresh_yesno: 262 items (131 test)
+[eval 19:59:25] suite inat_choice: 200 items (100 test)
+[eval 19:59:25] suite inat_yesno: 400 items (200 test)
+Loading weights:   0%|          | 0/625 [00:00<?, ?it/s]Loading weights:   0%|          | 1/625 [00:00<02:37,  3.96it/s]Loading weights:  59%|█████▉    | 368/625 [00:00<00:00, 1328.82it/s]Loading weights: 100%|██████████| 625/625 [00:00<00:00, 1590.89it/s]
+[eval 19:59:37] warmup fresh_choice|vlm|independent: 0.88 s/item
+[eval 19:59:45] warmup fresh_choice|vlm|letter: 0.82 s/item
+[eval 19:59:52] warmup fresh_yesno|vlm|statement: 0.62 s/item
+[eval 19:59:55] warmup inat_choice|vlm|independent: 0.34 s/item
+[eval 19:59:59] warmup inat_choice|vlm|letter: 0.39 s/item
+[eval 20:00:01] warmup inat_yesno|vlm|statement: 0.22 s/item
+[eval 20:00:01] ETA at n=500: 0.32 h; budget 4.0 h -> n per suite {'fresh_choice': 500, 'fresh_yesno': 500, 'inat_choice': 500, 'inat_yesno': 500} (ETA 0.32 h)
+[eval 20:01:45] done fresh_choice|vlm|independent: 131 items, 1.7 min, 0 failures
+[eval 20:03:19] done fresh_choice|vlm|letter: 131 items, 1.6 min, 0 failures
+[eval 20:06:02] done fresh_yesno|vlm|statement: 262 items, 2.7 min, 0 failures
+[eval 20:07:07] done inat_choice|vlm|independent: 200 items, 1.1 min, 0 failures
+[eval 20:08:22] done inat_choice|vlm|letter: 200 items, 1.2 min, 0 failures
+[eval 20:09:45] done inat_yesno|vlm|statement: 400 items, 1.4 min, 0 failures
+[eval 20:11:10] permutation fresh_choice|vlm|independent: max |dp| = 0.00e+00 over 195 requests (1.4 min)
+[eval 20:12:24] permutation fresh_choice|vlm|letter: max |dp| = 3.85e-01 over 195 requests (1.2 min)
+[eval 20:13:30] permutation inat_choice|vlm|independent: max |dp| = 0.00e+00 over 300 requests (1.1 min)
+[eval 20:14:55] permutation inat_choice|vlm|letter: max |dp| = 6.80e-01 over 300 requests (1.4 min)
+[eval 20:15:26] latency vlm: p50 1428 ms, p95 1573 ms
+[eval 20:15:27] wrote runs/20260921T025925Z-689481/report.md
+runs/20260921T025925Z-689481
+GLANCE v0 SUMMARY
+run_id:             20260921T025925Z-689481
+machine:            Apple M5, 32.0 GB RAM, mps, float16
+models:             none, Qwen/Qwen3-VL-2B-Instruct@89644892e4d85e24eaac8bacfd4f463576704203, none
+go/no-go:           NO-GO
+
+| metric | threshold | measured | pass |
+| --- | --- | --- | --- |
+| Accuracy gap vs frontier baseline | <= 5 points, macro-averaged over suites | not measured (no frontier baseline run) | not measured |
+| ECE after calibration | <= 0.05 per suite (15 equal-mass bins) | worst 0.088 (fresh_choice, sampling floor 0.063); over threshold: fresh_choice, fresh_yesno, inat_choice, inat_yesno | FAIL |
+| Selective accuracy at 80% coverage | >= baseline full-coverage accuracy | 0.958 local (macro); baseline not measured | not measured |
+| Permutation invariance (choice) | max probability shift <= 1e-3 (independent) | 0.0e+00 (fresh_choice) | pass |
+| Latency, 1 image + 5 questions | recorded; target <= 2000 ms on mps (not a gate) | p50 1428 ms, p95 1573 ms | recorded |
+
+choice method:      independent vs letter: fresh_choice: acc 0.815 vs 0.877 (same options), ECE cal 0.088 vs 0.063, p50 844 vs 777 ms; inat_choice: acc 0.930 vs 0.890 (same options), ECE cal 0.050 vs 0.085, p50 335 vs 389 ms
+weakest suite:      fresh_choice (acc 0.815), top confusions: car -> mountain (3); car -> church (2); bird -> mountain (2)
+calibration gain:   fresh_choice 0.116 -> 0.088; fresh_yesno 0.055 -> 0.052; inat_choice 0.055 -> 0.050; inat_yesno 0.078 -> 0.062
+cache speedup:      3.75x on 100 items (1685 statements); argmax agreement 100/100, max |dz| 0.075 vs limit 0.05 -> acceptance NOT met, shipped uncached
+failures:           fresh_choice/vlm/independent 0/131; fresh_choice/vlm/letter 0/131; fresh_yesno/vlm/statement 0/262; inat_choice/vlm/independent 0/200; inat_choice/vlm/letter 0/200; inat_yesno/vlm/statement 0/400
+deviations:         none
+recommended v1 data: by error rate: fresh_choice (choice) 18.5%, inat_yesno (noul) 8.5%, inat_choice (choice) 7.0%; calibrated ECE still over 0.05: fresh_choice 0.088, inat_yesno 0.062, inat_choice 0.050, fresh_yesno 0.052; gap to a frontier baseline not measured
+
