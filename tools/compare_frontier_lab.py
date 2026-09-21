@@ -57,7 +57,7 @@ for run_id in args.run:
                     seen[scale] += 1
                     frontier_items[scale].add(r["item_id"])
         continue
-    model = model or str(picks[0].get("model", "")).removeprefix("frontier:") or run_id
+    model = str(picks[0].get("model", "")).removeprefix("frontier:") or model or run_id  # rows first: a copied run folder keeps the old config
     # A call that failed or returned no valid answer counts as a wrong answer (same rule as the written-output baseline).
     answered = {(r["suite"], r["item_id"]) for r in picks}
     failed = [e for e in read_jsonl(run_dir / "errors.jsonl") if e.get("backend") == "frontier" and (e["suite"], e["item_id"]) not in answered]

@@ -13,7 +13,13 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TESTS = {"yesno": "yes/no", "choice": "pick-one", "rating": "rating"}
 LABEL = {"Qwen3-VL-4B, written": "Open 4B, written", "Qwen3-VL-4B, read (Glance)": "Open 4B, read"}
-LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "written", "Qwen3-VL-4B, read (Glance)": "read"}
+LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "written", "Qwen3-VL-4B, read (Glance)": "read",
+          "Claude Haiku 4.5": "H", "GPT-5.6 Luna": "L", "GPT-5 nano": "N", "Gemini 3.1 Flash-Lite": "F"}
+
+
+def hosted_key(rows):
+    """'G Gemini 3.1 Pro, O Claude Opus 5, ...' for the hosted systems actually present."""
+    return ", ".join(f"{LETTER.get(n, n[:1])} {n}" for n in dict.fromkeys(r["name"] for r in rows if not r["open"]))
 
 
 def matrix_rows():
@@ -94,7 +100,7 @@ def accuracy_cost(rows, w, h, tests):
             g.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{sy(max(r["ci"][0], lo)):.1f}" y2="{sy(min(r["ci"][1], hi)):.1f}" class="m-whisk"/>')
             cls = "m-prov" if r["prov"] else ("m-own" if r["open"] else "m-host")
             g.append(f'<rect x="{x - 4.5:.1f}" y="{y - 4.5:.1f}" width="9" height="9" class="{cls}"/>' if r["written"] else f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" class="{cls}"/>')
-            g.append(_t(x + 9, y + 4, LETTER[r["name"]], "start", "m-lab m-strong" if r["open"] else "m-lab"))
+            g.append(_t(x + 9, y + 4, LETTER.get(r["name"], r["name"][:1]), "start", "m-lab m-strong" if r["open"] else "m-lab"))
     g.append(_t((left + w - 8) / 2, h - 6, "US dollars per 1,000 answers, log scale; vertical axis is accuracy"))
     return f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Accuracy against cost, {", ".join(TESTS[t] for t in tests)}">{"".join(g)}</svg>'
 

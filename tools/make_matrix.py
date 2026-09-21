@@ -19,6 +19,18 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 FRONTIER = [("Gemini 3.1 Pro", "gemini", "20260920T205633Z-99f822-gemini", "20260920T170146Z-8ff72a"),
             ("Claude Opus 5", "opus", "20260920T205633Z-99f822", "20260920T165748Z-8ff72a"),
             ("GPT-5.6", "gpt", "20260920T205633Z-99f822-gpt", "20260920T165949Z-8ff72a")]
+INAT_RUN = {"Gemini 3.1 Pro": "20260920T232332Z-80efa7-gemini", "Claude Opus 5": "20260920T232332Z-80efa7", "GPT-5.6": "20260920T232332Z-80efa7-gpt"}
+PRETTY = {"anthropic/claude-haiku-4-5": "Claude Haiku 4.5", "openai/gpt-5.6-luna": "GPT-5.6 Luna", "openai/gpt-5-nano": "GPT-5 nano",
+          "openrouter/google/gemini-3.1-flash-lite": "Gemini 3.1 Flash-Lite", "openrouter/google/gemini-3.1-flash-lite-preview": "Gemini 3.1 Flash-Lite"}
+for suffix in ("haiku", "gptsmall", "flashlite"):  # the providers' cheapest models (tools/frontier_batch.py --set cheap), when their runs exist
+    commons, labrun, inat = (f"{base}-{suffix}" for base in ("20260920T205633Z-99f822", "20260920T165748Z-8ff72a", "20260920T232332Z-80efa7"))
+    if all((ROOT / "runs" / r / "predictions.jsonl").exists() for r in (commons, labrun)):
+        got = [r for r in read_jsonl(ROOT / "runs" / commons / "predictions.jsonl") if r["backend"] == "frontier"]
+        if got and any(r["backend"] == "frontier" for r in read_jsonl(ROOT / "runs" / labrun / "predictions.jsonl")):
+            model_id = str(got[0]["model"]).removeprefix("frontier:")
+            name = PRETTY.get(model_id, model_id.split("/")[-1])
+            FRONTIER.append((name, suffix, commons, labrun))
+            INAT_RUN[name] = inat
 TESTS = {"yesno": ("fresh_yesno", "Yes/no, 131 fresh Commons questions"), "choice": ("fresh_choice", "Pick one of 13, 65 fresh Commons photos"),
          "rating": (None, "Rating, exact level of 4, 1,000 lab images")}
 LIST_PRICE = json.loads((ROOT / "results/lab/cost_estimates.json").read_text())["est_usd_per_1000_ratings"]
@@ -74,16 +86,17 @@ for test, (suite, _) in TESTS.items():
         rows = [r for r in (fresh if suite else lab)[name] if pick(r)]
         systems[name].setdefault("seconds", {})[test] = {"value": statistics.median(r["latency_ms"] for r in rows) / 1000, "how": "measured, one call at a time from this laptop"}
         costs = [r["cost_usd"] for r in rows if r.get("cost_usd") is not None]
-        key = next(k for k in LIST_PRICE if name.split()[0].lower() in k or name.split()[-1].lower() in k or ("opus" in k and "Opus" in name))
+        key = next((k for k in LIST_PRICE if (("opus" in k and "Opus" in name) or ("gpt-5.6" in k and name == "GPT-5.6") or ("gemini-3.1-pro" in k and name == "Gemini 3.1 Pro"))), None)
         if not costs and suite:  # this run predates cost logging: use the same model's measured bill on the iNaturalist photos, same question type
             twin = {"fresh_yesno": "inat_yesno", "fresh_choice": "inat_choice"}[suite]
-            inat_run = "20260920T232332Z-80efa7" + {"Gemini 3.1 Pro": "-gemini", "GPT-5.6": "-gpt"}.get(name, "")
+            inat_run = INAT_RUN[name]
             inat = [r["cost_usd"] for r in frontier_rows(inat_run) if r["suite"] == twin and r.get("cost_usd") is not None] if (ROOT / "runs" / inat_run).exists() else []
             if inat:
                 systems[name].setdefault("usd_per_1000", {})[test] = {"value": [1000 * sum(inat) / len(inat)] * 2, "how": "measured on the iNaturalist photos (smaller images), same question type"}
                 continue
         systems[name].setdefault("usd_per_1000", {})[test] = ({"value": [1000 * sum(costs) / len(costs)] * 2, "how": "measured"} if costs
-                                                              else {"value": [LIST_PRICE[key]] * 2, "how": "list-price upper estimate (this run predates cost logging)"})
+                                                              else {"value": [LIST_PRICE[key]] * 2, "how": "list-price upper estimate (this run predates cost logging)"} if key
+                                                              else {"value": None, "how": "not logged"})
     systems["Qwen3-VL-4B, written"].setdefault("accuracy", {})[test] = cell([written[k] for k in sorted(shared)])
     if suite:
         read_hits = [read_hit(local[k]) for k in sorted(shared)]
