@@ -311,7 +311,7 @@ def beyond():
     found = [(load(path), title, suites) for path, title, suites in BEYOND]
     if not any(d for d, _, _ in found):
         return ""
-    hosted = [k for k in ALL_HOSTED if any(d and k in e for d, _, _ in found for e in d["suites"].values())]
+    hosted = [k for k in ALL_HOSTED if any(k in e for d, _, _ in found if d for e in d["suites"].values())]
     head = "".join(f'<th class="n">{ALL_HOSTED[k]}</th>' for k in hosted)
     body = []
     for d, title, suites in found:
@@ -331,8 +331,35 @@ def beyond():
             + f'<p class="caption"><b>Table 5.</b> Exact-answer accuracy on images whose labels are exact by construction (drawn or rendered by program; no photographs, no people). {note}</p>')
 
 
+def beyond_text():
+    """Sentences for the probe results, every number from results/lab/probes.json (entry 50c)."""
+    d = load("results/lab/probes.json")
+    if not d:
+        return ""
+    acc = {k: v["open 4B model, read"]["all_items"]["accuracy"] for k, v in d["suites"].items()}
+    b = {k: v["systems"]["open 4B model, read"] for k, v in d.get("breakdowns", {}).items()}
+    pooled = lambda g, keys: sum(g[k]["accuracy"] * g[k]["n"] for k in keys) / sum(g[k]["n"] for k in keys)  # noqa: E731
+    out = (f"Six sets of 150 images drawn by program, with labels exact by construction, mark where coarse recognition ends for the open model read this way. It reads which of six look-alike words is printed on {acc['probe_text']:.2f} of images "
+           f"and gets left, right, above and below right on {acc['probe_spatial']:.2f}.")
+    if "probe_count" in b:
+        c = b["probe_count"]
+        out += f" It counts one to five balls almost without error ({pooled(c, ['1', '2', '3', '4', '5']):.2f}) and then degrades: {c['6']['accuracy']:.2f} at six, {c['7']['accuracy']:.2f} at seven, {c['8']['accuracy']:.2f} at eight."
+    if "probe_stripes" in b:
+        st = b["probe_stripes"]
+        out += (f" It tells horizontal from vertical stripes perfectly ({pooled(st, ['horizontal', 'vertical']):.2f}) and cannot tell the two diagonal directions apart ({pooled(st, ['diagonal_rising', 'diagonal_falling']):.2f}, below a coin flip: "
+                "a mirror-image confusion).")
+    if "probe_largest" in b:
+        lg = b["probe_largest"]
+        out += (f" And it picks the largest of four like shapes on only {acc['probe_largest']:.2f} of images: {lg['2.0']['accuracy']:.2f} when the largest has twice the area of the others, {lg['1.15']['accuracy']:.2f} at 1.15 times (chance 0.25).")
+    hosted = any(k != "open 4B model, read" for v in d["suites"].values() for k in v)
+    out += (" We had predicted at least 0.90 on stripes and on the twofold size difference, and a steeper fall in counting; all three predictions were wrong."
+            + ("" if hosted else " Hosted models have not been run on these sets, so whether they share these weaknesses is not known."))
+    return "<p>" + out + "</p>"
+
+
 finer_block = finer()
 beyond_block = beyond()
+beyond_section = f"  <h3>2.3 Where coarse recognition ends: images drawn by program</h3>\n  {beyond_text()}\n  {beyond_block}" if beyond_block else ""
 t0 = 5 if beyond_block else 4  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
@@ -396,9 +423,10 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <p class="caption"><b>Table 3.</b> The open model on all items of each photo set, hosted models on the test half; 95% bootstrap intervals, uncalibrated decisions, nothing fitted. {apart()}</p>
   <figure>{fig1}<figcaption><b>Figure 2.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
 
-  <h3>2.2 A finer test, and tests beyond photographs</h3>
+  <h3>2.2 A finer test</h3>
   {finer_block}
-  <h3>2.3 The same numbers in one plane</h3>
+{beyond_section}
+  <h3>{"2.4" if beyond_section else "2.3"} The same numbers in one plane</h3>
   <figure>{fig_acc_cost}<figcaption><b>Figure 3.</b> Accuracy against cost, one panel per question type, 95% intervals. Open model: read (circle) and written (square). Hosted models: {site_charts.hosted_key(mrows)}.</figcaption></figure>
   <figure>{fig_cost_speed}<figcaption><b>Figure 4.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per question type: {site_charts.KEY}. Filled marks are the open 4B model.</figcaption></figure>
 </section>

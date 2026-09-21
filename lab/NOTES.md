@@ -1844,3 +1844,22 @@ not help here (0.375 to 0.366), unlike on the quality scales. So "order right, b
 image-QUALITY scales, not about rubrics in general; whether a labeled fit rescues these rubrics is E4's registered question
 (entry 20: at least 0.75 with the four-pass read and a per-rubric fit; tilt expected worst), whose calibration-split collection
 is now queued on lane A right after the KADID read (`semantic-ens4d-cal`).
+
+## 2026-09-21 02:45 Entry 50c: E22 result, open model: the rendered probes (three predictions, none fully right)
+
+Local run `20260921T090417Z-a80231`, 150 images per set, zero-shot, uncalibrated, shipped readouts (`results/lab/probes.md`,
+with per-count, per-ratio, per-direction breakdowns from `tools/suite_report.py --by`): look-alike words 1.000; left / right /
+above / below 0.940 (above 1.00, right 1.00, left 0.97, below 0.69 on 26 items); count 1 to 8 balls 0.913; count red balls
+0.887; stripe direction 0.653; largest of four shapes 0.520.
+- H53 (at least 0.90 on spatial, stripes and words): NOT SUPPORTED. Spatial and words hold; stripes fail, and in one specific
+  way: horizontal and vertical are perfect (76 of 76), the two diagonals are confused (22 of 74 correct; 33 of 37 rising images
+  called "falling"). I checked one image of each direction by eye: the labels are right, the failure is the model's.
+- H54, open-model parts (at least 0.90 for 1 to 3 balls; under 0.70 for 6 to 8): the first holds (57 of 57), the second does
+  NOT: 0.782 for 6 to 8 (0.89, 0.89, 0.56 at six, seven, eight). Counting degrades later than I predicted. The hosted half of
+  H54 needs the owner's paste (`tools/frontier_batch.py --set probes`).
+- H55 (largest shape: at least 0.90 at area ratio 2, under 0.75 at 1.15): NOT SUPPORTED at the easy end: 0.73 at ratio 2, then
+  0.59, 0.45, 0.32 at 1.5, 1.3, 1.15 (chance 0.25). It falls with the ratio as predicted, from a much lower start; the picks
+  lean toward yellow (59 of 150 against 37 true).
+Reading: these sets mark where "coarse recognition" ends for the open model read this way: reading text, coarse position and
+small counts are fine; mirror-image orientation and relative size are not. Whether hosted models share these weaknesses is not
+known until they are run.

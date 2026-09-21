@@ -185,7 +185,31 @@ count the items that every one of the seven systems answers "wrongly": 4 of 131 
 ambiguous label, so part of every system's distance from 1.0 is the labels, not the models.
 <!-- src: results/lab/label_noise_proxy.md, lab/NOTES.md entry 51 -->
 
-### 3.4 Written against read, and other sizes
+### 3.4 Where coarse recognition ends: images drawn by program
+
+Six sets of 150 images drawn by program, with labels exact by construction, mark where this stops for the open model
+read this way (registered as entry 50; zero-shot, uncalibrated, shipped readouts).
+
+| Question | options | Qwen3-VL-4B, read (n=150) |
+| --- | --- | --- |
+| Which of six look-alike words is printed? | 1 of 6 | 1.000 [1.000, 1.000] |
+| Is the ball left of / right of / above / below the square? | 1 of 2 | 0.940 [0.900, 0.973] |
+| How many balls? (1 to 8) | 1 of 8 | 0.913 [0.867, 0.953] |
+| How many red balls? (0 to 6) | 1 of 7 | 0.887 [0.833, 0.933] |
+| Which way do the stripes run? | 1 of 4 | 0.653 [0.573, 0.727] |
+| Which of four shapes is the largest? | 1 of 4 | 0.520 [0.440, 0.600] |
+
+Reading text, coarse position and small counts are fine: one to five balls are counted almost without error, then 0.89 at
+six and seven and 0.56 at eight. Two things are not. Horizontal and vertical stripes are told apart perfectly (76 of 76)
+while the two diagonal directions are confused (22 of 74 correct, below a coin flip: a mirror-image confusion). And the
+largest of four like shapes is found on 0.73 of images when it has twice the area of the others, falling to 0.59, 0.45
+and 0.32 at area ratios 1.5, 1.3 and 1.15 (chance 0.25). We had predicted at least 0.90 on stripes and on the twofold
+size difference, and a fall below 0.70 for six to eight balls (measured 0.78); all three predictions were wrong
+(Section 7). Hosted models had not been run on these sets when this draft was written, so whether they share these
+weaknesses is not known.
+<!-- src: results/lab/probes.md, results/lab/probes.json, lab/NOTES.md entries 50, 50b, 50c -->
+
+### 3.5 Written against read, and other sizes
 
 Reading changes nothing about what the frozen model knows on yes/no and pick-one. Asked to generate a JSON object
 instead, the same model is exactly as accurate: read minus written is +0.0 points [-1.1, +1.1] on 262 Commons yes/no
@@ -422,6 +446,7 @@ that this paper's evidence did not support.
 | A one-pass fitted read stays within 3 points of the four-pass fitted read at 32 labels | 3.1 points behind | 42b |
 | Every cheap hosted model stays within 5 points of its own flagship; cheap models score at or below their flagships on ratings | Claude Haiku 4.5 11-14 points behind Opus 5 on iNaturalist; every cheap model scored ABOVE its flagship on ratings, Flash-Lite reaching 0.763 | 45b |
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
+| Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |
 | A 0.9B model trained for image quality (Q-SiT-mini) is weak on exposure and resolution, and with our fit stays below the four-pass read (0.867) | it ranks all five scales (Spearman 0.86 to 0.95) and scores 0.869; on the same items with the same fit 0.869 against 0.863 (300 labels) and 0.853 against 0.846 (32 labels), both differences within 3 points of zero | 37c |
 
 <!-- src: lab/NOTES.md entries 26b, 27b, 28, 32b, 35b, 37c, 38c, 39b, 42b, 45b; docs/paper/RESULTS_GENERALIZATION.md; results/lab/external_same_items.md -->

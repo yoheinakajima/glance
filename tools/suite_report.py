@@ -58,6 +58,14 @@ for suite, systems in sorted(by_suite.items()):
     out["suites"][suite] = entry
 
 
+def order(value):
+    """Numbers in numeric order, words alphabetically after them."""
+    try:
+        return (0, float(value), "")
+    except ValueError:
+        return (1, 0.0, value)
+
+
 def params_of(suite):
     """item id -> {label, **generator params}, from the generator's source manifests (ground truth lives there, not in the run)."""
     found = {}
@@ -65,7 +73,8 @@ def params_of(suite):
         if not path.name.startswith(("probes_", "ui_screens")):
             continue
         for row in read_jsonl(path):
-            found.setdefault(row["item_id"], {"label": row.get("label"), **(row.get("params") or {})})
+            if "item_id" in row:  # the UI screens manifest is keyed by screen, not by item: no per-item params there
+                found.setdefault(row["item_id"], {"label": row.get("label"), **(row.get("params") or {})})
     return found
 
 
@@ -77,7 +86,7 @@ for spec in args.by:
         for item_id, ok in got.items():
             meta = params.get(item_id) or params.get(item_id.split("/")[-1]) or params.get(item_id.split(":")[-1]) or {}
             groups[name][str(meta.get(key, "unknown"))].append(ok)
-    out["breakdowns"][suite] = {"by": key, "systems": {name: {value: {"accuracy": float(np.mean(hits)), "n": len(hits)} for value, hits in sorted(g.items(), key=lambda kv: (len(kv[0]), kv[0]))}
+    out["breakdowns"][suite] = {"by": key, "systems": {name: {value: {"accuracy": float(np.mean(hits)), "n": len(hits)} for value, hits in sorted(g.items(), key=lambda kv: order(kv[0]))}
                                                        for name, g in groups.items()}}
 (ROOT / f"results/lab/{args.name}.json").write_text(json.dumps(out, indent=1))
 f = lambda c: f"{c['accuracy']:.3f} [{c['ci95'][0]:.3f}, {c['ci95'][1]:.3f}]"  # noqa: E731
@@ -89,7 +98,7 @@ for suite, entry in out["suites"].items():
         md.append(f"| {name} | {f(s) if s else '-'} | {s['n'] if s else '-'} | {f(e['all_items'])} | {e['all_items']['n']} |")
     md.append("")
 for suite, b in out["breakdowns"].items():
-    values = sorted({v for g in b["systems"].values() for v in g}, key=lambda v: (len(v), v))
+    values = sorted({v for g in b["systems"].values() for v in g}, key=order)
     md += [f"## {suite}, by {b['by']} (accuracy, items)", "", "| System | " + " | ".join(values) + " |", "| --- | " + " | ".join("---" for _ in values) + " |"]
     md += [f"| {name} | " + " | ".join(f"{g[v]['accuracy']:.2f} ({g[v]['n']})" if v in g else "-" for v in values) + " |" for name, g in b["systems"].items()]
     md.append("")
