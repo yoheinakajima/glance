@@ -99,6 +99,8 @@ fig_cost_speed = site_charts.both_widths(site_charts.cost_speed(mrows, 640, 400)
 fig_acc_cost = site_charts.both_widths(site_charts.accuracy_cost(mrows, 640, 250, list(site_charts.TESTS)),
                                        "".join(site_charts.accuracy_cost(mrows, 360, 220, [t]) for t in site_charts.TESTS))
 has_prov = any(r["prov"] for r in mrows)
+fig_bars = site_charts.both_widths(site_charts.bars_by_type(mrows, True), site_charts.bars_by_type(mrows, False))
+has_est = any(r["estimate"] for r in mrows)
 TEST_HEADS = {"yesno": "yes/no", "choice": "pick-one", "rating": "rating"}
 
 
@@ -156,26 +158,28 @@ BODY = f"""
   <h2 id="evidence"><span class="num">1</span>Evidence</h2>
   <h3>1.1 Five systems, three tests: accuracy, speed, cost</h3>
   <p>Three hosted frontier models, the open 4B model <em>writing</em> its answer, and the same open model <em>read</em> with Glance. Every accuracy in a column is computed on the same items for all five rows: {matrix["tests"]["yesno"].lower()}; {matrix["tests"]["choice"].lower()}; {matrix["tests"]["rating"].lower()}. Everything in this table is zero-shot.</p>
-  <figure>{fig_cost_speed}<figcaption><b>Figure 1.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per test: {site_charts.KEY}. Filled marks are the open 4B model, hollow marks are hosted models.{" Dashed small marks use a timing taken while the GPU was shared and will be replaced by a clean one." if has_prov else ""} Claude Opus 5’s cost is one list-price estimate for all three tests.</figcaption></figure>
-  <figure>{fig_acc_cost}<figcaption><b>Figure 2.</b> Accuracy against cost, one panel per test, 95% intervals. The open model’s marks (read: circle, written: square) sit at the height of the hosted models ({site_charts.hosted_key(mrows)}), one to two orders of magnitude to the left.</figcaption></figure>
   {matrix_tables()}
-  <p class="caption"><b>Table 1.</b> The numbers behind Figures 1 and 2. Accuracy with 95% bootstrap intervals; bold rows are the open model. Hosted speed is wall time per call from one laptop, and hosted cost is the provider’s bill where it was logged (“est.” is a list-price upper estimate for a run that predates cost logging). Open-model speed is measured with the GPU otherwise idle; its cost is those seconds at an on-demand cloud GPU price, assuming the GPU is no faster than the laptop. Cells marked “tonight” await a clean timing. No few-shot prompt was tried for any written row.</p>
-  <h3>1.2 What only the read row can add</h3>
+  <p class="caption"><b>Table 1.</b> Accuracy with 95% bootstrap intervals; bold rows are the open model. Hosted speed is wall time per call from one laptop, and hosted cost is the provider’s bill where it was logged (“est.” is a list-price upper estimate for a run that predates cost logging). Open-model speed is measured with the GPU otherwise idle; its cost is those seconds at an on-demand cloud GPU price, assuming the GPU is no faster than the laptop. Cells marked “tonight” await a clean timing. No few-shot prompt was tried for any written row.</p>
+  <figure>{fig_bars}<figcaption><b>Figure 1.</b> The same matrix as bars, bundled by question type, on scales that start at zero. Dark bars are the open 4B model.{" An outlined bar is a provisional timing (taken while the GPU was shared) or an estimated cost; an estimate beyond the measured range is cut short and marked ›." if (has_prov or has_est) else ""} Accuracy is level across systems; the open model’s time and cost bars are the short ones.</figcaption></figure>
+  <h3>1.2 Cost, speed and accuracy in one plane</h3>
+  <figure>{fig_cost_speed}<figcaption><b>Figure 2.</b> Cost against speed; down and left is better. Each system is a large mark at the centre (geometric mean) of three small ones, one per test: {site_charts.KEY}. Filled marks are the open 4B model, hollow marks are hosted models.{" Dashed small marks use a timing taken while the GPU was shared and will be replaced by a clean one." if has_prov else ""} Claude Opus 5’s cost is one list-price estimate for all three tests.</figcaption></figure>
+  <figure>{fig_acc_cost}<figcaption><b>Figure 3.</b> Accuracy against cost, one panel per test, 95% intervals. The open model’s marks (read: circle, written: square) sit at the height of the hosted models ({site_charts.hosted_key(mrows)}), one to two orders of magnitude to the left.</figcaption></figure>
+  <h3>1.3 What only the read row can add</h3>
   <p>A written pick has nothing to fit. A read answer is a set of logits, so a few images of your own rubric can recalibrate it, with or without labels.</p>
   {extras_table()}
   <p class="caption"><b>Table 2.</b> Exact-level accuracy on the rating test of Table 1 (the last row uses the full test split). These are extensions, not part of the zero-shot comparison.</p>
-  <h3>1.3 Yes/no and pick-one on photographs no model has seen</h3>
+  <h3>1.4 Yes/no and pick-one on photographs no model has seen</h3>
   <p>Wikimedia Commons photographs taken after 15 August 2026, labelled by their uploaders’ structured “depicts” statements, and iNaturalist observations uploaded on the day of the test, labelled by community identification. No labels were made by us or by any model.</p>
   {fresh_table()}
   <p class="caption"><b>Table 3.</b> All items of each photo set (the frontier models answered the test half), 95% bootstrap intervals, uncalibrated decisions, nothing fitted.</p>
-  <figure>{fig1}<figcaption><b>Figure 3.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
+  <figure>{fig1}<figcaption><b>Figure 4.</b> The Commons rows of Table 3, drawn to one scale. Filled marks are the open 4B model; hollow marks are hosted frontier models. Every interval overlaps every other.</figcaption></figure>
 
-  <h3>1.4 Ratings against a rubric in words</h3>
+  <h3>1.5 Ratings against a rubric in words</h3>
   <p>Five synthetic four-level scales (blur, exposure, JPEG, noise, resolution), the same 1,000 held-out images for every system. Zero-shot, the open model’s <em>written</em> answer is ahead of Claude Opus 5 by {paired["Claude Opus 5"]} points and of GPT-5.6 by {paired["GPT-5.6"]}, and level with Gemini 3.1 Pro ({paired["Gemini 3.1 Pro"]}), paired on the same images. Read in one forward pass at the position where the written answer puts its digit, the open model gives the same answers as when it writes ({jd["agree_with_written"]:.0%} identical, {jd["json_zero"]:.3f} against {written:.3f}), with probabilities. An earlier four-pass readout of ours, tuned with a calibration in the loop, was {100 * (written - jd["ens_zero"]):.0f} points worse zero-shot; we registered that comparison, lost it, and report it.</p>
-  <figure>{fig2}<figcaption><b>Figure 4.</b> Exact-level accuracy, chance 0.25. The lower group has seen images of the rubric: unlabeled ones (zero labels, but not zero-shot), then 32 labeled ones. Intervals for n = 1,000 are about ±0.03; paired differences are in the repository.</figcaption></figure>
+  <figure>{fig2}<figcaption><b>Figure 5.</b> Exact-level accuracy, chance 0.25. The lower group has seen images of the rubric: unlabeled ones (zero labels, but not zero-shot), then 32 labeled ones. Intervals for n = 1,000 are about ±0.03; paired differences are in the repository.</figcaption></figure>
   <p>Exact level is a hard target for any model because level boundaries are a convention. Zero-shot the open model is exactly right on {raw["accuracy"]:.2f} of images but within one level on {raw["within_1"]:.3f}, and 97% of its errors are one step, in a direction that is constant per rubric. Sixteen <em>unlabeled</em> images of the rubric remove most of that offset (one-pass read: {jd["json_zero"]:.3f} → {jd["json_u16"]:.3f}, ahead of every frontier model’s zero-shot pick).</p>
 
-  <h3>1.5 When several questions share one image</h3>
+  <h3>1.6 When several questions share one image</h3>
   {cost_table()}
   <p class="caption"><b>Table 4.</b> The open model writing against reading, cost per 1,000 images on a rented GPU assumed no faster than the laptop; self-hosted cost is GPU time, so the saving is the measured time saving. For comparison, the frontier calls on these tasks measured ${api_lo:.2f} to ${api_hi:.2f} per 1,000 answers.</p>
   <p>On yes/no and pick-one the read and the written answers are identical item for item. Reading adds probabilities (accuracy on the most confident 80% of answers is 0.975 on the iNaturalist set), and it is the only route to fitting: a written pick has nothing to calibrate.</p>

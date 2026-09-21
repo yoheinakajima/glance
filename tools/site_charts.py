@@ -75,7 +75,8 @@ def cost_speed(rows, w, h):
         g += [_small(r["test"], sx(r["sec"]), sy(r["usd"]), "m-s-prov" if r["prov"] else ("m-s-own" if r["open"] else "m-s-host")) for r in mine]
         left = cx > x0 + 0.72 * (x1 - x0)
         big.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="7" class="{"m-own" if mine[0]["open"] else "m-host"}"/>'
-                   + _t(cx + (-13 if left else 13), cy + 4, LABEL.get(name, name), "end" if left else "start", "m-lab m-strong" if mine[0]["open"] else "m-lab"))
+                   + (_t(cx + 6, cy - 13, LABEL.get(name, name), "end", "m-lab m-strong" if mine[0]["open"] else "m-lab") if left  # above the mark: its own small marks sit beside it
+                      else _t(cx + 13, cy + 4, LABEL.get(name, name), "start", "m-lab m-strong" if mine[0]["open"] else "m-lab")))
     g += big
     g.append(_t((x0 + x1) / 2, h - 6, "median seconds per answer, log scale"))
     g.append(f'<text transform="translate(11,{(y0 + y1) / 2:.0f}) rotate(-90)" text-anchor="middle" class="m-tick">US dollars per 1,000 answers, log scale</text>')
@@ -105,6 +106,53 @@ def accuracy_cost(rows, w, h, tests):
     return f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="Accuracy against cost, {", ".join(TESTS[t] for t in tests)}">{"".join(g)}</svg>'
 
 
+MEASURES = (("acc", "Accuracy · longer is better", lambda v: f"{v:.2f}"), ("sec", "Seconds per answer · shorter is better", lambda v: f"{v:.2f} s"),
+            ("usd", "US dollars per 1,000 answers · shorter is better", lambda v: f"${v:.2f}"))
+
+
+def bars_by_type(rows, wide):
+    """The headline figure: bars bundled by question type, real quantities on scales that start at zero. An outlined bar is a
+    provisional timing or an estimated cost; an estimate longer than the measured range is clipped and marked."""
+    names = list(dict.fromkeys(r["name"] for r in rows))
+    tops = {"acc": 1.0, "sec": max(r["sec"] for r in rows), "usd": max([r["usd"] for r in rows if not r["estimate"]] or [1.0])}
+
+    def bar(r, key, fmt, x, y, span):
+        soft = (key != "acc" and r["prov"]) or (key == "usd" and r["estimate"])
+        clipped = r[key] > tops[key] * 1.0001
+        width = max(1.5, min(r[key] / tops[key], 1.0) * span)
+        cls = "m-outline" if soft else ("m-own" if r["open"] else "m-bar")
+        note = " est." if key == "usd" and r["estimate"] else (" prov." if soft else "")
+        return (f'<rect x="{x:.1f}" y="{y}" width="{width:.1f}" height="9.5" class="{cls}"/>' + (_t(x + width - 3, y + 8.5, "›", "end", "m-lab") if clipped else "")
+                + _t(x + width + 5, y + 8.5, fmt(r[key]) + note, "start"))
+
+    if wide:
+        g, y, col, span = [], 16, lambda j: 132 + j * 170, 96
+        g += [_t(col(j), 12, TESTS[t], "start", "m-head") for j, t in enumerate(TESTS)]
+        for key, title, fmt in MEASURES:
+            g.append(_t(4, y + 18, title, "start", "m-tick"))
+            y += 24
+            for name in names:
+                own = name.startswith("Qwen")
+                g.append(_t(124, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if own else "m-lab"))
+                g += [bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, col(j), y, span) for j, t in enumerate(TESTS)]
+                y += 14
+            y += 6
+        return f'<svg viewBox="0 0 640 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, by question type">{"".join(g)}</svg>'
+    out = []
+    for t in TESTS:
+        g, y = [_t(4, 13, TESTS[t], "start", "m-head")], 22
+        for key, title, fmt in MEASURES:
+            g.append(_t(4, y + 10, title, "start", "m-tick"))
+            y += 16
+            for name in names:
+                g.append(_t(108, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if name.startswith("Qwen") else "m-lab"))
+                g.append(bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, 114, y, 160))
+                y += 14
+            y += 8
+        out.append(f'<svg viewBox="0 0 360 {y}" role="img" aria-label="Accuracy, seconds and dollars for every system, {TESTS[t]}">{"".join(g)}</svg>')
+    return "".join(out)
+
+
 def both_widths(wide, narrow):
     return f'<div class="only-wide">{wide}</div><div class="only-narrow">{narrow}</div>'
 
@@ -114,7 +162,7 @@ figure svg{width:100%;height:auto;display:block}
 .only-narrow{display:none}@media (max-width:560px){.only-wide{display:none}.only-narrow{display:block}}
 svg .m-tick{font-size:11px;fill:var(--muted)}svg .m-lab{font-size:12px;fill:var(--muted)}svg .m-strong{fill:var(--ink);font-weight:600}svg .m-head{font-size:12.5px;fill:var(--ink);font-weight:600}
 svg .m-grid{stroke:var(--rule);stroke-width:1}svg .m-spoke{stroke:var(--rule);stroke-width:1.2}svg .m-whisk{stroke:var(--muted);stroke-width:1}
-svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
+svg .m-bar{fill:var(--muted)}svg .m-outline{fill:var(--paper);stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
 svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}
 .key svg{width:11px;height:11px;vertical-align:-1px;margin:0 3px 0 8px;display:inline}
 """
