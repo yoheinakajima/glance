@@ -1779,3 +1779,23 @@ overlap; entry 45b). That favours the open model, and leaving it out still made 
 as broader than the data. Table 3 now lists all six hosted models on both sets, and its caption names every hosted interval that
 does not overlap the open model's, computed from the result files (today: that one model, on that one set). Written rows for
 iNaturalist will join the table when `written-inat` finishes.
+
+## 2026-09-21 01:47 Entry 32c: written against read on the second photo set (replication of 32b; no new prediction was registered)
+
+The same frozen 4B model writing a JSON answer on ALL iNaturalist items (`lab/runs/gen_accuracy_inat.jsonl`, 600 rows, 0 invalid
+or unparsable): yes/no written 0.945 [0.922, 0.965] against read 0.945, difference +0.0 points [-0.8, +0.8] (n=400); pick one
+of 10 written 0.945 [0.910, 0.975] against read 0.940, difference -0.5 [-2.5, +1.0] (n=200). As on the Commons set (32b),
+reading and writing give the same closed-set decision. The write timings in this file were taken while another job shared the
+GPU and are not used; the photo-size timing of entry 48b stands. The page's Table 3 now carries a written row for both sets.
+
+## 2026-09-21 01:48 Entry 32d: erratum: "identical answers" was an overstatement
+
+Entry 32b, the page, the draft and `docs/CLAIMS.md` said the written and the read answers are "identical" on yes/no and
+pick-one. What was measured is identical ACCURACY on the Commons set. Item by item, the written and the read answer come out the
+same way (both right or both wrong) on 99.2% of Commons yes/no items (2 of 262 differ), 95.4% of Commons pick-one (6 of 131),
+99.5% of iNaturalist yes/no (2 of 400) and 98.5% of iNaturalist pick-one (3 of 200). That is expected: the written answer uses a
+JSON prompt and the read uses one statement per option, so the logits are not the same; only the one-pass rating read shares its
+prompt with the written answer (98.2% identical answers, entry 42b). Found while adding the iNaturalist rows (32c). Corrected
+everywhere with the measured shares; `tools/gen_accuracy_report.py` now reports the share per suite; the page's section 3 heading
+and the abstract say "as accurate as", not "the same answer as". The live page deployed at about 00:13 carries the old wording
+until the owner's next deploy.

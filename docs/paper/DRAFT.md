@@ -13,7 +13,7 @@ a laptop) and read the answer from the logits of one forward pass; nothing is ge
 model's release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted
 models (three flagships, three low-cost) on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps
 every other). The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
-Reading gives the same answer as the same model writing JSON. Ratings behave differently. Zero-shot, every system orders
+Reading is as accurate as the same model writing JSON. Ratings behave differently. Zero-shot, every system orders
 images correctly (within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per
 rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read
 answer is a vector of logits it can be fitted: 16 unlabeled images of the rubric remove most of the offset (0.758) and 32
@@ -42,9 +42,10 @@ text and, in two cases, for images.
    labelled by people outside this project (Commons "depicts" statements, iNaturalist community identifications), the
    open model read this way is statistically indistinguishable (overlapping 95% intervals, n = 131 and 65) from three hosted flagships and each provider's cheapest current model on
    yes/no and pick-one (Section 3).
-2. Reading against writing on the same model. The same frozen model asked to generate a JSON answer gives identical
-   yes/no and pick-one decisions on the items measured; reading is 2.4 to 6.1 times faster and returns probabilities
-   the generated answer does not (Section 3).
+2. Reading against writing on the same model. The same frozen model asked to generate a JSON answer is exactly as
+   accurate on yes/no and pick-one (the same right/wrong outcome on 95% to 99.5% of items); reading is about 1.5 times
+   faster on a full-size photograph, 2.4 to 6.1 times on small images, and returns probabilities the generated answer
+   does not (Section 3).
 3. Ratings told as one arc, because this is where most of what is ours lives: order versus exact level, who leads
    zero-shot, a one-pass read at the JSON answer position that closes most of the zero-shot gap to writing,
    self-calibration from unlabeled images, a content-free prior that fails, label curves, and a hidden-state ceiling
@@ -187,10 +188,15 @@ ambiguous label, so part of every system's distance from 1.0 is the labels, not 
 ### 3.4 Written against read, and other sizes
 
 Reading changes nothing about what the frozen model knows on yes/no and pick-one. Asked to generate a JSON object
-instead, the same model gives the identical decision on the fresh Commons items: agreement +0.0 points [-1.1, +1.1]
-on 262 yes/no questions and +0.0 [-3.8, +3.8] on 131 pick-one photographs, zero invalid or unparsable outputs.
-<!-- src: results/lab/gen_accuracy.md --> A written answer under greedy decoding is an argmax over the same logits, so
-this agreement is expected; the two stop agreeing when the prompts differ (Section 4.3), and when one written JSON object
+instead, the same model is exactly as accurate: read minus written is +0.0 points [-1.1, +1.1] on 262 Commons yes/no
+questions, +0.0 [-3.8, +3.8] on 131 Commons pick-one photographs, +0.0 [-0.8, +0.8] on 400 iNaturalist yes/no questions
+and -0.5 [-2.5, +1.0] on 200 iNaturalist pick-one photographs, with zero invalid or unparsable outputs. The answers are
+not identical item by item: an item comes out the same way, right or wrong, on 99.2%, 95.4%, 99.5% and 98.5% of the
+four sets, the rest reflecting the two prompts, which differ (a JSON request against one statement per option).
+<!-- src: results/lab/gen_accuracy.md, lab/NOTES.md entries 32b, 32c, 32d --> Where the prompt IS the same (the one-pass
+rating read of Section 4.3, taken at the position where the written answer puts its digit) 98.2% of answers are
+identical, as expected when a greedy written answer is an argmax over the same logits. The two diverge further when
+the prompts differ more (Section 4.3), and when one written JSON object
 carries 25 ratings, each conditioned on the fields already written, it matches 25 independent reads on only 59% of fields
 (no ground truth for that request, so a difference, not an error rate). What reading changes is cost and form. For one
 question about a full-size photograph, where encoding the image dominates, reading is about 1.5 times faster (1.08 s
@@ -433,8 +439,7 @@ on fresh photographs sit near ceiling for every system (all near 0.93), so "leve
 that the task is currently easy, and on older, possibly contaminated benchmarks a hosted flagship led by 3 to 5 points
 (Section 3.2) - the harder insect-order test of Section 3.3 separates the hosted models and the open model holds, but
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
-2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); written answers on iNaturalist were not collected, so Section 3.4 uses the Commons
-set only, iNaturalist being queued (entry 35c); the one-pass JSON-position read of Section 4.3 has not been checked on
+2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 4.3 has not been checked on
 KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); and two open,
 MIT-licensed outside systems selected for a head-to-head on the lab scales have not yet been run (entry 37). <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 

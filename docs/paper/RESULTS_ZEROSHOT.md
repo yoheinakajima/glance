@@ -96,8 +96,10 @@ Accuracy of the two on identical labeled items (E11, `lab/NOTES.md` entries 32 a
 | ladder_resolution | 200 | 0.750 [0.690, 0.810] | 0.655 | -9.5 [-17.5, -1.5] |
 | fresh_yesno | 262 | 0.931 [0.901, 0.958] | 0.931 | +0.0 [-1.1, +1.1] |
 | fresh_choice | 131 | 0.885 [0.824, 0.939] | 0.885 | +0.0 [-3.8, +3.8] |
+| inat_yesno | 400 | 0.945 [0.922, 0.965] | 0.945 | +0.0 [-0.8, +0.8] |
+| inat_choice | 200 | 0.945 [0.910, 0.975] | 0.940 | -0.5 [-2.5, +1.0] |
 
-Identical on yes/no and pick-one. On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 removes that loss.
+The same accuracy on yes/no and pick-one, and the same right/wrong outcome on 95% to 99.5% of items (not identical answers: the prompts differ). On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 removes that loss.
 
 ## 5. Speed and cost per 1,000 answers
 

@@ -138,7 +138,7 @@ if genacc:
             "| Suite | n | written | read, 0 labels (yes/no, pick-one as shipped; ratings: four-pass `ens4d`) | read minus written, points |", "| --- | --- | --- | --- | --- |"]
     out += [f"| {k} | {e['n']} | {e['written'][0]:.3f} [{e['written'][1]:.3f}, {e['written'][2]:.3f}] | {e['read_0_labels'][0]:.3f} | "
             f"{e['read_minus_written_points'][0]:+.1f} [{e['read_minus_written_points'][1]:+.1f}, {e['read_minus_written_points'][2]:+.1f}] |" for k, e in genacc.items() if isinstance(e, dict) and "written" in e and "n" in e and "read_minus_written_points" in e]
-    out += ["", "Identical on yes/no and pick-one. On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 "
+    out += ["", "The same accuracy on yes/no and pick-one, and the same right/wrong outcome on 95% to 99.5% of items (not identical answers: the prompts differ). On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 "
             "removes that loss.", ""]
 else:
     out += ["Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): pending (collection queued).", ""]

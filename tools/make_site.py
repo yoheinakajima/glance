@@ -268,6 +268,10 @@ def lower_keep(text):
     return text.lower().replace("commons", "Commons").replace("inaturalist", "iNaturalist")
 
 
+_closed = [gen[k] for k in ("fresh_yesno", "fresh_choice", "inat_yesno", "inat_choice") if k in gen]
+rw_gap = (min(abs(e["read_minus_written_points"][0]) for e in _closed), max(abs(e["read_minus_written_points"][0]) for e in _closed))
+rw_same = (min(e["same_outcome"] for e in _closed), max(e["same_outcome"] for e in _closed))
+
 ALL_HOSTED = {**FRONTIER, "anthropic/claude-haiku-4-5": "Claude Haiku 4.5", "openai/gpt-5.6-luna": "GPT-5.6 Luna", "openrouter/google/gemini-3.1-flash-lite": "Gemini 3.1 Flash-Lite"}
 BEYOND = [("results/lab/probes.json", "Images drawn by program", [
               ("probe_spatial", "Is the ball left of / right of / above / below the square?", "1 of 2"), ("probe_stripes", "Which way do the stripes run?", "1 of 4"),
@@ -326,7 +330,7 @@ BODY = f"""
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
-  <p class="abstract">On photographs taken after every model’s release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted models, three flagships and three low-cost ones, on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps every other). These questions are easy and the labels are imperfect: about 3 to 5% of items are answered “wrongly” by all seven systems. Reading gives the same answer as the same model writing JSON.</p>
+  <p class="abstract">On photographs taken after every model’s release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted models, three flagships and three low-cost ones, on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps every other). These questions are easy and the labels are imperfect: about 3 to 5% of items are answered “wrongly” by all seven systems. Reading is as accurate as the same model writing JSON.</p>
   <p class="abstract">Ratings behave differently. Zero-shot, every system orders images correctly (the open model is within one level on {raw["within_1"]:.2f} of images) and places the level boundaries wrongly, by a constant offset per rubric; a low-cost hosted model leads ({best_rating_acc:.3f} against {jd["json_zero"]:.3f}), and an 8B model is no better than a 4B one. Because a read answer is a vector of logits, it can be fitted: 16 unlabeled images of the rubric remove most of the offset ({jd["json_u16"]:.3f}) and 32 labels reach {loc["+ Glance ens4d, 32 labels"]["mean_accuracy"]:.3f}; the hosted models were not given examples, so this is a comparison of products, not of models. On a real image-quality benchmark (KADID-10k) the approach missed every target we registered, and hand-built features remain better for low-level artefacts.</p>
   <p class="abstract">The open model’s cost is of the same order as the low-cost hosted models and one to two orders below the flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what is offered is the measurement, registered before it was run, with its misses.</p>
 </section>
@@ -377,8 +381,8 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 </section>
 
 <section aria-labelledby="read">
-  <h2 id="read"><span class="num">3</span>Reading gives the same answer as writing when the prompt is the same; the prompt is what matters</h2>
-  <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree: identical answers on yes/no and pick-one, and {jd["agree_with_written"]:.0%} identical on ratings when the digits are read at the position where the written answer puts them. A written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
+  <h2 id="read"><span class="num">3</span>Reading is as accurate as writing, and gives the same answer when the prompt is the same</h2>
+  <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree. On yes/no and pick-one the accuracy is the same on both photo sets (differences of {rw_gap[0]:.1f} to {rw_gap[1]:.1f} points, every interval spanning zero; Table 3), and each item comes out the same way, right or wrong, on {rw_same[0]:.1%} to {rw_same[1]:.1%} of items; the few that differ reflect the prompts, which are not the same (a JSON request against one statement per option). On ratings, where the digits can be read at the very position where the written answer puts them, {jd["agree_with_written"]:.0%} of answers are identical: a written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
   <p>They stop agreeing when the prompts differ. Our earlier four-pass rating readout uses different wording from the JSON prompt and scores {100 * (written - jd["ens_zero"]):.0f} points lower zero-shot. And when one written JSON object carries 25 ratings, each field is conditioned on the fields already written, while 25 separate reads are independent: the two agree on only {genb["25 ratings"]["agreement_with_read_on_valid_fields"]:.0%} of fields (that request has no ground truth, so this is a difference, not an error rate). Reading is therefore not a free substitute for any prompt; it is a way to take the same decision without generating it.</p>
   <p>What reading changes is cost and form: about 1.5 times faster for one question about a full-size photograph (encoding the image dominates), 2 to 3 times on small images, more as questions per image grow; and the answer is a probability vector, which can be thresholded, ranked and fitted.</p>
   {cost_table()}

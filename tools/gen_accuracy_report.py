@@ -46,6 +46,7 @@ for suite in dict.fromkeys(r["suite"] for r in written):
     g = [r for r in written if r["suite"] == suite]
     w, rd = np.array([r["correct"] for r in g], float), np.array([read_correct(r) for r in g], float)
     out[suite] = {"n": len(g), "written": boot(w), "read_0_labels": boot(rd), "read_minus_written_points": [100 * x for x in boot(rd - w)],
+                  "same_outcome": float(np.mean(w == rd)),  # share of items where written and read are both right or both wrong (picks are not compared: prompts differ)
                   "invalid_written": int(sum(not r["valid"] for r in g)), "write_ms_p50": float(np.percentile([r["write_ms"] for r in g], 50))}
 ladders = [s for s in out if s.startswith("ladder_")]
 head = json.loads((ROOT / "results/lab/frontier_head_to_head.json").read_text())["local"]
@@ -57,11 +58,11 @@ f = lambda t: f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"  # noqa: E731
 lines = ["# The same frozen Qwen3-VL-4B: WRITE a JSON answer, or READ it (Glance)? Accuracy on identical items", "",
          "Writing = greedy generation of one JSON field, invalid or unparsable counts as wrong. Reading = raw, zero-label Glance readout "
          "(`ens4d` mean logits for ratings; yes/no and pick-one as shipped).", "",
-         "| Suite | n | written | read, 0 labels | read minus written, points | invalid written | write p50 ms (GPU was shared unless noted) |", "| --- | --- | --- | --- | --- | --- | --- |"]
+         "| Suite | n | written | read, 0 labels | read minus written, points | same right/wrong outcome | invalid written | write p50 ms (GPU was shared unless noted) |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
 for s, e in out.items():
     if s != "lab_mean":
         d = e["read_minus_written_points"]
-        lines.append(f"| {s} | {e['n']} | {f(e['written'])} | {f(e['read_0_labels'])} | {d[0]:+.1f} [{d[1]:+.1f}, {d[2]:+.1f}] | {e['invalid_written']} | {e['write_ms_p50']:.0f} |")
+        lines.append(f"| {s} | {e['n']} | {f(e['written'])} | {f(e['read_0_labels'])} | {d[0]:+.1f} [{d[1]:+.1f}, {d[2]:+.1f}] | {e['same_outcome']:.1%} | {e['invalid_written']} | {e['write_ms_p50']:.0f} |")
 m = out["lab_mean"]
 lines += ["", f"Lab scales, mean over five rubrics: written {m['written']:.3f}; read with 0 labels {m['read_0_labels']:.3f}; read with unlabeled images "
           f"{m['read_unlabeled_images']:.3f}; read with 32 labels {m['read_32_labels']:.3f} (the last two from `results/lab/frontier_head_to_head.json`, same items)."]
