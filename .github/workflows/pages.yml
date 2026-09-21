@@ -1,6 +1,7 @@
 # Publishes the generated project page (site/) to GitHub Pages. The page itself is built locally by tools/make_site.py
 # from result files and committed, so this workflow only uploads it.
 name: pages
+# Runs by hand until the owner turns Pages on; after that set the repository variable PAGES_AUTO=true to deploy on every push.
 on:
   push:
     branches: [main]
@@ -15,6 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' || vars.PAGES_AUTO == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

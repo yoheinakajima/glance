@@ -1,6 +1,6 @@
-# Publishing checklist (nothing here has been run; the repository has no remote)
+# Publishing checklist (the code is pushed to a PRIVATE repository; going public and the project page are the owner's steps)
 
-Everything below is the owner's action. The assistant prepared the repository but did not create, push or publish anything.
+Going public and turning on the page are the owner's actions. The assistant pushed to a private repository only.
 
 ## 1. Look before you publish (5 minutes)
 
@@ -9,13 +9,14 @@ Everything below is the owner's action. The assistant prepared the repository bu
 - Author line and affiliation on the page (`tools/make_site.py`, search for `byline`) and in `CITATION.cff`.
 - `git log --oneline | head -30` on `main` (the work branch `score-lab` is fast-forwarded into `main`).
 
-## 2. Create the repository and push (one paste; makes the code PUBLIC)
+## 2. The repository exists and is PRIVATE
+
+At the owner's request (2026-09-20, late evening) the assistant created `github.com/yoheinakajima/glance` as a PRIVATE
+repository and pushed `main` (fast-forwarded from `score-lab`) and `score-lab`. Nothing is public. To publish the code:
 
 ```bash
-cd ~/code/glance && gh repo create yoheinakajima/glance --public --source . --remote origin --description "Ask an open vision-language model typed questions about an image and get probabilities back, on your own machine." && git push -u origin main && git push origin score-lab --tags
+gh repo edit yoheinakajima/glance --visibility public --accept-visibility-change-consequences
 ```
-
-Use `--private` instead of `--public` to stage it first; Pages on a private repository needs a paid plan.
 
 ## 3. Turn on the project page at glance.yohei.me
 
@@ -31,8 +32,6 @@ cd ~/code/glance && gh api -X POST repos/yoheinakajima/glance/pages -f build_typ
 
 ## 4. Afterwards
 
-- The README's clone line says `<this repository>`: replace it with the real URL (the assistant can do this once the
-  repository exists).
 - Optional next steps, prepared but not done: PyPI package under the free name `glance-vlm`; a Hugging Face Space demo.
 - What is NOT in the repository on purpose: model weights, the photographs (re-fetched from the committed manifests with
   attribution), KADID-10k data, hosted models' answers (only right/wrong flags), your API keys (never stored anywhere).

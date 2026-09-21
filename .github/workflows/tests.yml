@@ -1,9 +1,8 @@
 # CPU-only test suite: no model weights are downloaded (tests that need a model are skipped).
 name: tests
+# Manual for now (the dependency install is heavy); add push / pull_request triggers once it has run green once.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 jobs:
   pytest:
     runs-on: ubuntu-latest

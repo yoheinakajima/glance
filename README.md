@@ -10,7 +10,7 @@ Project page with every result: https://glance.yohei.me · Coding agents: read [
 ## Try it
 
 ```bash
-git clone <this repository> && cd glance && uv sync     # Python 3.11 and uv; about 10 GB of open weights download on first use
+git clone https://github.com/yoheinakajima/glance && cd glance && uv sync     # Python 3.11 and uv; about 10 GB of open weights download on first use
 uv run glance doctor                                     # picks the model for your hardware (Apple silicon or CUDA; CPU works, slowly)
 
 uv run glance ask photo.jpg "Is there a dog?"                                        # yes/no   -> {"noul": 0.98, ...}
