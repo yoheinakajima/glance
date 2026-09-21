@@ -189,15 +189,27 @@ ambiguous label, so part of every system's distance from 1.0 is the labels, not 
 Reading changes nothing about what the frozen model knows on yes/no and pick-one. Asked to generate a JSON object
 instead, the same model gives the identical decision on the fresh Commons items: agreement +0.0 points [-1.1, +1.1]
 on 262 yes/no questions and +0.0 [-3.8, +3.8] on 131 pick-one photographs, zero invalid or unparsable outputs.
-<!-- src: results/lab/gen_accuracy.md --> What reading changes is what surrounds the answer: cold start on an idle
-GPU, reading is 2.4 times faster than writing for one yes/no question, 3.5 times for five mixed questions, 6.1 times
-for 25 rating questions (40 images per shape, one laptop), and it returns a probability at no extra decoding cost.
-<!-- src: lab/GENBENCH.md, results/lab/cost_model.md --> A smaller open model does as well on yes/no out of the box:
+<!-- src: results/lab/gen_accuracy.md --> A written answer under greedy decoding is an argmax over the same logits, so
+this agreement is expected; the two stop agreeing when the prompts differ (Section 4.3), and when one written JSON object
+carries 25 ratings, each conditioned on the fields already written, it matches 25 independent reads on only 59% of fields
+(no ground truth for that request, so a difference, not an error rate). What reading changes is cost and form. For one
+question about a full-size photograph, where encoding the image dominates, reading is about 1.5 times faster (1.08 s
+against 1.65 s, Section 3.1); on small 448-pixel test images it is 2.4 times faster for one yes/no question, 3.5 times for
+five mixed questions and 6.1 times for 25 rating questions (40 images per shape, one laptop, idle GPU); and the answer is
+a probability vector that can be thresholded, ranked and fitted, at no extra decoding cost.
+<!-- src: lab/GENBENCH.md, lab/PHOTO_TIMING.json, results/lab/cost_model.md, lab/NOTES.md entries 27c, 48, 48b --> A smaller open model does as well on yes/no out of the box:
 Qwen3-VL-2B reaches 0.939 [0.908, 0.966] on Commons yes/no and 0.925 [0.898, 0.950] on iNaturalist yes/no, both
 overlapping the 4B model above; pick-one is more size-sensitive (Section 5).
 <!-- src: results/lab/other_models.json -->
 
 ## 4. Ratings, the hard case
+
+Scope first. "Ratings" in this section means five synthetic, single-factor, four-level image-quality scales (blur,
+exposure, JPEG artifacts, noise, resolution) on 1,000 held-out images, the same for every system. It does not mean
+aesthetic judgement or any naturally occurring, multi-factor score. On a real image-quality benchmark, KADID-10k, the
+method missed every target we registered (Section 4.6), and with plentiful labels 29 hand-built features score 0.979 on
+the synthetic scales against 0.867 for the fitted model: for low-level artefacts, features remain the better tool.
+<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, lab/NOTES.md entries 25, 28 -->
 
 ### 4.1 Order versus exact level
 
