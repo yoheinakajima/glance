@@ -1,0 +1,54 @@
+{
+ "benches": {
+  "creative-QA rubrics": {
+   "per_scale": {
+    "cutoff": {
+     "n": 300,
+     "json_zero": 0.25333333333333335,
+     "ens_zero": 0.26666666666666666,
+     "json_within_1": 0.7066666666666667,
+     "json_u16": 0.2886666666666667
+    },
+    "occlusion": {
+     "n": 300,
+     "json_zero": 0.51,
+     "ens_zero": 0.35,
+     "json_within_1": 0.9133333333333333,
+     "json_u16": 0.38
+    },
+    "text_legibility": {
+     "n": 300,
+     "json_zero": 0.4033333333333333,
+     "ens_zero": 0.43333333333333335,
+     "json_within_1": 0.6733333333333333,
+     "json_u16": 0.4246666666666667
+    },
+    "tilt": {
+     "n": 300,
+     "json_zero": 0.23,
+     "ens_zero": 0.22333333333333333,
+     "json_within_1": 0.4533333333333333,
+     "json_u16": 0.19250000000000003
+    },
+    "watermark": {
+     "n": 300,
+     "json_zero": 0.48,
+     "ens_zero": 0.39666666666666667,
+     "json_within_1": 0.96,
+     "json_u16": 0.5416666666666667
+    }
+   },
+   "mean": {
+    "json_zero": 0.37533333333333335,
+    "ens_zero": 0.334,
+    "json_within_1": 0.7413333333333333,
+    "json_u16": 0.36550000000000005
+   },
+   "scales_where_json_is_at_least_ens": 3,
+   "scales": 5
+  }
+ },
+ "verdict": {
+  "H42: creative-QA, jsondigits >= raw ens4d on the mean and on at least 3 of 5 rubrics": true
+ }
+}

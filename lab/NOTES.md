@@ -1829,3 +1829,18 @@ training collator computes it (1 where the token is the image placeholder), with
 correct. No openjev output had been seen before the fix (the failed run wrote no row). Re-queued ahead of the low-priority
 `semantic-ens4d` collection (stopped cleanly; it is resumable and re-queued after). First rows look sane (a level-0 blur image
 gets its highest claim score on level 0). About 5 s per image on a shared GPU, so roughly four hours for 3,000 images.
+
+## 2026-09-21 02:06 Entry 43b: E17, first half: the one-pass read on the rubrics that are not image quality
+
+`jsondigits` exactly as registered, test split of the five creative-QA rubrics (300 each) plus 100 calibration items each
+(`lab/runs/semantic_jsondigits.jsonl`, 2,000 rows; `results/lab/jsondigits_hard.md`), against the raw four-pass read on the
+same items. Exact level, zero-shot: cutoff 0.253 against 0.267, occlusion 0.510 against 0.350, caption legibility 0.403 against
+0.433, tilt 0.230 against 0.223, watermark 0.480 against 0.397; mean 0.375 against 0.334.
+- H42 (at least as accurate on the mean and on at least 3 of 5 rubrics): SUPPORTED (mean +4.1 points; ahead on 3 of 5).
+- The DECISION about the harness default waits for the KADID half (queued after the probes and the UI screens).
+What the table also says, and it is not flattering: zero-shot, BOTH reads are poor on these rubrics (chance is 0.25; tilt and
+cut-off sit at chance; within one level only 0.741 on the mean, against 0.99 on the quality scales), and 16 unlabeled images do
+not help here (0.375 to 0.366), unlike on the quality scales. So "order right, boundaries wrong" is a finding about the five
+image-QUALITY scales, not about rubrics in general; whether a labeled fit rescues these rubrics is E4's registered question
+(entry 20: at least 0.75 with the four-pass read and a per-rubric fit; tilt expected worst), whose calibration-split collection
+is now queued on lane A right after the KADID read (`semantic-ens4d-cal`).
