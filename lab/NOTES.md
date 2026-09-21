@@ -1382,3 +1382,16 @@ forward pass is not new; it is not in the class of the trained systems; what is 
 elicitation and calibration as commands; lead with "how you ask ... plus `fit`", never with "decision engine" as a
 noun for Glance. Written into `docs/paper/RELATED_WORK.md` ("Where Glance sits"), `docs/paper/OUTLINE.md`, the README
 and `docs/paper/COMPARABLE_SYSTEMS.md` (three systems added to "cite, do not run", with the reason for each).
+
+## 2026-09-20 17:33 Entry 41b: a correction of my own correction (Simple Jev does classify photos), and the pitch adopted
+
+Entry 41 said "Simple Jev (vision) is not a system", from its README ("The HF server currently supports text only").
+A second relayed review said otherwise, and it is right: the project's website has a Vision Lab that sends batches of
+photos to its `/v1/classifier` endpoint (models "must be Gemma or Qwen", "all images share one multimodal context"; read
+from the repository's generated wiki at commit 0dd539). Corrected in `RELATED_WORK.md` with the error named. Consequence:
+the inference object is fully shared, and Glance is described as a calibration and measurement harness on top of it, not
+as a new runtime (overlap table and pitch adopted from that review). The owner's claim survives as THE FINDING, a
+measured property of open VLMs read this way, which does not need Glance to be unique.
+One point where our data disagrees with that review: its proposed `fit --unlabeled` recipe (content-free prior from
+blank / noise / text-only inputs) is what E14 tested and it fails for image rubrics (entry 39b); what ships is
+z-scoring over unlabeled REAL images (entry 26). Recorded in `RELATED_WORK.md` as a finding.

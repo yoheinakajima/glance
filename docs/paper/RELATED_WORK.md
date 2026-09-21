@@ -218,16 +218,16 @@ no connection to glance, that the same bias affects Jev-adjacent evaluations. gi
 | --- | --- | --- | --- | --- | --- | --- |
 | What it is | an ask-layer (library, CLI, server) around an open VLM | ask-layers around an open VLM | an ask-layer around any open LM | fine-tuned Qwen-VL 2B checkpoints | a trained 256M decision model | a hosted proprietary model |
 | Trains weights? | no | no | no | yes (LoRA) | yes (LM + decision head) | yes |
-| Images | yes, first | yes | no ("text only") | yes | yes | no (docs: text only) |
+| Images | yes, first | yes | yes on its classifier endpoint (its "Vision Lab" demo classifies batches of photos, Gemma or Qwen models only); the local HF server's README still says "text only" | yes | yes | no (docs: text only) |
 | Question types | yes/no, pick-one, ratings | choice, score, noul | choice, score, noul | yes/no per requirement only | choice, noul (`score` untrained) | choice, score, noul |
 | How the answer is taken | logits of the allowed answer tokens at a forced answer position | the same | the same | yes/no logits at N positions of one packed template | a dedicated decision head | not disclosed |
 | Calibration | commands: `glance fit --unlabeled`, `glance fit`; generic calibration for yes/no and pick-one | none reported | "not calibrated probabilities of correctness" | none | temperature after proper-scoring-rule training | claimed by the vendor |
-| Several questions per image | one image prefill, independent branches (invariant by construction) | shared vision prefill | shared text prefix | one packed sequence | one image encode per call | n/a |
+| Several questions per image | one image prefill, independent branches (invariant by construction) | shared vision prefill | shared prefix KV; in the Vision Lab "all images share one multimodal context" | one packed sequence | one image encode per call | n/a |
 | Backbone | yours (Qwen3-VL-4B measured; 2B / 8B and SmolVLM2 in progress) | yours | yours | fixed | fixed | fixed |
 | Credit line | "Qwen3-VL-4B + Glance" | - | "<model> + Simple Jev" | "YOFO" | "laya-vision-smolvlm-256m" | "Jev" |
 
 Statements we stand behind, in this order:
-1. **Same class as the training-free ask-layers.** Simple Jev (text), jev-visual and LitJev (images) and Glance all wrap
+1. **Same class as the training-free ask-layers, and the same inference object.** Simple Jev (text and, on its endpoint, photos), jev-visual and LitJev (images) and Glance all wrap
    a frozen generative model, force it to the answer position, read the allowed tokens' logits and reuse the shared
    prefix. For yes/no and pick-one, Glance's forward pass is NOT new and this repository says so. An outside review's
    phrase is fair: Glance is that readout pointed at photos, with calibration commands and a frontier-VLM scoreboard.
@@ -248,9 +248,44 @@ Statements we stand behind, in this order:
    exist (jev-visual, LitJev, OpenJev on DiffusionGemma), and Glance's difference from them is measurement and `fit`,
    not the interface.
 
-Corrections to the relayed reviews, so their errors do not enter this repository: Simple Jev has no vision path (its
-README: "images, audio, video, and tool calls are unsupported"), so "Simple Jev (vision)" is not a system; the
-training-free image neighbours are jev-visual and LitJev. Jev is a typed decision API (choice, score, noul), not an
+**Overlap, layer by layer** (adopted from an outside review, 2026-09-20; it is correct):
+
+| Layer | Overlap with Simple Jev and the other training-free ask-layers |
+| --- | --- |
+| Frozen VLM + logits at the answer position | full |
+| yes/no, pick-one, ratings as question types | full (Noul / Choice / Score) |
+| Many questions for one image cost | full, unless a profiled gap is shown |
+| "Not a model; credit the open VLM" | full |
+| Self-calibration from unlabeled images, labeled fit for rating levels | Glance only: shipped (`glance fit --unlabeled`, `glance fit`), specified (`docs/paper/METHODS.md` section 14) and measured |
+| The same VLM writing its answer against reading it | Glance only: speed measured (2.4x to 6.1x); accuracy being collected (E11) |
+| Fresh-photo board against Gemini / GPT / Opus, with dollars and milliseconds | Glance only: published for one photo set, second set awaiting the paid calls |
+| "Works on any VLM" | nobody, until a second family is in the table (E3, E15 running) |
+
+So the inference object is shared, Simple Jev's image support closes the gap that would have made Glance "Jev for
+vision", and what is left is a HARNESS on top of that object. Not differences: being a CLI; caring about perception
+while others care about agents; a "unique" visual KV design; calling a raw softmax over labels "not a scoring layer".
+Calibration is the product for rating LEVELS, not for the whole engine: uncalibrated reads are enough for yes/no,
+pick-one and ranking, and this repository's own numbers say so.
+
+One place where the measurements here contradict the textbook recipe a reviewer proposed for `fit --unlabeled` (a
+content-free prior from blank, noise or text-only inputs, then dividing it out): we registered and ran exactly that
+(`lab/NOTES.md` entries 39 and 39b) and it FAILS for image rubrics, exact accuracy 0.558 -> 0.400, because a blank or
+noise image is read as the worst level of most quality rubrics; for an image rubric there is no content-free image.
+What works, and what `glance fit --unlabeled` ships, is z-scoring each readout over a small pool of unlabeled REAL
+images of the rubric (0.558 -> 0.686 with 16 images, entry 26). That contrast is a finding, small but ours.
+
+Pitch to use: "Glance is a calibration and measurement harness on top of the same single-pass logit readout that
+Simple Jev and other training-free ask-layers use. It does not introduce a new runtime. It adds self-calibration from
+unlabeled images and labeled scaling for rating levels, and it reports write-versus-read and hosted-API cost on fresh
+photos. Closed-set yes/no and pick-one are a property of the open VLM. Exact levels are not; that is what `fit` is for."
+
+Corrections, including one of our own: an earlier version of this section said Simple Jev has no vision path, on the
+strength of its README ("The HF server currently supports text only; images, audio, video, and tool calls are
+unsupported"). That was too strong. The project's website has a Vision Lab that sends batches of photos to its
+`/v1/classifier` endpoint ("all images share one multimodal context", models "must be Gemma or Qwen"; read 2026-09-20
+from the repository's generated wiki, commit 0dd539), so Simple Jev does classify photos with the same primitives and
+the same readout; what its open local server supports may lag its endpoint. Errors in the relayed reviews that stay
+out of this repository: Jev is a typed decision API (choice, score, noul), not an
 "action and control space" paradigm; the DiffusionGemma and patched-vLLM details belong to razorback16's OpenJev, not to
 Jev. Glance's fits are matrix scaling on member logits and z-scoring over unlabeled images, not Platt or isotonic
 scaling. A released YOFO checkpoint could not be confirmed.

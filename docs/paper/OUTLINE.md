@@ -126,12 +126,20 @@ calibrated, so it is context, not a head-to-head comparison.
 
 ## Positioning, revised by the project owner (2026-09-20 evening; STATUS D44, `lab/NOTES.md` entry 38). Supersedes the block below where they differ
 
-One sentence: **Glance is how you ask an open vision-language model for a typed decision, plus `fit`. It is not a model.**
-Where it sits among Jev-style systems (same class as the training-free ask-layers Simple Jev, jev-visual and LitJev; not the same class as the trained YOFO, Laya Vision, OpenJev v2): `docs/paper/RELATED_WORK.md`, "Where Glance sits". For yes/no and pick-one the forward pass is not new; say so first.
-The claim: a frozen open 4B model, READ instead of generated, is a zero-shot general image decision engine: level with
-frontier models on yes/no and pick-one on photos no model has seen, with usable probabilities, several times faster than
-the same model writing its answer, at a small fraction of API cost; on ratings it matches frontier models zero-shot and
-orders images almost perfectly, while exact levels need a few unlabeled images or, optionally, labels.
+Two things are kept apart (2026-09-20 17:40, after a second round of outside review and a check of Simple Jev's image path):
+- **The finding (about open models, the paper's headline, the owner's claim):** a frozen open 4B VLM, asked typed
+  questions and READ with the single-pass logit readout this whole family of ask-layers shares, is level with frontier
+  models on yes/no and pick-one on photos no model has seen, at a small fraction of the cost; on ratings it orders images
+  almost perfectly zero-shot, is between the frontier models on exact levels (Gemini 3.1 Pro leads by 8 points), and exact
+  levels are what calibration is for. None of this needs Glance to be unique: it is a measured property of the open VLM
+  plus a readout anyone can use.
+- **The product (Glance):** "a calibration and measurement harness on top of the same single-pass logit readout that
+  Simple Jev and other training-free ask-layers use. It does not introduce a new runtime. It adds self-calibration from
+  unlabeled images and labeled scaling for rating levels, and it reports write-versus-read and hosted-API cost on fresh
+  photos." Full overlap table and the pitch: `docs/paper/RELATED_WORK.md`, "Where Glance sits".
+- Do not lead the description of GLANCE with "zero-shot visual decision engine", and never write "parity on ratings":
+  those two phrases are how it gets filed as a Jev clone with adjectives. Also not differences: CLI versus server, a
+  "unique" visual KV design, perception versus agents.
 - The model does the seeing; Glance is the asking (typed questions, logit readout, many questions per pass,
   probabilities, optional fit). Accuracy that belongs to the open model is credited to it: rows read
   "Qwen3-VL-4B + Glance", "Qwen3-VL-8B + Glance", "SmolVLM2 + Glance".
