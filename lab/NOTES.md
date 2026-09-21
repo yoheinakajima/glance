@@ -2222,3 +2222,40 @@ largest shape = the model, at this size and image resolution, does not make the 
 on one vector can miss a relational property). Caveat on the probe: it is cross-validated WITH labels (120 images per fold), so it
 shows that the information is present, not that it can be read zero-shot. The reviewer who asked for this control was right that
 "the model stops at geometry" was not established; the answer is "it depends which geometry".
+
+## 2026-09-21 09:24 Entry 49d: E21, the hosted half, and TWO corrections to entry 49c (a test defect I had read as a model bias; a verdict I called too early)
+
+Six hosted models on the test half of each interface-screen set (owner's batch), by the rule of entry 54 (per set, same items,
+best hosted minus open, bootstrap over screens; `results/lab/ui_screens.md`): click target, every system 0.993 to 1.000 (open
+1.000, +0.0); one-step reasoning, hosted 0.98 to 1.00 against 0.90, +10.0 points [+2.0, +20.0]; state questions, best 0.984
+against 0.924, +6.0 [+3.3, +9.0]; already done, 0.89 against 0.83, +6.0 [+2.0, +11.0]; page type, EVERY hosted model 0.807
+against 0.780.
+- H52 (systems separate by at least 8 points on the click target): NOT SUPPORTED: every system finds the element (spread 0.7).
+- H51 (one forward pass at least 10 points below the best hosted model on the reasoning screens): SUPPORTED at the margin: 10.0
+  points on the 50 shared screens (earliest date: 0.79 against 1.00 for five of six hosted models). CORRECTION: entry 49c said
+  this "cannot hold whatever the hosted models score". That was wrong: I used the open model's score on all 100 screens (0.910);
+  the registered comparison is on the shared items, where it scores 0.900.
+- H58 (the disabled-button miss is partly the test's: at least 4 of 6 hosted models report it on fewer than 0.80 of the screens
+  that have it): SUPPORTED, 5 of 6: Claude Opus 5 1.00, GPT-5.6 0.50, Gemini 3.1 Pro 0.36, GPT-5.6 Luna 0.29, Claude Haiku 4.5
+  and Gemini 3.1 Flash-Lite 0.00; the open model 0.07 (14 screens). A pale tint is a poor rendering of "disabled".
+TWO DEFECTS OF THE TEST, found because six hosted models agreed with each other to the item (`tools/ui_defects_report.py`,
+`results/lab/ui_defects.md`); each is picked out by a rule of the generator, not by any model's answers:
+1. Page type. On screens where a dialog is open its backdrop hides the page, so the page type cannot be seen (67 of 300 screens).
+   All 29 items that every system gets wrong are such screens; on the others EVERY system, the open model included, is perfect
+   (open model 233 of 233). CORRECTION: entry 49c read the open model's page-type errors as "an uncalibrated bias toward one
+   option, the kind a fit removes". They were the test's fault; "article" was only what it said when it could not see the page.
+2. Already done. For the goal "Go to the next page of results" the after-screen (page 2 of 3) does not show that anything was
+   done (25% of items); all 11 items that every system gets wrong have that goal. Without it: open 0.92, hosted 0.95 to 1.00.
+By the rule of entry 54 no set is dropped: the registered all-item numbers stay in the table, and the numbers without the defective
+items are reported beside them as post hoc. H50's page-type half (0.823 against a predicted 0.90) is a miss of the TEST.
+
+## 2026-09-21 09:25 Entry 63: the name: the tool stays Glance, its citable handle is `glance-vlm`, and the paper gets its own title
+
+Collision research (a helper's web research; the three closest papers spot-checked at arXiv): "Glance" collides with two recent
+VLM papers (2609.00355, a one-pass block drafter called GLANCE; 2601.13942, "Glance-or-Gaze") and several large products; the
+alternatives in the same spirit are mostly worse (Glimpse: two exact-name VLM papers; Peek: two; Gist, Skim: dominant products) and
+only Gander, Espy and Once-over are clean. The owner had already shipped `glance-vlm` on PyPI and asked whether that can simply be
+the name. Checked: no arXiv result for "GlanceVLM" or "Glance-VLM", no GitHub repository of that name, the Hugging Face handle is
+free. Decision (owner's): keep it. `glance-vlm` is the unique, searchable handle (package, citation file, README title, the page's
+running head); "Glance" stays the short name and the command; the paper carries a descriptive title of its own ("Reading typed
+visual judgements from a frozen open vision-language model"), so a citation never depends on the word "Glance".

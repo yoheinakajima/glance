@@ -1,0 +1,88 @@
+{
+ "page_type": {
+  "screens_with_a_dialog_over_the_page": 67,
+  "of_screens": 300,
+  "wrong_for_every_system": 25,
+  "of_those_with_a_dialog": 25,
+  "all_items": {
+   "n_shared": 150,
+   "accuracy_same_items": {
+    "Qwen3-VL-4B + Glance": 0.78,
+    "Claude Opus 5": 0.8066666666666666,
+    "GPT-5.6": 0.8066666666666666,
+    "Gemini 3.1 Pro": 0.8066666666666666,
+    "Claude Haiku 4.5": 0.8066666666666666,
+    "GPT-5.6 Luna": 0.8066666666666666,
+    "Gemini 3.1 Flash-Lite": 0.8066666666666666
+   },
+   "open_all_items": {
+    "n": 300,
+    "accuracy": 0.8233333333333334
+   }
+  },
+  "without_covered_screens": {
+   "n_shared": 113,
+   "accuracy_same_items": {
+    "Qwen3-VL-4B + Glance": 1.0,
+    "Claude Opus 5": 1.0,
+    "GPT-5.6": 1.0,
+    "Gemini 3.1 Pro": 1.0,
+    "Claude Haiku 4.5": 1.0,
+    "GPT-5.6 Luna": 1.0,
+    "Gemini 3.1 Flash-Lite": 1.0
+   },
+   "open_all_items": {
+    "n": 233,
+    "accuracy": 1.0
+   }
+  }
+ },
+ "already_done": {
+  "items_with_the_next_page_goal": 40,
+  "of_items": 200,
+  "all_items": {
+   "n_shared": 100,
+   "accuracy_same_items": {
+    "Qwen3-VL-4B + Glance": 0.83,
+    "Claude Opus 5": 0.89,
+    "GPT-5.6": 0.89,
+    "Gemini 3.1 Pro": 0.89,
+    "Claude Haiku 4.5": 0.85,
+    "GPT-5.6 Luna": 0.89,
+    "Gemini 3.1 Flash-Lite": 0.86
+   },
+   "open_all_items": {
+    "n": 200,
+    "accuracy": 0.825
+   }
+  },
+  "without_that_goal": {
+   "n_shared": 75,
+   "accuracy_same_items": {
+    "Qwen3-VL-4B + Glance": 0.92,
+    "Claude Opus 5": 1.0,
+    "GPT-5.6": 1.0,
+    "Gemini 3.1 Pro": 1.0,
+    "Claude Haiku 4.5": 0.9466666666666667,
+    "GPT-5.6 Luna": 1.0,
+    "Gemini 3.1 Flash-Lite": 0.96
+   },
+   "open_all_items": {
+    "n": 160,
+    "accuracy": 0.90625
+   }
+  }
+ },
+ "disabled_button_detected": {
+  "n_screens": 14,
+  "rate": {
+   "Qwen3-VL-4B + Glance": 0.07142857142857142,
+   "Claude Opus 5": 1.0,
+   "GPT-5.6": 0.5,
+   "Gemini 3.1 Pro": 0.35714285714285715,
+   "Claude Haiku 4.5": 0.0,
+   "GPT-5.6 Luna": 0.2857142857142857,
+   "Gemini 3.1 Flash-Lite": 0.0
+  }
+ }
+}

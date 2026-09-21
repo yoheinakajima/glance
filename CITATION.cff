@@ -1,12 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this software or its results, please cite it as below."
-title: "Glance: reading typed decisions from open vision-language models"
+title: "Glance (glance-vlm): reading typed visual judgements from a frozen open vision-language model"
 type: software
 authors:
   - family-names: Nakajima
     given-names: Yohei
 license: Apache-2.0
-version: 0.2.1
+version: 0.3.0
 date-released: 2026-09-21
 url: "https://glance.yohei.me"
+repository-code: "https://github.com/yoheinakajima/glance"
+repository-artifact: "https://pypi.org/project/glance-vlm/"
 abstract: "A calibration and measurement harness for asking frozen open vision-language models typed questions about images (yes/no, pick-one, rating) and reading the answer from the logits of one forward pass. Includes pre-registered comparisons with hosted models on photographs taken after every model's release."

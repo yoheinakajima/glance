@@ -645,27 +645,35 @@ def probes_hosted_text(d):
 
 
 def ui_text():
-    """Sentences for the synthetic interface screens, every number from results/lab/ui_screens.json (entry 49c)."""
-    d = load("results/lab/ui_screens.json")
+    """Sentences for the synthetic interface screens (entries 49c, 49d): registered all-item numbers from results/lab/ui_screens.json, the
+    test's two defects and the disabled-button diagnostic from results/lab/ui_defects.json."""
+    d, x = load("results/lab/ui_screens.json"), load("results/lab/ui_defects.json")
     if not d:
         return ""
     acc = {k: v["open 4B model, read"]["all_items"] for k, v in d["suites"].items()}
-    b = {k: v["systems"]["open 4B model, read"] for k, v in d.get("breakdowns", {}).items()}
+    pr = d.get("paired") or {}
     out = (f"Five hundred synthetic interface screens (five kinds of page, invented content, rendered from generated HTML so every label is exact) ask what an agent would ask. Given a goal in words and six to eight numbered marks on the screen, "
-           f"the open model names the mark to click on {acc['ui_click']['accuracy']:.3f} of {acc['ui_click']['n']} screens; when the goal needs one step of reasoning first (the cheaper plan, the item out of stock, the earliest date) on {acc['ui_reason']['accuracy']:.2f}. "
-           f"State questions (is a dialog open, is an error shown, is the user signed in) are right on {acc['ui_state']['accuracy']:.2f}")
-    if "ui_state" in b and "primary_disabled" in b["ui_state"]:
-        rest = [v["accuracy"] for k, v in b["ui_state"].items() if k != "primary_disabled"]
-        out += f", with one exception: whether the main button is disabled ({b['ui_state']['primary_disabled']['accuracy']:.2f}; the other five states {min(rest):.2f} to {max(rest):.2f}), a state our screens draw as a pale tint that the model almost never reports"
-    out += f". It is weaker on “is this goal already done” ({acc['ui_done']['accuracy']:.2f}"
-    if "ui_done" in b:
-        out += f": {b['ui_done']['False']['accuracy']:.2f} on screens where it is not, {b['ui_done']['True']['accuracy']:.2f} where it is"
-    out += f") and on the kind of page ({acc['ui_page']['accuracy']:.2f}, every error being another page called an article: an uncalibrated bias toward one option)."
-    hosted = any(k != "open 4B model, read" for v in d["suites"].values() for k in v)
-    out += (" We had predicted that one forward pass would trail hosted models by ten points on the reasoning screens; at this score it cannot."
-            + ("" if hosted else " Hosted models have not been run on these screens."))
+           f"the open model names the mark to click on {acc['ui_click']['accuracy']:.3f} of {acc['ui_click']['n']} screens")
+    if pr:
+        gap = lambda s: f"{pr[s]['best_minus_open_points'][0]:.0f} points [{pr[s]['best_minus_open_points'][1]:.0f}, {pr[s]['best_minus_open_points'][2]:.0f}]"  # noqa: E731
+        out += (f", and so does every hosted model (0.99 to 1.00): finding the element that serves a goal does not separate systems. One step of reasoning first (the cheaper plan, the item out of stock, the earliest date) does: "
+                f"the open model scores {pr['ui_reason']['open_accuracy']:.2f} on the shared screens and the best hosted model {pr['ui_reason']['best_hosted_accuracy']:.2f}, {gap('ui_reason')} ahead, as we had predicted. "
+                f"On state questions (is a dialog open, is an error shown, is the user signed in) the best hosted model is {gap('ui_state')} ahead.")
+    else:
+        out += f"; when the goal needs one step of reasoning first on {acc['ui_reason']['accuracy']:.2f}. State questions are right on {acc['ui_state']['accuracy']:.2f}."
+    if x:
+        det = x["disabled_button_detected"]["rate"]
+        hosted_det = {k: v for k, v in det.items() if not k.startswith("Qwen")}
+        low = [k for k, v in hosted_det.items() if v < 0.8]
+        p, a = x["page_type"], x["already_done"]
+        out += (f" The hosted results also exposed three weaknesses of our test, which we report rather than remove. A disabled main button, which our screens draw as a pale tint, is reported by the open model on {det['Qwen3-VL-4B + Glance']:.2f} of the screens that have it "
+                f"and by {len(low)} of the {len(hosted_det)} hosted models on fewer than 0.80 (only {max(hosted_det, key=hosted_det.get)} sees it every time). "
+                f"On page type every hosted model scores {p['all_items']['accuracy_same_items']['Claude Opus 5']:.3f} and the open model {p['all_items']['accuracy_same_items']['Qwen3-VL-4B + Glance']:.3f}, because on the "
+                f"{p['screens_with_a_dialog_over_the_page']} of {p['of_screens']} screens where a dialog is open its backdrop hides the page; on the others every system is perfect, the open model included. "
+                f"And for one goal (“go to the next page of results”) the after-screen does not show that anything was done; without it the open model is at {a['without_that_goal']['accuracy_same_items']['Qwen3-VL-4B + Glance']:.2f} "
+                f"on “is this goal already done” and the hosted models at {min(v for k, v in a['without_that_goal']['accuracy_same_items'].items() if not k.startswith('Qwen')):.2f} to {max(v for k, v in a['without_that_goal']['accuracy_same_items'].items() if not k.startswith('Qwen')):.2f}. "
+                "Table 6 keeps the registered numbers on all items.")
     return "\n  <p>" + out + "</p>"
-
 
 finer_block = finer()
 beyond_block = beyond()
@@ -681,7 +689,7 @@ version = next(line.split('"')[1] for line in (ROOT / "pyproject.toml").read_tex
 
 BODY = f"""
 <header>
-  <p class="running">Working paper · v{version} · snapshot {snapshot}, {today} · every experiment registered before it ran · results regenerate from the repository</p>
+  <p class="running">glance-vlm · working paper · v{version} · snapshot {snapshot}, {today} · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
   <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>

@@ -1,4 +1,4 @@
-# glance
+# glance-vlm (Glance)
 
 **Ask an open vision-language model typed questions about an image and get probabilities back, on your own machine.**
 Yes/no, pick-one and ratings are READ from the logits of one forward pass of a frozen open model (Qwen3-VL-4B by
