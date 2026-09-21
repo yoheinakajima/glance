@@ -1395,3 +1395,29 @@ measured property of open VLMs read this way, which does not need Glance to be u
 One point where our data disagrees with that review: its proposed `fit --unlabeled` recipe (content-free prior from
 blank / noise / text-only inputs) is what E14 tested and it fails for image rubrics (entry 39b); what ships is
 z-scoring over unlabeled REAL images (entry 26). Recorded in `RELATED_WORK.md` as a finding.
+
+## 2026-09-20 17:58 Entry 32b: E11 result: on zero-shot ratings the same model WRITING its answer beats our raw read by 10 points (H28 fails against us)
+
+`results/lab/gen_accuracy.md`, same frozen Qwen3-VL-4B, identical items, greedy JSON answer (invalid = wrong; none were
+invalid), against the raw zero-label read.
+- Yes/no and pick-one on the fresh Commons photos: written 0.931 / 0.885, read 0.931 / 0.885, differences +0.0 [-1.1,
+  +1.1] and +0.0 [-3.8, +3.8]. The read gives the same answers, with probabilities, several times faster.
+- Ratings, the 1,000 lab images the frontier models saw: WRITTEN 0.672, raw read (`ens4d`, no labels) 0.570. Per scale,
+  read minus written: blur -28.5, noise -12.5, exposure -11.0, resolution -9.5, JPEG +10.5 points. No single digit
+  readout does better than the ensemble zero-shot (digits 0.528, digitsrev 0.544, zoom members 0.452 / 0.515).
+- H28 (within 5 points everywhere at 0 labels): NOT SUPPORTED on all five rating scales, supported on yes/no and
+  pick-one. H29: read with unlabeled images ahead by >= 10 points: NOT SUPPORTED (0.702 against 0.672, +3.0); read with
+  32 labels ahead by >= 25: NOT SUPPORTED (0.857, +18.5); yes/no and pick-one within 3 points: SUPPORTED.
+- As registered in entry 32, the paper must therefore say: for zero-label GRADES, generation with a JSON prompt elicits
+  better answers than our digit readouts, and Glance's advantage on ratings is speed, probabilities and the fitted map,
+  not zero-shot accuracy. The `ens4d` members were selected with a calibration in the loop, which forgives a constant
+  offset; zero-shot nothing forgives it.
+- Against the frontier models, paired on the same images, the open 4B model's WRITTEN zero-shot ratings are ahead of
+  Claude Opus 5 by 12.2 points [8.1, 16.3], ahead of GPT-5.6 by 7.5 [3.0, 11.9] and level with Gemini 3.1 Pro (+2.1
+  [-2.3, +6.6]). For the owner's claim (what an open model does zero-shot) this is the stronger row.
+- The written answer IS a logit readout in disguise: greedy decoding of `{"q": 2}` takes the argmax at the position
+  after `{"q": `. The gap is therefore a PROMPT effect (JSON framing, all level texts inline, "answer with the number"),
+  not generate-versus-read. Follow-up registered next (E16): read the digit logits at that forced JSON position in one
+  pass.
+- Timing here was contended (second GPU job running): written p50 2.3 to 3.8 s. The clean speed comparison stays
+  entry 27c.

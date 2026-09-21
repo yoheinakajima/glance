@@ -1,0 +1,148 @@
+{
+  "ladder_blur": {
+    "n": 200,
+    "written": [
+      0.755,
+      0.695,
+      0.815
+    ],
+    "read_0_labels": [
+      0.47,
+      0.4,
+      0.54
+    ],
+    "read_minus_written_points": [
+      -28.499999999999996,
+      -35.0,
+      -22.0
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 2511.4557079505175
+  },
+  "ladder_noise": {
+    "n": 200,
+    "written": [
+      0.7,
+      0.635,
+      0.76
+    ],
+    "read_0_labels": [
+      0.575,
+      0.505,
+      0.645
+    ],
+    "read_minus_written_points": [
+      -12.5,
+      -18.0,
+      -7.000000000000001
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 2450.10485406965
+  },
+  "ladder_jpeg": {
+    "n": 200,
+    "written": [
+      0.345,
+      0.28,
+      0.41
+    ],
+    "read_0_labels": [
+      0.45,
+      0.38,
+      0.52
+    ],
+    "read_minus_written_points": [
+      10.5,
+      6.0,
+      15.5
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 2369.679645402357
+  },
+  "ladder_exposure": {
+    "n": 200,
+    "written": [
+      0.81,
+      0.755,
+      0.865
+    ],
+    "read_0_labels": [
+      0.7,
+      0.635,
+      0.765
+    ],
+    "read_minus_written_points": [
+      -11.0,
+      -19.5,
+      -2.5
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 2433.31010453403
+  },
+  "ladder_resolution": {
+    "n": 200,
+    "written": [
+      0.75,
+      0.69,
+      0.81
+    ],
+    "read_0_labels": [
+      0.655,
+      0.59,
+      0.72
+    ],
+    "read_minus_written_points": [
+      -9.5,
+      -17.5,
+      -1.5
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 2328.9799789199606
+  },
+  "fresh_yesno": {
+    "n": 262,
+    "written": [
+      0.9312977099236641,
+      0.9007633587786259,
+      0.9580152671755725
+    ],
+    "read_0_labels": [
+      0.9312977099236641,
+      0.8969465648854962,
+      0.9618320610687023
+    ],
+    "read_minus_written_points": [
+      0.0,
+      -1.1450381679389312,
+      1.1450381679389312
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 3544.2932504229248
+  },
+  "fresh_choice": {
+    "n": 131,
+    "written": [
+      0.8854961832061069,
+      0.8244274809160306,
+      0.9389312977099237
+    ],
+    "read_0_labels": [
+      0.8854961832061069,
+      0.8320610687022901,
+      0.9389312977099237
+    ],
+    "read_minus_written_points": [
+      0.0,
+      -3.816793893129771,
+      3.816793893129771
+    ],
+    "invalid_written": 0,
+    "write_ms_p50": 3752.894541947171
+  },
+  "lab_mean": {
+    "written": 0.672,
+    "read_0_labels": 0.57,
+    "read_unlabeled_images": 0.702,
+    "read_32_labels": 0.8573000000000001
+  }
+}
