@@ -1991,3 +1991,30 @@ statement about sample size. With three times the items it becomes: on pick-one,
 yes/no, level with Claude Opus 5 and GPT-5.6, about 2 points behind both Gemini models, and ahead of the other two low-cost
 models. The page, the README and the draft are changed to say this. The back-of-envelope in entry 54 (0.943 against 0.960) was
 close; the small Gemini lead that no single set could show is real at this sample size.
+
+## 2026-09-21 07:21 Entry 56: speed context from independent timings of hosted Jev (owner's brief), checked at the sources before use
+
+The owner sent a writer brief proposing a paragraph that sets our speed ratios beside third-party timings of hosted Jev (a
+text-only product). Every outside number was read at its source today before entering any document:
+- TrueStandard (Arun Agrahri), "Is Jev Really 193x Faster? We Measured 1.7x and 100x": Jev 1.13, three runs, medians; server
+  time 477 ms against 790 ms (Gemini 3.1 Flash Lite), 928 ms (Claude Haiku 4.5), 2,575 ms (Claude Fable 5.1 thinking): 1.7x,
+  1.9x, 5.4x; six sequential thinking calls 74.42 s against one Jev call 0.739 s: 100.7x. CONFIRMED.
+- Sean Goedecke, 16 Sep 2026: a 2x to 3x speedup from prefilling `Qwen2.5-1.5B-Instruct` to one constrained token against
+  non-prefixed structured output (his own experiment). CONFIRMED.
+- dorarep (Zenn), 19 Sep 2026: 15 requests per condition; Jev 0.315 s against 0.960 s (DeepSeek V4 Flash) at 5 judgments; 1 to
+  100 questions per request: Jev 0.343 s to 0.524 s (1.53x), six generating models 6.51x to 28.38x. CONFIRMED.
+- Ciyo, 20 Sep 2026: the vendor's figures are unverified; LangChain 0.44 s average per call; Vercel "5 to 18 times" is
+  customer-reported through TechCrunch. CONFIRMED; used only in `docs/paper/RELATED_WORK.md`.
+- TypeSafe launch post: text only ("not on images (yet)"), 70 to 500 ms against 3 to 329 s, "40x-200x faster", trained with
+  RLCD. CONFIRMED as the vendor's own claims.
+Four points where the brief differed from its sources, corrected in what we publish: (1) TrueStandard's task is a THREE-WAY
+classification of a support ticket, not a yes/no; (2) its page is dated 19 September, not 18; (3) Goedecke's post does not say
+the constrained-token trick "still does not reach hosted Jev latency" (no such measurement there), so we do not say it; (4) the
+vendor's multiplier is "40 to 200 times", and the launch post's own date could not be confirmed as 15 September (the page shows
+21 September), so the page says "September 2026" only. The brief's numbers about Glance all match `results/lab/matrix.json`
+(1.65 / 1.08 s, 1.87 / 1.43 s, 0.91 / 0.45 s; hosted yes/no 0.87 to 2.74 s; 58 / 71 / 84% cheaper). One sentence the brief asked
+to keep ("gives the same answers as the same model writing JSON") is the live page's OLD wording, corrected by erratum 32d, and
+is not restored. Added: a "Speed, in context" paragraph in the page's section 8 with our ratios computed from the matrix, four
+references, a pointer from section 4, the same paragraph in the draft, and the verification record in RELATED_WORK.md. Nothing
+is added to the abstract or to the results tables. Not claimed anywhere: any multiple against a thinking-model workflow, "as fast
+as Jev", "faster than Haiku", "Jev for images".

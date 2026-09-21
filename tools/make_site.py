@@ -235,12 +235,18 @@ REFS = [
     ("Zhang et al., 2025", "YOFO: fine-tuned Qwen-VL judging many yes/no requirements in one forward pass", "https://arxiv.org/abs/2511.16600"),
     ("Zheng et al., 2024", "Large language models are not robust multiple choice selectors (option-letter bias)", "https://arxiv.org/abs/2309.03882"),
     ("vLLM project", "Automatic prefix caching, including multimodal inputs", "https://docs.vllm.ai/en/stable/design/prefix_caching/"),
+    ("Agrahri (TrueStandard), 2026", "Is Jev really 193x faster? We measured 1.7x and 100x: independent timings of hosted Jev against fast classifiers and against a thinking-model workflow", "https://truestandard.ai/blog/is-jev-really-193x-faster"),
+    ("dorarep, 2026", "Jev against small LLMs (in Japanese): latency as the number of questions per request grows from 1 to 100", "https://zenn.dev/dorarep/articles/8f1efbf10e3e8c"),
+    ("Goedecke, 2026", "Jev means structured output is interesting again: one constrained token against written structured output on a small open model", "https://seangoedecke.com/jev-means-structured-output-is-interesting-again/"),
+    ("TypeSafe, 2026", "Introducing System One models and Jev (the vendor’s launch post; its figures are the vendor’s own)", "https://typesafe.ai/blog/introducing-system-one-models-and-jev"),
     ("Simple Jev; jev-visual; LitJev", "Training-free servers that read answer-token logits from a frozen model", "https://github.com/featherless-ai/simple-jev"),
 ]
 
 
 def refs_html():
-    return "<ol class=\"refs\">" + "".join(f'<li>{a}. {t}. <a href="{u}">{u.split("//")[1][:48]}</a></li>' for a, t, u in REFS) + "</ol>"
+    people = sorted((r for r in REFS if r[0][0].isalpha() and "," in r[0]), key=lambda r: r[0].lower())  # author-year entries, alphabetical
+    rest = [r for r in REFS if r not in people]  # projects and tools, in the order given
+    return "<ol class=\"refs\">" + "".join(f'<li>{a}. {t}. <a href="{u}">{u.split("//")[1][:48]}</a></li>' for a, t, u in people + rest) + "</ol>"
 
 
 photo_timed = "on these photographs" in matrix["systems"]["Qwen3-VL-4B, read (Glance)"]["seconds"]["yesno"]["how"]
@@ -330,6 +336,23 @@ def pooled_table():
     return ('<div class="table-scroll"><table><thead><tr><th>Three photo sets pooled, zero-shot</th>'
             f'<th class="n">yes/no, n={n["yesno"]}</th><th class="n">open minus this, points</th><th class="n">pick-one, n={n["choice"]}</th><th class="n">open minus this, points</th></tr></thead><tbody>'
             + "".join(row(name, e) for name in names) + "</tbody></table></div>")
+
+
+def speed_context():
+    """Independent timings of hosted Jev, a text-only product of the same family, beside our own ratios (notebook entry 56). The
+    outside numbers were read at their sources on 2026-09-21; ours are computed from the matrix. Nothing here is our measurement of Jev."""
+    sec = {n: v["seconds"]["yesno"]["value"] for n, v in matrix["systems"].items()}
+    own, wrote = sec["Qwen3-VL-4B, read (Glance)"], sec["Qwen3-VL-4B, written"]
+    flash, haiku = sec["Gemini 3.1 Flash-Lite"], sec["Claude Haiku 4.5"]
+    versus_haiku = f"slower than Claude Haiku 4.5 ({own:.2f} s against {haiku:.2f} s)" if haiku < own else f"{haiku / own:.1f} times against Claude Haiku 4.5"
+    return ("<p><b>Speed, in context.</b> Hosted Jev (TypeSafe 2026) is the trained product of this family; it takes text, not images. Its launch material quotes 40 to 200 times faster than frontier language models. "
+            "Independent timings show what that figure is made of. TrueStandard (Agrahri 2026) timed one three-way classification of a support ticket at 477 ms of server time against 790 ms for Gemini 3.1 Flash Lite and 928 ms "
+            "for Claude Haiku 4.5, 1.7 and 1.9 times, and reached 100 times only when one call replaced six sequential calls to a thinking model: “the multiple is a property of the comparison, not of the model”. "
+            "Goedecke (2026) measured 2 to 3 times from having a small open model emit one constrained token instead of written structured output, and dorarep (2026) found that going from one question to a hundred per request "
+            "cost Jev 1.5 times the latency where generating models paid 6 to 28 times. "
+            f"Our ratios sit in the same modest band, with the image as a fixed cost that text systems do not pay: {wrote / own:.1f} times against the same model writing JSON on a full-size photograph, 2.4 to 6.1 times on small images "
+            f"as questions per image grow, {flash / own:.1f} times against Gemini 3.1 Flash-Lite, and {versus_haiku}. We did not run a sequential thinking-model workflow and claim nothing about one. "
+            "None of the outside figures is our measurement, and raw milliseconds do not transfer between a hosted text model and a 4B vision model on a laptop.</p>")
 
 
 def older():
@@ -561,7 +584,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
   <h2 id="read"><span class="num">4</span>Reading is as accurate as writing, and gives the same answer when the prompt is the same</h2>
   <p>The alternative to reading is to let the same model write a JSON answer. With ground truth and one question per request, the two agree. On yes/no and pick-one the accuracy is the same on both photo sets (differences of {rw_gap[0]:.1f} to {rw_gap[1]:.1f} points, every interval spanning zero; Table 4), and each item comes out the same way, right or wrong, on {rw_same[0]:.1%} to {rw_same[1]:.1%} of items; the few that differ reflect the prompts, which are not the same (a JSON request against one statement per option). On ratings, where the digits can be read at the very position where the written answer puts them, {jd["agree_with_written"]:.0%} of answers are identical: a written answer under greedy decoding is an argmax over the same logits, so this is expected.</p>
   <p>They stop agreeing when the prompts differ. Our earlier four-pass rating readout uses different wording from the JSON prompt and scores {100 * (written - jd["ens_zero"]):.0f} points lower zero-shot. And when one written JSON object carries 25 ratings, each field is conditioned on the fields already written, while 25 separate reads are independent: the two agree on only {genb["25 ratings"]["agreement_with_read_on_valid_fields"]:.0%} of fields (that request has no ground truth, so this is a difference, not an error rate). Reading is therefore not a free substitute for any prompt; it is a way to take the same decision without generating it.</p>
-  <p>What reading changes is cost and form: about 1.5 times faster for one question about a full-size photograph (encoding the image dominates), 2 to 3 times on small images, more as questions per image grow; and the answer is a probability vector, which can be thresholded, ranked and fitted.</p>
+  <p>What reading changes is cost and form: about 1.5 times faster for one question about a full-size photograph (encoding the image dominates), 2 to 3 times on small images, more as questions per image grow (section 8 sets these ratios beside independent timings of a hosted text product of the same kind); and the answer is a probability vector, which can be thresholded, ranked and fitted.</p>
   {cost_table()}
   <p class="caption"><b>Table {t0 + 1}.</b> The open model writing against reading, cost per 1,000 images on a rented GPU assumed no faster than the laptop; self-hosted cost is GPU time, so the saving is the measured time saving. For comparison, the frontier calls on these tasks measured ${api_lo:.2f} to ${api_hi:.2f} per 1,000 answers.</p>
 </section>
@@ -599,6 +622,7 @@ uncertain: a fungus on bark, iNaturalist 401937340 (CC BY, Марина Давл
 <section aria-labelledby="new">
   <h2 id="new"><span class="num">8</span>What is not new, and the work this sits in</h2>
   <p>Reading answer-token logits from a frozen generative model, with several questions sharing one image prefix, is what Simple Jev, jev-visual and LitJev also do. For yes/no and pick-one the forward pass here is not new, and the accuracy belongs to the open model. What this project adds is a harness on top: a fresh-photograph comparison with paid frontier calls, the same model writing against reading, self-calibration from unlabeled images and labeled fitting for rating levels (<code>glance fit</code>), and measured dollars and milliseconds. It trains no weights, unlike YOFO (Zhang et al. 2025), Laya Vision or OpenJev v2.</p>
+  {speed_context()}
   <p>The pieces are older than any of these tools. Scoring a closed set of candidate answers instead of generating is standard for language models (Kadavath et al. 2022) and its option-letter pitfalls are known (Zheng et al. 2024); VQAScore reads P(“Yes”) from a VQA model in one pass (Lin et al. 2024); a rubric score as a probability-weighted sum over rating tokens is G-Eval (Liu et al. 2023); level-token readouts for image quality are Q-Bench and Q-Align (Wu et al. 2024a, b), and frozen-CLIP quality scores are CLIP-IQA (Wang et al. 2023); the fits are matrix scaling and its relatives (Guo et al. 2017; Kull et al. 2019); the hidden-state variant is a linear probe (Alain and Bengio 2016); sharing an image prefix across questions is prefix caching (vLLM). Our additions are the contamination-controlled comparison, the read-against-write control, the unlabeled fit for ratings with the failed content-free prior as its contrast, and the registered misses.</p>
 </section>
 

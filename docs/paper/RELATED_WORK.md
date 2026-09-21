@@ -326,3 +326,28 @@ This project does not publish to PyPI yet; a different package name will be need
 ## Measured against (added 2026-09-21, entry 37c)
 
 Q-SiT (Zhang, Wu, Jia, Lin and Zhai, 2025, arxiv.org/abs/2503.09197; title and authors checked on arXiv on 2026-09-21): an LMM taught to score and explain image quality on a fixed five-word scale. Its 0.9B release, `zhangzicheng/q-sit-mini` (MIT), is the one trained outside system we ran. With our matrix scaling on its five level-word logits it is indistinguishable from the fitted four-pass read on our five quality scales (`results/lab/external_same_items.md`): on image-quality rubrics a small specialist does as well as a frozen general 4B model. It cannot take a rubric outside image quality, which is the case Glance is for.
+
+## Speed context: independent timings of hosted Jev (added 2026-09-21, notebook entry 56)
+
+Hosted Jev (TypeSafe, September 2026) is the trained, TEXT-ONLY product of the family Glance's readout belongs to. None of the
+figures below is our measurement; each was read at its source on 2026-09-21. They are used for one purpose: to show that our
+speed ratios sit in the modest single-decision band that independent writers measured, not in the launch material's band.
+
+| Source | What was timed | Figure | How we use it |
+| --- | --- | --- | --- |
+| TrueStandard (Arun Agrahri), 19 Sep 2026, truestandard.ai/blog/is-jev-really-193x-faster | Jev 1.13, one three-way classification of a support ticket, three runs, medians | server time 477 ms against 790 ms (Gemini 3.1 Flash Lite, 1.7x), 928 ms (Claude Haiku 4.5, 1.9x), 2,575 ms (Claude Fable 5.1 thinking, 5.4x); six sequential thinking calls 74.42 s against one Jev call 0.739 s (100.7x) | primary citation; always name the baseline in the same sentence |
+| Sean Goedecke, 16 Sep 2026, seangoedecke.com/jev-means-structured-output-is-interesting-again/ | `Qwen2.5-1.5B-Instruct` prefilled to emit one constrained token, against non-prefixed structured output | 2x to 3x (his own experiment) | the closest analogue of our write-against-read table; the post does NOT measure whether this reaches hosted Jev latency, so we do not say so |
+| dorarep, Zenn, 19 Sep 2026, zenn.dev/dorarep/articles/8f1efbf10e3e8c | Jev and six small LLMs, 15 requests per condition | 5 judgments: 0.315 s against 0.960 s (DeepSeek V4 Flash); 1 to 100 questions per request: Jev 1.53x, the LLMs 6.51x to 28.38x | the text-side form of "many questions share one prefix" |
+| Ciyo, 20 Sep 2026, ciyo.ai/blog/jev-price-speed-claims-checked | a check of the vendor's claims | vendor figures unverified; LangChain 0.44 s average per call; Vercel "5 to 18 times" is customer-reported via TechCrunch | background only, not cited on the page |
+| TypeSafe launch post, typesafe.ai/blog/introducing-system-one-models-and-jev | the vendor's own claims | 70 to 500 ms against 3 to 329 s; "40x-200x faster"; text only ("not on images (yet)"); trained with RLCD | cited as the vendor's claim, never as a measurement |
+
+How the comparisons map (the argument): the same model reading against writing JSON, 2x to 3x there and 1.5x (full-size
+photograph) to 2.4x-6.1x (small images, many questions) here: maps. One cheap call against Gemini 3.1 Flash-Lite, 1.7x there and
+1.5x here: maps. Against Claude Haiku 4.5, 1.9x there and SLOWER here (1.08 s against 0.87 s): same regime, opposite winner,
+because the image has to be encoded. Many questions behind one prefix: maps structurally. A thinking-model workflow (100x
+there): not measured here, not implied. Raw milliseconds: do not transfer (hosted text model against a 4B vision model on a laptop).
+
+Do not write: "Jev for vision", "open Jev", "we reproduce Jev", "193x", "200x", "two orders of magnitude faster than hosted
+models", "faster than Haiku", "as fast as Jev"; do not present the vendor's multipliers or Vercel's customer-reported figure as
+independent measurements; do not explain the accuracy result as a consequence of speed. These sources are days old: re-check
+the links if this text sits for more than a week.

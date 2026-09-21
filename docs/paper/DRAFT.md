@@ -510,6 +510,20 @@ image-input, Jev-shaped open servers already exist, and what a calibration and m
 shared primitive is exactly what Sections 3 and 4 report.
 <!-- src: docs/paper/RELATED_WORK.md, "Lead with the ask" and the pitch paragraph -->
 
+Speed, in context. Hosted Jev (TypeSafe, September 2026) is the trained product of this family; it takes text, not images.
+Its launch material quotes 40 to 200 times faster than frontier language models. Independent timings show what that figure
+is made of. TrueStandard (Agrahri 2026) timed one three-way classification of a support ticket at 477 ms of server time
+against 790 ms for Gemini 3.1 Flash Lite and 928 ms for Claude Haiku 4.5, 1.7 and 1.9 times, and reached 100 times only when
+one call replaced six sequential calls to a thinking model; in its words, the multiple is a property of the comparison, not
+of the model. Goedecke (2026) measured 2 to 3 times from having a small open model emit one constrained token instead of
+written structured output, and dorarep (2026) found that going from one question to a hundred per request cost Jev 1.5 times
+the latency where generating models paid 6 to 28 times. Our ratios sit in the same modest band, with the image as a fixed
+cost that text systems do not pay: 1.5 times against the same model writing JSON on a full-size photograph, 2.4 to 6.1 times
+on small images as questions per image grow, 1.5 times against Gemini 3.1 Flash-Lite, and slower than Claude Haiku 4.5 (1.08 s
+against 0.87 s). We did not run a sequential thinking-model workflow and claim nothing about one. None of the outside figures
+is our measurement, and raw milliseconds do not transfer between a hosted text model and a 4B vision model on a laptop.
+<!-- src: docs/paper/RELATED_WORK.md "Speed context", results/lab/matrix.md, lab/NOTES.md entry 56 -->
+
 ## 9. Limitations and misses
 
 We registered a hypothesis before most experiments in this paper and report every verdict, including the following
