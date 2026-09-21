@@ -33,19 +33,24 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
-**Progress 00:58 on 2026-09-21 (overnight; newest first).** DONE tonight: insect-order test with all six hosted models (entry
-47c, on the page), E19 SmolVLM2 on the photographs (entry 46b: level on everyday photos, trails on nature photos; on the page and
-in the draft), any-model option checked on the GPU (entry 46c; "experimental" replaced by what was checked), E21 UI screens built,
-reviewed, registered and queued (entry 49b; `ui-eval` on lane A), E22 probes built and queued (entry 50b), a batch-tool defect
-fixed before it reached the page (entry 47d), `tools/suite_report.py --by SUITE=KEY` for the per-count / per-ratio verdicts,
-`beyond()` in `tools/make_site.py` (a data-driven Table 3c for probes and UI screens; NOT yet placed in the page body: place it
-under section 2 once `results/lab/probes.json` or `ui_screens.json` exists, with a sentence per registered prediction).
-STILL TO DO as jobs finish: `smol-json` -> `tools/scaling_report.py`; `written-inat` -> written rows for the iNaturalist
-table; `jsondigits-semantic` + `jsondigits-kadid` -> `tools/jsondigits_hard_report.py` (E17 DECISION); `probes-eval` ->
-`uv run python tools/suite_report.py --name probes --prefix probe_ --run <run> --by probe_count=count --by probe_count_color=label --by probe_largest=ratio`
-(H53 to H55); `ui-eval` -> `uv run python tools/suite_report.py --name ui_screens --prefix ui_ --run <run>` (H50; H51 / H52 need
-the owner's hosted paste `uv run python tools/frontier_batch.py --set ui`); `qsit-lab` + `openjev-lab` ->
-`tools/external_report.py` (H31 / H32).
+**Progress 03:58 on 2026-09-21 (overnight; the owner is asleep and may publish in the morning).** DONE tonight, all in
+`lab/NOTES.md` with verdicts, on the page, in the draft, pushed to the PRIVATE repository: insect orders with six hosted models
+(47c); SmolVLM2 on photographs (46b) and its one-pass rating read (44b); any-model option checked on the GPU (46c); written
+answers on iNaturalist (32c) and the erratum "identical answers" -> measured per-item agreement (32d); q-sit-mini, a 0.9B trained
+quality model, MATCHES the fitted 4B model on the quality scales (37c, a published miss; `tools/external_same_items.py`); the
+one-pass read on the non-quality rubrics (43b: H42 supported, but both reads are poor zero-shot there); rendered probes (50c:
+words, position and small counts fine; diagonal direction and relative size fail; three predictions wrong); synthetic interface
+screens (49c: click target 0.993, reasoning 0.910, page type 0.823; H50 not supported, H51 refuted by arithmetic); page errata
+(52: duplicate table number; 53: Table 3 now shows all six hosted models and names the one that is not level); batch-tool fix
+(47d). RUNNING: lane A `jsondigits-kadid` (about 05:00) -> `uv run python tools/jsondigits_hard_report.py` prints H43 and the
+registered DECISION (if YES: wire `jsondigits` as the zero-shot `score` method in `glance/rating.py` + `scorer.py`, tests,
+keep `ens4d` for fits); then `semantic-ens4d-cal` -> `uv run python -m glance.lab.bench_report --bench semantic --in
+lab/runs/semantic.jsonl --out lab/SEMANTIC_REPORT` (E4, entry 20: at least 0.75 fitted, tilt worst); lane B
+`openjev-lab-retry` (about 06:00; adapter fixed, entry 37d) -> `uv run python tools/external_report.py --out
+results/lab/external_systems` and `uv run python tools/external_same_items.py` (H31), then `semantic-ens4d` (resumable).
+OWNER'S OPTIONAL PASTES (hosted models on the new sets; each asks for the three keys once, hidden input):
+`uv run python tools/frontier_batch.py --set probes` and `uv run python tools/frontier_batch.py --set ui`. To put tonight's
+page live: `gh workflow run pages --repo yoheinakajima/glance` (`docs/PUBLISH.md` section 3b).
 
 **OVERNIGHT PLAN, written 23:52 on 2026-09-20. The owner is asleep and may PUBLISH in the morning. READ THIS BLOCK FIRST.**
 Goal by morning: every blank on the page filled from runs that have finished, the paper draft consistent with the page, `main`
