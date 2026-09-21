@@ -154,7 +154,37 @@ model could have trained on, that gap disappears into overlapping intervals, so 
 artifact working in the open model's favor.
 <!-- src: results/lab/fresh_commons.md, results/lab/fresh_inat.md, docs/paper/RESULTS_ZEROSHOT.md section 1, lab/NOTES.md entries 33, 45b -->
 
-### 3.3 Written against read, and other sizes
+### 3.3 A finer test that separates the hosted models
+
+The two photo sets above sit near ceiling for almost every system, which leaves open whether "level with hosted models"
+only means "the task is easy". We registered a deliberately harder closed-set test before collecting it (entry 47): 210
+iNaturalist research-grade photographs taken after every model's release, labelled by insect order (seven orders that look
+alike), with every "no" question naming another insect order rather than an unrelated subject.
+
+| System | yes/no (n=420 open, 210 hosted) | pick one of 7 (n=210 open, 105 hosted) |
+| --- | --- | --- |
+| Qwen3-VL-4B, read (Glance) | 0.948 [0.926, 0.967] | 0.962 [0.933, 0.986] |
+| SigLIP2 (dual encoder) | - | 0.710 [0.648, 0.771] |
+| Gemini 3.1 Pro | 0.967 [0.943, 0.990] | 0.971 [0.933, 1.000] |
+| Claude Opus 5 | 0.938 [0.905, 0.967] | 0.962 [0.924, 0.990] |
+| Gemini 3.1 Flash-Lite | 0.962 [0.933, 0.986] | 0.952 [0.905, 0.990] |
+| GPT-5.6 | 0.943 [0.910, 0.971] | 0.905 [0.848, 0.952] |
+| GPT-5.6 Luna | 0.867 [0.819, 0.910] | 0.886 [0.819, 0.943] |
+| Claude Haiku 4.5 | 0.786 [0.729, 0.838] | 0.743 [0.657, 0.829] |
+
+This test does separate systems: hosted pick-one accuracy spans 23 points (0.743 to 0.971) and the dual encoder falls to
+0.710. The open 4B model stays within one point of the best hosted system on pick-one and two points on yes/no, with
+overlapping intervals, and above three of the six hosted models on both. So the level result is not only a ceiling
+effect, at least at this grain; we have not tested species-level or expert-level distinctions.
+<!-- src: results/lab/fresh_inat_orders.md, lab/NOTES.md entries 47, 47b, 47c -->
+
+Labels on all three photo sets are community or uploader labels, not a human audit. As a rough floor on label noise we
+count the items that every one of the seven systems answers "wrongly": 4 of 131 and 3 of 65 on Commons, 5 of 200 and 3 of
+100 on iNaturalist (2.5% to 4.6%). Seven independent systems making the same mistake is less likely than a wrong or
+ambiguous label, so part of every system's distance from 1.0 is the labels, not the models.
+<!-- src: results/lab/label_noise_proxy.md, lab/NOTES.md entry 51 -->
+
+### 3.4 Written against read, and other sizes
 
 Reading changes nothing about what the frozen model knows on yes/no and pick-one. Asked to generate a JSON object
 instead, the same model gives the identical decision on the fresh Commons items: agreement +0.0 points [-1.1, +1.1]
@@ -378,10 +408,9 @@ none a naturally occurring multi-factor judgment; no hosted model was given a fe
 before scoring, so Section 4 compares each provider's zero-shot, not best achievable, performance; yes/no and pick-one
 on fresh photographs sit near ceiling for every system (all near 0.93), so "level with hosted models" partly reflects
 that the task is currently easy, and on older, possibly contaminated benchmarks a hosted flagship led by 3 to 5 points
-(Section 3.2) - a harder fresh closed-set test, at the level of insect orders that look alike, is registered as entry
-47 and not yet run; the open model's yes/no and pick-one timings and costs in Section 3 were measured on smaller test
-images (and, for pick-one, fewer options) than the hosted rows, and a same-photograph timing is running and will
-replace those cells (entry 38c); written answers on iNaturalist were not collected, so Section 3.3 uses the Commons
+(Section 3.2) - the harder insect-order test of Section 3.3 separates the hosted models and the open model holds, but
+species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
+2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); written answers on iNaturalist were not collected, so Section 3.4 uses the Commons
 set only, iNaturalist being queued (entry 35c); the one-pass JSON-position read of Section 4.3 has not been checked on
 KADID-10k or the creative-QA rubrics, so it is not yet the harness default for zero-shot ratings (entry 43); two open,
 MIT-licensed outside systems selected for a head-to-head on the lab scales have not yet been run (entry 37); and
