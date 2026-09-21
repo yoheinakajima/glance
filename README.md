@@ -66,12 +66,13 @@ revision. Rating modes (`--method`): `ens4d` (4 passes, the one to fit), `fast2`
 | Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6 | 0.947 / 0.924 / 0.893 | 0.923 / 0.908 / 0.892 | 0.650 / 0.550 / 0.597 | 1.1 to 4.0 | 2.62 to 7.82, ratings up to 18.70 (est.) |
 
 Photos were taken after every model's release and labelled by people outside this project (131 Wikimedia Commons
-questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the same picture: 0.945 / 0.940 for the open
-model). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
+questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the same picture, 0.945 / 0.940 for the open
+model, except that Claude Haiku 4.5 falls to 0.830 / 0.790 there; on a harder test, seven look-alike insect orders, the hosted
+models spread over 23 points and the open model, at 0.962 pick-one, is within 1 point of the best). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
 position, which lives in the lab code (`--methods jsondigits`) and moves into `glance ask` and `glance score` after one
 more registered check; the four-pass read those commands use today scores 0.570 zero-shot and is the one to fit. Read honestly: on yes/no and pick-one the open 4B model
 is level with hosted models, cheap and expensive. On zero-shot ratings the cheapest Google model is 9 points ahead; the
-open model draws level with 16 unlabeled images and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
+open model reaches 0.758 with 16 unlabeled images (half a point short of it) and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
 1.1 s (faster than five of the six hosted models) and is somewhat cheaper than the cheapest hosted models on a rented GPU,
 not an order of magnitude; most of that time is reading the image. Every experiment was registered before it ran and the misses
 are published (`lab/NOTES.md`, `docs/CLAIMS.md`).
