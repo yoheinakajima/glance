@@ -15,6 +15,10 @@ RUNS = {  # run id -> what was asked
     "20260920T170146Z-8ff72a": "lab scales, one 4-level rating per call", "20260920T205633Z-99f822": "fresh photos, one yes/no or pick-one per call",
     "20260920T205633Z-99f822-gpt": "fresh photos, one yes/no or pick-one per call", "20260920T205633Z-99f822-gemini": "fresh photos, one yes/no or pick-one per call",
 }
+for _base, _task in (("20260920T232332Z-80efa7", "iNaturalist photos (about 500 px), one yes/no or pick-one per call"), ("20260920T205633Z-99f822", "fresh photos, one yes/no or pick-one per call"),
+                     ("20260920T165748Z-8ff72a", "lab scales, one 4-level rating per call")):
+    for _suffix in ("", "-gpt", "-gemini", "-haiku", "-gptsmall", "-flashlite", "-opus"):  # flagship copies and the providers' cheapest models (entries 35c, 45b)
+        RUNS.setdefault(_base + _suffix, _task)
 
 
 def rows_of(run_dir):

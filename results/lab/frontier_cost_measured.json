@@ -58,5 +58,125 @@
   "usd_per_1000_calls": 3.03026530612245,
   "usd_total": 0.5939320000000002,
   "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7",
+  "model": "anthropic/claude-opus-5",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 2294.245812110603,
+  "usd_per_1000_calls": 3.7361499999999985,
+  "usd_total": 1.1208449999999996,
+  "median_output_tokens": 13.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7-gpt",
+  "model": "openai/gpt-5.6",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 1154.6713119605556,
+  "usd_per_1000_calls": 1.8611999999999982,
+  "usd_total": 0.5583599999999994,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7-gemini",
+  "model": "openrouter/google/gemini-3.1-pro-preview",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 2832.583832903765,
+  "usd_per_1000_calls": 3.1133866666666696,
+  "usd_total": 0.9340160000000008,
+  "median_output_tokens": 49.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7-haiku",
+  "model": "anthropic/claude-haiku-4-5",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 733.2900619367138,
+  "usd_per_1000_calls": 0.596346666666668,
+  "usd_total": 0.1789040000000004,
+  "median_output_tokens": 10.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7-gptsmall",
+  "model": "openai/gpt-5.6-luna",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 949.8532285215333,
+  "usd_per_1000_calls": 0.09636666666666667,
+  "usd_total": 0.02891,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T232332Z-80efa7-flashlite",
+  "model": "openrouter/google/gemini-3.1-flash-lite",
+  "task": "iNaturalist photos (about 500 px), one yes/no or pick-one per call",
+  "calls": 300,
+  "median_latency_ms": 1530.3294995101169,
+  "usd_per_1000_calls": 0.32817833333333357,
+  "usd_total": 0.09845350000000008,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T205633Z-99f822-haiku",
+  "model": "anthropic/claude-haiku-4-5",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 880.0128960283473,
+  "usd_per_1000_calls": 1.7939285714285733,
+  "usd_total": 0.35161000000000037,
+  "median_output_tokens": 10.0
+ },
+ {
+  "run": "20260920T205633Z-99f822-gptsmall",
+  "model": "openai/gpt-5.6-luna",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 1249.7836251277477,
+  "usd_per_1000_calls": 0.38208326530612224,
+  "usd_total": 0.07488831999999997,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T205633Z-99f822-flashlite",
+  "model": "openrouter/google/gemini-3.1-flash-lite",
+  "task": "fresh photos, one yes/no or pick-one per call",
+  "calls": 196,
+  "median_latency_ms": 1760.9720204491168,
+  "usd_per_1000_calls": 0.32347704081632667,
+  "usd_total": 0.06340150000000003,
+  "median_output_tokens": 12.0
+ },
+ {
+  "run": "20260920T165748Z-8ff72a-haiku",
+  "model": "anthropic/claude-haiku-4-5",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 1000,
+  "median_latency_ms": 715.5405834782869,
+  "usd_per_1000_calls": 0.5543919999999988,
+  "usd_total": 0.5543919999999988,
+  "median_output_tokens": 10.0
+ },
+ {
+  "run": "20260920T165748Z-8ff72a-gptsmall",
+  "model": "openai/gpt-5.6-luna",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 1000,
+  "median_latency_ms": 1095.8138749701902,
+  "usd_per_1000_calls": 0.12003720000000005,
+  "usd_total": 0.12003720000000005,
+  "median_output_tokens": 44.0
+ },
+ {
+  "run": "20260920T165748Z-8ff72a-flashlite",
+  "model": "openrouter/google/gemini-3.1-flash-lite",
+  "task": "lab scales, one 4-level rating per call",
+  "calls": 1000,
+  "median_latency_ms": 1617.657333612442,
+  "usd_per_1000_calls": 0.33285825000000324,
+  "usd_total": 0.33285825000000324,
+  "median_output_tokens": 7.0
  }
 ]

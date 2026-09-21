@@ -1,0 +1,123 @@
+config:
+  paths:
+    hf_home: .cache/hf
+    eval_images: .cache/eval_images
+    logs: logs
+    runs: runs
+    calibration: calibration
+    human_gold: gold/human_gold.jsonl
+  models:
+    siglip:
+      id: google/siglip2-base-patch16-256
+      revision: 3f9f96cb90da5dbc758b01813f2f6f1aee24c1ab
+      photo_prefix: false
+    vlm_tiers:
+      cuda_24gb:
+        id: Qwen/Qwen3-VL-8B-Instruct
+        revision: 0c351dd01ed87e9c1b53cbc748cba10e6187ff3b
+        dtype: bfloat16
+        image_token_budget: 768
+      cuda_12gb:
+        id: Qwen/Qwen3-VL-4B-Instruct
+        revision: ebb281ec70b05090aa6165b016eac8ec08e71b17
+        dtype: bfloat16
+        image_token_budget: 768
+      apple_32gb:
+        id: Qwen/Qwen3-VL-4B-Instruct
+        revision: ebb281ec70b05090aa6165b016eac8ec08e71b17
+        dtype: float16
+        image_token_budget: 768
+      apple_8gb:
+        id: Qwen/Qwen3-VL-2B-Instruct
+        revision: 89644892e4d85e24eaac8bacfd4f463576704203
+        dtype: float16
+        image_token_budget: 384
+    tier_override: null
+    image_token_budget_override: null
+  vlm:
+    batch_size: 8
+    suffix_batch_size: 16
+    prefix_cache: true
+    letter_rotations: 4
+    off_mass_warn: 0.1
+  limits:
+    max_image_mb: 20
+    formats:
+    - JPEG
+    - PNG
+    - WEBP
+    max_side: 2048
+  eval:
+    seed: 7
+    n_cuda: 1000
+    n_apple: 500
+    manifest_n: 1000
+    max_hours: 4.0
+    warmup_items: 10
+    baseline_n: 300
+    ece_bins: 15
+    permutation_items: 100
+    permutation_orders: 3
+    letter_max_options: 26
+    latency_repeats: 20
+    max_failure_rate: 0.02
+    top_errors: 20
+  calibration:
+    isotonic_min_n: 1000
+  server:
+    host: 127.0.0.1
+    port: 8077
+args:
+  suites:
+  - inat_choice
+  - inat_yesno
+  models:
+  - vlm
+  - siglip
+  n: null
+  max_hours: null
+  choice_methods:
+  - independent
+  - letter
+  baseline_n: null
+  confirm_spend: false
+  allow_upload_gold: false
+  skip_permutation: false
+  permutation_items: null
+  skip_latency: false
+  calibrate: true
+  resume: null
+n_requested: 500
+max_hours: 4.0
+harness_version: 0.2.1
+git_sha: be0581afb4540c360c8bcc40abab11eb3e11b168
+trim:
+  requested_n: 500
+  final_n:
+    inat_choice: 500
+    inat_yesno: 500
+  eta_hours_at_requested_n: 0.54
+  eta_hours_at_final_n: 0.54
+  max_hours: 4.0
+  trimmed: false
+notes:
+- '`inat_yesno` does not run on `siglip` (its questions carry no criteria the backend
+  can use)'
+- frontier baseline added on 2026-09-21 with `anthropic/claude-opus-5` via `glance
+  baseline` (test split, up to 300 items per suite; picks are not stored, only whether
+  each was right)
+suites:
+  inat_choice:
+    qtype: choice
+    source: iNaturalist research-grade observations made after the models' release;
+      labels are the community identification's iconic taxon
+    license: CC0 / CC BY / CC BY-SA per photo (see manifest)
+    status: ok
+    n_items: 200
+  inat_yesno:
+    qtype: noul
+    source: iNaturalist research-grade observations made after the models' release;
+      labels are the community identification's iconic taxon
+    license: CC0 / CC BY / CC BY-SA per photo (see manifest)
+    status: ok
+    n_items: 400

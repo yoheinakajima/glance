@@ -1,0 +1,1 @@
+copied from runs/20260920T232332Z-80efa7 (local rows and Claude Opus 5 correctness flags; hosted picks are never stored)
