@@ -234,14 +234,49 @@ def finer():
         out.append('<div class="table-scroll"><table><thead><tr><th>Insect orders, zero-shot</th><th class="n">yes/no</th><th class="n">pick one of 7</th></tr></thead><tbody>'
                    + "".join(f'<tr{" class=own" if n.startswith("Qwen") else ""}><td>{n}</td><td class="n">{ci(a) if a else "–"}</td><td class="n">{ci(b_) if b_ else "–"}</td></tr>' for n, a, b_ in rows) + "</tbody></table></div>")
         out.append('<p class="caption"><b>Table 3b.</b> The open model on all items; hosted models, where present, on the test half.</p>')
-    if probes:
-        out.append("<p>Procedural probes (images drawn by program, labels exact by construction) and synthetic interface screens test counting, spatial relations, size, reading and click targets; their results are in the repository (<code>results/lab/probes.md</code>, <code>results/lab/ui_screens.md</code>) and will be summarised here in a later snapshot.</p>")
-    else:
+    if not probes and not load("results/lab/ui_screens.json"):
         out.append("<p>Tests that need more than coarse recognition (counting, spatial relations, relative size, reading, and which element of a screen to click) are registered and built from images drawn by program, with labels exact by construction; their results are not in this snapshot.</p>")
     return "\n  ".join(out)
 
 
+ALL_HOSTED = {**FRONTIER, "anthropic/claude-haiku-4-5": "Claude Haiku 4.5", "openai/gpt-5.6-luna": "GPT-5.6 Luna", "openrouter/google/gemini-3.1-flash-lite": "Gemini 3.1 Flash-Lite"}
+BEYOND = [("results/lab/probes.json", "Images drawn by program", [
+              ("probe_spatial", "Is the ball left of / right of / above / below the square?", "1 of 2"), ("probe_stripes", "Which way do the stripes run?", "1 of 4"),
+              ("probe_text", "Which of six look-alike words is printed?", "1 of 6"), ("probe_largest", "Which of four shapes is the largest?", "1 of 4"),
+              ("probe_count", "How many balls? (1 to 8)", "1 of 8"), ("probe_count_color", "How many red balls? (0 to 6)", "1 of 7")]),
+          ("results/lab/ui_screens.json", "Synthetic interface screens", [
+              ("ui_page", "What kind of page is this?", "1 of 5"), ("ui_state", "Is the page in this state? (error shown, dialog open, …)", "1 of 2"),
+              ("ui_done", "Is this goal already done?", "1 of 2"), ("ui_click", "Which numbered mark serves this goal?", "1 of 6 to 8"),
+              ("ui_reason", "The same, after one step of reasoning (the cheaper plan, the earliest date)", "1 of 2 to 4")])]
+
+
+def beyond():
+    """Tests that need more than coarse recognition: rendered probes (entry 50) and synthetic interface screens (entry 49). Data-driven; empty until a report exists."""
+    found = [(load(path), title, suites) for path, title, suites in BEYOND]
+    if not any(d for d, _, _ in found):
+        return ""
+    hosted = [k for k in ALL_HOSTED if any(d and k in e for d, _, _ in found for e in d["suites"].values())]
+    head = "".join(f'<th class="n">{ALL_HOSTED[k]}</th>' for k in hosted)
+    body = []
+    for d, title, suites in found:
+        if not d:
+            continue
+        body.append(f'<tr class="group"><td colspan="{3 + len(hosted)}">{title}</td></tr>')
+        for suite, question, options in suites:
+            e = d["suites"].get(suite)
+            if not e:
+                continue
+            own = e["open 4B model, read"]
+            cell = lambda c: f'{c["accuracy"]:.2f}'  # noqa: E731
+            body.append(f'<tr><td>{question}</td><td class="n">{options}</td><td class="n own">{ci(own["all_items"], 2)} <span class="ci">n={own["all_items"]["n"]}</span></td>'
+                        + "".join(f'<td class="n">{cell(e[k]["all_items"]) if k in e else "–"}</td>' for k in hosted) + "</tr>")
+    note = "Hosted models answered the test half of each set." if hosted else "Hosted models have not been run on these sets."
+    return ('<div class="table-scroll"><table><thead><tr><th>Question, zero-shot</th><th class="n">options</th><th class="n">Qwen3-VL-4B, read</th>' + head + "</tr></thead><tbody>" + "".join(body) + "</tbody></table></div>"
+            + f'<p class="caption"><b>Table 3c.</b> Exact-answer accuracy on images whose labels are exact by construction (drawn or rendered by program; no photographs, no people). {note}</p>')
+
+
 finer_block = finer()
+beyond_block = beyond()
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)
 raw = lf["raw (0 labels, no pool)"]
@@ -411,7 +446,7 @@ thead th{font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:up
 td{padding:.42rem .9rem .42rem 0;vertical-align:baseline;white-space:nowrap}
 td:first-child{white-space:normal;min-width:11rem}
 .n{text-align:right}td.n:last-child,th.n:last-child{padding-right:0}
-tr.own td{font-weight:600}tr.sep td{border-top:.75px solid var(--rule)}
+tr.own td{font-weight:600}tr.sep td{border-top:.75px solid var(--rule)}td.own{font-weight:600}tr.group td{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:.85rem;padding-bottom:.15rem}
 .ci{font-size:.78rem;color:var(--muted);font-weight:400}.note{font-size:.78rem;color:var(--muted);font-weight:400;display:block}
 .pending{color:var(--muted);font-style:italic;text-align:center}
 .protocol{margin:0;display:grid;grid-template-columns:7.5rem 1fr;gap:.7rem 1rem;font-size:.95rem}.protocol dt{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:.2rem}.protocol dd{margin:0}.protocol code{white-space:normal;word-break:break-word}@media (max-width:560px){.protocol{grid-template-columns:1fr;gap:.2rem}.protocol dd{margin-bottom:.6rem}}.refs{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.84rem;line-height:1.5;padding-left:1.4rem;display:flex;flex-direction:column;gap:.35rem}.aff{color:var(--muted);font-size:.9rem}td code,th code{white-space:normal}.caption,figcaption{font-size:.82rem;line-height:1.5;color:var(--muted)}
