@@ -43,7 +43,8 @@ svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:
 @media (max-width:620px){.regimes thead{display:none}.regimes table,.regimes tbody,.regimes tr,.regimes td{display:block}.regimes td{min-width:0!important;padding:.15rem 0}.regimes tr{padding:.65rem 0;border-top:.75px solid var(--rule)}.regimes tr:first-child{border-top:0}.regimes td:nth-child(3){font-style:italic}}
 .useit{border:1px solid var(--rule);background:var(--tint);padding:1.05rem 1.25rem .95rem;margin:1.4rem 0 2.4rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
 .useit-top{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem 1rem;flex-wrap:wrap}.useit h2{margin:0;border:0;padding:0}.useit .gh{font-weight:500;white-space:nowrap}
-.useit p{margin:.55rem 0}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
+.useit p{margin:.55rem 0}
+.useit .tryit a{font-weight:500;white-space:nowrap;margin-right:.9rem}.useit .tryit .note{display:block;margin-top:.2rem;color:var(--muted);font-size:.84rem}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
 .useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
 pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
 code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
@@ -60,7 +61,7 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 </style>
 <main>
 <header>
-  <p class="running">glance-vlm · working paper · v0.3.1 · snapshot bfb8a7a, 2026-09-21 · every experiment registered before it ran · results regenerate from the repository</p>
+  <p class="running">glance-vlm · working paper · v0.3.1 · snapshot 8f36e06, 2026-09-21 · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
   <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
@@ -73,6 +74,7 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 <aside class="useit site-only" aria-labelledby="useit">
   <div class="useit-top"><h2 id="useit" class="plain">Use it</h2><a class="gh" href="https://github.com/yoheinakajima/glance">github.com/yoheinakajima/glance&nbsp;→</a></div>
   <p>Glance is also a tool you can run: the readout and the fits measured on this page, packaged. One open model on your own machine, typed answers with probabilities, no image leaves it, no per-call bill. Apache-2.0.</p>
+  <p class="tryit"><b>Try it in your browser</b>, no install: <a href="https://glancevlm.replit.app">live demo&nbsp;→</a> <a href="https://replicate.com/untapped/glance-qwen3-vl-4b">Replicate&nbsp;→</a> <a href="https://huggingface.co/spaces/yoheinakajima/glance-qwen3-vl-4b-demo">Hugging Face Space&nbsp;→</a><span class="note">The same readout on Qwen3-VL-4B, hosted: yes/no and pick-one. These run in the cloud, so your image is sent to them and the first answer can take a minute while a machine starts; the tool below runs on your own machine.</span></p>
 <pre><code># install: Python 3.11; about 9 GB of open weights download on first use
 pip install glance-vlm
 

@@ -452,6 +452,7 @@ def use_it():
     """A panel that belongs to the WEBSITE, not to the paper: what the repository lets a reader do, with the commands. The paper
     version drops this block (it is the only element with class `site-only`)."""
     repo = "https://github.com/yoheinakajima/glance"
+    demo, replicate, space = "https://glancevlm.replit.app", "https://replicate.com/untapped/glance-qwen3-vl-4b", "https://huggingface.co/spaces/yoheinakajima/glance-qwen3-vl-4b-demo"
     live = pip_live()
     install = ("# install: Python 3.11; about 9 GB of open weights download on first use\npip install glance-vlm" if live else
                f"# install: Python 3.11 and uv; about 9 GB of open weights download on first use\ngit clone {repo} && cd glance && uv sync")
@@ -459,6 +460,7 @@ def use_it():
     return f"""<aside class="useit site-only" aria-labelledby="useit">
   <div class="useit-top"><h2 id="useit" class="plain">Use it</h2><a class="gh" href="{repo}">github.com/yoheinakajima/glance&nbsp;→</a></div>
   <p>Glance is also a tool you can run: the readout and the fits measured on this page, packaged. One open model on your own machine, typed answers with probabilities, no image leaves it, no per-call bill. Apache-2.0.</p>
+  <p class="tryit"><b>Try it in your browser</b>, no install: <a href="{demo}">live demo&nbsp;→</a> <a href="{replicate}">Replicate&nbsp;→</a> <a href="{space}">Hugging Face Space&nbsp;→</a><span class="note">The same readout on Qwen3-VL-4B, hosted: yes/no and pick-one. These run in the cloud, so your image is sent to them and the first answer can take a minute while a machine starts; the tool below runs on your own machine.</span></p>
 <pre><code>{install}
 
 # yes/no: a probability
@@ -906,7 +908,8 @@ svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:
 @media (max-width:620px){.regimes thead{display:none}.regimes table,.regimes tbody,.regimes tr,.regimes td{display:block}.regimes td{min-width:0!important;padding:.15rem 0}.regimes tr{padding:.65rem 0;border-top:.75px solid var(--rule)}.regimes tr:first-child{border-top:0}.regimes td:nth-child(3){font-style:italic}}
 .useit{border:1px solid var(--rule);background:var(--tint);padding:1.05rem 1.25rem .95rem;margin:1.4rem 0 2.4rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
 .useit-top{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem 1rem;flex-wrap:wrap}.useit h2{margin:0;border:0;padding:0}.useit .gh{font-weight:500;white-space:nowrap}
-.useit p{margin:.55rem 0}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
+.useit p{margin:.55rem 0}
+.useit .tryit a{font-weight:500;white-space:nowrap;margin-right:.9rem}.useit .tryit .note{display:block;margin-top:.2rem;color:var(--muted);font-size:.84rem}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
 .useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
 pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
 code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
