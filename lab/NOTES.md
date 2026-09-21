@@ -1714,3 +1714,15 @@ Luna 0.867, Haiku 0.786 (Haiku answers "yes" on only 57% of true cases).
   open 4B model sits with the two strongest hosted models, ahead of GPT-5.6, GPT-5.6 Luna and Claude Haiku 4.5. It answers
   the critique that "level with" only reflected an easy test, for fine-grained recognition; counting, spatial relations,
   reading and interface screens are the separate probes (entries 49, 50).
+
+## 2026-09-21 00:48 Entry 49b: E21 screens built and reviewed before any model saw them
+
+An assistant model built the generator from my spec (`glance/lab/ui_screens.py`): 300 base screens (60 per page type), 100
+before / after pairs for `ui_done`, 100 reasoning screens; suites `ui_state` 600 items (298 yes / 302 no), `ui_page` 300,
+`ui_click` 300 (6 to 8 marks), `ui_done` 200 (100 / 100), `ui_reason` 100. Rendered with the installed Chrome, headless,
+throwaway profile, no network (it needed Chrome's no-update flags and a poll-then-terminate render because a fresh profile
+stalls on an update check that cannot reach the network). Its visual check found and fixed three real defects before any
+model output (marks hidden behind the dialog by a stacking bug; two text overlaps) and the corpus was rebuilt. I looked at
+full-size screens myself (a dark cart page with an error banner, a pricing screen): marks readable and clear of the text
+they mark, goals unambiguous. No deviation from entry 49. Suites registered as opt-in; the local run is queued; hosted rows
+need the owner's paste (`tools/frontier_batch.py --set ui`).
