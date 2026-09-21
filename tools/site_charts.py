@@ -13,9 +13,9 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TESTS = {"yesno": "yes/no", "choice": "pick-one", "rating": "rating"}
 # display names: the model, and what is done with it ("+ Glance" = the answer is read from one forward pass; "written" = the same model generates JSON)
-LABEL = {"Qwen3-VL-4B, written": "Qwen3-VL-4B, written", "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance",
+LABEL = {"Qwen3-VL-4B, written": "Qwen3-VL-4B, written", "Qwen3-VL-2B, written": "Qwen3-VL-2B, written", "Qwen3-VL-8B, written": "Qwen3-VL-8B, written", "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance",
          "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}
-LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "4B written", "Qwen3-VL-4B, read (Glance)": "4B", "Qwen3-VL-2B, read (Glance)": "2B", "Qwen3-VL-8B, read (Glance)": "8B",  # sizes: the caption says they are read with Glance
+LETTER = {"Gemini 3.1 Pro": "G", "Claude Opus 5": "O", "GPT-5.6": "P", "Qwen3-VL-4B, written": "4B written", "Qwen3-VL-2B, written": "2B written", "Qwen3-VL-8B, written": "8B written", "Qwen3-VL-4B, read (Glance)": "4B", "Qwen3-VL-2B, read (Glance)": "2B", "Qwen3-VL-8B, read (Glance)": "8B",  # sizes: the caption says they are read with Glance
           "Claude Haiku 4.5": "H", "GPT-5.6 Luna": "L", "GPT-5 nano": "N", "Gemini 3.1 Flash-Lite": "F"}
 
 
@@ -162,7 +162,7 @@ def bars_by_type(rows, wide, tests=None):
         soft = (key != "acc" and r["prov"]) or (key == "usd" and r["estimate"])
         clipped = r[key] > tops[key] * 1.0001
         width = max(1.5, min(r[key] / tops[key], 1.0) * span)
-        cls = "m-outline" if soft else ("m-own" if r["open"] else "m-bar")
+        cls = "m-outline" if soft else (("m-written" if r["written"] else "m-own") if r["open"] else "m-bar")
         note = " est." if key == "usd" and r["estimate"] else (" prov." if soft else "")
         return (f'<rect x="{x:.1f}" y="{y}" width="{width:.1f}" height="9.5" class="{cls}"/>' + (_t(x + width - 3, y + 8.5, "›", "end", "m-lab") if clipped else "")
                 + _t(x + width + 5, y + 8.5, fmt(r[key]) + note, "start"))
@@ -175,7 +175,7 @@ def bars_by_type(rows, wide, tests=None):
             y += 24
             for name in names:
                 own = name.startswith("Qwen")
-                g.append(_t(124, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if own else "m-lab"))
+                g.append(_t(124, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if own and not name.endswith("written") else ("m-lab m-ink" if own else "m-lab")))
                 g += [bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, col(j), y, span) for j, t in enumerate(tests)]
                 y += 14
             y += 6
@@ -187,7 +187,7 @@ def bars_by_type(rows, wide, tests=None):
             g.append(_t(4, y + 10, title, "start", "m-tick"))
             y += 16
             for name in names:
-                g.append(_t(122, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if name.startswith("Qwen") else "m-lab"))  # 122: room for the longest name at phone width
+                g.append(_t(122, y + 8.5, LABEL.get(name, name), "end", "m-lab m-strong" if name.startswith("Qwen") and not name.endswith("written") else ("m-lab m-ink" if name.startswith("Qwen") else "m-lab")))  # 122: room for the longest name at phone width
                 g.append(bar(next(r for r in rows if r["name"] == name and r["test"] == t), key, fmt, 128, y, 150))
                 y += 14
             y += 8
@@ -224,7 +224,7 @@ def both_widths(wide, narrow):
 CSS = """
 figure svg{width:100%;height:auto;display:block}
 .only-narrow{display:none}@media (max-width:560px){.only-wide{display:none}.only-narrow{display:block}}
-svg .m-tick{font-size:11px;fill:var(--muted)}svg .m-lab{font-size:12px;fill:var(--muted)}svg .m-strong{fill:var(--ink);font-weight:600}svg .m-head{font-size:12.5px;fill:var(--ink);font-weight:600}
+svg .m-tick{font-size:11px;fill:var(--muted)}svg .m-lab{font-size:12px;fill:var(--muted)}svg .m-strong{fill:var(--ink);font-weight:600}svg .m-ink{fill:var(--ink)}svg .m-written{fill:var(--ink);opacity:.42}svg .m-head{font-size:12.5px;fill:var(--ink);font-weight:600}
 svg .m-grid{stroke:var(--rule);stroke-width:1}svg .m-spoke{stroke:var(--rule);stroke-width:1.2}svg .m-whisk{stroke:var(--muted);stroke-width:1}
 svg .m-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.1}svg .m-arrow{stroke:var(--ink);stroke-width:1.2}svg .m-bar{fill:var(--muted)}svg .m-outline{fill:var(--paper);stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
 svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}

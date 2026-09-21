@@ -2164,3 +2164,22 @@ not make the judgement.
 - H65: written is within 5 points of the read on all three sets (the read-against-write result of section 4 carries to probes).
 - H66: the hidden-state probe beats the token read by at least 15 points on stripes (direction is linearly there) and by less than
   10 on the largest shape (relative size is not).
+
+## 2026-09-21 09:04 Entry 59b: E25 result: without Glance the 2B model mostly fails at FORMATTING; scored leniently it equals its read (all three predictions held)
+
+Qwen3-VL-2B writing JSON, the identical request and cap as the 4B written row (`lab/runs/gen_accuracy_2b.jsonl`, 2,623 rows, raw
+text kept). Pooled over the three photo sets on the hosted items, and on the 1,000 lab rating images:
+| | read with Glance | written, strict | written, lenient | malformed |
+| yes/no | 0.904 | 0.584 [0.543, 0.625] | 0.915 [0.891, 0.937] | 35% |
+| pick-one | 0.907 | 0.841 [0.796, 0.881] | 0.907 [0.870, 0.941] | 11% |
+| rating | 0.492 | 0.056 | 0.495 | 86% |
+What it writes when it fails: `"answer": "No"` with no braces (286 rows), `"answer": 1` with no braces, and for ratings the right
+digit as a string, `{"answer": "2"}`, which the strict rule (an integer level) rejects.
+- H62 (strict: at least 25% of yes/no and 40% of ratings malformed; at least 20 points below its read on yes/no; under 0.35 on
+  ratings): SUPPORTED (35% and 86%; 32 points; 0.056).
+- H63 (lenient recovers yes/no and pick-one to within 3 points of the read): SUPPORTED (+1.1 and 0.0).
+- H64 (lenient written ratings within 5 points of the one-pass read): SUPPORTED (0.495 against 0.492).
+So the sentence the page uses is the one fixed in advance: reading spares a small model the formatting; it does not make it
+smarter. The 4B model never produced a malformed answer on these sets, which is why its two rows coincide. In the headline chart
+the written rows are drawn lighter above their "+ Glance" pair (2B and 4B; the 8B written row was not collected), the 2B written
+row uses the strict score like every other written row, and the caption gives the lenient numbers next to it.

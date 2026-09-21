@@ -18,6 +18,7 @@
     "Qwen3-VL-2B, read": 0,
     "Qwen3-VL-8B, read": 0,
     "SmolVLM2-2.2B, read": 0,
+    "Qwen3-VL-2B, written": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -126,6 +127,34 @@
       7.024029574861368,
       12.939001848428836
      ]
+    },
+    "Qwen3-VL-2B, written": {
+     "pooled": [
+      0.5841035120147874,
+      0.5434380776340111,
+      0.6247689463955638
+     ],
+     "equal_weight_per_set": [
+      0.5927232521507331,
+      0.5503081303768327,
+      0.6337007148915546
+     ],
+     "per_set": {
+      "Commons": 0.6641221374045801,
+      "iNaturalist, ten groups": 0.495,
+      "iNaturalist, insect orders": 0.6190476190476191
+     },
+     "open_4b_minus_this_points": [
+      35.48983364140481,
+      31.42329020332717,
+      39.74121996303142
+     ],
+     "lenient_pooled": [
+      0.9149722735674677,
+      0.8909426987060998,
+      0.9371534195933456
+     ],
+     "invalid_share": 0.3512014787430684
     },
     "Claude Opus 5": {
      "pooled": [
@@ -286,6 +315,7 @@
     "Qwen3-VL-2B, read": 0,
     "Qwen3-VL-8B, read": 0,
     "SmolVLM2-2.2B, read": 0,
+    "Qwen3-VL-2B, written": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -394,6 +424,34 @@
       14.814814814814813,
       24.444444444444443
      ]
+    },
+    "Qwen3-VL-2B, written": {
+     "pooled": [
+      0.8407407407407408,
+      0.7962962962962963,
+      0.8814814814814815
+     ],
+     "equal_weight_per_set": [
+      0.8389865689865691,
+      0.7933431013431013,
+      0.8824184981684982
+     ],
+     "per_set": {
+      "Commons": 0.8307692307692308,
+      "iNaturalist, ten groups": 0.81,
+      "iNaturalist, insect orders": 0.8761904761904762
+     },
+     "open_4b_minus_this_points": [
+      9.25925925925926,
+      5.185185185185185,
+      13.333333333333334
+     ],
+     "lenient_pooled": [
+      0.9074074074074074,
+      0.8703703703703703,
+      0.9407407407407408
+     ],
+     "invalid_share": 0.10740740740740741
     },
     "Claude Opus 5": {
      "pooled": [

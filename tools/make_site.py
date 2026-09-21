@@ -282,12 +282,20 @@ smol_orders = (f" and falls well behind on the insect orders ({_so['inat_orders_
 gap_2b = ((POOLED_EARLY := load("results/lab/pooled_photos.json"))["kinds"]["yesno"]["systems"].get("Qwen3-VL-2B, read") or {}).get("open_4b_minus_this_points", [float("nan")])[0]
 _open_read = [n for n in matrix["systems"] if n.startswith("Qwen") and not n.endswith("written")]
 _sizes = [n.split("-")[2].split(",")[0] for n in _open_read]  # "2B", "4B", "8B"
-open_rows_note = ("Qwen3-VL at " + ", ".join(_sizes[:-1]) + " and " + _sizes[-1] + " read with Glance, and the 4B model writing JSON without it") if len(_sizes) > 1 else "Qwen3-VL-4B read with Glance, and the same model writing JSON without it"
-dark_note = ("Dark bars are open models on a laptop: " + open_rows_note + ".") if len(_sizes) > 1 else "Dark bars are the open 4B model."
+_pairs = [z for z in _sizes if f"Qwen3-VL-{z}, written" in matrix["systems"]]
+open_rows_note = ("Qwen3-VL at " + ", ".join(_sizes[:-1]) + " and " + _sizes[-1] + " read with Glance; the rows marked “written” are the same model generating a JSON answer without it ("
+                  + " and ".join(_pairs) + ")") if len(_sizes) > 1 else "Qwen3-VL-4B read with Glance, and the same model writing JSON without it"
+_w2 = matrix["systems"].get("Qwen3-VL-2B, written")
+strict_note = (f" A written answer that does not parse or is not an allowed value counts as wrong, for every system; that rule costs the 2B model most of its written score "
+               f"({_w2['invalid_share']['yesno']:.0%} of its yes/no answers and {_w2['invalid_share']['rating']:.0%} of its ratings are malformed, typically a missing brace). Scored leniently, "
+               f"taking the first allowed answer in its text, it reaches {_w2['lenient_accuracy']['yesno']:.2f}, {_w2['lenient_accuracy']['choice']:.2f} and {_w2['lenient_accuracy']['rating']:.2f}: "
+               "reading spares a small model the formatting; it does not make it smarter.") if _w2 else ""
+dark_note = ("Black bars are open models on a laptop read with Glance; the lighter bar above each is the same model writing JSON without it (" + open_rows_note.split("(")[-1].rstrip(")") + "; the 8B model’s written row was not collected)."
+             + strict_note) if len(_sizes) > 1 else "Dark bars are the open 4B model."
 basis_note = ("yes/no and pick-one accuracy pooled over the three fresh photo sets, Table 3; seconds and dollars as measured on the Commons photographs, because hosted cost depends on image size"
               if matrix.get("accuracy_basis", "").startswith("three") else "the test half of the Commons set, the first of three photo sets; Table 3 pools all three")
 POOLED = load("results/lab/pooled_photos.json")
-SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Qwen3-VL-4B, writing JSON", "Qwen3-VL-2B, read": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read": "Qwen3-VL-8B + Glance",
+SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Qwen3-VL-4B, writing JSON", "Qwen3-VL-2B, written": "Qwen3-VL-2B, writing JSON", "Qwen3-VL-2B, read": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read": "Qwen3-VL-8B + Glance",
          "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance", "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}  # display names
 
 

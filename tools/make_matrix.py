@@ -176,7 +176,23 @@ if pooled and all(pooled["kinds"][k].get("written_row_complete") for k in ("yesn
                              "seconds": {t: {"value": v / 1000, "how": "measured on the laptop, GPU otherwise idle, " + ("on these photographs" if t != "rating" else "on the 448 px lab images")} for t, v in ms.items()},
                              "usd_per_1000": {t: {"value": local_usd(v / 1000), "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"} for t, v in ms.items()}}
         alias[row_name] = pooled_name
-    order = [n for n in systems if not n.startswith("Qwen")] + [n for n in ("Qwen3-VL-4B, written", "Qwen3-VL-2B, read (Glance)", "Qwen3-VL-4B, read (Glance)", "Qwen3-VL-8B, read (Glance)") if n in systems]
+        # the same size WRITING its answer (E25, notebook entry 59): strict scoring in the row, as for every written row; the lenient
+        # score (first allowed answer found in the raw text) is carried beside it so the page can say how much is formatting
+        w_name, w_path, single_t = f"Qwen3-VL-{size}, written", ROOT / f"lab/runs/gen_accuracy_{size.lower()}.jsonl", ROOT / f"lab/GENBENCH_SINGLE_{size}.json"
+        if all(w_name in pooled["kinds"][k]["systems"] for k in ("yesno", "choice")) and w_path.exists() and single_t.exists():
+            import written_scoring
+            w_rows = {(r["suite"], r["item_id"]): r for r in read_jsonl(w_path) if r["suite"].startswith("ladder_")}
+            if all(k in w_rows for k in keys):
+                w_ms = {"yesno": pt["yesno"]["write_p50_ms"], "choice": pt["choice"]["write_p50_ms"], "rating": json.loads(single_t.read_text())["1 rating"]["write_p50_ms"]}
+                systems[w_name] = {"kind": f"the {size} open model, zero-shot, writes one JSON answer (no Glance); an unparsable or invalid answer counts as wrong",
+                                   "accuracy": {"rating": cell([written_scoring.strict(w_rows[k]) for k in keys])},
+                                   "lenient_accuracy": {"rating": cell([written_scoring.lenient(w_rows[k]) for k in keys])["accuracy"],
+                                                        **{k: pooled["kinds"][k]["systems"][w_name]["lenient_pooled"][0] for k in ("yesno", "choice")}},
+                                   "invalid_share": {"rating": float(np.mean([not w_rows[k]["valid"] for k in keys])), **{k: pooled["kinds"][k]["systems"][w_name]["invalid_share"] for k in ("yesno", "choice")}},
+                                   "seconds": {t: {"value": v / 1000, "how": "measured on the laptop, GPU otherwise idle, " + ("on these photographs" if t != "rating" else "on the 448 px lab images")} for t, v in w_ms.items()},
+                                   "usd_per_1000": {t: {"value": local_usd(v / 1000), "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"} for t, v in w_ms.items()}}
+                alias[w_name] = w_name
+    order = [n for n in systems if not n.startswith("Qwen")] + [n for n in ("Qwen3-VL-2B, written", "Qwen3-VL-2B, read (Glance)", "Qwen3-VL-4B, written", "Qwen3-VL-4B, read (Glance)", "Qwen3-VL-8B, written", "Qwen3-VL-8B, read (Glance)") if n in systems]
     systems = {n: systems[n] for n in order}
     for kind in ("yesno", "choice"):
         e = pooled["kinds"][kind]

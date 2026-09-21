@@ -402,69 +402,79 @@
     }
    }
   },
-  "Qwen3-VL-4B, written": {
-   "kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)",
+  "Qwen3-VL-2B, written": {
+   "kind": "the 2B open model, zero-shot, writes one JSON answer (no Glance); an unparsable or invalid answer counts as wrong",
    "accuracy": {
-    "yesno": {
-     "accuracy": 0.944547134935305,
+    "rating": {
+     "accuracy": 0.056,
      "ci95": [
-      0.9242144177449169,
-      0.9630314232902033
+      0.043,
+      0.071
+     ],
+     "n": 1000
+    },
+    "yesno": {
+     "accuracy": 0.5841035120147874,
+     "ci95": [
+      0.5434380776340111,
+      0.6247689463955638
      ],
      "n": 541
     },
     "choice": {
-     "accuracy": 0.9296296296296296,
+     "accuracy": 0.8407407407407408,
      "ci95": [
-      0.9,
-      0.9592592592592593
+      0.7962962962962963,
+      0.8814814814814815
      ],
      "n": 270
-    },
-    "rating": {
-     "accuracy": 0.672,
-     "ci95": [
-      0.643,
-      0.701
-     ],
-     "n": 1000
     }
+   },
+   "lenient_accuracy": {
+    "rating": 0.495,
+    "yesno": 0.9149722735674677,
+    "choice": 0.9074074074074074
+   },
+   "invalid_share": {
+    "rating": 0.856,
+    "yesno": 0.3512014787430684,
+    "choice": 0.10740740740740741
    },
    "seconds": {
     "yesno": {
-     "value": 1.6477374165551737,
+     "value": 1.0750003959983587,
      "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "choice": {
-     "value": 1.8706402705283836,
+     "value": 0.9397823744220659,
      "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "rating": {
-     "value": 0.9066312500508502,
+     "value": 0.30204558302648365,
      "how": "measured on the laptop, GPU otherwise idle, on the 448 px lab images"
     }
    },
    "usd_per_1000": {
     "yesno": {
      "value": [
-      0.24075274475222816,
-      0.3683608535676677
+      0.15706950230420463,
+      0.24032231074985527
      ],
-     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+     "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"
     },
     "choice": {
      "value": [
-      0.2733213284160916,
-      0.4181920249225674
+      0.1373126469294463,
+      0.21009357081524407
      ],
-     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+     "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"
     },
     "rating": {
      "value": [
-      0.13246889931298536,
-      0.20268245278914562
+      0.0441322157422029,
+      0.06752396811658724
      ],
-     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+     "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"
     }
    }
   },
@@ -531,6 +541,72 @@
       0.04849890129180211
      ],
      "how": "arithmetic: measured seconds x the same rented-GPU price as the 4B rows"
+    }
+   }
+  },
+  "Qwen3-VL-4B, written": {
+   "kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.944547134935305,
+     "ci95": [
+      0.9242144177449169,
+      0.9630314232902033
+     ],
+     "n": 541
+    },
+    "choice": {
+     "accuracy": 0.9296296296296296,
+     "ci95": [
+      0.9,
+      0.9592592592592593
+     ],
+     "n": 270
+    },
+    "rating": {
+     "accuracy": 0.672,
+     "ci95": [
+      0.643,
+      0.701
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 1.6477374165551737,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
+    },
+    "choice": {
+     "value": 1.8706402705283836,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
+    },
+    "rating": {
+     "value": 0.9066312500508502,
+     "how": "measured on the laptop, GPU otherwise idle, on the 448 px lab images"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      0.24075274475222816,
+      0.3683608535676677
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+    },
+    "choice": {
+     "value": [
+      0.2733213284160916,
+      0.4181920249225674
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+    },
+    "rating": {
+     "value": [
+      0.13246889931298536,
+      0.20268245278914562
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     }
    }
   },
@@ -606,8 +682,8 @@
     "rating": {
      "accuracy": 0.643,
      "ci95": [
-      0.613975,
-      0.672
+      0.614,
+      0.671
      ],
      "n": 1000
     },
