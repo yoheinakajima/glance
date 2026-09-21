@@ -2040,3 +2040,23 @@ empty home folder; `glance doctor` runs; `glance ask` on the real model gives th
 rating by the one-pass read, 0.996 on level 1). Tests: 364 passed, 12 skipped. `.github/workflows/publish.yml` publishes with
 Trusted Publishing (no token exists anywhere), manual trigger only; `docs/PYPI.md` is the step-by-step for the owner's
 browser-capable assistant (TestPyPI first, the owner's explicit go before PyPI). I did not publish anything.
+
+## 2026-09-21 07:43 Entry 58: E24, the other open models on the insect-order set, so they can join the pooled headline; registered before any of their output on that set
+
+The owner asked whether the headline chart (six hosted rows against two rows for one open model) should name the rows plainly
+("Qwen3-VL-4B + Glance", "Qwen3-VL-4B, writing JSON") and carry the other open models. Naming: yes, done now. Other models: a row
+may join the headline only on the SAME basis as every other row: the pooled items of the three photo sets (the hosted test
+halves), and seconds measured the same way (photographs, idle GPU: `lab/PHOTO_TIMING_2B.json`, `lab/PHOTO_TIMING_8B.json`
+exist). Qwen3-VL-2B and 8B have Commons and iNaturalist runs but none on the insect orders; SmolVLM2 likewise, and it has NO
+idle-GPU photo timing, so it stays in the "scale and family" section whatever it scores. Runs: `glance eval` on
+`inat_orders_yesno` and `inat_orders_choice` with `configs/scaling_qwen3vl_2b.yaml` and `..._8b.yaml` (the 8B model alone on the
+GPU), and `glance.lab.generic_eval` for SmolVLM2; shipped readouts, nothing reworded, uncalibrated, all items.
+Known before this entry (all items): 2B Commons 0.939 / 0.832, iNaturalist 0.925 / 0.940; 8B 0.924 / 0.878 and 0.935 / 0.955;
+SmolVLM2 0.931 / 0.870 and 0.892 / 0.815; the 4B model on the insect orders 0.948 / 0.962.
+- H59: Qwen3-VL-2B, pooled on the hosted items: yes/no within 2 points of the 4B model (0.939); pick-one at least 3 points below
+  it (0.933). On the insect orders alone its pick-one is at least 5 points below the 4B model's.
+- H60: Qwen3-VL-8B, pooled: within 1.5 points of the 4B model on both question types, in either direction: size does not buy
+  accuracy on these questions.
+- H61: SmolVLM2 on the insect orders: at least 0.80 yes/no and 0.70 pick-one, and at least 8 points below the 4B model on pick-one.
+Reporting rule fixed now: whatever they score, the 2B and 8B rows go into the headline chart and table next to the 4B rows
+(marked "+ Glance"), with their measured seconds and the same cost model; no row is dropped for looking bad.
