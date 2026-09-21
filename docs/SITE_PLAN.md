@@ -31,6 +31,17 @@ Publishing anywhere public needs the owner's explicit go-ahead (there is no git 
   "level with", never "beats"; no "parity on ratings"; the ten-point loss of our zero-shot rating read to the same model's
   written answer is stated on the page.
 
+## The comparison matrix (owner's request, 2026-09-20 evening)
+
+The page leads its evidence with ONE matrix, `results/lab/matrix.json` from `tools/make_matrix.py`: five rows (Gemini 3.1
+Pro, Claude Opus 5, GPT-5.6, the open model WRITING, the open model READ with Glance) x three tests (yes/no, pick-one,
+rating) x accuracy, median seconds per answer, dollars per 1,000 answers, shown as three stacked tables with identical
+rows so it reads on a phone. Every accuracy in a column is on the same items for all five rows. Hosted cost is the bill
+per call where logged, otherwise a list-price upper estimate marked "est."; open-model speed uses only idle-GPU timings,
+and cells without one say "tonight" (`glance.lab.gen_bench --single` runs in the idle window after the 8B job, then
+re-run `make_matrix.py` and `make_site.py`). Extensions that only the read row has (unlabeled images, 32 labels, the
+hidden-state readout) are a separate table directly below, never mixed into the zero-shot matrix.
+
 ## Sections now
 
 Header (running head, title, one-sentence subtitle, author, in-page links) · Abstract · 1 Evidence (1.1 fresh photographs:

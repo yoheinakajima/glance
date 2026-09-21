@@ -114,6 +114,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=8, help="test images per lab scale (5 scales)")
     parser.add_argument("--out", default="lab/GENBENCH")
     parser.add_argument("--rows", default="lab/runs/gen_bench.jsonl")
+    parser.add_argument("--single", action="store_true", help="one question per request of each type (yes/no, pick-one, rating): the cells of the comparison matrix")
     args = parser.parse_args(argv)
 
     lab = load_ladder_meta("ladders")
@@ -121,6 +122,10 @@ def main(argv: list[str] | None = None) -> int:
             **{k: v for k, v in list(rating_questions(lab).items())[:3]}}
     many = rating_questions(load_ladder_meta("kadid"))
     sets = {"1 yes/no": ({"animal": {"type": "noul", "instructions": YESNO}}, 16), "5 mixed": (five, 96), "25 ratings": (many, 400)}
+    if args.single:
+        one_rating = dict(list(rating_questions(lab).items())[:1])
+        sets = {"1 yes/no": ({"animal": {"type": "noul", "instructions": YESNO}}, 16), "1 pick-one": ({"kind": {"type": "choice", **CHOICE}}, 24),
+                "1 rating": (one_rating, 24)}
 
     bench = Bench()
     (PROJECT_ROOT / args.rows).unlink(missing_ok=True)

@@ -1,0 +1,353 @@
+{
+ "tests": {
+  "yesno": "Yes/no, 131 fresh Commons questions",
+  "choice": "Pick one of 13, 65 fresh Commons photos",
+  "rating": "Rating, exact level of 4, 1,000 lab images"
+ },
+ "systems": {
+  "Gemini 3.1 Pro": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9465648854961832,
+     "ci95": [
+      0.9083969465648855,
+      0.9847328244274809
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.9230769230769231,
+     "ci95": [
+      0.8615384615384616,
+      0.9846153846153847
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.65,
+     "ci95": [
+      0.621,
+      0.679
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 2.7434836248867214,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 3.1760543750133365,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 4.0236223340034485,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      2.624900763358779,
+      2.624900763358779
+     ],
+     "how": "measured"
+    },
+    "choice": {
+     "value": [
+      3.8472307692307695,
+      3.8472307692307695
+     ],
+     "how": "measured"
+    },
+    "rating": {
+     "value": [
+      6.150728728728727,
+      6.150728728728727
+     ],
+     "how": "measured"
+    }
+   }
+  },
+  "Claude Opus 5": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9236641221374046,
+     "ci95": [
+      0.8778625954198473,
+      0.9694656488549618
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.9076923076923077,
+     "ci95": [
+      0.8307692307692308,
+      0.9692307692307692
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.55,
+     "ci95": [
+      0.518,
+      0.581
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 2.640581125160679,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 2.9796916670165956,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 2.415066187386401,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      18.7,
+      18.7
+     ],
+     "how": "list-price upper estimate (this run predates cost logging)"
+    },
+    "choice": {
+     "value": [
+      18.7,
+      18.7
+     ],
+     "how": "list-price upper estimate (this run predates cost logging)"
+    },
+    "rating": {
+     "value": [
+      18.7,
+      18.7
+     ],
+     "how": "list-price upper estimate (this run predates cost logging)"
+    }
+   }
+  },
+  "GPT-5.6": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.8931297709923665,
+     "ci95": [
+      0.8396946564885496,
+      0.9465648854961832
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.8923076923076924,
+     "ci95": [
+      0.8153846153846154,
+      0.9538461538461539
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.597,
+     "ci95": [
+      0.565,
+      0.628
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 1.1839122078381479,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 1.3399307080544531,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 1.0722042080014944,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      7.548995419847334,
+      7.548995419847334
+     ],
+     "how": "measured"
+    },
+    "choice": {
+     "value": [
+      7.819569230769226,
+      7.819569230769226
+     ],
+     "how": "measured"
+    },
+    "rating": {
+     "value": [
+      14.96,
+      14.96
+     ],
+     "how": "list-price upper estimate (this run predates cost logging)"
+    }
+   }
+  },
+  "Qwen3-VL-4B, written": {
+   "kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9312977099236641,
+     "ci95": [
+      0.8854961832061069,
+      0.9694656488549618
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.8923076923076924,
+     "ci95": [
+      0.8153846153846154,
+      0.9538461538461539
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.672,
+     "ci95": [
+      0.642,
+      0.701
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 0.7980797283817083,
+     "how": "measured on the laptop, GPU otherwise idle"
+    },
+    "choice": {
+     "value": null,
+     "how": "clean timing scheduled (idle-GPU window tonight)"
+    },
+    "rating": {
+     "value": null,
+     "how": "clean timing scheduled (idle-GPU window tonight)"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      0.11660831586910517,
+      0.17841515705599967
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+    },
+    "choice": {
+     "value": null,
+     "how": "pending the timing"
+    },
+    "rating": {
+     "value": null,
+     "how": "pending the timing"
+    }
+   }
+  },
+  "Qwen3-VL-4B, read (Glance)": {
+   "kind": "the same open model, zero-shot, answer read from one forward pass (four for a rating)",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9312977099236641,
+     "ci95": [
+      0.8854961832061069,
+      0.9694656488549618
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.8615384615384616,
+     "ci95": [
+      0.7692307692307693,
+      0.9384615384615385
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.57,
+     "ci95": [
+      0.539,
+      0.6
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 0.33771058346610516,
+     "how": "measured on the laptop, GPU otherwise idle"
+    },
+    "choice": {
+     "value": null,
+     "how": "clean timing scheduled (idle-GPU window tonight)"
+    },
+    "rating": {
+     "value": 1.0891686045797542,
+     "how": "measured on the laptop, GPU otherwise idle"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      0.049343268584214256,
+      0.07549707710375594
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+    },
+    "choice": {
+     "value": null,
+     "how": "pending the timing"
+    },
+    "rating": {
+     "value": [
+      0.15913963500248632,
+      0.24348969249049612
+     ],
+     "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
+    }
+   }
+  }
+ },
+ "only_the_read_row_can_add": [
+  {
+   "what": "UNLABELED images of the rubric (`glance fit --unlabeled`)",
+   "rating_accuracy": 0.702,
+   "note": "zero labels, but not zero-shot; 500 unlabeled images here, and 16 already give 0.686 on the full test split; probabilities improve but are not calibrated"
+  },
+  {
+   "what": "32 labeled images of the rubric (`glance fit`)",
+   "rating_accuracy": 0.8573000000000001,
+   "note": "same 1,000 images; calibrated probabilities (ECE about 0.03)"
+  },
+  {
+   "what": "500 labels, readout fitted on the hidden state (research result, not shipped)",
+   "rating_accuracy": 0.965463967611336,
+   "note": "full test split, ONE forward pass; needs on the order of a hundred labels to beat the row above"
+  }
+ ],
+ "caveats": [
+  "Frontier models were run once, zero-shot, with a constrained written pick; a failed call counts as wrong. No few-shot prompt was tried for any written row.",
+  "Yes/no and pick-one: photographs taken after every model's release; labels are uploaders' structured 'depicts' statements (pick-one labels are noisy). Ratings: five synthetic 4-level scales.",
+  "Hosted latency includes the network from one laptop; hosted cost is the provider's bill per call where logged, otherwise a list-price upper estimate.",
+  "Open-model cost is arithmetic on measured seconds and an on-demand cloud GPU price; several questions about one image share its cost and get cheaper per answer (see the cost model)."
+ ]
+}
