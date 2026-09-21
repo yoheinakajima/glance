@@ -155,6 +155,28 @@ def bars_by_type(rows, wide, tests=None):
     return "".join(out)
 
 
+def method_diagram(wide):
+    """Image and typed question -> one forward pass of a frozen open model -> logits of the allowed answers -> probabilities."""
+    steps = [("image + typed question", "yes/no, pick one, or rate"), ("one forward pass", "frozen open model, local"),
+             ("answer-position logits", "allowed answers only"), ("probabilities", "nothing generated")]
+    g = []
+    if wide:
+        bw, bh, gap = 146, 58, 18
+        for i, (a, b) in enumerate(steps):
+            x = 2 + i * (bw + gap)
+            g.append(f'<rect x="{x}" y="6" width="{bw}" height="{bh}" class="m-box"/>' + _t(x + bw / 2, 30, a, "middle", "m-lab m-strong") + _t(x + bw / 2, 48, b, "middle", "m-tick"))
+            if i < len(steps) - 1:
+                g.append(f'<line x1="{x + bw + 3}" x2="{x + bw + gap - 7}" y1="35" y2="35" class="m-arrow"/><polygon points="{x + bw + gap - 3},35 {x + bw + gap - 10},31 {x + bw + gap - 10},39" class="m-own"/>')
+        return f'<svg viewBox="0 0 640 70" role="img" aria-label="How a question is answered: image and typed question, one forward pass, logits of the allowed answers, probabilities">{"".join(g)}</svg>'
+    bw, bh, gap = 300, 48, 20
+    for i, (a, b) in enumerate(steps):
+        y = 4 + i * (bh + gap)
+        g.append(f'<rect x="30" y="{y}" width="{bw}" height="{bh}" class="m-box"/>' + _t(180, y + 20, a, "middle", "m-lab m-strong") + _t(180, y + 37, b, "middle", "m-tick"))
+        if i < len(steps) - 1:
+            g.append(f'<line x1="180" x2="180" y1="{y + bh + 3}" y2="{y + bh + gap - 7}" class="m-arrow"/><polygon points="180,{y + bh + gap - 3} 176,{y + bh + gap - 10} 184,{y + bh + gap - 10}" class="m-own"/>')
+    return f'<svg viewBox="0 0 360 {4 + len(steps) * (bh + gap)}" role="img" aria-label="How a question is answered">{"".join(g)}</svg>'
+
+
 def both_widths(wide, narrow):
     return f'<div class="only-wide">{wide}</div><div class="only-narrow">{narrow}</div>'
 
@@ -164,7 +186,7 @@ figure svg{width:100%;height:auto;display:block}
 .only-narrow{display:none}@media (max-width:560px){.only-wide{display:none}.only-narrow{display:block}}
 svg .m-tick{font-size:11px;fill:var(--muted)}svg .m-lab{font-size:12px;fill:var(--muted)}svg .m-strong{fill:var(--ink);font-weight:600}svg .m-head{font-size:12.5px;fill:var(--ink);font-weight:600}
 svg .m-grid{stroke:var(--rule);stroke-width:1}svg .m-spoke{stroke:var(--rule);stroke-width:1.2}svg .m-whisk{stroke:var(--muted);stroke-width:1}
-svg .m-bar{fill:var(--muted)}svg .m-outline{fill:var(--paper);stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
+svg .m-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.1}svg .m-arrow{stroke:var(--ink);stroke-width:1.2}svg .m-bar{fill:var(--muted)}svg .m-outline{fill:var(--paper);stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
 svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}
 .key svg{width:11px;height:11px;vertical-align:-1px;margin:0 3px 0 8px;display:inline}
 """
