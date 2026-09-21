@@ -1,123 +1,113 @@
 # glance
 
-**Glance is a calibration and measurement harness for asking open vision-language models typed questions. It adds `fit` and evidence, not a new runtime. It is not a model.**
+**Ask an open vision-language model typed questions about an image and get probabilities back, on your own machine.**
+Yes/no, pick-one and ratings are READ from the logits of one forward pass of a frozen open model (Qwen3-VL-4B by
+default, Apache-2.0). Nothing is generated, nothing is trained, no image leaves the machine. Glance is a calibration and
+measurement harness around that readout. It is not a model.
 
-You send image(s) plus typed questions (`noul`: is this true, `choice`: which one, `score`: where on this ordered
-rubric) and get probability distributions back, READ from single forward passes of a frozen open model you run
-yourself (Qwen3-VL-4B by default, Apache-2.0). No text is generated, nothing is trained, and out of the box no labels
-or examples are needed. The model does the seeing; Glance is the asking: typed questions, a readout of the answer from
-the logits, many questions per image in one pass, probabilities instead of prose. The request and response shapes
-follow TypeSafe's Jev, a hosted text-only model, so integrations look familiar; that is where the resemblance ends.
+Project page with every result: https://glance.yohei.me · Coding agents: read [`AGENTS.md`](AGENTS.md).
 
-Where this sits: the inference object is shared. Simple Jev, jev-visual, LitJev and Glance all read answer-token logits
-from a frozen model in one pass and reuse the shared prefix, and Simple Jev's endpoint already classifies photos that
-way. Closed-set yes/no and pick-one are therefore a property of the open VLM and that shared readout, not of Glance.
-What Glance adds is a harness on top: self-calibration from unlabeled images and labeled scaling for rating levels
-(`glance fit`), the same VLM writing versus reading, and a fresh-photo board against hosted models with dollars and
-milliseconds (`docs/paper/RELATED_WORK.md`, "Where Glance sits"). It is not in the class of YOFO, Laya Vision or
-OpenJev v2, which train weights.
-
-Zero-shot, on a laptop (`docs/paper/RESULTS_ZEROSHOT.md`; result rows read "Qwen3-VL-4B + Glance"):
-
-| Photos taken after every model's release, labels made by nobody here | yes/no | pick-one |
-| --- | --- | --- |
-| Qwen3-VL-4B + Glance, 131 Wikimedia Commons photos | 0.931 | 0.885 (of 13) |
-| Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6, same photos (test half) | 0.947 / 0.924 / 0.893 | 0.923 / 0.908 / 0.892 |
-| Qwen3-VL-4B + Glance, 200 iNaturalist photos uploaded the day of the test | 0.945 | 0.940 (of 10) |
-
-Intervals overlap everywhere; on older public benchmarks Claude Opus 5 is ahead by about 3 points. Ratings against a
-rubric in words (`score`), zero-shot on five synthetic 4-level scales: exact level 0.570 (Opus 5 0.550, GPT-5.6 0.597,
-Gemini 3.1 Pro 0.650 on the same 1,000 images), within one level on 0.99 of images, rank agreement 0.93: the model
-orders images almost perfectly, and what no model can know zero-shot is where YOUR rubric draws its lines. Reading the
-answer is 2.4 to 6.1 times faster than the same model writing it as JSON; a yes/no takes under a second, a rating about
-1.1 s (0.34 to 0.58 s each when several rubrics share an image). Self-hosted cost is $0.02 to $0.24 per 1,000 ratings
-(arithmetic on measured seconds); the frontier calls measured $3 to $8 per 1,000 answers.
-
-If you have images of your own (optional): `glance fit --unlabeled` lets a rubric calibrate itself on 16 or more
-UNLABELED images (exact level 0.57 -> 0.69, ahead of all three frontier models; zero labels, but not zero-shot), and
-`glance fit` with about 32 labeled images reaches 0.86. Fits are per rubric and do not transfer. Honest limits: one
-model family measured so far; the rating scales are synthetic; fine severity levels on KADID-10k are weak zero-shot
-(0.33 exact); hand-built features beat the VLM on low-level artifacts when labels are plentiful; two errata are on
-record (`lab/NOTES.md` entries 16 and 18). Every experiment was registered before it ran, misses included.
-
-- `HANDOFF.md` is the original spec. `STATUS.md` is the build log, with every decision and deviation.
-- `docs/` is written for a paper: methods, results, reproduction, related work, research log. `lab/NOTES.md` is the
-  lab notebook, with hypotheses registered before each experiment and two errata.
-- `MODELS.md` and `DATASETS.md` record licenses, pins and check dates.
-
-## Setup
+## Try it
 
 ```bash
-uv sync
-uv run glance doctor --json      # detects the device and picks the model tier
+git clone <this repository> && cd glance && uv sync     # Python 3.11 and uv; about 10 GB of open weights download on first use
+uv run glance doctor                                     # picks the model for your hardware (Apple silicon or CUDA; CPU works, slowly)
+
+uv run glance ask photo.jpg "Is there a dog?"                                        # yes/no   -> {"noul": 0.98, ...}
+uv run glance ask photo.jpg "What is the main subject?" --options dog cat car       # pick one -> {"choice": "dog", "probabilities": {...}, "confidence": ...}
+uv run glance ask photo.jpg "How blurry is the photo?" --levels Sharp "Slightly soft" Blurry "Very blurry"   # rating -> {"score": ..., "probabilities": {...}}
 ```
-
-Weights download to `./.cache/hf` on first use (about 10.5 GB for SigLIP2 plus Qwen3-VL-4B on this tier).
-Afterwards everything runs with `HF_HUB_OFFLINE=1`.
-
-## Rate an image, and fit your own rubric
-
-```bash
-# one rating, from the command line (uses your calibration for this rubric if you have fit one)
-uv run glance score photo.jpg --prefix-cache \
-  --instructions "How blurry is `img0`?" \
-  --criteria "Sharp" "Slightly soft" "Blurry" "Very blurry"
-
-# fit a calibration for YOUR rubric from a few dozen labeled images: labels/0/*.jpg, labels/1/*.jpg, ...
-uv run glance fit --data labels/ --rubric rubric.json --prefix-cache
-```
-
-`rubric.json` is `{"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}`. `fit`
-reads the model four times per image, fits a K x 4K affine map on those logits (nothing in the model changes), prints
-its cross-validated accuracy, error and calibration at your sample size, and writes a few hundred numbers to
-`calibration/ratings/<hash>.json`. A calibration is tied to the exact rubric text, the model revision and the image
-token budget. Calibrations for the five lab rubrics ship in `glance/assets/ratings/`.
 
 ```python
 from glance import Glance
 
-g = Glance()                                   # loads the local VLM on first use
-g.score("photo.jpg", "How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"])
-# {'score': 0.31, 'probabilities': {'0': 0.72, '1': 0.26, ...}, 'confidence': 0.55, 'calibration': 'rate_e098aa', ...}  (values illustrative)
-g.noul("photo.jpg", "Is there a dog in `img0`?")
+g = Glance()                                                        # loads the local model on first use
+g.noul("photo.jpg", "Is there a dog in `img0`?")                    # {'noul': 0.98, ...}
 g.choice("photo.jpg", "What is in `img0`?", ["dog", "cat", "other"])
-g.ask("photo.jpg", {"blur": {...}, "noise": {...}, "usable": {...}})   # many questions, the image is prefilled once per view
-g.fit("How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"], "labels/")
+g.score("photo.jpg", "How blurry is `img0`?", ["Sharp", "Slightly soft", "Blurry", "Very blurry"])
+g.ask("photo.jpg", {"dog": {"type": "noul", "instructions": "Is there a dog in `img0`?"},           # many questions, one image:
+                    "blur": {"type": "score", "instructions": "How blurry is `img0`?",              # the image is read once and
+                             "criteria": ["Sharp", "Slightly soft", "Blurry", "Very blurry"]}})     # every extra question is cheap
 ```
-
-How much setup a rating needs (five lab scales, exact-level accuracy; within one level is 0.985 or better in every row):
-nothing at all 0.558; `glance fit --unlabeled --data any_folder_of_your_images/` (16 or more images, no labels; removes
-the readout's systematic bias) 0.697; `glance fit` with about 32 labeled images 0.856. Yes/no and pick-one questions
-need no setup.
-
-Three rating modes (`options.score_method`, or `--method`): `ens4d` (default; 4 passes, 0.867 on the lab scales, about
-1.1 s for one rating), `fast2` (2 passes, no magnified crop; 0.833, and 133 to 240 ms per rating when a request carries
-5 to 25 rubrics; weak on compression artifacts, 0.674), `digits` (1 pass; 0.814).
-
-`score` is the expected level, `probabilities` the distribution over levels, `confidence` is 1 minus the normalized
-entropy. Use the expectation and the confidence, not only the top level: almost every error is an adjacent level.
-
-## Use the harness
 
 ```bash
-uv run glance decide samples/receipt.json --model vlm
-uv run glance decide samples/receipt.json --model siglip
-uv run glance decide samples/receipt.json --model vlm --choice-method letter
-uv run glance decide samples/receipt.json --model vlm --calibrated      # needs fitted params in calibration/
-uv run glance decide samples/receipt.json --model vlm --score-method statements   # the v0 `score` method
-
-uv run glance serve --preload vlm --prefix-cache                         # 127.0.0.1:8077
+uv run glance serve --preload vlm --prefix-cache          # a local HTTP server on 127.0.0.1:8077, nothing leaves the machine
 curl -s localhost:8077/v1/decide -H 'content-type: application/json' -d @samples/dog.json
-curl -s localhost:8077/v1/models
-curl -s localhost:8077/healthz
 ```
 
-The request and response shapes are in `HANDOFF.md` section 5, with three additive extensions (`STATUS.md`, "API
-extension"): `options.score_method` (`auto` | `statements` | `digits` | `ens4d`; `auto` is `ens4d` on the VLM),
-`options.calibrated` also accepts `"auto"` (calibrate what has fitted parameters, warn about the rest; `true` still
-fails with 409 when something is missing), and `score` answers carry `method` and `calibration`. Every call appends
-one line to `logs/calls/YYYY-MM-DD.jsonl` (inputs, per-statement logits, raw and calibrated probabilities, timing,
-versions).
+Images are referred to as `` `img0` `` (then `` `img1` ``, ...) inside the question text. A yes/no answer is `noul`, the
+probability that the statement is true. A pick-one answer has `choice`, `probabilities` and `confidence`. A rating has
+`score` (the expected level, 0 to K-1), `probabilities` over the levels and `confidence`; use the expectation and the
+confidence, not only the top level, because almost every rating error is an adjacent level. The full request and
+response shapes are in `HANDOFF.md` section 5; every call is logged to `logs/calls/`.
+
+## How much setup does a question need?
+
+| Question | Setup | What to expect |
+| --- | --- | --- |
+| yes/no, pick-one | none | level with hosted models on photos none of them has seen (table below) |
+| rating, you need the ORDER (sort, threshold, flag the worst) | none | within one level on 0.99 of images, rank agreement 0.93 with the true level |
+| rating, you need the EXACT level of your own scale | `glance fit --unlabeled --data folder_of_your_images/` (16 or more images, no labels) | removes the model's constant offset on your rubric: 0.57 -> 0.70 exact with the shipped read (0.67 -> 0.76 with the one-pass read below) |
+| rating, best accuracy and calibrated probabilities | `glance fit --data labels/ --rubric rubric.json` (about 32 labeled images, folders `labels/0/`, `labels/1/`, ...) | 0.86 exact, ECE about 0.03; fits are per rubric and do not transfer |
+
+`rubric.json` is `{"instructions": "How ... is `img0`?", "criteria": ["lowest level", ..., "highest level"]}`. A fit changes
+nothing in the model; it writes a few hundred numbers to `calibration/ratings/`, tied to the exact rubric text and model
+revision. Rating modes (`--method`): `ens4d` (4 passes, the one to fit), `fast2` (2 passes), `digits` (1 pass).
+
+## How good is it? (zero-shot, same items for every row, 95% intervals on the project page)
+
+| System | yes/no, fresh photos | pick-one, fresh photos | rating, exact level | seconds per answer | US dollars per 1,000 answers |
+| --- | --- | --- | --- | --- | --- |
+| **Qwen3-VL-4B read with Glance, on a laptop** | **0.931** | **0.862** | **0.669** | **0.34 (yes/no)** | **0.05 to 0.24** (rented GPU; electricity only: under 0.01) |
+| the same model writing JSON | 0.931 | 0.892 | 0.672 | 0.80 | 0.12 to 0.18 |
+| Gemini 3.1 Flash-Lite (cheapest Google) | 0.954 | 0.908 | 0.763 | 1.6 to 1.9 | 0.31 to 0.34 |
+| GPT-5.6 Luna (cheapest OpenAI tried) | 0.924 | 0.908 | 0.686 | 1.1 to 1.3 | 0.12 to 0.40 |
+| Claude Haiku 4.5 | 0.939 | 0.846 | 0.609 | 0.7 to 0.9 | 0.55 to 1.89 |
+| Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6 | 0.947 / 0.924 / 0.893 | 0.923 / 0.908 / 0.892 | 0.650 / 0.550 / 0.597 | 1.1 to 4.0 | 2.62 to 7.82, ratings up to 18.70 (est.) |
+
+Photos were taken after every model's release and labelled by people outside this project (131 Wikimedia Commons
+questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the same picture: 0.945 / 0.940 for the open
+model). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
+position, which lives in the lab code (`--methods jsondigits`) and moves into `glance ask` and `glance score` after one
+more registered check; the four-pass read those commands use today scores 0.570 zero-shot and is the one to fit. Read honestly: on yes/no and pick-one the open 4B model
+is level with hosted models, cheap and expensive. On zero-shot ratings the cheapest Google model is 9 points ahead; the
+open model draws level with 16 unlabeled images and leads with 32 labels (0.857). Against the cheapest hosted models it is
+about 5 times cheaper on yes/no and no cheaper on ratings. Every experiment was registered before it ran and the misses
+are published (`lab/NOTES.md`, `docs/CLAIMS.md`).
+
+## When to use it, and when not to
+
+Use it when images must stay on your machine, when you want no per-call bill or need to work offline, when latency
+matters (0.34 s for a yes/no on a laptop), when you want probabilities to threshold, abstain or rank on, when you ask
+many questions about each image, or when you have a rubric of your own and a few dozen examples to fit it. Do NOT reach
+for it to save money against the cheapest hosted models on one-off ratings, or when you need the best zero-shot exact
+rating with nothing to fit: call Gemini 3.1 Flash-Lite. It is also not an image-quality metric (on KADID-10k it misses
+our own targets) and hand-built features beat it on low-level artifacts when labels are plentiful.
+
+## What is and is not new
+
+The inference object is shared: Simple Jev, jev-visual, LitJev and Glance all read answer-token logits from a frozen
+model in one pass and reuse the shared prefix. Closed-set yes/no and pick-one are a property of the open model and that
+readout, not of Glance. What Glance adds is the harness: a fresh-photo comparison with paid hosted calls, the same model
+writing against reading, self-calibration from unlabeled images, labeled fitting for rating levels, and measured dollars
+and milliseconds (`docs/paper/RELATED_WORK.md`, "Where Glance sits"). It trains no weights, unlike YOFO, Laya Vision or
+OpenJev v2. The request and response shapes follow TypeSafe's Jev, a hosted text-only model.
+
+## Requirements and models
+
+Python 3.11, [uv](https://docs.astral.sh/uv/). Apple silicon with 16 GB or more, or a CUDA GPU with 12 GB or more, runs the
+default Qwen3-VL-4B (8.9 GB download); `glance doctor` picks Qwen3-VL-2B on small machines and 8B on 24 GB GPUs. Other
+sizes of the family load through a config file (`configs/scaling_qwen3vl_*.yaml`); another family (SmolVLM2) has been run
+through the lab code only, so "any Hugging Face model" is NOT supported yet. Only Apache-2.0 or MIT weights are used;
+pins, licenses and check dates are in `MODELS.md` and `DATASETS.md`. After the first download everything runs offline.
+
+## Where things are
+
+- `AGENTS.md`: a one-page operating guide for coding agents. `docs/CLAIMS.md`: every claim with evidence and caveats.
+- `docs/paper/`: methods, results (generated from result files), related work, outline. `lab/NOTES.md`: the notebook,
+  with each hypothesis registered before its experiment and each verdict after, including two errata.
+- `site/`: the project page, generated by `tools/make_site.py` from the same result files.
+- `HANDOFF.md`: the original spec. `STATUS.md`: the build log with every decision.
 
 ## Evaluate
 

@@ -197,6 +197,28 @@ def _cmd_score(args: argparse.Namespace) -> int:
     return 0 if status == 200 else 1
 
 
+def _cmd_ask(args: argparse.Namespace) -> int:
+    """One question about one image, typed by its flags: plain = yes/no, --options = pick one, --levels = rating."""
+    from .pipeline import Engine
+
+    cfg = load_config(args.config, _config_overrides(args))
+    text = args.question if "`img0`" in args.question else f"{args.question.rstrip()} (about `img0`)"
+    if args.options and args.levels:
+        print("give --options (pick one) or --levels (rating), not both", file=sys.stderr)
+        return 2
+    if args.options:
+        question = {"type": "choice", "instructions": text, "criteria": {o: None for o in args.options}}
+    elif args.levels:
+        question = {"type": "score", "instructions": text, "criteria": list(args.levels)}
+    else:
+        question = {"type": "noul", "instructions": text}
+    body = {"model": args.model, "state": {"images": [{"id": "img0", "path": args.image}]}, "questions": {"answer": question},
+            "options": {"calibrated": "auto"}}
+    status, payload = Engine(cfg, source="cli").decide_json(body)
+    print(json.dumps(payload if status != 200 or args.full else {**payload["answers"]["answer"], "warnings": payload["warnings"]}, indent=2))
+    return 0 if status == 200 else 1
+
+
 def _cmd_fit(args: argparse.Namespace) -> int:
     from .fit import main_fit
 
@@ -231,6 +253,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--confirm-spend", action="store_true", help="allow --model frontier: sends the image to a paid API")
     p.add_argument("--prefix-cache", action="store_true", help="VLM: opt in to the prefix-cached path (about 3.7x faster; see STATUS.md M4)")
     p.set_defaults(func=_cmd_decide)
+
+    p = sub.add_parser("ask", help="one question about one image: yes/no by default, --options for pick-one, --levels for a rating")
+    p.add_argument("image", help="path to the image")
+    p.add_argument("question", help='the question, e.g. "Is there a dog?"')
+    p.add_argument("--options", nargs="+", help="pick one of these")
+    p.add_argument("--levels", nargs="+", help="rate on these ordered levels, lowest first")
+    p.add_argument("--model", choices=["vlm", "siglip"], default="vlm")
+    p.add_argument("--full", action="store_true", help="print the whole response, not only the answer")
+    p.set_defaults(func=_cmd_ask)
 
     p = sub.add_parser("score", help="rate one image on a rubric (Glance elicitation; uses your `glance fit` calibration if there is one)")
     p.add_argument("image", help="path to the image")
