@@ -13,13 +13,15 @@ a laptop) and read the answer from the logits of one forward pass; nothing is ge
 model's release, labelled by people outside this project, the open model is statistically indistinguishable from six hosted
 models (three flagships, three low-cost) on coarse yes/no and pick-one questions (n = 131 and 65; every 95% interval overlaps
 every other). The questions are easy and the labels imperfect: 3 to 5% of items are answered "wrongly" by all seven systems.
-Reading is as accurate as the same model writing JSON. Ratings behave differently. Zero-shot, every system orders
+Reading is as accurate as the same model writing JSON. Ratings behave differently. On five image-quality scales, zero-shot, every system orders
 images correctly (within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per
 rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read
 answer is a vector of logits it can be fitted: 16 unlabeled images of the rubric remove most of the offset (0.758) and 32
 labels reach 0.857. The hosted models were not given examples, so this is a comparison of products, not of models. On a real
-image-quality benchmark (KADID-10k) the approach missed every target we registered, and hand-built features remain better for
-low-level artefacts. The open model's cost is of the same order as the low-cost hosted models and one to two orders below the
+image-quality benchmark (KADID-10k) the approach missed every target we registered, hand-built features and a small trained
+quality model do as well or better on low-level artefacts, and on rubrics that are not image quality (tilt, how much of a
+subject is cut off) even 300 labels reach only 0.55. On images drawn by program the open model reads text, coarse position and
+small counts reliably and fails on mirror-image direction and relative size. The open model's cost is of the same order as the low-cost hosted models and one to two orders below the
 flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what
 is offered is the measurement, registered before it was run, with its misses.
 <!-- src: results/lab/matrix.md, results/lab/label_noise_proxy.md, results/lab/jsondigits.md, results/lab/scaling.md, docs/paper/RESULTS_GENERALIZATION.md; wording aligned with the page after the outside critique of 2026-09-21 (lab/NOTES.md entry 51) -->
