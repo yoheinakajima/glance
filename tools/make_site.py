@@ -303,7 +303,7 @@ BEYOND = [("results/lab/probes.json", "Images drawn by program", [
           ("results/lab/ui_screens.json", "Synthetic interface screens", [
               ("ui_page", "What kind of page is this?", "1 of 5"), ("ui_state", "Is the page in this state? (error shown, dialog open, …)", "1 of 2"),
               ("ui_done", "Is this goal already done?", "1 of 2"), ("ui_click", "Which numbered mark serves this goal?", "1 of 6 to 8"),
-              ("ui_reason", "The same, after one step of reasoning (the cheaper plan, the earliest date)", "1 of 2 to 4")])]
+              ("ui_reason", "The same, after one step of reasoning (the cheaper plan, the earliest date)", "1 of 2 to 6")])]
 
 
 def beyond():
@@ -354,12 +354,35 @@ def beyond_text():
     hosted = any(k != "open 4B model, read" for v in d["suites"].values() for k in v)
     out += (" We had predicted at least 0.90 on stripes and on the twofold size difference, and a steeper fall in counting; all three predictions were wrong."
             + ("" if hosted else " Hosted models have not been run on these sets, so whether they share these weaknesses is not known."))
-    return "<p>" + out + "</p>"
+    return "<p>" + out + "</p>" + ui_text()
+
+
+def ui_text():
+    """Sentences for the synthetic interface screens, every number from results/lab/ui_screens.json (entry 49c)."""
+    d = load("results/lab/ui_screens.json")
+    if not d:
+        return ""
+    acc = {k: v["open 4B model, read"]["all_items"] for k, v in d["suites"].items()}
+    b = {k: v["systems"]["open 4B model, read"] for k, v in d.get("breakdowns", {}).items()}
+    out = (f"Five hundred synthetic interface screens (five kinds of page, invented content, rendered from generated HTML so every label is exact) ask what an agent would ask. Given a goal in words and six to eight numbered marks on the screen, "
+           f"the open model names the mark to click on {acc['ui_click']['accuracy']:.3f} of {acc['ui_click']['n']} screens; when the goal needs one step of reasoning first (the cheaper plan, the item out of stock, the earliest date) on {acc['ui_reason']['accuracy']:.2f}. "
+           f"State questions (is a dialog open, is an error shown, is the user signed in) are right on {acc['ui_state']['accuracy']:.2f}")
+    if "ui_state" in b and "primary_disabled" in b["ui_state"]:
+        rest = [v["accuracy"] for k, v in b["ui_state"].items() if k != "primary_disabled"]
+        out += f", with one exception: whether the main button is disabled ({b['ui_state']['primary_disabled']['accuracy']:.2f}; the other five states {min(rest):.2f} to {max(rest):.2f}), a state our screens draw as a pale tint that the model almost never reports"
+    out += f". It is weaker on “is this goal already done” ({acc['ui_done']['accuracy']:.2f}"
+    if "ui_done" in b:
+        out += f": {b['ui_done']['False']['accuracy']:.2f} on screens where it is not, {b['ui_done']['True']['accuracy']:.2f} where it is"
+    out += f") and on the kind of page ({acc['ui_page']['accuracy']:.2f}, every error being another page called an article: an uncalibrated bias toward one option)."
+    hosted = any(k != "open 4B model, read" for v in d["suites"].values() for k in v)
+    out += (" We had predicted that one forward pass would trail hosted models by ten points on the reasoning screens; at this score it cannot."
+            + ("" if hosted else " Hosted models have not been run on these screens."))
+    return "\n  <p>" + out + "</p>"
 
 
 finer_block = finer()
 beyond_block = beyond()
-beyond_section = f"  <h3>2.3 Where coarse recognition ends: images drawn by program</h3>\n  {beyond_text()}\n  {beyond_block}" if beyond_block else ""
+beyond_section = f"  <h3>2.3 Where coarse recognition ends: drawn probes and interface screens</h3>\n  {beyond_text()}\n  {beyond_block}" if beyond_block else ""
 t0 = 5 if beyond_block else 4  # tables after section 2 are numbered from here, so no number is skipped while Table 5 has no data
 got = [r for r in (measured or []) if r["usd_per_1000_calls"] is not None]
 api_lo, api_hi = min(r["usd_per_1000_calls"] for r in got), max(r["usd_per_1000_calls"] for r in got)

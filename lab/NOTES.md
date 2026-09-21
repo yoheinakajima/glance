@@ -1863,3 +1863,23 @@ above / below 0.940 (above 1.00, right 1.00, left 0.97, below 0.69 on 26 items);
 Reading: these sets mark where "coarse recognition" ends for the open model read this way: reading text, coarse position and
 small counts are fine; mirror-image orientation and relative size are not. Whether hosted models share these weaknesses is not
 known until they are run.
+
+## 2026-09-21 03:56 Entry 49c: E21 result, open model: synthetic interface screens (one prediction wrong, one refuted by arithmetic)
+
+Local run `20260921T094322Z-62937c`, zero-shot, uncalibrated, shipped readouts (`results/lab/ui_screens.md`, breakdowns from
+`tools/suite_report.py --by`): which numbered mark serves a stated goal 0.993 [0.983, 1.000] (n=300, 6 to 8 marks, answers
+spread over marks 2 to 8, no text describes the marks); state questions 0.922 (n=500); one-step reasoning then a mark 0.910
+(n=100); is the goal already done 0.825 (n=200); kind of page 0.823 (n=300).
+- H50 (at least 0.90 on state and on page type, at least 0.75 on the click target): NOT SUPPORTED as a whole. State and click
+  hold; page type does not: every one of its 53 errors is another page called "article" (article 1.00, cart 0.75, search
+  0.85, settings 0.80, sign-in 0.72), an uncalibrated bias toward one option, the kind a fit removes; not yet fitted here.
+- H51 (at least 10 points below the best hosted model on the reasoning screens): cannot hold whatever the hosted models score,
+  because the open model is at 0.910. By kind: out-of-stock item 1.00, cheaper plan 0.94, earliest date 0.79. One forward pass
+  did more here than I expected; whether hosted models are perfect on it needs the owner's paste.
+- H52 (systems separate by at least 8 points on the click target) needs the hosted rows; the open model leaves 0.7 points.
+Two weak spots, both one-sided: "is the main button disabled" is right on 0.69 because the disabled state is detected on only
+0.07 of the screens that have it (every other state 0.92 to 1.00), and "is the goal already done" is right on every not-done
+screen and on 0.65 of done screens. Caveat on the first, from looking at the screens after the run: the generator draws a
+disabled button as a pale tint of the accent colour, while the question says "greyed out"; a person can tell next to an enabled
+button but it is subtle, so part of this miss may belong to the test's wording. The test is NOT changed after the fact.
+Hosted paste: `uv run python tools/frontier_batch.py --set ui` (its report keeps the same breakdowns).

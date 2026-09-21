@@ -40,11 +40,13 @@ rows = [r for r in read_jsonl(ROOT / "runs" / args.run[0] / "predictions.jsonl")
 for extra in args.run[1:]:
     rows += [r for r in read_jsonl(ROOT / "runs" / extra / "predictions.jsonl") if r["backend"] == "frontier" and r["suite"].startswith(args.prefix)]
 by_suite = collections.defaultdict(lambda: collections.defaultdict(dict))
+labels = {}
 for r in rows:
     if r["backend"] == "vlm" and r["method"] not in ("statement", "independent"):
         continue
     name = str(r.get("model", "")).removeprefix("frontier:") if r["backend"] == "frontier" else ("open 4B model, read" if r["backend"] == "vlm" else f"{r['backend']}")
     by_suite[r["suite"]][name][r["item_id"]] = hit(r)
+    labels[(r["suite"], r["item_id"])] = str(r.get("label"))
 out = {"runs": args.run, "suites": {}}
 for suite, systems in sorted(by_suite.items()):
     hosted = [n for n in systems if n not in ("open 4B model, read", "siglip")]
@@ -85,7 +87,9 @@ for spec in args.by:
     for name, got in by_suite.get(suite, {}).items():
         for item_id, ok in got.items():
             meta = params.get(item_id) or params.get(item_id.split("/")[-1]) or params.get(item_id.split(":")[-1]) or {}
-            groups[name][str(meta.get(key, "unknown"))].append(ok)
+            # keys starting with @ come from the run itself: the item's label, the part of its id after `__`, or the second `_` token of its id
+            special = {"@label": labels.get((suite, item_id)), "@id_suffix": item_id.split("__")[-1], "@id_kind": (item_id.split("_") + [""])[1]}
+            groups[name][str(special[key] if key in special else meta.get(key, "unknown"))].append(ok)
     out["breakdowns"][suite] = {"by": key, "systems": {name: {value: {"accuracy": float(np.mean(hits)), "n": len(hits)} for value, hits in sorted(g.items(), key=lambda kv: order(kv[0]))}
                                                        for name, g in groups.items()}}
 (ROOT / f"results/lab/{args.name}.json").write_text(json.dumps(out, indent=1))

@@ -185,7 +185,7 @@ count the items that every one of the seven systems answers "wrongly": 4 of 131 
 ambiguous label, so part of every system's distance from 1.0 is the labels, not the models.
 <!-- src: results/lab/label_noise_proxy.md, lab/NOTES.md entry 51 -->
 
-### 3.4 Where coarse recognition ends: images drawn by program
+### 3.4 Where coarse recognition ends: drawn probes and interface screens
 
 Six sets of 150 images drawn by program, with labels exact by construction, mark where this stops for the open model
 read this way (registered as entry 50; zero-shot, uncalibrated, shipped readouts).
@@ -208,6 +208,28 @@ size difference, and a fall below 0.70 for six to eight balls (measured 0.78); a
 (Section 7). Hosted models had not been run on these sets when this draft was written, so whether they share these
 weaknesses is not known.
 <!-- src: results/lab/probes.md, results/lab/probes.json, lab/NOTES.md entries 50, 50b, 50c -->
+
+Five hundred synthetic interface screens (five kinds of page, invented content, rendered from generated HTML so every
+label is exact; registered as entry 49) ask what an agent would ask of a screen.
+
+| Question | options | Qwen3-VL-4B, read |
+| --- | --- | --- |
+| Goal in words: which numbered mark should be clicked? | 1 of 6 to 8 | 0.993 [0.983, 1.000] (n=300) |
+| The same, after one step of reasoning (cheaper plan, out-of-stock item, earliest date) | 1 of 2 to 6 | 0.910 [0.850, 0.960] (n=100) |
+| Is the page in this state? (error shown, dialog open, signed in, ...) | 1 of 2 | 0.922 [0.898, 0.944] (n=500) |
+| Is this goal already done? | 1 of 2 | 0.825 [0.770, 0.875] (n=200) |
+| What kind of page is this? | 1 of 5 | 0.823 [0.780, 0.867] (n=300) |
+
+Finding the element that serves a stated goal is nearly perfect, and one step of reasoning costs eight points (out of
+stock 1.00, cheaper plan 0.94, earliest date 0.79). The weak spots are one-sided. The disabled state of the main button
+is reported on only 0.07 of the screens that have it (the other five states 0.92 to 1.00); our screens draw it as a
+pale tint of the accent colour while the question says "greyed out", so part of that miss may belong to the test, which
+we did not change after seeing the result. "Already done" is right on every not-done screen and on 0.65 of done
+screens. Every page-type error is another page called an article, an uncalibrated bias toward one option of the kind a
+fit removes. We had predicted at least 0.90 on page type, and that a single forward pass would trail the best hosted
+model by ten points on the reasoning screens; at 0.910 the second cannot hold whatever the hosted models score. They
+had not been run on these screens when this draft was written.
+<!-- src: results/lab/ui_screens.md, results/lab/ui_screens.json, lab/NOTES.md entries 49, 49b, 49c -->
 
 ### 3.5 Written against read, and other sizes
 
@@ -446,6 +468,7 @@ that this paper's evidence did not support.
 | A one-pass fitted read stays within 3 points of the four-pass fitted read at 32 labels | 3.1 points behind | 42b |
 | Every cheap hosted model stays within 5 points of its own flagship; cheap models score at or below their flagships on ratings | Claude Haiku 4.5 11-14 points behind Opus 5 on iNaturalist; every cheap model scored ABOVE its flagship on ratings, Flash-Lite reaching 0.763 | 45b |
 | KADID-10k: exact accuracy >= 0.70, within-one >= 0.97, MAE <= 0.40, per-type SRCC >= 0.85 | 0.527, 0.880, 0.642, 0.763 | 28 |
+| Interface screens: at least 0.90 on page type; one forward pass at least 10 points behind the best hosted model on one-step reasoning | page type 0.823 (every error is another page called an article); reasoning 0.910, so a 10-point gap is impossible | 49c |
 | Rendered probes: at least 0.90 on stripe direction; under 0.70 for six to eight balls; at least 0.90 for the largest shape at twice the area | stripes 0.653 (the two diagonals are confused); 0.782 for six to eight balls; 0.73 at twice the area, 0.32 at 1.15 times | 50c |
 | A 0.9B model trained for image quality (Q-SiT-mini) is weak on exposure and resolution, and with our fit stays below the four-pass read (0.867) | it ranks all five scales (Spearman 0.86 to 0.95) and scores 0.869; on the same items with the same fit 0.869 against 0.863 (300 labels) and 0.853 against 0.846 (32 labels), both differences within 3 points of zero | 37c |
 

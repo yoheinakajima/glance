@@ -129,7 +129,9 @@ def main() -> int:
     # every copy of the base run that exists, not only this batch's, so a second batch (one provider at a time) keeps the first's rows
     copies = [a for _, _, models in FLAGSHIP_AND_CHEAP for _, suffix in models if (cfg.path("runs") / f"{bases[0][0]}-{suffix}").is_dir() for a in ("--run", f"{bases[0][0]}-{suffix}")]
     if args.set in ("probes", "ui") and finished:
-        by = [a for spec in ("probe_count=count", "probe_count_color=label", "probe_largest=ratio") for a in ("--by", spec)] if args.set == "probes" else []
+        specs = ("probe_count=count", "probe_count_color=label", "probe_largest=ratio", "probe_stripes=label", "probe_spatial=asked_word") if args.set == "probes" else \
+            ("ui_state=@id_suffix", "ui_done=@label", "ui_reason=@id_kind", "ui_page=@label")
+        by = [a for spec in specs for a in ("--by", spec)]
         subprocess.run(["uv", "run", "python", "tools/suite_report.py", "--name", {"probes": "probes", "ui": "ui_screens"}[args.set], "--prefix", {"probes": "probe_", "ui": "ui_"}[args.set],
                         "--run", bases[0][0]] + copies + by, check=False, stdout=subprocess.DEVNULL)
     if args.set == "orders" and finished:

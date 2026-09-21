@@ -1,0 +1,161 @@
+{
+ "runs": [
+  "20260921T094322Z-62937c"
+ ],
+ "suites": {
+  "ui_click": {
+   "open 4B model, read": {
+    "all_items": {
+     "accuracy": 0.9933333333333333,
+     "ci95": [
+      0.9833333333333333,
+      1.0
+     ],
+     "n": 300
+    }
+   }
+  },
+  "ui_done": {
+   "open 4B model, read": {
+    "all_items": {
+     "accuracy": 0.825,
+     "ci95": [
+      0.77,
+      0.875
+     ],
+     "n": 200
+    }
+   }
+  },
+  "ui_page": {
+   "open 4B model, read": {
+    "all_items": {
+     "accuracy": 0.8233333333333334,
+     "ci95": [
+      0.78,
+      0.8666666666666667
+     ],
+     "n": 300
+    }
+   }
+  },
+  "ui_reason": {
+   "open 4B model, read": {
+    "all_items": {
+     "accuracy": 0.91,
+     "ci95": [
+      0.85,
+      0.96
+     ],
+     "n": 100
+    }
+   }
+  },
+  "ui_state": {
+   "open 4B model, read": {
+    "all_items": {
+     "accuracy": 0.922,
+     "ci95": [
+      0.898,
+      0.944
+     ],
+     "n": 500
+    }
+   }
+  }
+ },
+ "breakdowns": {
+  "ui_state": {
+   "by": "@id_suffix",
+   "systems": {
+    "open 4B model, read": {
+     "checkbox_checked": {
+      "accuracy": 0.96875,
+      "n": 64
+     },
+     "cookie_banner": {
+      "accuracy": 1.0,
+      "n": 80
+     },
+     "dialog_open": {
+      "accuracy": 0.9868421052631579,
+      "n": 76
+     },
+     "error_shown": {
+      "accuracy": 1.0,
+      "n": 91
+     },
+     "primary_disabled": {
+      "accuracy": 0.6888888888888889,
+      "n": 90
+     },
+     "signed_in": {
+      "accuracy": 0.9191919191919192,
+      "n": 99
+     }
+    }
+   }
+  },
+  "ui_done": {
+   "by": "@label",
+   "systems": {
+    "open 4B model, read": {
+     "False": {
+      "accuracy": 1.0,
+      "n": 100
+     },
+     "True": {
+      "accuracy": 0.65,
+      "n": 100
+     }
+    }
+   }
+  },
+  "ui_reason": {
+   "by": "@id_kind",
+   "systems": {
+    "open 4B model, read": {
+     "pricing": {
+      "accuracy": 0.9411764705882353,
+      "n": 34
+     },
+     "slots": {
+      "accuracy": 0.7878787878787878,
+      "n": 33
+     },
+     "stock": {
+      "accuracy": 1.0,
+      "n": 33
+     }
+    }
+   }
+  },
+  "ui_page": {
+   "by": "@label",
+   "systems": {
+    "open 4B model, read": {
+     "article": {
+      "accuracy": 1.0,
+      "n": 60
+     },
+     "cart": {
+      "accuracy": 0.75,
+      "n": 60
+     },
+     "search_results": {
+      "accuracy": 0.85,
+      "n": 60
+     },
+     "settings": {
+      "accuracy": 0.8,
+      "n": 60
+     },
+     "sign_in": {
+      "accuracy": 0.7166666666666667,
+      "n": 60
+     }
+    }
+   }
+  }
+ }
+}
