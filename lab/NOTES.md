@@ -1487,3 +1487,16 @@ the first 400 items per lab scale (200 fit / 200 test), the prompts and readouts
   So the FITTED recipe is portable across families; the zero-shot quality is a property of the model, which is what the
   owner's scaling question (E15, running) is about. `jsondigits` was not collected for this model.
 - "Works on any VLM" stays unsaid: two families, one fitted recipe.
+
+## 2026-09-20 20:00 Entry 35c: E12 complete: three frontier models on the iNaturalist photos (the owner ran the paid calls in one batch)
+
+`results/lab/fresh_inat.md`. Yes/no: open 4B model read 0.945 [0.922, 0.968] (all 400); Gemini 3.1 Pro 0.960, Claude Opus 5
+0.945, GPT-5.6 0.935 (test half, 200). Pick one of ten: open model 0.940 [0.905, 0.970] (lettered prompt 0.950); Opus 5
+0.930, GPT-5.6 0.910, Gemini 0.910 (test half, 100); SigLIP2 0.880. Every interval overlaps; on pick-one the open model
+has the highest point estimate. H30, last part (frontier within 5 points either way): SUPPORTED.
+Measured cost and speed, all three with cost logging this time: yes/no $3.37 / $1.62 / $2.98 per 1,000 answers and
+2.3 / 1.1 / 2.8 s median (Opus / GPT / Gemini); pick-one $4.48 / $2.35 / $3.37 and 2.4 / 1.3 / 2.9 s. The list-price
+"upper estimate" used so far for Opus ($18.70) overstates its real cost about fivefold on images of this size; hosted
+cost depends on image size (GPT-5.6 cost $7.55 per 1,000 on the 1280 px Commons files against $1.62 on these 500 px
+files). The comparison matrix will move its yes/no and pick-one columns to this photo set once the same model's WRITTEN
+answers are collected on it (queued), because it has cleaner labels, more items and measured cost for every hosted row.

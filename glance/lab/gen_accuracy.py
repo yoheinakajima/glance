@@ -28,6 +28,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--frontier-run", required=True, help="run whose frontier rows define the lab test items")
     parser.add_argument("--out", default="lab/runs/gen_accuracy.jsonl")
     parser.add_argument("--limit", type=int, help="items per suite (smoke tests)")
+    parser.add_argument("--suites", help="comma-separated suites instead of the default set (e.g. inat_yesno,inat_choice)")
     args = parser.parse_args(argv)
 
     bench = Bench()
@@ -36,7 +37,7 @@ def main(argv: list[str] | None = None) -> int:
     out_path = PROJECT_ROOT / args.out
     done = {(r["suite"], r["item_id"]) for r in read_jsonl(out_path)}
     writer = JsonlWriter(out_path)
-    for suite in LADDERS + ["fresh_yesno", "fresh_choice"]:
+    for suite in (args.suites.split(",") if args.suites else LADDERS + ["fresh_yesno", "fresh_choice"]):
         items = SUITES[suite].build(bench.cfg, 600)
         if suite in LADDERS:
             items = [i for i in items if (suite, i.item_id) in seen_by_frontier]
