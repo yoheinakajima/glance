@@ -30,6 +30,19 @@ cd ~/code/glance && gh api -X POST repos/yoheinakajima/glance/pages -f build_typ
 3. In the repository's Settings -> Pages, confirm the custom domain `glance.yohei.me` (the file `site/CNAME` already asks
    for it) and tick "Enforce HTTPS" once the certificate is issued (can take up to an hour after DNS resolves).
 
+## 3b. The page is already live once; to update it (state on 2026-09-21)
+
+The owner set up Pages, DNS and the custom domain on 2026-09-20 and deployed once by hand (about 00:13). Pushes do NOT
+redeploy on their own (the workflow deploys on a manual run, or on push only if the repository variable `PAGES_AUTO` is
+`true`). Everything committed since then (the insect-order test with six hosted models, the second model family on
+photographs, table numbering, the overnight results) goes live with one paste:
+
+```bash
+cd ~/code/glance && gh workflow run pages --repo yoheinakajima/glance && sleep 5 && gh run watch --repo yoheinakajima/glance
+```
+
+Then, in Settings -> Pages, tick "Enforce HTTPS" if the certificate has been issued since.
+
 ## 4. Afterwards
 
 - Optional next steps, prepared but not done: PyPI package under the free name `glance-vlm`; a Hugging Face Space demo.
