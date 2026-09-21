@@ -37,28 +37,32 @@ against itself once it has seen unlabeled or labeled examples of a rating rubric
 <!-- src: docs/paper/METHODS.md sections 1-2 -->
 
 The contributions below are measured properties of the frozen model plus this readout, not claims about the readout's
-originality; Section 6 places the readout among a family of training-free tools that already do the same thing for
+originality; Section 8 places the readout among a family of training-free tools that already do the same thing for
 text and, in two cases, for images.
 
 1. A fresh-photograph, cross-provider measurement. On photographs taken after every evaluated model's release,
    labelled by people outside this project (Commons "depicts" statements, iNaturalist community identifications), the
    open model read this way is statistically indistinguishable (overlapping 95% intervals, n = 131 and 65) from three hosted flagships and each provider's cheapest current model on
-   yes/no and pick-one (Section 3).
-2. Reading against writing on the same model. The same frozen model asked to generate a JSON answer is exactly as
+   yes/no and pick-one, including a harder insect-order test on which the hosted models spread over 23 points (Section 3).
+2. Where that stops. On images drawn by program and on synthetic interface screens, with labels exact by construction,
+   the open model reads text, finds the element that serves a goal (0.993) and counts to five, and fails on mirror-image
+   direction (0.30) and relative size (0.52): its limit is geometry, not reading (Section 4).
+3. Reading against writing on the same model. The same frozen model asked to generate a JSON answer is exactly as
    accurate on yes/no and pick-one (the same right/wrong outcome on 95% to 99.5% of items); reading is about 1.5 times
    faster on a full-size photograph, 2.4 to 6.1 times on small images, and returns probabilities the generated answer
-   does not (Section 3).
-3. Ratings told as one arc, because this is where most of what is ours lives: order versus exact level, who leads
+   does not (Section 5).
+4. Ratings told as one arc, because this is where most of what is ours lives: order versus exact level, who leads
    zero-shot, a one-pass read at the JSON answer position that closes most of the zero-shot gap to writing,
-   self-calibration from unlabeled images, a content-free prior that fails, label curves, and a hidden-state ceiling
-   (Section 4).
-4. A pre-registered notebook with published misses. Every experiment behind this paper has a hypothesis written down
-   before its data existed; several were not supported, and we report them next to the ones that were (Section 7).
+   self-calibration from unlabeled images, a content-free prior that fails, label curves, a hidden-state ceiling, and
+   what lies outside the quality scales, where the pattern does not hold: a real quality benchmark, a small trained
+   quality model that does as well, and rubrics that a 300-label fit does not rescue (Section 6).
+5. A pre-registered notebook with published misses. Every experiment behind this paper has a hypothesis written down
+   before its data existed; several were not supported, and we report them next to the ones that were (Section 9).
 
 We do not claim the readout itself is new. Scoring a candidate statement's logit at a forced answer position, with
 nothing decoded, is the same primitive that VQAScore, Kadavath et al.'s probes of a language model's stated
 confidence, and several open reproductions of a commercial typed-decision interface (Simple Jev, jev-visual, LitJev)
-already use, in two of the latter cases on images (Section 6). What we measure is what that primitive delivers on a
+already use, in two of the latter cases on images (Section 8). What we measure is what that primitive delivers on a
 frozen open model, honestly compared with hosted alternatives, and what a small amount of calibration adds.
 <!-- src: docs/paper/RELATED_WORK.md -->
 
@@ -70,13 +74,15 @@ option, one scale level, is scored in its own forward pass: the user turn holds 
 assistant turn is opened and left empty, and we read the logits of the allowed answer tokens ("Yes"/"No" variants, or
 a rating's digit tokens) at that position through a float32 copy of the output head, never decoding a token. A yes/no
 answer is the sigmoid of the Yes-minus-No logit; a pick-one or rating answer is a softmax over the per-option or
-per-level logits. Several questions about one image can share the cost of reading it.
-<!-- src: docs/paper/METHODS.md sections 1-2 -->
+per-level logits. Several questions about one image share the cost of reading it: they reuse the image's key-value
+prefix and branch into independent suffixes, so they cannot influence each other, and packing them this way changed 0 of
+100 checked predictions.
+<!-- src: docs/paper/METHODS.md sections 1-2, docs/paper/RESULTS_LAB.md section 9 -->
 
 The open model is Qwen3-VL-4B-Instruct (Apache-2.0), frozen, float16, on one Apple M5 laptop (32 GB RAM, MPS). A
 frozen dual-encoder baseline, SigLIP2-base (Apache-2.0), appears alongside it on pick-one questions; two other sizes
 of the same family (2B, 8B) and one model of a different family (SmolVLM2-2.2B, Apache-2.0) are read the same way in
-Section 5. <!-- src: docs/paper/METHODS.md section 12 -->
+Section 7. <!-- src: docs/paper/METHODS.md section 12 -->
 
 Three tests, all zero-shot unless stated otherwise, use the same items across every system compared in a table: (a)
 yes/no, 131 fresh Wikimedia Commons photographs (262 questions, one "yes" and one seeded "no" per photograph); (b)
@@ -97,7 +103,7 @@ per call from the laptop; hosted cost is the provider's logged bill where record
 estimate marked as such throughout. Open-model cost is arithmetic on measured seconds and an assumed cloud GPU price,
 not a bill. Every experiment behind Sections 3 to 5 has a hypothesis recorded, with its own timestamp, in a lab
 notebook before the data that would test it existed, and a verdict recorded afterward, including every case not
-supported; we report both, and collect the misses in Section 7.
+supported; we report both, and collect the misses in Section 9.
 <!-- src: docs/paper/METHODS.md section 11, results/lab/cost_model.md, results/lab/frontier_cost_measured.md, lab/NOTES.md -->
 
 ## 3. Yes/no and pick-one
@@ -127,9 +133,15 @@ pick-one (writing 1.87 s): faster than five of the six hosted models on yes/no (
 \$0.16 to \$0.24 per 1,000 yes/no answers on a rented GPU against \$0.31 for the cheapest hosted model (Gemini 3.1
 Flash-Lite). That is somewhat cheaper, not an order of magnitude: each provider's cheapest current model is itself many
 times cheaper than its flagship, and on a full-size photograph most of the open model's time goes into reading the image.
+The two sides are not measured the same way: hosted cost is the provider's bill per call and hosted latency includes the
+network and the provider's queue, while open-model cost is measured laptop seconds at an on-demand cloud GPU price with
+no batching, idle time or operator counted; a different GPU price or image resolution moves it by more than the gap to the
+low-cost hosted models. Hosted cost also depends on image size: GPT-5.6 measured \$7.55 per 1,000 answers on the
+1,280-pixel Commons files and \$1.86 on the roughly 500-pixel iNaturalist files. The durable differences are not the
+cents: no image leaves the machine, there is no per-call bill, it works offline, and the answer can be fitted.
 An earlier version of these cells (0.33 s, "about five times cheaper") was timed on 448 px test images and is withdrawn
 (erratum, entry 48).
-<!-- src: results/lab/matrix.md, lab/PHOTO_TIMING.json, lab/NOTES.md entries 45b, 48, 48b -->
+<!-- src: results/lab/matrix.md, results/lab/frontier_cost_measured.md, lab/PHOTO_TIMING.json, lab/NOTES.md entries 45b, 48, 48b -->
 
 ### 3.2 Both photo sets in full
 
@@ -150,7 +162,7 @@ both tests:
 
 Only whether each hosted pick was correct is stored, never the pick itself. Almost every interval overlaps, with one
 exception: Claude Haiku 4.5 trails here (0.830/0.790, neither overlapping the open model's 0.945/0.940), 11 to 14
-points under its own flagship, unexpected when we registered this comparison (Section 7). On four older public
+points under its own flagship, unexpected when we registered this comparison (Section 9). On four older public
 benchmarks that may sit inside every model's training data (POPE, GQA yes/no, Oxford Pets, Caltech-101) the same
 reading trails Claude Opus 5's zero-shot pick by 3.2 points on average [1.0, 5.4]; on fresh photographs, which no
 model could have trained on, that gap disappears into overlapping intervals, so it is not obviously a contamination
@@ -187,7 +199,7 @@ count the items that every one of the seven systems answers "wrongly": 4 of 131 
 ambiguous label, so part of every system's distance from 1.0 is the labels, not the models.
 <!-- src: results/lab/label_noise_proxy.md, lab/NOTES.md entry 51 -->
 
-### 3.4 Where coarse recognition ends: drawn probes and interface screens
+## 4. Where coarse recognition ends: geometry, not reading
 
 Six sets of 150 images drawn by program, with labels exact by construction, mark where this stops for the open model
 read this way (registered as entry 50; zero-shot, uncalibrated, shipped readouts).
@@ -207,7 +219,7 @@ while the two diagonal directions are confused (22 of 74 correct, below a coin f
 largest of four like shapes is found on 0.73 of images when it has twice the area of the others, falling to 0.59, 0.45
 and 0.32 at area ratios 1.5, 1.3 and 1.15 (chance 0.25). We had predicted at least 0.90 on stripes and on the twofold
 size difference, and a fall below 0.70 for six to eight balls (measured 0.78); all three predictions were wrong
-(Section 7). Hosted models had not been run on these sets when this draft was written, so whether they share these
+(Section 9). Hosted models had not been run on these sets when this draft was written, so whether they share these
 weaknesses is not known.
 <!-- src: results/lab/probes.md, results/lab/probes.json, lab/NOTES.md entries 50, 50b, 50c -->
 
@@ -233,7 +245,7 @@ model by ten points on the reasoning screens; at 0.910 the second cannot hold wh
 had not been run on these screens when this draft was written.
 <!-- src: results/lab/ui_screens.md, results/lab/ui_screens.json, lab/NOTES.md entries 49, 49b, 49c -->
 
-### 3.5 Written against read, and other sizes
+## 5. Reading against writing
 
 Reading changes nothing about what the frozen model knows on yes/no and pick-one. Asked to generate a JSON object
 instead, the same model is exactly as accurate: read minus written is +0.0 points [-1.1, +1.1] on 262 Commons yes/no
@@ -242,48 +254,36 @@ and -0.5 [-2.5, +1.0] on 200 iNaturalist pick-one photographs, with zero invalid
 not identical item by item: an item comes out the same way, right or wrong, on 99.2%, 95.4%, 99.5% and 98.5% of the
 four sets, the rest reflecting the two prompts, which differ (a JSON request against one statement per option).
 <!-- src: results/lab/gen_accuracy.md, lab/NOTES.md entries 32b, 32c, 32d --> Where the prompt IS the same (the one-pass
-rating read of Section 4.3, taken at the position where the written answer puts its digit) 98.2% of answers are
+rating read of Section 6.3, taken at the position where the written answer puts its digit) 98.2% of answers are
 identical, as expected when a greedy written answer is an argmax over the same logits. The two diverge further when
-the prompts differ more (Section 4.3), and when one written JSON object
+the prompts differ more (Section 6.3), and when one written JSON object
 carries 25 ratings, each conditioned on the fields already written, it matches 25 independent reads on only 59% of fields
 (no ground truth for that request, so a difference, not an error rate). What reading changes is cost and form. For one
 question about a full-size photograph, where encoding the image dominates, reading is about 1.5 times faster (1.08 s
 against 1.65 s, Section 3.1); on small 448-pixel test images it is 2.4 times faster for one yes/no question, 3.5 times for
 five mixed questions and 6.1 times for 25 rating questions (40 images per shape, one laptop, idle GPU); and the answer is
 a probability vector that can be thresholded, ranked and fitted, at no extra decoding cost.
-<!-- src: lab/GENBENCH.md, lab/PHOTO_TIMING.json, results/lab/cost_model.md, lab/NOTES.md entries 27c, 48, 48b --> A smaller open model does as well on yes/no out of the box:
-Qwen3-VL-2B reaches 0.939 [0.908, 0.966] on Commons yes/no and 0.925 [0.898, 0.950] on iNaturalist yes/no, both
-overlapping the 4B model above; pick-one is more size-sensitive (Section 5).
-<!-- src: results/lab/other_models.json -->
+<!-- src: lab/GENBENCH.md, lab/PHOTO_TIMING.json, results/lab/cost_model.md, lab/NOTES.md entries 27c, 48, 48b -->
 
-## 4. Ratings, the hard case
+## 6. Ratings, the hard case
 
-Scope first. "Ratings" in this section means five synthetic, single-factor, four-level image-quality scales (blur,
-exposure, JPEG artifacts, noise, resolution) on 1,000 held-out images, the same for every system. It does not mean
-aesthetic judgement or any naturally occurring, multi-factor score. On a real image-quality benchmark, KADID-10k, the
-method missed every target we registered (Section 4.6), and with plentiful labels 29 hand-built features score 0.979 on
-the synthetic scales against 0.867 for the fitted model: for low-level artefacts, features remain the better tool. Nor
-does the pattern of Section 4.1 extend to every rubric: on five synthetic rubrics that are not image quality (subject cut
-off by the frame, occlusion, tilt, caption legibility, watermark) the zero-shot one-pass read is exactly right on 0.375
-of images and within one level on 0.741 (chance 0.25; tilt and cut-off at chance), the four-pass read 0.334, and 16
-unlabeled images do not help (0.366). A labeled fit does not rescue them either: with 300 labels per rubric the
-four-pass read reaches 0.548 exact and 0.897 within one level, where we had predicted at least 0.75 and 0.95 (occlusion
-0.727, caption legibility 0.650, watermark 0.557, cut-off 0.477, tilt 0.330). A fit removes an offset; it cannot supply
-a judgement the model does not make, and the weakest rubrics are the geometric ones, in line with the drawn probes of
-Section 3.4.
-<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/SEMANTIC_REPORT.md, lab/NOTES.md entries 20, 25, 28, 36c, 43b -->
+Scope first. "Ratings" in Sections 6.1 to 6.5 means five synthetic, single-factor, four-level image-quality scales
+(blur, exposure, JPEG artifacts, noise, resolution) on 1,000 held-out images, the same for every system. It does not mean
+aesthetic judgement or any naturally occurring, multi-factor score. The pattern reported here holds on these scales and
+does not hold outside them; Section 6.6 collects what lies outside: a real image-quality benchmark, specialised tools
+that do as well or better, and rubrics that are not image quality.
 
-### 4.1 Order versus exact level
+### 6.1 Order versus exact level
 
 A rating asks for a level on a four-level rubric described in words: blur, underexposure, JPEG artifacts, noise, low
 resolution; 1,000 held-out images, 200 per scale. Zero-shot, the frozen model gets the order right and the exact
 level often wrong: the raw, uncalibrated read is exactly right on 0.558 of images but within one level on 0.987 (mean
 absolute error 0.47 levels, rank agreement 0.934). Its misses are not evenly spread: it is, for example, about half a
 level too harsh on blur and almost never uses the JPEG scale's top level, a constant per-rubric offset rather than
-random noise, which a small calibration can remove and a content-free correction (4.4) cannot.
+random noise, which a small calibration can remove and a content-free correction (6.4) cannot.
 <!-- src: results/lab/label_free_test.md, results/lab/scaling.md, docs/paper/METHODS.md section 14.1 -->
 
-### 4.2 Who leads, zero-shot
+### 6.2 Who leads, zero-shot
 
 | System | labels used | mean exact accuracy |
 | --- | --- | --- |
@@ -303,7 +303,7 @@ than its own flagship here, the opposite of what we had expected: Claude Haiku 4
 above GPT-5.6, Gemini 3.1 Flash-Lite above Gemini 3.1 Pro, the strongest zero-shot system we measured on this task.
 <!-- src: results/lab/matrix.md, results/lab/frontier_head_to_head.md, lab/NOTES.md entry 45b -->
 
-### 4.3 One pass, four passes, or writing
+### 6.3 One pass, four passes, or writing
 
 The readout the harness ships as the fitting target (`ens4d`, four passes, chosen because a calibration in the loop
 forgives a constant offset) is a poor zero-shot elicitation: 0.570, ten points below the same model's own generated
@@ -318,7 +318,7 @@ advance (at least as good on the first, not worse on the second) was met, althou
 on KADID-10k was not (+1.9). It is now the default; the four-pass read remains the method for labeled fits.
 <!-- src: results/lab/gen_accuracy.md, results/lab/jsondigits.md, docs/paper/METHODS.md section 14.2, docs/paper/RESULTS_ZEROSHOT.md section 3 -->
 
-### 4.4 Zero labels, not zero-shot: self-calibration from unlabeled images
+### 6.4 Zero labels, not zero-shot: self-calibration from unlabeled images
 
 A pool of unlabeled images of the rubric lets each readout's level logits be z-scored against that pool's own mean and
 standard deviation, with no parameter fit to any label: zero labels, never zero-shot, since it still needs images
@@ -338,7 +338,7 @@ subtracting that reading as a "prior" pushes every real image toward the mild en
 this would gain at least 3 points was not supported; it lost ground on four of five scales. For an image rubric there
 appears to be no content-free image. <!-- src: results/lab/null_prior.md, docs/paper/METHODS.md section 14.1 -->
 
-### 4.5 If you have labels
+### 6.5 If you have labels
 
 | Setting | mean exact accuracy | note |
 | --- | --- | --- |
@@ -359,7 +359,7 @@ about 32 (0.826 against 0.855 at n=32); it suggests the frozen model already rep
 the hand-built features do, so the zero-shot gap looks like a readout and convention problem more than a perception
 one. <!-- src: docs/paper/RESULTS_LAB.md sections 3, 4, 5, 8, docs/paper/RESULTS_COMPARISONS.md sections 1, 3, lab/READOUT_LADDER.md, lab/NOTES.md entry 40 -->
 
-### 4.6 KADID-10k: the misses
+### 6.6 Outside the quality scales: KADID-10k, specialised tools, other rubrics
 
 On KADID-10k (23 severity distortion types at 5 levels, human DMOS scores, evaluation only, no photograph shared with
 the lab scales), every registered target was missed: exact accuracy 0.527 with the full per-distortion label set
@@ -370,10 +370,29 @@ least 20 of 23 distortions individually, could not be met even by a perfectly ca
 size. The zero-shot read is weaker still (0.328 exact); a calibration learned on 22 other distortions barely helps a
 distortion it has not seen (0.350 against 0.328 raw), while removing the readout's bias with unlabeled images of the
 held-out distortion helps more (0.433 combined). Where zero-shot ratings must place an exact severity level across
-many distortion types with no per-rubric fit, this method is not solved.
+many distortion types with no per-rubric fit, this method is not solved. On the same KADID items the one-pass read
+of Section 6.3 scores 0.347 zero-shot against 0.328 for the four-pass read.
+
+Specialised tools do as well or better on low-level artefacts. With plentiful labels 29 hand-built features score 0.979 on
+the synthetic scales against 0.867 for the fitted model. A 0.9B model trained for image quality (Q-SiT-mini), given our
+matrix scaling on its five level-word logits, the same 32 labels per scale and the same test items, scores 0.853 against
+0.846 for the frozen 4B model (difference +0.7 points [-1.1, +2.5]; with 300 labels 0.869 against 0.863): indistinguishable,
+at a quarter of the size. We had predicted it would rank only the three distortions it was trained for and stay below the
+4B model; it ranks all five scales (Spearman 0.86 to 0.95). A general model read this way earns its place by answering any
+typed question with one set of frozen weights, not by being the best quality meter.
+
+Nor does the pattern of Section 6.1 extend to every rubric. On five synthetic rubrics that are not image quality (subject
+cut off by the frame, occlusion, tilt, caption legibility, watermark; exact ground truth from segmentation masks and
+drawing parameters) the zero-shot one-pass read is exactly right on 0.375 of images and within one level on 0.741 (chance
+0.25; tilt and cut-off at chance), the four-pass read 0.334, and 16 unlabeled images do not help (0.366). A labeled fit
+does not rescue them either: with 300 labels per rubric the four-pass read reaches 0.548 exact and 0.897 within one level,
+where we had predicted at least 0.75 and 0.95 (occlusion 0.727, caption legibility 0.650, watermark 0.557, cut-off 0.477,
+tilt 0.330). A fit removes an offset; it cannot supply a judgement the model does not make, and the weakest rubrics are
+the geometric ones, in line with the drawn probes of Section 4.
+<!-- src: docs/paper/RESULTS_GENERALIZATION.md, results/lab/classical_baselines.md, results/lab/jsondigits_hard.md, lab/SEMANTIC_REPORT.md, results/lab/external_same_items.md, lab/NOTES.md entries 20, 25, 28, 36c, 37c, 43b, 43c -->
 <!-- src: docs/paper/RESULTS_GENERALIZATION.md, docs/paper/RESULTS_ZEROSHOT.md section 3 -->
 
-## 5. Does it depend on the model?
+## 7. Does it depend on the model?
 
 The same questions and readouts, unchanged, were run on two other sizes of the same open family (Qwen3-VL-2B,
 Qwen3-VL-8B) and on one model of a different family (SmolVLM2-2.2B: a SigLIP vision tower, an SmolLM2 language model,
@@ -411,7 +430,7 @@ at 32 labels, so the fitted recipe travels across sizes even though zero-shot qu
 those 32 labels did not shrink with size as expected (45.4, 28.3, 30.2 points for 2B, 4B, 8B).
 <!-- src: results/lab/scaling.md, lab/NOTES.md entry 38c -->
 
-The one-pass read of Section 4.3 shows the same picture and is at or above the four-pass read zero-shot on every model
+The one-pass read of Section 6.3 shows the same picture and is at or above the four-pass read zero-shot on every model
 measured: 0.492, 0.669 and 0.643 for Qwen3-VL-2B, 4B and 8B (against 0.388, 0.570, 0.537), and 0.440 against 0.419 for
 SmolVLM2-2.2B; with 16 unlabeled images it reaches 0.623, 0.758, 0.677 and 0.609. The 8B model is again not above the
 4B model. <!-- src: results/lab/scaling.md, lab/NOTES.md entries 38c, 42b, 44b -->
@@ -421,10 +440,11 @@ The fitted recipe also travels to that different family without a wording change
 and the four-pass ensemble with a matrix calibration 0.854 (200 labels/scale), the same registered ordering as on
 Qwen3-VL-4B. Zero-shot it is much weaker (raw four-pass read 0.419 exact, within one level 0.837, against 0.570 and
 0.987 for the 4B model): zero-shot quality is a property of the model being read, not of the harness. Two families
-and three sizes is not "any model".
+and three sizes is not "any model". The harness loads any Hugging Face image-text model with a chat template through the same
+backend (`--model-id`); that path was checked end to end on SmolVLM2-2.2B only (entry 46c), and any other model is untested.
 <!-- src: lab/SMOLVLM2_REPORT.md, lab/NOTES.md entries 44, 46 -->
 
-## 6. Related work and positioning
+## 8. Related work and positioning
 
 Reading a candidate statement's logit at a forced answer position, with nothing decoded, is not a primitive we
 invented. VQAScore reads P(Yes) to "Does this figure show {text}?" from a vision-language model for image-text
@@ -451,15 +471,15 @@ can be calibrated by construction but is tied to its own backbone; what this har
 vision-language model is attached, and it moves when a better one ships, with no retraining.
 <!-- src: docs/paper/RELATED_WORK.md, "Typed-decision models" table and "Statements we stand behind" -->
 
-We do not claim this works on any open vision-language model (two families, three sizes, Section 5), that it is
+We do not claim this works on any open vision-language model (two families, three sizes, Section 7), that it is
 faster or cheaper than the commercial interface it is modelled on (that interface is text-only; no image-to-image
-cost comparison exists), or that its probabilities are calibrated for ratings out of the box (Section 4). We do not
+cost comparison exists), or that its probabilities are calibrated for ratings out of the box (Section 6). We do not
 call the harness a model, and we avoid describing it as a vision counterpart of that commercial interface:
 image-input, Jev-shaped open servers already exist, and what a calibration and measurement layer adds on top of the
 shared primitive is exactly what Sections 3 and 4 report.
 <!-- src: docs/paper/RELATED_WORK.md, "Lead with the ask" and the pitch paragraph -->
 
-## 7. Limitations and misses
+## 9. Limitations and misses
 
 We registered a hypothesis before most experiments in this paper and report every verdict, including the following
 that this paper's evidence did not support.
@@ -498,16 +518,16 @@ logit alike) but changing how much the reported probabilities can be trusted at 
 
 Other limits, stated plainly: every rating scale here, including KADID-10k, is a synthetic single-factor degradation,
 none a naturally occurring multi-factor judgment; no hosted model was given a few-shot prompt or a rubric example
-before scoring, so Section 4 compares each provider's zero-shot, not best achievable, performance; yes/no and pick-one
+before scoring, so Section 6 compares each provider's zero-shot, not best achievable, performance; yes/no and pick-one
 on fresh photographs sit near ceiling for every system (all near 0.93), so "level with hosted models" partly reflects
 that the task is currently easy, and on older, possibly contaminated benchmarks a hosted flagship led by 3 to 5 points
 (Section 3.2) - the harder insect-order test of Section 3.3 separates the hosted models and the open model holds, but
 species-level and expert distinctions are untested; labels on the photo sets are community labels with an estimated
-2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 4.3, now the default, is still poor
+2.5% to 4.6% noise floor and no human audit; timings are from one laptop GPU (Section 3.1); the one-pass JSON-position read of Section 6.3, now the default, is still poor
 in absolute terms on KADID-10k (0.347) and on rubrics that are not image quality (0.375), and its request wording for a question about several images at once has not been measured (entry 43c); and two open,
-MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read (Section 7's table); the second was still running when this draft was written. <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
+MIT-licensed outside systems were selected for a head-to-head on the lab scales (entry 37): the first, a 0.9B quality model, matched the fitted four-pass read (Section 9's table); the second was still running when this draft was written. <!-- src: lab/NOTES.md entries 35c, 37, 38c, 43, 46, 47 -->
 
-## 8. Reproducibility
+## 10. Reproducibility
 
 Every result in this paper can be regenerated from this repository.
 
@@ -534,7 +554,7 @@ and only Apache-2.0 or MIT weights are used anywhere in this project. Photograph
 attributed per file in source manifests, and not redistributed (manifests hold item identifiers, hashes and licence
 fields; images are re-fetched into a local, gitignored cache). Two older benchmarks (POPE, Caltech-101) were
 re-sourced from official MIT- or CC-BY-licensed releases rather than an ambiguous mirror; RVL-CDIP was skipped
-outright over an unclear licence. KADID-10k (Section 4.6) carries no formal licence, only a statement that it is
+outright over an unclear licence. KADID-10k (Section 6.6) carries no formal licence, only a statement that it is
 "freely available to the research community"; it is used under an explicit, evaluation-only exception, never to fit
 anything the harness ships, and nothing from it is redistributed beyond item identifiers, distortion levels,
 DMOS-derived metrics and model logits. Hand-labeled private data never leaves the machine and was empty in every run
@@ -568,14 +588,14 @@ harmless, but one source should feed both tables), (a)3, (a)5, (a)6, (a)8 to (a)
 4. `docs/CLAIMS.md` states "0.697 exact" for "16 or more UNLABELED images," which is actually the value for the full
    500-image unlabeled pool in `results/lab/label_free_test.md`; the same file's row for exactly 16 images gives
    0.686, which is the number `docs/paper/OUTLINE.md`'s own results map cites for "16 images." We used 0.686 in
-   Section 4.4 as the entry-16 figure and 0.697 as the full-pool figure, sourced separately.
+   Section 6.4 as the entry-16 figure and 0.697 as the full-pool figure, sourced separately.
 5. The 500-label, four-pass rating accuracy is 0.867 [0.854, 0.881] in `docs/paper/RESULTS_LAB.md` section 8 and in
    `lab/READOUT_LADDER.md`'s "full" column, but 0.868 in `results/lab/frontier_head_to_head.md` and
-   `docs/paper/RESULTS_COMPARISONS.md` section 4. We used 0.867 [0.854, 0.881] in Section 4.5 because it carries the
+   `docs/paper/RESULTS_COMPARISONS.md` section 4. We used 0.867 [0.854, 0.881] in Section 6.5 because it carries the
    only sourced interval.
 6. The raw four-pass readout's accuracy at 32 labels is 0.853 in `results/lab/jsondigits.md` (used as the comparison
    point for the one-pass read's H41 verdict) but 0.857 in `results/lab/frontier_head_to_head.md` and
-   `docs/paper/RESULTS_COMPARISONS.md`. The 3.1-point miss we report for H41 in Section 7 uses 0.822 against 0.853
+   `docs/paper/RESULTS_COMPARISONS.md`. The 3.1-point miss we report for H41 in Section 9 uses 0.822 against 0.853
    (jsondigits.md's own comparison); against 0.857 the miss would be 3.5 points, which would not change the verdict.
 7. `results/lab/matrix.md` and `lab/NOTES.md` entry 45b report measured (not "est.") costs for the three cheapest
    hosted models (Claude Haiku 4.5, GPT-5.6 Luna, Gemini 3.1 Flash-Lite), but `results/lab/frontier_cost_measured.md`
