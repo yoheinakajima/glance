@@ -18,7 +18,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--name", required=True, help="output name: results/lab/<name>.json and .md")
 parser.add_argument("--prefix", required=True, help="suite name prefix, e.g. probe_ or ui_")
 parser.add_argument("--run", action="append", required=True)
-parser.add_argument("--by", help="also break the OPEN model's accuracy down by this key of the item's meta/params (e.g. ratio)")
+parser.add_argument("--by", action="append", default=[], metavar="SUITE=KEY",
+                    help="also break every system's accuracy on SUITE down by KEY of the item's generator params in its source manifest, or by `label` (e.g. probe_largest=ratio)")
 args = parser.parse_args()
 rng = np.random.default_rng(7)
 
@@ -55,6 +56,29 @@ for suite, systems in sorted(by_suite.items()):
             e["same_items"] = ci([got[i] for i in sorted(shared)])
         entry[name] = e
     out["suites"][suite] = entry
+
+
+def params_of(suite):
+    """item id -> {label, **generator params}, from the generator's source manifests (ground truth lives there, not in the run)."""
+    found = {}
+    for path in sorted((ROOT / "glance/evals/manifests").glob("*_source.jsonl")):
+        if not path.name.startswith(("probes_", "ui_screens")):
+            continue
+        for row in read_jsonl(path):
+            found.setdefault(row["item_id"], {"label": row.get("label"), **(row.get("params") or {})})
+    return found
+
+
+out["breakdowns"] = {}
+for spec in args.by:
+    suite, key = spec.split("=", 1)
+    params, groups = params_of(suite), collections.defaultdict(lambda: collections.defaultdict(list))
+    for name, got in by_suite.get(suite, {}).items():
+        for item_id, ok in got.items():
+            meta = params.get(item_id) or params.get(item_id.split("/")[-1]) or params.get(item_id.split(":")[-1]) or {}
+            groups[name][str(meta.get(key, "unknown"))].append(ok)
+    out["breakdowns"][suite] = {"by": key, "systems": {name: {value: {"accuracy": float(np.mean(hits)), "n": len(hits)} for value, hits in sorted(g.items(), key=lambda kv: (len(kv[0]), kv[0]))}
+                                                       for name, g in groups.items()}}
 (ROOT / f"results/lab/{args.name}.json").write_text(json.dumps(out, indent=1))
 f = lambda c: f"{c['accuracy']:.3f} [{c['ci95'][0]:.3f}, {c['ci95'][1]:.3f}]"  # noqa: E731
 md = [f"# `{args.prefix}*` suites: accuracy per system (uncalibrated decisions, bootstrap 95% intervals)", ""]
@@ -63,6 +87,11 @@ for suite, entry in out["suites"].items():
     for name, e in entry.items():
         s = e.get("same_items")
         md.append(f"| {name} | {f(s) if s else '-'} | {s['n'] if s else '-'} | {f(e['all_items'])} | {e['all_items']['n']} |")
+    md.append("")
+for suite, b in out["breakdowns"].items():
+    values = sorted({v for g in b["systems"].values() for v in g}, key=lambda v: (len(v), v))
+    md += [f"## {suite}, by {b['by']} (accuracy, items)", "", "| System | " + " | ".join(values) + " |", "| --- | " + " | ".join("---" for _ in values) + " |"]
+    md += [f"| {name} | " + " | ".join(f"{g[v]['accuracy']:.2f} ({g[v]['n']})" if v in g else "-" for v in values) + " |" for name, g in b["systems"].items()]
     md.append("")
 (ROOT / f"results/lab/{args.name}.md").write_text("\n".join(md) + "\n")
 print("\n".join(md))
