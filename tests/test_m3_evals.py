@@ -113,9 +113,9 @@ def test_suite_registry_and_skips(cfg, tmp_path):
     from glance.evals.suites import DEFAULT_SUITES, LADDER_SUITES, STRETCH_SUITES
 
     assert set(DEFAULT_SUITES) == {"pope", "gqa_yesno", "pets37", "caltech101", "blur_ladder", "doctype16", "human_gold"}
-    from glance.evals.suites import FRESH_SUITES
+    from glance.evals.suites import FRESH_SUITES, SYNTHETIC_SUITES
 
-    assert set(SUITES) == set(DEFAULT_SUITES) | set(STRETCH_SUITES) | set(LADDER_SUITES) | set(FRESH_SUITES)
+    assert set(SUITES) == set(DEFAULT_SUITES) | set(STRETCH_SUITES) | set(LADDER_SUITES) | set(FRESH_SUITES) | set(SYNTHETIC_SUITES)
     assert len(LADDER_SUITES) == 5
     with pytest.raises(SuiteSkipped, match="license"):
         SUITES["doctype16"].build(cfg, 10)

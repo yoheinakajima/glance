@@ -1669,3 +1669,14 @@ printed, varied font size, slight rotation and noise).
 - H55: `probe_largest` falls with the size ratio: at least 0.90 at ratio 2, under 0.75 at ratio 1.15.
 Local run on the GPU queue; hosted rows need the owner's paste. Does NOT block publication; the page will present E21 and E22
 together as "beyond photographs" once both the local and the hosted rows exist.
+
+## 2026-09-21 00:16 Entry 50b: E22 images built and reviewed before any model saw them; one design correction
+
+An assistant model built the generator from my spec (`glance/lab/probes.py`, 900 images, six suites of 150, labels and
+ratios balanced); I reviewed every contact sheet. One correction, made before any model output: my brief had asked for
+four DIFFERENT kinds of shape in `probe_largest`, and the builder found that "largest" is then ambiguous (a triangle of the
+same area reaches further than a disc; its work-around of equalising the circumscribed radius left the disc with the
+largest true area). Fixed by drawing four shapes of ONE kind per image (the kind varies across images), so the area ratio is
+exactly r and the label is unambiguous; entry 50 only says "four shapes", so the registration stands. At ratio 1.15 the
+difference is one to two pixels of radius: hard on purpose (H55). Suites registered as opt-in (`SYNTHETIC_SUITES`); the
+local run is queued; hosted rows need the owner's paste (`tools/frontier_batch.py --set probes`).
