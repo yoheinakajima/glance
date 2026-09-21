@@ -7,6 +7,9 @@ Frontier: zero-shot, constrained to the rubric's levels, uncalibrated (a hard pi
 | anthropic/claude-opus-5 | 0 | 0.560 | 0.750 | 0.285 | 0.525 | 0.630 | **0.550** |
 | openai/gpt-5.6 | 0 | 0.645 | 0.610 | 0.555 | 0.670 | 0.505 | **0.597** |
 | openrouter/google/gemini-3.1-pro-preview | 0 | 0.665 | 0.655 | 0.645 | 0.590 | 0.695 | **0.650** |
+| anthropic/claude-haiku-4-5 | 0 | 0.680 | 0.730 | 0.405 | 0.535 | 0.695 | **0.609** |
+| openai/gpt-5.6-luna | 0 | 0.800 | 0.735 | 0.475 | 0.840 | 0.580 | **0.686** |
+| openrouter/google/gemini-3.1-flash-lite | 0 | 0.885 | 0.730 | 0.695 | 0.710 | 0.795 | **0.763** |
 | Qwen3-VL-4B, v0 readout as shipped (single temperature) | 0 | 0.625 | 0.530 | 0.365 | 0.550 | 0.480 | **0.510** |
 | Qwen3-VL-4B, + Glance ens4d | 0 | 0.470 | 0.700 | 0.450 | 0.575 | 0.655 | **0.570** |
 | Qwen3-VL-4B, + Glance ens4d | 0 (plus unlabeled images) | 0.610 | 0.840 | 0.565 | 0.740 | 0.755 | **0.702** |
@@ -32,5 +35,20 @@ Paired differences in mean accuracy, same images (bootstrap 95% interval over it
 | + Glance ens4d, 0 labels + unlabeled images minus openrouter/google/gemini-3.1-pro-preview | +5.2 | [+1.3, +9.3] |
 | + Glance ens4d, 32 labels minus openrouter/google/gemini-3.1-pro-preview | +20.7 | [+17.5, +24.1] |
 | + Glance ens4d, 500 labels minus openrouter/google/gemini-3.1-pro-preview | +21.8 | [+18.3, +25.2] |
+| v0 readout as shipped (single temperature), 0 rubric labels minus anthropic/claude-haiku-4-5 | -9.9 | [-14.3, -5.5] |
+| + Glance ens4d, 0 labels minus anthropic/claude-haiku-4-5 | -3.9 | [-8.1, +0.3] |
+| + Glance ens4d, 0 labels + unlabeled images minus anthropic/claude-haiku-4-5 | +9.3 | [+5.2, +13.5] |
+| + Glance ens4d, 32 labels minus anthropic/claude-haiku-4-5 | +24.8 | [+21.5, +28.1] |
+| + Glance ens4d, 500 labels minus anthropic/claude-haiku-4-5 | +25.9 | [+22.3, +29.4] |
+| v0 readout as shipped (single temperature), 0 rubric labels minus openai/gpt-5.6-luna | -17.6 | [-21.7, -13.5] |
+| + Glance ens4d, 0 labels minus openai/gpt-5.6-luna | -11.6 | [-15.4, -7.7] |
+| + Glance ens4d, 0 labels + unlabeled images minus openai/gpt-5.6-luna | +1.6 | [-2.2, +5.5] |
+| + Glance ens4d, 32 labels minus openai/gpt-5.6-luna | +17.1 | [+14.2, +20.2] |
+| + Glance ens4d, 500 labels minus openai/gpt-5.6-luna | +18.2 | [+15.0, +21.4] |
+| v0 readout as shipped (single temperature), 0 rubric labels minus openrouter/google/gemini-3.1-flash-lite | -25.3 | [-29.6, -20.9] |
+| + Glance ens4d, 0 labels minus openrouter/google/gemini-3.1-flash-lite | -19.3 | [-23.4, -15.1] |
+| + Glance ens4d, 0 labels + unlabeled images minus openrouter/google/gemini-3.1-flash-lite | -6.1 | [-9.9, -2.2] |
+| + Glance ens4d, 32 labels minus openrouter/google/gemini-3.1-flash-lite | +9.4 | [+6.5, +12.2] |
+| + Glance ens4d, 500 labels minus openrouter/google/gemini-3.1-flash-lite | +10.5 | [+7.4, +13.7] |
 
 n per scale: blur 200, exposure 200, jpeg 200, noise 200, resolution 200.

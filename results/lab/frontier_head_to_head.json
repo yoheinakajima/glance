@@ -56,6 +56,63 @@
         "resolution": 0.695
       },
       "mean_accuracy": 0.6499999999999999
+    },
+    "20260920T165748Z-8ff72a-haiku": {
+      "model": "anthropic/claude-haiku-4-5",
+      "failed_calls_counted_wrong": 0,
+      "n": {
+        "blur": 200,
+        "noise": 200,
+        "jpeg": 200,
+        "exposure": 200,
+        "resolution": 200
+      },
+      "accuracy": {
+        "blur": 0.68,
+        "noise": 0.535,
+        "jpeg": 0.405,
+        "exposure": 0.73,
+        "resolution": 0.695
+      },
+      "mean_accuracy": 0.609
+    },
+    "20260920T165748Z-8ff72a-gptsmall": {
+      "model": "openai/gpt-5.6-luna",
+      "failed_calls_counted_wrong": 0,
+      "n": {
+        "blur": 200,
+        "noise": 200,
+        "jpeg": 200,
+        "exposure": 200,
+        "resolution": 200
+      },
+      "accuracy": {
+        "blur": 0.8,
+        "noise": 0.84,
+        "jpeg": 0.475,
+        "exposure": 0.735,
+        "resolution": 0.58
+      },
+      "mean_accuracy": 0.686
+    },
+    "20260920T165748Z-8ff72a-flashlite": {
+      "model": "openrouter/google/gemini-3.1-flash-lite",
+      "failed_calls_counted_wrong": 0,
+      "n": {
+        "blur": 200,
+        "noise": 200,
+        "jpeg": 200,
+        "exposure": 200,
+        "resolution": 200
+      },
+      "accuracy": {
+        "blur": 0.885,
+        "noise": 0.71,
+        "jpeg": 0.695,
+        "exposure": 0.73,
+        "resolution": 0.795
+      },
+      "mean_accuracy": 0.763
     }
   },
   "local": {
@@ -214,6 +271,111 @@
       "ci95": [
         18.3,
         25.2
+      ]
+    },
+    "v0 readout as shipped (single temperature), 0 rubric labels minus anthropic/claude-haiku-4-5": {
+      "points": -9.899999999999999,
+      "ci95": [
+        -14.3,
+        -5.500000000000001
+      ]
+    },
+    "+ Glance ens4d, 0 labels minus anthropic/claude-haiku-4-5": {
+      "points": -3.9000000000000035,
+      "ci95": [
+        -8.1,
+        0.3
+      ]
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images minus anthropic/claude-haiku-4-5": {
+      "points": 9.299999999999997,
+      "ci95": [
+        5.197500000000002,
+        13.5
+      ]
+    },
+    "+ Glance ens4d, 32 labels minus anthropic/claude-haiku-4-5": {
+      "points": 24.83000000000001,
+      "ci95": [
+        21.475,
+        28.065125000000002
+      ]
+    },
+    "+ Glance ens4d, 500 labels minus anthropic/claude-haiku-4-5": {
+      "points": 25.900000000000002,
+      "ci95": [
+        22.3,
+        29.4
+      ]
+    },
+    "v0 readout as shipped (single temperature), 0 rubric labels minus openai/gpt-5.6-luna": {
+      "points": -17.600000000000005,
+      "ci95": [
+        -21.7,
+        -13.499999999999998
+      ]
+    },
+    "+ Glance ens4d, 0 labels minus openai/gpt-5.6-luna": {
+      "points": -11.60000000000001,
+      "ci95": [
+        -15.4,
+        -7.7
+      ]
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images minus openai/gpt-5.6-luna": {
+      "points": 1.5999999999999903,
+      "ci95": [
+        -2.1999999999999997,
+        5.500000000000001
+      ]
+    },
+    "+ Glance ens4d, 32 labels minus openai/gpt-5.6-luna": {
+      "points": 17.130000000000003,
+      "ci95": [
+        14.155000000000001,
+        20.165249999999993
+      ]
+    },
+    "+ Glance ens4d, 500 labels minus openai/gpt-5.6-luna": {
+      "points": 18.199999999999996,
+      "ci95": [
+        15.0,
+        21.400000000000002
+      ]
+    },
+    "v0 readout as shipped (single temperature), 0 rubric labels minus openrouter/google/gemini-3.1-flash-lite": {
+      "points": -25.3,
+      "ci95": [
+        -29.599999999999998,
+        -20.9
+      ]
+    },
+    "+ Glance ens4d, 0 labels minus openrouter/google/gemini-3.1-flash-lite": {
+      "points": -19.300000000000004,
+      "ci95": [
+        -23.4,
+        -15.1
+      ]
+    },
+    "+ Glance ens4d, 0 labels + unlabeled images minus openrouter/google/gemini-3.1-flash-lite": {
+      "points": -6.100000000000005,
+      "ci95": [
+        -9.9,
+        -2.1999999999999997
+      ]
+    },
+    "+ Glance ens4d, 32 labels minus openrouter/google/gemini-3.1-flash-lite": {
+      "points": 9.430000000000005,
+      "ci95": [
+        6.549875000000001,
+        12.205249999999996
+      ]
+    },
+    "+ Glance ens4d, 500 labels minus openrouter/google/gemini-3.1-flash-lite": {
+      "points": 10.499999999999998,
+      "ci95": [
+        7.400000000000001,
+        13.699999999999998
       ]
     }
   }

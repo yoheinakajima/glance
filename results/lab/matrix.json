@@ -19,7 +19,7 @@
     "choice": {
      "accuracy": 0.9230769230769231,
      "ci95": [
-      0.8615384615384616,
+      0.8461538461538461,
       0.9846153846153847
      ],
      "n": 65
@@ -93,7 +93,7 @@
     "rating": {
      "accuracy": 0.55,
      "ci95": [
-      0.518,
+      0.5189750000000001,
       0.581
      ],
      "n": 1000
@@ -159,8 +159,8 @@
     "rating": {
      "accuracy": 0.597,
      "ci95": [
-      0.565,
-      0.628
+      0.567,
+      0.627
      ],
      "n": 1000
     }
@@ -203,6 +203,204 @@
     }
    }
   },
+  "Claude Haiku 4.5": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9389312977099237,
+     "ci95": [
+      0.8931297709923665,
+      0.9770992366412213
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.8461538461538461,
+     "ci95": [
+      0.7538461538461538,
+      0.9230769230769231
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.609,
+     "ci95": [
+      0.579,
+      0.6390250000000001
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 0.8712842089589685,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 0.9195652918424457,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 0.7155405834782869,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      1.7487404580152692,
+      1.7487404580152692
+     ],
+     "how": "measured"
+    },
+    "choice": {
+     "value": [
+      1.885000000000001,
+      1.885000000000001
+     ],
+     "how": "measured"
+    },
+    "rating": {
+     "value": [
+      0.5543919999999988,
+      0.5543919999999988
+     ],
+     "how": "measured"
+    }
+   }
+  },
+  "GPT-5.6 Luna": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9236641221374046,
+     "ci95": [
+      0.8778625954198473,
+      0.9694656488549618
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.9076923076923077,
+     "ci95": [
+      0.8307692307692308,
+      0.9692307692307692
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.686,
+     "ci95": [
+      0.657,
+      0.715
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 1.2157344168517739,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 1.3042976669967175,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 1.0958138749701902,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      0.37549862595419853,
+      0.37549862595419853
+     ],
+     "how": "measured"
+    },
+    "choice": {
+     "value": [
+      0.3953538461538461,
+      0.3953538461538461
+     ],
+     "how": "measured"
+    },
+    "rating": {
+     "value": [
+      0.12003720000000005,
+      0.12003720000000005
+     ],
+     "how": "measured"
+    }
+   }
+  },
+  "Gemini 3.1 Flash-Lite": {
+   "kind": "hosted frontier model, zero-shot, answer written",
+   "accuracy": {
+    "yesno": {
+     "accuracy": 0.9541984732824428,
+     "ci95": [
+      0.916030534351145,
+      0.9847328244274809
+     ],
+     "n": 131
+    },
+    "choice": {
+     "accuracy": 0.9076923076923077,
+     "ci95": [
+      0.8307692307692308,
+      0.9692307692307692
+     ],
+     "n": 65
+    },
+    "rating": {
+     "accuracy": 0.763,
+     "ci95": [
+      0.737,
+      0.789
+     ],
+     "n": 1000
+    }
+   },
+   "seconds": {
+    "yesno": {
+     "value": 1.6322795830201358,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "choice": {
+     "value": 1.8944653749931604,
+     "how": "measured, one call at a time from this laptop"
+    },
+    "rating": {
+     "value": 1.617657333612442,
+     "how": "measured, one call at a time from this laptop"
+    }
+   },
+   "usd_per_1000": {
+    "yesno": {
+     "value": [
+      0.31414694656488557,
+      0.31414694656488557
+     ],
+     "how": "measured"
+    },
+    "choice": {
+     "value": [
+      0.34228076923076933,
+      0.34228076923076933
+     ],
+     "how": "measured"
+    },
+    "rating": {
+     "value": [
+      0.33285825000000324,
+      0.33285825000000324
+     ],
+     "how": "measured"
+    }
+   }
+  },
   "Qwen3-VL-4B, written": {
    "kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)",
    "accuracy": {
@@ -225,7 +423,7 @@
     "rating": {
      "accuracy": 0.672,
      "ci95": [
-      0.642,
+      0.643,
       0.701
      ],
      "n": 1000
@@ -285,7 +483,7 @@
     "rating": {
      "accuracy": 0.669,
      "ci95": [
-      0.639,
+      0.64,
       0.698
      ],
      "n": 1000

@@ -19,11 +19,11 @@ Mean gap over these four suites: 3.2 points [1.0, 5.4] in the frontier model's f
 
 | System | yes/no | n | pick-one | n |
 | --- | --- | --- | --- | --- |
-| Qwen3-VL-4B + Glance (open, local) | 0.931 [0.897, 0.962] | 262 | 0.885 [0.824, 0.939] | 131 |
+| Qwen3-VL-4B + Glance (open, local) | 0.931 [0.901, 0.958] | 262 | 0.885 [0.824, 0.939] | 131 |
 | SigLIP2 (open dual encoder) | - | - | 0.855 [0.794, 0.908] | 131 |
-| Claude Opus 5 | 0.924 [0.878, 0.969] | 131 | 0.908 [0.831, 0.969] | 65 |
-| GPT-5.6 | 0.893 [0.840, 0.947] | 131 | 0.892 [0.815, 0.954] | 65 |
-| Gemini 3.1 Pro | 0.947 [0.908, 0.977] | 131 | 0.923 [0.846, 0.985] | 65 |
+| Claude Opus 5 | 0.924 [0.878, 0.962] | 131 | 0.908 [0.831, 0.969] | 65 |
+| GPT-5.6 | 0.893 [0.840, 0.939] | 131 | 0.892 [0.815, 0.954] | 65 |
+| Gemini 3.1 Pro | 0.947 [0.908, 0.985] | 131 | 0.923 [0.846, 0.985] | 65 |
 
 The frontier models were scored on the test half only (their n is smaller).
 
@@ -46,6 +46,9 @@ The frontier models were scored on the test half only (their n is smaller).
 | Claude Opus 5, written pick | 0.560 | 0.750 | 0.285 | 0.525 | 0.630 | **0.550** |
 | GPT-5.6, written pick | 0.645 | 0.610 | 0.555 | 0.670 | 0.505 | **0.597** |
 | Gemini 3.1 Pro, written pick | 0.665 | 0.655 | 0.645 | 0.590 | 0.695 | **0.650** |
+| anthropic/claude-haiku-4-5, written pick | 0.680 | 0.730 | 0.405 | 0.535 | 0.695 | **0.609** |
+| openai/gpt-5.6-luna, written pick | 0.800 | 0.735 | 0.475 | 0.840 | 0.580 | **0.686** |
+| openrouter/google/gemini-3.1-flash-lite, written pick | 0.885 | 0.730 | 0.695 | 0.710 | 0.795 | **0.763** |
 | Qwen3-VL-4B, v0 readout (one yes/no per level) | 0.625 | 0.530 | 0.365 | 0.550 | 0.480 | **0.510** |
 | Qwen3-VL-4B + Glance (open, local), `ens4d` | 0.470 | 0.700 | 0.450 | 0.575 | 0.655 | **0.570** |
 | Qwen3-VL-4B, WRITTEN JSON answer (no Glance) | 0.755 | 0.810 | 0.345 | 0.700 | 0.750 | **0.672** |

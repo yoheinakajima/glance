@@ -6,10 +6,13 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the sam
 
 | System | n | accuracy | on yes questions | on no questions |
 | --- | --- | --- | --- | --- |
-| vlm:statement | 262 | 0.931 [0.897, 0.962] | 0.908 | 0.954 |
-| anthropic/claude-opus-5 | 131 | 0.924 [0.878, 0.969] | 0.894 | 0.954 |
-| openai/gpt-5.6 | 131 | 0.893 [0.840, 0.947] | 0.909 | 0.877 |
-| openrouter/google/gemini-3.1-pro-preview | 131 | 0.947 [0.908, 0.977] | 0.924 | 0.969 |
+| vlm:statement | 262 | 0.931 [0.901, 0.958] | 0.908 | 0.954 |
+| anthropic/claude-opus-5 | 131 | 0.924 [0.878, 0.962] | 0.894 | 0.954 |
+| openai/gpt-5.6 | 131 | 0.893 [0.840, 0.939] | 0.909 | 0.877 |
+| openrouter/google/gemini-3.1-pro-preview | 131 | 0.947 [0.908, 0.985] | 0.924 | 0.969 |
+| anthropic/claude-haiku-4-5 | 131 | 0.939 [0.893, 0.977] | 0.894 | 0.985 |
+| openai/gpt-5.6-luna | 131 | 0.924 [0.878, 0.969] | 0.924 | 0.923 |
+| openrouter/google/gemini-3.1-flash-lite | 131 | 0.954 [0.916, 0.985] | 0.939 | 0.969 |
 
 ## Pick one of 13: "What is the main subject?"
 
@@ -21,6 +24,9 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Label noise, the sam
 | anthropic/claude-opus-5 | 65 | 0.908 [0.831, 0.969] |
 | openai/gpt-5.6 | 65 | 0.892 [0.815, 0.954] |
 | openrouter/google/gemini-3.1-pro-preview | 65 | 0.923 [0.846, 0.985] |
+| anthropic/claude-haiku-4-5 | 65 | 0.846 [0.754, 0.923] |
+| openai/gpt-5.6-luna | 65 | 0.908 [0.831, 0.969] |
+| openrouter/google/gemini-3.1-flash-lite | 65 | 0.908 [0.831, 0.969] |
 
 Per class (accuracy, photos):
 
@@ -32,3 +38,6 @@ Per class (accuracy, photos):
 | anthropic/claude-opus-5 | 1.00 (5) | - | 0.50 (4) | 1.00 (5) | 1.00 (6) | 0.71 (7) | 1.00 (4) | 0.88 (8) | 1.00 (6) | 1.00 (5) | 1.00 (2) | 0.86 (7) | 1.00 (6) |
 | openai/gpt-5.6 | 1.00 (5) | - | 0.25 (4) | 1.00 (5) | 1.00 (6) | 0.71 (7) | 1.00 (4) | 1.00 (8) | 1.00 (6) | 1.00 (5) | 0.50 (2) | 0.86 (7) | 1.00 (6) |
 | openrouter/google/gemini-3.1-pro-preview | 1.00 (5) | - | 0.25 (4) | 1.00 (5) | 1.00 (6) | 0.86 (7) | 1.00 (4) | 1.00 (8) | 1.00 (6) | 1.00 (5) | 1.00 (2) | 0.86 (7) | 1.00 (6) |
+| anthropic/claude-haiku-4-5 | 1.00 (5) | - | 0.25 (4) | 1.00 (5) | 1.00 (6) | 0.57 (7) | 1.00 (4) | 0.88 (8) | 1.00 (6) | 1.00 (5) | 0.50 (2) | 0.86 (7) | 0.83 (6) |
+| openai/gpt-5.6-luna | 1.00 (5) | - | 0.25 (4) | 1.00 (5) | 1.00 (6) | 0.71 (7) | 1.00 (4) | 0.88 (8) | 1.00 (6) | 1.00 (5) | 1.00 (2) | 1.00 (7) | 1.00 (6) |
+| openrouter/google/gemini-3.1-flash-lite | 1.00 (5) | - | 0.25 (4) | 1.00 (5) | 1.00 (6) | 0.71 (7) | 1.00 (4) | 1.00 (8) | 1.00 (6) | 1.00 (5) | 1.00 (2) | 0.86 (7) | 1.00 (6) |

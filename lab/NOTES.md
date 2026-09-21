@@ -1525,3 +1525,27 @@ independent pick-one readout, no wording changed), uncalibrated, on all items of
 Commons 0.939 / 0.832, iNaturalist 0.925 / 0.940; the 4B model: 0.931 / 0.885 and 0.945 / 0.940); 8B runs tonight.
 - H47: SmolVLM2 reaches at least 0.85 on yes/no and 0.75 on pick-one on both photo sets, below the 4B model on every
   cell: closed-set questions are easy for small open models too, with pick-one the more sensitive to model quality.
+
+## 2026-09-20 21:52 Entry 45b: E18 result: the providers' cheapest models change the comparison (two of my three predictions fail)
+
+The owner ran the batch (about 4,500 calls). Same items, same constrained written pick, a failed call counts as wrong.
+- Yes/no and pick-one. Commons (131 / 65): Claude Haiku 4.5 0.939 / 0.846, GPT-5.6 Luna 0.924 / 0.908, Gemini 3.1
+  Flash-Lite 0.954 / 0.908 (open 4B read: 0.931 / 0.862; flagships 0.89 to 0.95 / 0.89 to 0.92). iNaturalist (200 /
+  100): Haiku 0.830 / 0.790, Luna 0.935 / 0.860, Flash-Lite 0.965 / 0.930 (open 4B read, all items: 0.945 / 0.940).
+  H44 (every cheap model within 5 points of its flagship on all four cells): NOT SUPPORTED as stated: Luna and
+  Flash-Lite are, Haiku is not (11.5 and 14 points under Opus 5 on the nature photos).
+- Ratings, the 1,000 lab images: Haiku 0.609, Luna 0.686, Flash-Lite 0.763. EVERY cheap model beats its own flagship
+  (0.550, 0.597, 0.650), and Flash-Lite is the best zero-shot system we have measured. Paired with the open 4B model's
+  one-pass read (0.669): +6.0 [2.1, 10.0] over Haiku, level with Luna (-1.7 [-5.6, 2.3]), 9.4 BEHIND Flash-Lite [5.3,
+  13.6]. H45 (cheap models at or below their flagships, none above 0.65): NOT SUPPORTED, badly. With 16 unlabeled
+  images the open model (0.758) is level with Flash-Lite; with 32 labels (0.857) ahead.
+- Measured cost per 1,000 answers (yes/no, pick-one, rating): Luna $0.38 / $0.40 / $0.12; Flash-Lite $0.31 / $0.34 /
+  $0.33; Haiku $1.75 / $1.89 / $0.55. Median seconds: Haiku 0.7 to 0.9, Luna 1.1 to 1.3, Flash-Lite 1.6 to 1.9. H46
+  (under $1.50 everywhere): holds for Luna and Flash-Lite, not for Haiku.
+- What this does to the claims, as registered: the cost comparison must lead with the CHEAP hosted rows. Against them
+  the open model on a rented GPU is about 5x cheaper on yes/no ($0.05 to $0.08 against $0.31), not 40x, and on ratings
+  it is no cheaper at all (GPT-5.6 Luna $0.12 per 1,000). "Level with hosted models on yes/no and pick-one" stands, now
+  including the cheap OpenAI and Google models. "Level with the best frontier model on zero-shot ratings" does NOT stand:
+  a $0.33-per-1,000 hosted model is 9 points ahead. What remains for the open model is not price: it runs on your own
+  machine (no image leaves it, no per-call bill, works offline), answers a yes/no in 0.34 s against 0.9 to 1.9 s,
+  returns probabilities, and can be fitted (0.857 with 32 labels, which no hosted row offers through a written pick).

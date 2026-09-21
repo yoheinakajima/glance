@@ -10,6 +10,9 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Labels are community
 | anthropic/claude-opus-5 | 200 | 0.945 [0.910, 0.975] | 0.907 | 0.989 |
 | openai/gpt-5.6 | 200 | 0.935 [0.900, 0.965] | 0.925 | 0.946 |
 | openrouter/google/gemini-3.1-pro-preview | 200 | 0.960 [0.930, 0.985] | 0.944 | 0.978 |
+| anthropic/claude-haiku-4-5 | 200 | 0.830 [0.780, 0.880] | 0.776 | 0.892 |
+| openai/gpt-5.6-luna | 200 | 0.935 [0.900, 0.965] | 0.907 | 0.968 |
+| openrouter/google/gemini-3.1-flash-lite | 200 | 0.965 [0.935, 0.990] | 0.953 | 0.978 |
 
 ## Pick one of 10: "What kind of organism is the main subject?"
 
@@ -21,6 +24,9 @@ Uncalibrated decisions, all items, bootstrap 95% intervals. Labels are community
 | anthropic/claude-opus-5 | 100 | 0.930 [0.880, 0.980] |
 | openai/gpt-5.6 | 100 | 0.910 [0.850, 0.960] |
 | openrouter/google/gemini-3.1-pro-preview | 100 | 0.910 [0.850, 0.960] |
+| anthropic/claude-haiku-4-5 | 100 | 0.790 [0.710, 0.870] |
+| openai/gpt-5.6-luna | 100 | 0.860 [0.790, 0.920] |
+| openrouter/google/gemini-3.1-flash-lite | 100 | 0.930 [0.880, 0.980] |
 
 Per class (accuracy, photos):
 
@@ -32,3 +38,6 @@ Per class (accuracy, photos):
 | anthropic/claude-opus-5 | 1.00 (9) | 0.62 (8) | 1.00 (11) | 1.00 (8) | 0.89 (9) | 1.00 (6) | 0.87 (15) | 1.00 (12) | 1.00 (10) | 0.92 (12) |
 | openai/gpt-5.6 | 1.00 (9) | 0.62 (8) | 1.00 (11) | 0.88 (8) | 0.89 (9) | 1.00 (6) | 0.87 (15) | 0.92 (12) | 1.00 (10) | 0.92 (12) |
 | openrouter/google/gemini-3.1-pro-preview | 1.00 (9) | 0.62 (8) | 1.00 (11) | 0.88 (8) | 0.89 (9) | 1.00 (6) | 0.80 (15) | 0.92 (12) | 1.00 (10) | 1.00 (12) |
+| anthropic/claude-haiku-4-5 | 0.78 (9) | 0.62 (8) | 1.00 (11) | 0.88 (8) | 0.89 (9) | 1.00 (6) | 0.67 (15) | 0.75 (12) | 0.90 (10) | 0.58 (12) |
+| openai/gpt-5.6-luna | 1.00 (9) | 0.75 (8) | 1.00 (11) | 0.88 (8) | 0.89 (9) | 1.00 (6) | 0.73 (15) | 0.75 (12) | 0.90 (10) | 0.83 (12) |
+| openrouter/google/gemini-3.1-flash-lite | 1.00 (9) | 0.75 (8) | 1.00 (11) | 0.88 (8) | 0.89 (9) | 1.00 (6) | 0.87 (15) | 0.92 (12) | 1.00 (10) | 1.00 (12) |
