@@ -14,6 +14,7 @@
    "n_total": 541,
    "missing_hosted_rows_counted_wrong": {
     "Qwen3-VL-4B, read": 0,
+    "Qwen3-VL-4B, written": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -21,7 +22,7 @@
     "GPT-5.6 Luna": 0,
     "Gemini 3.1 Flash-Lite": 0
    },
-   "written_row_complete": false,
+   "written_row_complete": true,
    "systems": {
     "Qwen3-VL-4B, read": {
      "pooled": [
@@ -38,6 +39,23 @@
       "Commons": 0.9312977099236641,
       "iNaturalist, ten groups": 0.94,
       "iNaturalist, insect orders": 0.9428571428571428
+     }
+    },
+    "Qwen3-VL-4B, written": {
+     "pooled": [
+      0.944547134935305,
+      0.9242144177449169,
+      0.9630314232902033
+     ],
+     "equal_weight_per_set": [
+      0.9428928874348722,
+      0.9208936144432327,
+      0.9621234702532413
+     ],
+     "per_set": {
+      "Commons": 0.9312977099236641,
+      "iNaturalist, ten groups": 0.945,
+      "iNaturalist, insect orders": 0.9523809523809523
      }
     },
     "Claude Opus 5": {
@@ -195,6 +213,7 @@
    "n_total": 270,
    "missing_hosted_rows_counted_wrong": {
     "Qwen3-VL-4B, read": 0,
+    "Qwen3-VL-4B, written": 0,
     "Claude Opus 5": 0,
     "GPT-5.6": 0,
     "Gemini 3.1 Pro": 0,
@@ -202,7 +221,7 @@
     "GPT-5.6 Luna": 0,
     "Gemini 3.1 Flash-Lite": 0
    },
-   "written_row_complete": false,
+   "written_row_complete": true,
    "systems": {
     "Qwen3-VL-4B, read": {
      "pooled": [
@@ -219,6 +238,23 @@
       "Commons": 0.8615384615384616,
       "iNaturalist, ten groups": 0.92,
       "iNaturalist, insect orders": 0.9904761904761905
+     }
+    },
+    "Qwen3-VL-4B, written": {
+     "pooled": [
+      0.9296296296296296,
+      0.9,
+      0.9592592592592593
+     ],
+     "equal_weight_per_set": [
+      0.924896214896215,
+      0.8909523809523808,
+      0.9563125763125763
+     ],
+     "per_set": {
+      "Commons": 0.8923076923076924,
+      "iNaturalist, ten groups": 0.93,
+      "iNaturalist, insect orders": 0.9523809523809523
      }
     },
     "Claude Opus 5": {

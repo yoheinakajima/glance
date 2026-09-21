@@ -2,20 +2,20 @@
 
 ## Accuracy, zero-shot [95% interval]
 
-| System | Yes/no, 131 fresh Commons questions | Pick one of 13, 65 fresh Commons photos | Rating, exact level of 4, 1,000 lab images |
+| System | Yes/no, 541 questions about fresh photographs (three sets pooled) | Pick one, 270 fresh photographs (three sets pooled) | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
-| Gemini 3.1 Pro | 0.947 [0.908, 0.985] | 0.923 [0.846, 0.985] | 0.650 [0.621, 0.679] |
-| Claude Opus 5 | 0.924 [0.878, 0.969] | 0.908 [0.831, 0.969] | 0.550 [0.519, 0.581] |
-| GPT-5.6 | 0.893 [0.840, 0.947] | 0.892 [0.815, 0.954] | 0.597 [0.567, 0.627] |
-| Claude Haiku 4.5 | 0.939 [0.893, 0.977] | 0.846 [0.754, 0.923] | 0.609 [0.579, 0.639] |
-| GPT-5.6 Luna | 0.924 [0.878, 0.969] | 0.908 [0.831, 0.969] | 0.686 [0.657, 0.715] |
-| Gemini 3.1 Flash-Lite | 0.954 [0.916, 0.985] | 0.908 [0.831, 0.969] | 0.763 [0.737, 0.789] |
-| Qwen3-VL-4B, written | 0.931 [0.885, 0.969] | 0.892 [0.815, 0.954] | 0.672 [0.643, 0.701] |
-| Qwen3-VL-4B, read (Glance) | 0.931 [0.885, 0.969] | 0.862 [0.769, 0.938] | 0.669 [0.640, 0.698] |
+| Gemini 3.1 Pro | 0.959 [0.941, 0.976] | 0.937 [0.907, 0.963] | 0.650 [0.621, 0.679] |
+| Claude Opus 5 | 0.937 [0.915, 0.957] | 0.937 [0.907, 0.963] | 0.550 [0.519, 0.581] |
+| GPT-5.6 | 0.928 [0.906, 0.948] | 0.904 [0.867, 0.937] | 0.597 [0.567, 0.627] |
+| Claude Haiku 4.5 | 0.839 [0.808, 0.869] | 0.785 [0.737, 0.833] | 0.609 [0.579, 0.639] |
+| GPT-5.6 Luna | 0.906 [0.880, 0.930] | 0.881 [0.841, 0.919] | 0.686 [0.657, 0.715] |
+| Gemini 3.1 Flash-Lite | 0.961 [0.945, 0.976] | 0.933 [0.904, 0.959] | 0.763 [0.737, 0.789] |
+| Qwen3-VL-4B, written | 0.945 [0.924, 0.963] | 0.930 [0.900, 0.959] | 0.672 [0.643, 0.701] |
+| Qwen3-VL-4B, read (Glance) | 0.939 [0.917, 0.957] | 0.933 [0.904, 0.959] | 0.669 [0.640, 0.698] |
 
 ## Median seconds per answer
 
-| System | Yes/no, 131 fresh Commons questions | Pick one of 13, 65 fresh Commons photos | Rating, exact level of 4, 1,000 lab images |
+| System | Yes/no, 541 questions about fresh photographs (three sets pooled) | Pick one, 270 fresh photographs (three sets pooled) | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
 | Gemini 3.1 Pro | 2.74 s | 3.18 s | 4.02 s |
 | Claude Opus 5 | 2.64 s | 2.98 s | 2.42 s |
@@ -28,7 +28,7 @@
 
 ## US dollars per 1,000 answers
 
-| System | Yes/no, 131 fresh Commons questions | Pick one of 13, 65 fresh Commons photos | Rating, exact level of 4, 1,000 lab images |
+| System | Yes/no, 541 questions about fresh photographs (three sets pooled) | Pick one, 270 fresh photographs (three sets pooled) | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
 | Gemini 3.1 Pro | $2.62 | $3.85 | $6.15 |
 | Claude Opus 5 | $3.37 | $4.48 | $18.70 (est.) |

@@ -60,21 +60,22 @@ remain available.
 
 ## How good is it? (zero-shot, same items for every row, 95% intervals on the project page)
 
-| System | yes/no, fresh photos | pick-one, fresh photos | rating, exact level | seconds per answer | US dollars per 1,000 answers |
+| System | yes/no, 541 questions, three fresh photo sets | pick-one, 270 photos, three sets | rating, exact level | seconds per answer | US dollars per 1,000 answers |
 | --- | --- | --- | --- | --- | --- |
-| **Qwen3-VL-4B read with Glance, on a laptop** | **0.931** | **0.862** | **0.669** | **1.1 (yes/no on a full-size photo; 0.33 on a small image)** | **0.07 to 0.32** (rented GPU; electricity only: about 0.01) |
-| the same model writing JSON | 0.931 | 0.892 | 0.672 | 1.6 (0.78 on a small image) | 0.13 to 0.42 |
-| Gemini 3.1 Flash-Lite (cheapest Google) | 0.954 | 0.908 | 0.763 | 1.6 to 1.9 | 0.31 to 0.34 |
-| GPT-5.6 Luna (cheapest OpenAI tried) | 0.924 | 0.908 | 0.686 | 1.1 to 1.3 | 0.12 to 0.40 |
-| Claude Haiku 4.5 | 0.939 | 0.846 | 0.609 | 0.7 to 0.9 | 0.55 to 1.89 |
-| Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6 | 0.947 / 0.924 / 0.893 | 0.923 / 0.908 / 0.892 | 0.650 / 0.550 / 0.597 | 1.1 to 4.0 | 2.62 to 7.82, ratings up to 18.70 (est.) |
+| **Qwen3-VL-4B read with Glance, on a laptop** | **0.939** | **0.933** | **0.669** | **1.1 (yes/no on a full-size photo; 0.33 on a small image)** | **0.07 to 0.32** (rented GPU; electricity only: about 0.01) |
+| the same model writing JSON | 0.945 | 0.930 | 0.672 | 1.6 (0.78 on a small image) | 0.13 to 0.42 |
+| Gemini 3.1 Flash-Lite (cheapest Google) | 0.961 | 0.933 | 0.763 | 1.6 to 1.9 | 0.31 to 0.34 |
+| GPT-5.6 Luna (cheapest OpenAI tried) | 0.906 | 0.881 | 0.686 | 1.1 to 1.3 | 0.12 to 0.40 |
+| Claude Haiku 4.5 | 0.839 | 0.785 | 0.609 | 0.7 to 0.9 | 0.55 to 1.89 |
+| Gemini 3.1 Pro / Claude Opus 5 / GPT-5.6 | 0.959 / 0.937 / 0.928 | 0.937 / 0.937 / 0.904 | 0.650 / 0.550 / 0.597 | 1.1 to 4.0 | 2.62 to 7.82, ratings up to 18.70 (est.) |
 
-Photos were taken after every model's release and labelled by people outside this project (131 Wikimedia Commons
-questions, 65 pick-one photos; a second set of 200 iNaturalist photos gives the same picture, 0.945 / 0.940 for the open
-model, except that Claude Haiku 4.5 falls to 0.830 / 0.790 there; on a harder test, seven look-alike insect orders, the hosted
-models spread over 23 points and the open model, at 0.962 pick-one, is within 1 point of the best). Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
+Photos were taken after every model's release and labelled by people outside this project. The yes/no and pick-one columns
+pool three sets (Wikimedia Commons, iNaturalist organism groups, iNaturalist insect orders) on the items every system answered;
+seconds and dollars are as measured on the Commons photographs, because hosted cost depends on image size. Set by set, every
+interval overlaps on Commons, Claude Haiku 4.5 falls to 0.830 / 0.790 on iNaturalist, and on the insect orders the hosted models
+spread over 23 points on pick-one while the open model stays within 1 point of the best. Ratings are five synthetic 4-level scales, 1,000 images; the open model's 0.669 is the one-pass read at the JSON answer
 position, the default of `glance ask` and `glance score` for a rubric with nothing fitted (the registered check that decided
-this is `lab/NOTES.md` entry 43c); the four-pass read scores 0.570 zero-shot and is the one to fit with labels. Read honestly: Pooled over three fresh photo sets and paired on the same items (541 yes/no questions, 270 pick-one photographs), the open 4B model is level with the best hosted models on pick-one (0.933 against 0.937) and about two points behind the two Gemini models on yes/no (0.939 against 0.959 and 0.961); it is indistinguishable from Claude Opus 5 and GPT-5.6 on both and ahead of Claude Haiku 4.5 and GPT-5.6 Luna on both (`results/lab/pooled_photos.md`; the table above shows the first photo set alone, where every interval overlaps). On zero-shot ratings the cheapest Google model is 9 points ahead; the
+this is `lab/NOTES.md` entry 43c); the four-pass read scores 0.570 zero-shot and is the one to fit with labels. Read honestly: Pooled over three fresh photo sets and paired on the same items (541 yes/no questions, 270 pick-one photographs), the open 4B model is level with the best hosted models on pick-one (0.933 against 0.937) and about two points behind the two Gemini models on yes/no (0.939 against 0.959 and 0.961); it is indistinguishable from Claude Opus 5 and GPT-5.6 on both and ahead of Claude Haiku 4.5 and GPT-5.6 Luna on both (`results/lab/pooled_photos.md`, paired differences with intervals). On zero-shot ratings the cheapest Google model is 9 points ahead; the
 open model reaches 0.758 with 16 unlabeled images (half a point short of it) and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
 1.1 s (faster than five of the six hosted models) and is somewhat cheaper than the cheapest hosted models on a rented GPU,
 not an order of magnitude; most of that time is reading the image. Every experiment was registered before it ran and the misses

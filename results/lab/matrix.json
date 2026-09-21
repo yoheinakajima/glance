@@ -1,29 +1,29 @@
 {
  "tests": {
-  "yesno": "Yes/no, 131 fresh Commons questions",
-  "choice": "Pick one of 13, 65 fresh Commons photos",
+  "yesno": "Yes/no, 541 questions about fresh photographs (three sets pooled)",
+  "choice": "Pick one, 270 fresh photographs (three sets pooled)",
   "rating": "Rating, exact level of 4, 1,000 lab images"
  },
- "accuracy_basis": "Commons test half",
+ "accuracy_basis": "three fresh photo sets pooled",
  "systems": {
   "Gemini 3.1 Pro": {
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9465648854961832,
+     "accuracy": 0.9593345656192237,
      "ci95": [
-      0.9083969465648855,
-      0.9847328244274809
+      0.9408502772643254,
+      0.9759704251386322
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.9230769230769231,
+     "accuracy": 0.937037037037037,
      "ci95": [
-      0.8461538461538461,
-      0.9846153846153847
+      0.9074074074074074,
+      0.9629629629629629
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.65,
@@ -76,20 +76,20 @@
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9236641221374046,
+     "accuracy": 0.9371534195933456,
      "ci95": [
-      0.8778625954198473,
-      0.9694656488549618
+      0.9149722735674677,
+      0.9574861367837338
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.9076923076923077,
+     "accuracy": 0.937037037037037,
      "ci95": [
-      0.8307692307692308,
-      0.9692307692307692
+      0.9074074074074074,
+      0.9629629629629629
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.55,
@@ -142,20 +142,20 @@
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.8931297709923665,
+     "accuracy": 0.9279112754158965,
      "ci95": [
-      0.8396946564885496,
-      0.9465648854961832
+      0.9057301293900185,
+      0.9482439926062847
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.8923076923076924,
+     "accuracy": 0.9037037037037037,
      "ci95": [
-      0.8153846153846154,
-      0.9538461538461539
+      0.8666666666666667,
+      0.937037037037037
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.597,
@@ -208,20 +208,20 @@
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9389312977099237,
+     "accuracy": 0.8391866913123844,
      "ci95": [
-      0.8931297709923665,
-      0.9770992366412213
+      0.8077634011090573,
+      0.8687615526802218
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.8461538461538461,
+     "accuracy": 0.7851851851851852,
      "ci95": [
-      0.7538461538461538,
-      0.9230769230769231
+      0.737037037037037,
+      0.8333333333333334
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.609,
@@ -274,20 +274,20 @@
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9236641221374046,
+     "accuracy": 0.9057301293900185,
      "ci95": [
-      0.8778625954198473,
-      0.9694656488549618
+      0.8798521256931608,
+      0.9297597042513863
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.9076923076923077,
+     "accuracy": 0.8814814814814815,
      "ci95": [
-      0.8307692307692308,
-      0.9692307692307692
+      0.8407407407407408,
+      0.9185185185185185
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.686,
@@ -340,20 +340,20 @@
    "kind": "hosted frontier model, zero-shot, answer written",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9541984732824428,
+     "accuracy": 0.9611829944547134,
      "ci95": [
-      0.916030534351145,
-      0.9847328244274809
+      0.944547134935305,
+      0.9759704251386322
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.9076923076923077,
+     "accuracy": 0.9333333333333333,
      "ci95": [
-      0.8307692307692308,
-      0.9692307692307692
+      0.9037037037037037,
+      0.9592592592592593
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.763,
@@ -406,20 +406,20 @@
    "kind": "open 4B model on a laptop, zero-shot, writes one JSON answer (no Glance)",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9312977099236641,
+     "accuracy": 0.944547134935305,
      "ci95": [
-      0.8854961832061069,
-      0.9694656488549618
+      0.9242144177449169,
+      0.9630314232902033
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.8923076923076924,
+     "accuracy": 0.9296296296296296,
      "ci95": [
-      0.8153846153846154,
-      0.9538461538461539
+      0.9,
+      0.9592592592592593
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.672,
@@ -472,20 +472,20 @@
    "kind": "the same open model, zero-shot, answer read from one forward pass (four for a rating)",
    "accuracy": {
     "yesno": {
-     "accuracy": 0.9312977099236641,
+     "accuracy": 0.9390018484288355,
      "ci95": [
-      0.8854961832061069,
-      0.9694656488549618
+      0.9168207024029574,
+      0.9574861367837338
      ],
-     "n": 131
+     "n": 541
     },
     "choice": {
-     "accuracy": 0.8615384615384616,
+     "accuracy": 0.9333333333333333,
      "ci95": [
-      0.7692307692307693,
-      0.9384615384615385
+      0.9037037037037037,
+      0.9592592592592593
      ],
-     "n": 65
+     "n": 270
     },
     "rating": {
      "accuracy": 0.669,

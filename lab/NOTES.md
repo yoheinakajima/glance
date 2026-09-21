@@ -2018,3 +2018,12 @@ is not restored. Added: a "Speed, in context" paragraph in the page's section 8 
 references, a pointer from section 4, the same paragraph in the draft, and the verification record in RELATED_WORK.md. Nothing
 is added to the abstract or to the results tables. Not claimed anywhere: any multiple against a thinking-model workflow, "as fast
 as Jev", "faster than Haiku", "Jev for images".
+
+## 2026-09-21 07:23 Entry 55b: the written row completes the pooled analysis; the headline table moves to the pooled basis
+
+The same 4B model writing JSON on the insect-order set (`lab/runs/gen_accuracy_orders.jsonl`, 630 rows, 0 invalid). Pooled over
+the three photo sets on the items the hosted models were asked: written 0.945 [0.924, 0.963] against read 0.939 on yes/no
+(n=541), written 0.930 [0.900, 0.959] against read 0.933 on pick-one (n=270). Reading costs no accuracy on any of the three sets.
+With every row covered, `tools/make_matrix.py` now takes its yes/no and pick-one accuracy from the pooled analysis
+(`accuracy_basis` in `results/lab/matrix.json`); seconds and dollars stay as measured on the Commons photographs, because hosted
+cost depends on image size. The page's Figure 1 and Table 2, the README scorecard and the draft's section 3.1 follow.

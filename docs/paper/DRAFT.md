@@ -114,23 +114,23 @@ supported; we report both, and collect the misses in Section 9.
 ### 3.1 The headline matrix
 
 On the same items, across three tests and eight systems (three hosted flagships, three of the same providers'
-cheapest current models, and the open model both read and written), accuracy intervals on yes/no and pick-one overlap
-almost everywhere:
+cheapest current models, and the open model both read and written):
 
-| System | Yes/no, 131 fresh Commons questions | Pick one of 13, 65 fresh Commons photos | Rating, exact level of 4, 1,000 lab images |
+| System | Yes/no, 541 questions, three fresh photo sets pooled | Pick one, 270 photographs, three sets pooled | Rating, exact level of 4, 1,000 lab images |
 | --- | --- | --- | --- |
-| Gemini 3.1 Pro | 0.947 [0.908, 0.985] | 0.923 [0.846, 0.985] | 0.650 [0.621, 0.679] |
-| Claude Opus 5 | 0.924 [0.878, 0.969] | 0.908 [0.831, 0.969] | 0.550 [0.519, 0.581] |
-| GPT-5.6 | 0.893 [0.840, 0.947] | 0.892 [0.815, 0.954] | 0.597 [0.567, 0.627] |
-| Claude Haiku 4.5 (cheapest Anthropic) | 0.939 [0.893, 0.977] | 0.846 [0.754, 0.923] | 0.609 [0.579, 0.639] |
-| GPT-5.6 Luna (cheapest OpenAI) | 0.924 [0.878, 0.969] | 0.908 [0.831, 0.969] | 0.686 [0.657, 0.715] |
-| Gemini 3.1 Flash-Lite (cheapest Google) | 0.954 [0.916, 0.985] | 0.908 [0.831, 0.969] | 0.763 [0.737, 0.789] |
-| Qwen3-VL-4B, written | 0.931 [0.885, 0.969] | 0.892 [0.815, 0.954] | 0.672 [0.643, 0.701] |
-| Qwen3-VL-4B, read (Glance) | 0.931 [0.885, 0.969] | 0.862 [0.769, 0.938] | 0.669 [0.640, 0.698] |
+| Gemini 3.1 Pro | 0.959 [0.941, 0.976] | 0.937 [0.907, 0.963] | 0.650 [0.621, 0.679] |
+| Claude Opus 5 | 0.937 [0.915, 0.957] | 0.937 [0.907, 0.963] | 0.550 [0.519, 0.581] |
+| GPT-5.6 | 0.928 [0.906, 0.948] | 0.904 [0.867, 0.937] | 0.597 [0.567, 0.627] |
+| Claude Haiku 4.5 (cheapest Anthropic) | 0.839 [0.808, 0.869] | 0.785 [0.737, 0.833] | 0.609 [0.579, 0.639] |
+| GPT-5.6 Luna (cheapest OpenAI) | 0.906 [0.880, 0.930] | 0.881 [0.841, 0.919] | 0.686 [0.657, 0.715] |
+| Gemini 3.1 Flash-Lite (cheapest Google) | 0.961 [0.945, 0.976] | 0.933 [0.904, 0.959] | 0.763 [0.737, 0.789] |
+| Qwen3-VL-4B, written | 0.945 [0.924, 0.963] | 0.930 [0.900, 0.959] | 0.672 [0.643, 0.701] |
+| Qwen3-VL-4B, read (Glance) | 0.939 [0.917, 0.957] | 0.933 [0.904, 0.959] | 0.669 [0.640, 0.698] |
 
-The yes/no column uses the 131 test-half questions and the pick-one column the 65 test-half photographs the hosted models
-were shown, for every system including the open model (Section 3.3 gives the
-open model's numbers on the full 131 instead). Every yes/no and pick-one interval above overlaps every other. Timed on these
+The yes/no and pick-one columns pool the three fresh photo sets on the items the hosted models were shown (the test
+halves), for every system including the open model; Section 3.2 gives the paired differences and Section 3.3 the sets
+one by one. The same model writing its answer scores 0.945 and 0.930 against 0.939 and 0.933 read: reading costs no
+accuracy. Timed on these
 same photographs with the GPU otherwise idle, reading takes 1.08 s per yes/no (writing 1.65 s) and 1.43 s per 13-way
 pick-one (writing 1.87 s): faster than five of the six hosted models on yes/no (Claude Haiku 4.5 is faster, 0.87 s), and
 \$0.16 to \$0.24 per 1,000 yes/no answers on a rented GPU against \$0.31 for the cheapest hosted model (Gemini 3.1
