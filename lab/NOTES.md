@@ -1974,3 +1974,20 @@ hosted model whose paired interval includes zero; otherwise the difference is st
 "within 3 points" is used only if the whole paired interval lies inside [-3, +3]. If the owner adopts it, this pooled result
 replaces the Commons-only numbers as the headline for yes/no and pick-one, with the per-set rows kept beneath it; cost and speed
 are NOT pooled (hosted cost depends on image size) and stay per set. Ratings stay separate.
+
+## 2026-09-21 07:02 Entry 55: E23 result: pooled over three photo sets the open model is NOT level with every hosted model (it is 2 points behind the two Gemini models on yes/no)
+
+By the rule of entry 54 (`tools/pooled_photos.py`, `results/lab/pooled_photos.md`; no hosted row was missing). Paired on the
+same items, open model minus hosted model, points:
+- Yes/no, 541 items, open model 0.939 [0.917, 0.957]: Claude Opus 5 +0.2 [-1.7, +1.8] (indistinguishable, within 3 points);
+  GPT-5.6 +1.1 [-0.7, +3.1] (indistinguishable); Gemini 3.1 Pro -2.0 [-3.7, -0.4] and Gemini 3.1 Flash-Lite -2.2 [-3.9, -0.6]
+  (the open model is BEHIND both); GPT-5.6 Luna +3.3 [+1.1, +5.5] and Claude Haiku 4.5 +10.0 [+7.2, +12.8] (ahead of both).
+- Pick-one, 270 items, open model 0.933 [0.904, 0.959]: Claude Opus 5 -0.4 [-3.0, +2.2], Gemini 3.1 Pro -0.4 [-3.0, +2.2],
+  Gemini 3.1 Flash-Lite +0.0 [-3.0, +3.0] (all three indistinguishable and within 3 points); GPT-5.6 +3.0 [+0.0, +6.3]
+  (indistinguishable, the interval touches zero); GPT-5.6 Luna +5.2 [+1.5, +8.9] and Claude Haiku 4.5 +14.8 [+10.4, +19.3] (ahead).
+The equal-weight-per-set means tell the same story (yes/no 0.938 against 0.958 and 0.960 for the Gemini models).
+What this does to the claim: "statistically indistinguishable from six hosted models" was true of each set alone and was a
+statement about sample size. With three times the items it becomes: on pick-one, level with the three best hosted models; on
+yes/no, level with Claude Opus 5 and GPT-5.6, about 2 points behind both Gemini models, and ahead of the other two low-cost
+models. The page, the README and the draft are changed to say this. The back-of-envelope in entry 54 (0.943 against 0.960) was
+close; the small Gemini lead that no single set could show is real at this sample size.
