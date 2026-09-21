@@ -28,13 +28,14 @@ def main(argv=None) -> int:
     parser.add_argument("--image-longest-edge", type=int)
     parser.add_argument("--out", required=True)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--suites", help="comma-separated suites instead of the default four (e.g. inat_orders_yesno,inat_orders_choice)")
     args = parser.parse_args(argv)
     cfg = load_config()
     backend = GenericVlm(cfg, model_id=args.model_id, revision=args.revision, longest_edge=args.image_longest_edge)
     out = PROJECT_ROOT / args.out
     done = {(r["suite"], r["item_id"]) for r in read_jsonl(out)}
     writer = JsonlWriter(out)
-    for suite in SUITE_NAMES:
+    for suite in (args.suites.split(",") if args.suites else SUITE_NAMES):
         items = SUITES[suite].build(cfg, 600)
         for n, item in enumerate(items[: args.limit] if args.limit else items, 1):
             if (suite, item.item_id) in done:
