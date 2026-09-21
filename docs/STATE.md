@@ -33,6 +33,30 @@ for a paper; publish misses; never call it a model or "Jev for vision"; `glance 
 
 ## 3. RUNNING RIGHT NOW (do not start a second copy)
 
+**OVERNIGHT PLAN, written 23:52 on 2026-09-20. The owner is asleep and may PUBLISH in the morning. READ THIS BLOCK FIRST.**
+Goal by morning: every blank on the page filled from runs that have finished, the paper draft consistent with the page, `main`
+fast-forwarded and pushed to the PRIVATE repository `github.com/yoheinakajima/glance` (created at the owner's request; going
+public and turning on Pages are the OWNER's steps, `docs/PUBLISH.md`). Never make the repository public, never enable Pages.
+After EVERY result: notebook entry with verdicts (real clock) -> regenerate (`tools/make_matrix.py`, `tools/scaling_report.py`,
+`tools/other_models_report.py`, `tools/make_results_zeroshot.py`, `tools/make_site.py`) -> `tools/verify_docs_numbers.py` ->
+commit -> `git fetch . score-lab:main && git push origin main score-lab` -> republish the preview artifact (same file path
+`site/page.html`).
+Wake-ups armed (background tasks): (1) `smol-fresh` + `generic-smoke` + `smol-json` done -> `tools/other_models_report.py`,
+`tools/scaling_report.py`, verdict H47 (entry 46), read `$TMPDIR/glance/generic_smoke.out|.err` and only then drop
+"experimental" wording; (2) `written-inat` + `jsondigits-semantic` + `jsondigits-kadid` done -> add the written rows to the
+page's photo table (from `lab/runs/gen_accuracy_inat.jsonl`), `tools/jsondigits_hard_report.py` (prints H42 / H43 and the
+registered DECISION about making the one-pass read the harness default; if YES, wire `jsondigits` into `glance/rating.py` /
+`scorer.py` as `score_method` for zero-shot and keep `ens4d` for fits, with tests); (3) the owner's six hosted runs on the
+insect-order test complete (run `20260921T061001Z-da85d6` + suffixes opus, haiku, gpt, gptsmall, gemini, flashlite) ->
+`tools/fresh_report.py --set orders --run <base> --run <each copy>`, verdict H49 (entry 47), add a short subsection to the page;
+(4) `qsit-lab` + `openjev-lab` done -> `tools/external_report.py` (H31 / H32, entry 37). Two assistant-model agents are building
+E21 (synthetic UI screens, entry 49: `glance/lab/ui_screens.py`, `glance/evals/suites/ui_screens.py`) and E22 (procedural probes,
+entry 50: `glance/lab/probes.py`, `glance/evals/suites/probes.py`); they must NOT edit `suites/__init__.py`: when each reports,
+review its contact sheets, register its `MODULES` in `glance/evals/suites/__init__.py` (and `tests/test_m3_evals.py` expects the
+suite-name sets to match), commit, queue `uv run glance eval --suite <its suites> --model vlm --prefix-cache` on lane A, add a
+job set to `tools/frontier_batch.py` for the owner's morning paste. These two do NOT block publication.
+Morning hand-over for the owner: what finished, what changed on the page, the exact publish steps, the optional pastes.
+
 **Update 22:18 (READ THIS BLOCK FIRST; older blocks below are history).**
 Results since 17:00, all in `lab/NOTES.md`: 32b (the same model WRITING beats the four-pass read zero-shot on ratings, 0.672 vs
 0.570; identical on yes/no and pick-one), 42b (one-pass read at the JSON answer position `jsondigits`: 0.669, 0.758 with 16
