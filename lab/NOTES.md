@@ -1590,3 +1590,26 @@ no question per photo, the no drawn from the OTHER six orders, so every negative
   of the best hosted model here too, the headline stands on a harder test; if it trails by more than 10, the headline must
   say "on everyday photographs".
 Hosted rows need the owner's paste (`tools/frontier_batch.py`, a new set); the local run goes on the GPU queue.
+
+## 2026-09-20 23:06 Entry 48: a fairness correction to the speed and cost comparison (timing on the SAME photographs), and reading against writing by model size
+
+The matrix compared hosted latencies measured on the Commons photographs (1280 px files, 768 image tokens for the open
+model) with open-model timings taken on the lab's 448 px images (196 tokens). Found by me tonight, not by a reviewer;
+fixed with `glance.lab.photo_timing` (first 40 Commons photos, the 13-option pick-one and the photo's own yes/no, written
+and read, GPU otherwise idle).
+- Qwen3-VL-4B on the photographs: yes/no read 1.08 s (written 1.65 s); pick-one of 13 read 1.43 s (written 1.87 s). NOT the
+  0.33 s and 0.38 s of the small-image timing. Reading the image dominates: the read is 1.5 and 1.3 times faster than
+  writing here, against 2.4 times on small images.
+- Consequences for the claims: on full-size photographs the open model answers a yes/no faster than five of the six
+  hosted models (Claude Haiku 4.5 is faster, 0.87 s), and on a rented GPU it costs $0.16 to $0.24 per 1,000 yes/no
+  answers against $0.31 for the cheapest hosted model: "somewhat cheaper", not "5 times cheaper"; pick-one costs about the
+  same as the cheapest hosted models. The "0.33 s" and "about 5 times cheaper" statements published earlier today on the
+  page and in the README were true only for small images and are withdrawn (erratum; the page's sentences are now
+  computed from the matrix). Ratings were timed on the lab images every system saw, so those cells stand (0.45 s, $0.07
+  to $0.10 per 1,000 for the one-pass read).
+- Reading against writing by model size (small images, idle GPU, `lab/GENBENCH_SINGLE*.json`): yes/no speed-up 3.3 /
+  2.4 / 3.2 times at 2B / 4B / 8B; three-option pick-one 1.9 / 2.7 / 2.2; rating (two-pass read) 1.2 / 2.1 / 2.5. No
+  clean trend in the RATIO; the absolute saving per answer grows with size (yes/no: 0.46 s, 0.45 s, 1.25 s). On the
+  photographs: 2B read 0.66 s against written 1.08 s (1.6 times); 8B pending.
+- Practical note for users: the image-token budget is the speed knob (768 tokens by default); accuracy at smaller budgets
+  on these photo tests is not measured yet.

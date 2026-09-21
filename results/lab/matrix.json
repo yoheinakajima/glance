@@ -431,12 +431,12 @@
    },
    "seconds": {
     "yesno": {
-     "value": 0.7785184165695682,
-     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
+     "value": 1.6477374165551737,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "choice": {
-     "value": 0.9979771664366126,
-     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
+     "value": 1.8706402705283836,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "rating": {
      "value": 0.9066312500508502,
@@ -446,15 +446,15 @@
    "usd_per_1000": {
     "yesno": {
      "value": [
-      0.11375019086544247,
-      0.17404211712644121
+      0.24075274475222816,
+      0.3683608535676677
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "choice": {
      "value": [
-      0.14581555265157176,
-      0.22310333987449607
+      0.2733213284160916,
+      0.4181920249225674
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
@@ -497,12 +497,12 @@
    },
    "seconds": {
     "yesno": {
-     "value": 0.328441750141792,
-     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
+     "value": 1.0785572294844314,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "choice": {
-     "value": 0.37641170783899724,
-     "how": "measured on the laptop, GPU otherwise idle, on 448 px test images and a 3-option pick-one: SMALLER inputs than the hosted rows saw; photo timing pending"
+     "value": 1.4294963964493945,
+     "how": "measured on the laptop, GPU otherwise idle, on these photographs"
     },
     "rating": {
      "value": 0.4463122294982895,
@@ -512,15 +512,15 @@
    "usd_per_1000": {
     "yesno": {
      "value": [
-      0.04798898904849516,
-      0.07342497792058728
+      0.15758919519689196,
+      0.2411174606358529
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },
     "choice": {
      "value": [
-      0.05499793286758683,
-      0.0841489284635625
+      0.20886530681455043,
+      0.3195718610729091
      ],
      "how": "arithmetic: measured seconds x rented-GPU price, GPU assumed no faster than the laptop"
     },

@@ -58,8 +58,8 @@ revision. Rating modes (`--method`): `ens4d` (4 passes, the one to fit), `fast2`
 
 | System | yes/no, fresh photos | pick-one, fresh photos | rating, exact level | seconds per answer | US dollars per 1,000 answers |
 | --- | --- | --- | --- | --- | --- |
-| **Qwen3-VL-4B read with Glance, on a laptop** | **0.931** | **0.862** | **0.669** | **0.34 (yes/no)** | **0.05 to 0.24** (rented GPU; electricity only: under 0.01) |
-| the same model writing JSON | 0.931 | 0.892 | 0.672 | 0.80 | 0.12 to 0.18 |
+| **Qwen3-VL-4B read with Glance, on a laptop** | **0.931** | **0.862** | **0.669** | **1.1 (yes/no on a full-size photo; 0.33 on a small image)** | **0.07 to 0.32** (rented GPU; electricity only: about 0.01) |
+| the same model writing JSON | 0.931 | 0.892 | 0.672 | 1.6 (0.78 on a small image) | 0.13 to 0.42 |
 | Gemini 3.1 Flash-Lite (cheapest Google) | 0.954 | 0.908 | 0.763 | 1.6 to 1.9 | 0.31 to 0.34 |
 | GPT-5.6 Luna (cheapest OpenAI tried) | 0.924 | 0.908 | 0.686 | 1.1 to 1.3 | 0.12 to 0.40 |
 | Claude Haiku 4.5 | 0.939 | 0.846 | 0.609 | 0.7 to 0.9 | 0.55 to 1.89 |
@@ -71,14 +71,15 @@ model). Ratings are five synthetic 4-level scales, 1,000 images; the open model'
 position, which lives in the lab code (`--methods jsondigits`) and moves into `glance ask` and `glance score` after one
 more registered check; the four-pass read those commands use today scores 0.570 zero-shot and is the one to fit. Read honestly: on yes/no and pick-one the open 4B model
 is level with hosted models, cheap and expensive. On zero-shot ratings the cheapest Google model is 9 points ahead; the
-open model draws level with 16 unlabeled images and leads with 32 labels (0.857). Against the cheapest hosted models it is
-about 5 times cheaper on yes/no and no cheaper on ratings. Every experiment was registered before it ran and the misses
+open model draws level with 16 unlabeled images and leads with 32 labels (0.857). On full-size photographs it answers a yes/no in
+1.1 s (faster than five of the six hosted models) and is somewhat cheaper than the cheapest hosted models on a rented GPU,
+not an order of magnitude; most of that time is reading the image. Every experiment was registered before it ran and the misses
 are published (`lab/NOTES.md`, `docs/CLAIMS.md`).
 
 ## When to use it, and when not to
 
 Use it when images must stay on your machine, when you want no per-call bill or need to work offline, when latency
-matters (0.34 s for a yes/no on a laptop), when you want probabilities to threshold, abstain or rank on, when you ask
+matters (about 1 s for a yes/no about a full-size photo on a laptop, 0.3 s on small images), when you want probabilities to threshold, abstain or rank on, when you ask
 many questions about each image, or when you have a rubric of your own and a few dozen examples to fit it. Do NOT reach
 for it to save money against the cheapest hosted models on one-off ratings, or when you need the best zero-shot exact
 rating with nothing to fit: call Gemini 3.1 Flash-Lite. It is also not an image-quality metric (on KADID-10k it misses
