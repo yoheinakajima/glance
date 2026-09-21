@@ -150,6 +150,23 @@ Two things are kept apart (2026-09-20 17:40, after a second round of outside rev
   zero-shot exact ratings); "a model"; "Jev for vision"; "works on any VLM" until E3 and E15 report; "zero-shot" for
   anything that saw images of the rubric; "0.87 on image quality assessment".
 
+## Results map for the paper (2026-09-20 evening): every completed experiment and where it goes
+
+Section numbers follow the owner's framing: the zero-shot comparison leads; label-based results are a later section.
+| Paper section | Result (notebook entry) | Source of numbers |
+| --- | --- | --- |
+| 1 Headline matrix: 5+ systems x 3 tests x accuracy / speed / cost | matrix on identical items; bars by question type (Figure 1) | `results/lab/matrix.json`, `tools/make_matrix.py`, `site/` |
+| 2.1 Yes/no and pick-one on photos no model has seen | Commons (30b, 33, 33b), iNaturalist (35b, 35c): level with three frontier models | `results/lab/fresh_commons.*`, `fresh_inat.*` |
+| 2.2 Ratings zero-shot | frontier 0.550 / 0.597 / 0.650 (31, 33, 33c); written 0.672 (32b); one-pass read 0.669 (42b); exact versus within-one and rank agreement | `frontier_head_to_head.*`, `gen_accuracy.*`, `jsondigits.*` |
+| 2.3 Reading against writing, same model | speed 2.4x to 6.1x (27c); identical answers on yes/no and pick-one (32b); cost per 1,000 images | `lab/GENBENCH.*`, `results/lab/cost_model.*` |
+| 2.4 Hosted cost and speed, measured | flagships (33c, 35c); providers' cheapest models (45, running) | `frontier_cost_measured.*` |
+| 3 Zero labels, not zero-shot: self-calibration from unlabeled images | 0.558 -> 0.686 with 16 images (26); 0.669 -> 0.758 on the one-pass read (42b); ECE before / after; the content-free prior FAILS (39b) | `label_free_*`, `null_prior.*`, METHODS 14.1 |
+| 4 If you have labels | 32 labels 0.857; label curve; hidden-state readout 0.965 from one pass, label-hungry (40); classical features win with many labels (23); no transfer across rubrics (26) | `RESULTS_LAB.md`, `lab/READOUT_LADDER.*`, `RESULTS_COMPARISONS.md` |
+| 5 Portability | second family SmolVLM2: fitted order replicates, zero-shot weaker (44); model size 2B / 4B / 8B (38, running); outside open systems (37, queued) | `lab/SMOLVLM2_REPORT.*`, `results/lab/scaling.*` |
+| 6 Harder benchmarks | KADID-10k: all registered targets missed (28); one-pass read on KADID and creative-QA (43, queued); reference-anchored (29, queued) | `RESULTS_GENERALIZATION.md` |
+| 7 Related work and positioning | same inference object as Simple Jev / jev-visual / LitJev; not a trained model (41, 41b) | `RELATED_WORK.md` "Where Glance sits" |
+| 8 Limits, errata, misses | latency erratum (16), small-fit overconfidence (18), flawed ECE criterion (15b), every NOT SUPPORTED verdict | `docs/CLAIMS.md`, `lab/NOTES.md` |
+
 ## Positioning guardrails (agreed with the project owner, 2026-09-20)
 
 Say: a frozen 4B VLM already sees graded quality; the missing piece was how the question is asked and how the logits

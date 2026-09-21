@@ -78,8 +78,20 @@ if h2h:
                        ("+ Glance ens4d, 0 labels", LOCAL + ", `ens4d`")):
         e = h2h["local"][key]
         out.append(f"| {label} | " + " | ".join(f"{e['accuracy'][s]:.3f}" for s in scales) + f" | **{e['mean_accuracy']:.3f}** |")
-    out += ["", "Chance is 0.250. Paired differences with intervals are in `results/lab/frontier_head_to_head.md`: the open model is level with Opus 5 and GPT-5.6 "
-            "and 8 points behind Gemini 3.1 Pro."]
+    jd = load("results/lab/jsondigits.json")
+    if jd:
+        ps = jd["per_scale_zero_shot"]
+        out.append("| Qwen3-VL-4B, WRITTEN JSON answer (no Glance) | " + " | ".join(f"{ps[s]['written']:.3f}" for s in scales) + f" | **{jd['mean']['written']:.3f}** |")
+        out.append("| " + LOCAL + ", ONE pass read at the JSON answer position (`jsondigits`) | " + " | ".join(f"{ps[s]['json_zero']:.3f}" for s in scales) + f" | **{jd['mean']['json_zero']:.3f}** |")
+    out += ["", "Chance is 0.250. The four-pass `ens4d` read was selected with a calibration in the loop and is poor zero-shot: it is level with Opus 5 and GPT-5.6 and 8 "
+            "points behind Gemini 3.1 Pro (`results/lab/frontier_head_to_head.md`), and 10 points behind the SAME model's written answer (`results/lab/gen_accuracy.md`, "
+            "`lab/NOTES.md` entry 32b)."]
+    if jd:
+        out += [f"Reading the digits in ONE pass at the position where the written answer puts them closes that gap (`results/lab/jsondigits.md`, entry 42b): it agrees with the "
+                f"written answer on {jd['mean']['agree_with_written']:.1%} of items, and paired on the same images it is ahead of Claude Opus 5 by 11.9 points [7.8, 16.0], ahead of "
+                f"GPT-5.6 by 7.2 [2.7, 11.8] and level with Gemini 3.1 Pro (+1.9 [-2.5, 6.3]). Its zero-shot probabilities are not calibrated (ECE {jd['mean']['ece']:.2f}). With 16 "
+                f"UNLABELED images of the rubric it reaches {jd['mean']['json_u16']:.3f} (+10.8 [6.9, 14.6] over Gemini 3.1 Pro); with 32 labels {jd['mean']['json_l32']:.3f}, where the "
+                f"four-pass read is still better ({jd['mean']['ens_l32']:.3f})."]
     if lf:
         raw = lf["raw (0 labels, no pool)"]
         out += [f"Exact level is a hard target zero-shot because where a rubric draws its boundaries is a convention: on the full test split the open model is "
@@ -121,8 +133,15 @@ if gen:
     for name, e in gen.items():
         out.append(f"| {name} | {e['write_p50_ms']:.0f} | {e['read_fast2_p50_ms']:.0f} | {e['speedup_vs_write_fast2']:.1f}x | {e['agreement_with_read_on_valid_fields']:.0%} |")
     out += ["", "Reads here use the two-pass `fast2` rating readout; 40 images, one laptop, GPU otherwise idle (`lab/GENBENCH.md`)."]
-out += ["Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): "
-        + ("see `results/lab/gen_accuracy.md`." if genacc else "pending (collection queued)."), ""]
+if genacc:
+    out += ["", "Accuracy of the two on identical labeled items (E11, `lab/NOTES.md` entries 32 and 32b; invalid written output counts as wrong, none occurred):", "",
+            "| Suite | n | written | read, 0 labels (yes/no, pick-one as shipped; ratings: four-pass `ens4d`) | read minus written, points |", "| --- | --- | --- | --- | --- |"]
+    out += [f"| {k} | {e['n']} | {e['written'][0]:.3f} [{e['written'][1]:.3f}, {e['written'][2]:.3f}] | {e['read_0_labels'][0]:.3f} | "
+            f"{e['read_minus_written_points'][0]:+.1f} [{e['read_minus_written_points'][1]:+.1f}, {e['read_minus_written_points'][2]:+.1f}] |" for k, e in genacc.items() if isinstance(e, dict) and "written" in e and "n" in e and "read_minus_written_points" in e]
+    out += ["", "Identical on yes/no and pick-one. On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 "
+            "removes that loss.", ""]
+else:
+    out += ["Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): pending (collection queued).", ""]
 
 # 5. cost
 cost, measured = load("results/lab/cost_model.json"), load("results/lab/frontier_cost_measured.json")
@@ -143,6 +162,11 @@ scaling = load("results/lab/scaling.json")
 out += ["## 6. Does zero-shot improve with model size? (E15, Qwen3-VL 2B / 4B / 8B, identical prompts and settings)", "",
         "See `results/lab/scaling.md`." if scaling else "Pending: registered in `lab/NOTES.md` entry 38 with a prediction that can fail (8B stays below 0.70 exact on the "
         "lab scales zero-shot). The 8B model must run alone on this 32 GB machine.", "",
+        "## 6b. Does the recipe carry to another model family? (E3, SmolVLM2-2.2B, no wording changed)", "",
+        (lambda r: (f"Fitted, yes: v0 readout as shipped {r['independent (as shipped)']['accuracy']:.3f}, best-calibrated v0 {r['independent']['accuracy']:.3f}, `digits` + matrix "
+                    f"{r['digits']['accuracy']:.3f}, `ens4d` + matrix {r['ens4d']['accuracy']:.3f} (200 labels per scale; the registered order replicates; `lab/SMOLVLM2_REPORT.md`, "
+                    "`lab/NOTES.md` entry 44). Zero-shot, no: raw `ens4d` 0.419 exact on the same items against 0.570 for the 4B model; zero-shot quality belongs to the model.")
+         )(load("lab/SMOLVLM2_REPORT.json")["summary"]) if load("lab/SMOLVLM2_REPORT.json") else "Pending.", "",
         "## 7. If you do have examples (a caveat, not the headline)", "",
         "With 32 labeled images per rubric the same frozen model reaches 0.857 on the lab scales (`docs/paper/RESULTS_LAB.md`); a fitted readout on its hidden "
         "state goes higher still but needs more labels (`lab/READOUT_LADDER.md`). Classical hand-built features beat both on low-level artifacts when labels are "

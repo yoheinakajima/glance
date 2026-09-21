@@ -579,3 +579,19 @@ The textbook alternative does not work here: a content-free prior (the level log
 images, subtracted per member) was registered and tested (`lab/NOTES.md` entries 39 and 39b; `results/lab/null_prior.md`)
 and takes exact accuracy from 0.558 to 0.400, because the model reads a blank or noise image as the worst level of most
 quality rubrics. For an image rubric there is no content-free image; the prior has to come from real images.
+
+### 14.2 Zero-shot rating read at the JSON answer position (`jsondigits`; lab collector, `lab/NOTES.md` entries 42 and 42b)
+
+The four-pass `ens4d` readout of section 14 was selected with a calibration in the loop, which forgives a constant
+offset; zero-shot nothing forgives it, and the same model WRITING its rating as JSON was 10 points more accurate
+(`results/lab/gen_accuracy.md`). A written answer is a logit readout in disguise: greedy decoding of `{"answer": 2}`
+takes the argmax at the position after `{"answer": `. `jsondigits` therefore uses the written baseline's exact prompt
+(`glance.lab.gen_bench.json_prompt`: the instruction, then `Allowed: 0 = <level text>; 1 = ...; (answer with the
+number)`), forces the assistant turn to begin with `{"answer": ` (`score_labels(..., assistant_prefix=...)`), and reads
+the logits of the digit tokens `0..K-1` at that position in ONE forward pass. No wording was tuned. On the 1,000 lab
+images the frontier models saw it scores 0.669 exact (written 0.672, identical answer on 98.2% of items; raw `ens4d`
+0.570), has no probability mass outside the digits, and is not calibrated zero-shot (ECE 0.25). Self-calibration from 16
+unlabeled images (section 14.1, applied to the single logit vector) gives 0.758; with 32 labels it reaches 0.822, below
+`ens4d` + matrix (0.853), so the four-pass ensemble remains the option to FIT and the one-pass read the option to use
+with no labels. It becomes the harness default for zero-shot `score` only after the registered check on KADID-10k and
+the creative-QA rubrics (entry 43).

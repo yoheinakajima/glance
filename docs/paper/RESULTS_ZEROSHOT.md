@@ -48,8 +48,11 @@ The frontier models were scored on the test half only (their n is smaller).
 | Gemini 3.1 Pro, written pick | 0.665 | 0.655 | 0.645 | 0.590 | 0.695 | **0.650** |
 | Qwen3-VL-4B, v0 readout (one yes/no per level) | 0.625 | 0.530 | 0.365 | 0.550 | 0.480 | **0.510** |
 | Qwen3-VL-4B + Glance (open, local), `ens4d` | 0.470 | 0.700 | 0.450 | 0.575 | 0.655 | **0.570** |
+| Qwen3-VL-4B, WRITTEN JSON answer (no Glance) | 0.755 | 0.810 | 0.345 | 0.700 | 0.750 | **0.672** |
+| Qwen3-VL-4B + Glance (open, local), ONE pass read at the JSON answer position (`jsondigits`) | 0.730 | 0.805 | 0.345 | 0.715 | 0.750 | **0.669** |
 
-Chance is 0.250. Paired differences with intervals are in `results/lab/frontier_head_to_head.md`: the open model is level with Opus 5 and GPT-5.6 and 8 points behind Gemini 3.1 Pro.
+Chance is 0.250. The four-pass `ens4d` read was selected with a calibration in the loop and is poor zero-shot: it is level with Opus 5 and GPT-5.6 and 8 points behind Gemini 3.1 Pro (`results/lab/frontier_head_to_head.md`), and 10 points behind the SAME model's written answer (`results/lab/gen_accuracy.md`, `lab/NOTES.md` entry 32b).
+Reading the digits in ONE pass at the position where the written answer puts them closes that gap (`results/lab/jsondigits.md`, entry 42b): it agrees with the written answer on 98.2% of items, and paired on the same images it is ahead of Claude Opus 5 by 11.9 points [7.8, 16.0], ahead of GPT-5.6 by 7.2 [2.7, 11.8] and level with Gemini 3.1 Pro (+1.9 [-2.5, 6.3]). Its zero-shot probabilities are not calibrated (ECE 0.25). With 16 UNLABELED images of the rubric it reaches 0.758 (+10.8 [6.9, 14.6] over Gemini 3.1 Pro); with 32 labels 0.822, where the four-pass read is still better (0.853).
 Exact level is a hard target zero-shot because where a rubric draws its boundaries is a convention: on the full test split the open model is exactly right on 0.558 of images and within one level on 0.987 (mean error 0.47 levels). Frontier picks are not stored, so their within-one figure is unknown.
 
 **Zero labels, but not zero-shot: self-calibration from unlabeled images of the rubric** (`glance fit --unlabeled`; the readout's bias is removed by z-scoring each member over a pool of unlabeled images; `lab/NOTES.md` entry 26):
@@ -78,7 +81,20 @@ On KADID-10k (23 distortion types at 5 severity levels, human-scored, chance 0.2
 | 25 ratings | 20046 | 3261 | 6.1x | 59% |
 
 Reads here use the two-pass `fast2` rating readout; 40 images, one laptop, GPU otherwise idle (`lab/GENBENCH.md`).
-Accuracy of the written answers on the same labeled items (E11, `lab/NOTES.md` entry 32): see `results/lab/gen_accuracy.md`.
+
+Accuracy of the two on identical labeled items (E11, `lab/NOTES.md` entries 32 and 32b; invalid written output counts as wrong, none occurred):
+
+| Suite | n | written | read, 0 labels (yes/no, pick-one as shipped; ratings: four-pass `ens4d`) | read minus written, points |
+| --- | --- | --- | --- | --- |
+| ladder_blur | 200 | 0.755 [0.695, 0.815] | 0.470 | -28.5 [-35.0, -22.0] |
+| ladder_noise | 200 | 0.700 [0.635, 0.760] | 0.575 | -12.5 [-18.0, -7.0] |
+| ladder_jpeg | 200 | 0.345 [0.280, 0.410] | 0.450 | +10.5 [+6.0, +15.5] |
+| ladder_exposure | 200 | 0.810 [0.755, 0.865] | 0.700 | -11.0 [-19.5, -2.5] |
+| ladder_resolution | 200 | 0.750 [0.690, 0.810] | 0.655 | -9.5 [-17.5, -1.5] |
+| fresh_yesno | 262 | 0.931 [0.901, 0.958] | 0.931 | +0.0 [-1.1, +1.1] |
+| fresh_choice | 131 | 0.885 [0.824, 0.939] | 0.885 | +0.0 [-3.8, +3.8] |
+
+Identical on yes/no and pick-one. On ratings the four-pass read loses to the written answer on four of five scales; the one-pass JSON-position read of section 3 removes that loss.
 
 ## 5. Speed and cost per 1,000 answers
 
@@ -88,6 +104,10 @@ Frontier APIs, measured on the owner's runs: Gemini 3.1 Pro $6.15 per 1,000, 4.0
 ## 6. Does zero-shot improve with model size? (E15, Qwen3-VL 2B / 4B / 8B, identical prompts and settings)
 
 Pending: registered in `lab/NOTES.md` entry 38 with a prediction that can fail (8B stays below 0.70 exact on the lab scales zero-shot). The 8B model must run alone on this 32 GB machine.
+
+## 6b. Does the recipe carry to another model family? (E3, SmolVLM2-2.2B, no wording changed)
+
+Fitted, yes: v0 readout as shipped 0.384, best-calibrated v0 0.762, `digits` + matrix 0.775, `ens4d` + matrix 0.854 (200 labels per scale; the registered order replicates; `lab/SMOLVLM2_REPORT.md`, `lab/NOTES.md` entry 44). Zero-shot, no: raw `ens4d` 0.419 exact on the same items against 0.570 for the 4B model; zero-shot quality belongs to the model.
 
 ## 7. If you do have examples (a caveat, not the headline)
 
