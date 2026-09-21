@@ -1461,3 +1461,16 @@ creative-QA rubrics (registered when it is run), and the four-pass ensemble stay
   elicitation, and reading it costs one pass.
 - Not yet the harness default: as registered, it first gets a check on KADID-10k and the creative-QA rubrics (next
   entry), and a clean timing in tonight's idle-GPU window.
+
+## 2026-09-20 19:27 Entry 43: E17, the JSON-position read on the harder benchmarks, registered before any output
+
+`jsondigits` exactly as in entry 42 (no wording change), one pass, on (a) the creative-QA rubrics, test split (300 per
+rubric; the four `ens4d` members are already collected there) plus the first 100 calibration items per rubric, and (b)
+KADID-10k, first 200 test items and first 100 calibration items of each of the 23 severity distortions (the subset the
+reference-anchored experiment uses). Compared with raw `ens4d` on the same items, zero-shot and with 16 unlabeled images.
+- H42: on the creative-QA rubrics `jsondigits` zero-shot is at least as accurate as raw `ens4d` on the mean and on at
+  least 3 of 5 rubrics.
+- H43: on KADID-10k `jsondigits` zero-shot beats raw `ens4d` (0.328 on the full test split) by at least 5 points but
+  stays below 0.50: fine severity levels of 23 distortion types remain hard zero-shot.
+- Decision rule fixed now: if H42 holds and KADID is not worse than raw `ens4d`, `jsondigits` becomes the zero-shot default
+  for `score` in the harness (one pass), `fit --unlabeled` applies to it, and `ens4d` stays the default for labeled fits.
