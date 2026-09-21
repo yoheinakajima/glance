@@ -2283,3 +2283,12 @@ The owner posted the launch. Tag `v0.3.1` marks the exact commit that is live at
 (`main` at 8f36e06). From here `main` is left as published (the page deploys from `main`, by hand, on the owner's say), and work on a
 paper version for review and arXiv happens on branch `arxiv`: a PDF built from the same generated page (so every number still comes
 from a result file), without the website-only panel. Fixes to the live page, if any are needed, go to `main` deliberately and separately.
+
+## 2026-09-21 10:37 Entry 66: a paper version (PDF) for outside review, built from the generated page
+
+`tools/make_paper.py` turns `site/index.html` into `paper/glance-vlm-paper.html` and `paper/glance-vlm-paper-v0.3.1.pdf` (A4, 18
+pages, vector figures, page numbers): the descriptive title as the heading, the website-only panel and the navigation removed, the
+three-regimes summary after the abstract, a disclosure paragraph before the references. Nothing is retyped, so every number still
+comes from a result file and the PDF cannot drift from the page. This is the version for the owner's outside review; an arXiv
+submission will additionally want an introduction, a LaTeX source (arXiv's preferred format) and a decision on categories, none of
+which is done yet.

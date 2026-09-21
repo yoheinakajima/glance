@@ -1,5 +1,10 @@
-
-<title>Glance: reading typed visual judgements from a frozen open vision-language model</title>
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading typed visual judgements from a frozen open vision-language model</title>
+<meta name="author" content="Yohei Nakajima">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap">
 <style>
 :root{--paper:#ffffff;--ink:#14171a;--muted:#56616b;--rule:#d5dbe1;--link:#1a4480;--miss:#8f2d2d;--own:#14171a;--tint:#f3f5f7}
@@ -58,41 +63,27 @@ svg .m-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.1}svg .m-arrow{str
 svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}
 .key svg{width:11px;height:11px;vertical-align:-1px;margin:0 3px 0 8px;display:inline}
 </style>
+
+<style>
+@page{size:A4;margin:19mm 19mm 21mm;@bottom-center{content:counter(page);font:8.5pt "IBM Plex Sans",Arial,sans-serif;color:#56616b}}
+:root{--paper:#fff;--ink:#14171a;--muted:#56616b;--rule:#d5dbe1;--link:#14171a;--miss:#8f2d2d;--own:#14171a;--tint:#f3f5f7}
+html{font-size:14.4px}body{padding:0;font-size:10.3pt;line-height:1.5}main{max-width:none;gap:1.5rem}
+header.paper h1{font-size:19pt;line-height:1.22;margin:0 0 .55rem;max-width:none}header.paper .byline{margin:.2rem 0}header.paper .running{margin:.5rem 0 0;border:0;padding:0}
+.abstract{font-size:10.3pt;line-height:1.5}h2{break-after:avoid;font-size:12.5pt}h3{break-after:avoid}p{orphans:3;widows:3}
+figure,.table-scroll,table,pre,.protocol,.regimes tr,ul.misses li,.refs li{break-inside:avoid}
+.table-scroll{overflow:visible}td,thead th{white-space:normal}td.n{white-space:nowrap}table{font-size:8.5pt}td{padding:.3rem .7rem .3rem 0}td:first-child{min-width:7.5rem}
+.regimes td{font-size:8.9pt}.ci{font-size:7.6pt}.caption,figcaption{font-size:8.6pt}pre{font-size:7.6pt;white-space:pre-wrap;word-break:break-word}
+a{color:inherit;text-decoration:none}.refs{font-size:8.8pt}.refs a{word-break:break-all;color:var(--muted)}
+.only-narrow{display:none!important}.only-wide{display:block!important}footer{font-size:8.6pt}
+</style>
+</head>
+<body>
 <main>
-<header>
-  <p class="running">glance-vlm · working paper · v0.3.1 · snapshot b5580b1, 2026-09-21 · every experiment registered before it ran · results regenerate from the repository</p>
-  <h1>Glance</h1>
-  <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
-  <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
-  <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#regimes">Summary</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+<header class="paper">
+  <h1>Reading typed visual judgements from a frozen open vision-language model</h1>
+  <p class="byline">Yohei Nakajima <span class="aff">· independent</span></p>
+  <p class="running">Working paper · 21 September 2026 · glance-vlm v0.3.1, snapshot b5580b1 · code, data and the registration notebook: github.com/yoheinakajima/glance · current version: glance.yohei.me</p>
 </header>
-
-<section aria-labelledby="regimes" class="regimes"><h2 id="regimes" class="plain">The result in three regimes</h2><div class="table-scroll"><table><thead><tr><th>What you ask</th><th>What we measured, Qwen3-VL-4B + Glance</th><th>What to do</th></tr></thead><tbody><tr><td><b>Recognition</b><span class="note">yes/no and pick-one about what is in a photograph</span></td><td>0.939 and 0.933 on fresh photographs, against 0.961 and 0.937 for the best hosted model; the same model writing its answer scores 0.945 and 0.930</td><td>Read it. One forward pass of a small open model, nothing generated.</td></tr><tr><td><b>Ratings on a rubric</b><span class="note">a level on an image-quality scale</span></td><td>zero-shot the order is right (within one level on 0.99 of images) and the exact level often wrong (0.669); 0.758 after the model has seen 16 unlabeled images of the rubric</td><td>Show it a few images of the rubric first. Outside image quality this does not work (section 5.1).</td></tr><tr><td><b>Geometry</b><span class="note">relative size, line direction, tilt</span></td><td>0.52 on the largest of four shapes and 0.65 on stripe direction, where the best hosted models score 1.00; the direction is in its hidden state (0.99 by a linear probe) and the relative size is not</td><td>Do not rely on this readout. Use a larger hosted model.</td></tr></tbody></table></div></section>
-
-<aside class="useit site-only" aria-labelledby="useit">
-  <div class="useit-top"><h2 id="useit" class="plain">Use it</h2><a class="gh" href="https://github.com/yoheinakajima/glance">github.com/yoheinakajima/glance&nbsp;→</a></div>
-  <p>Glance is also a tool you can run: the readout and the fits measured on this page, packaged. One open model on your own machine, typed answers with probabilities, no image leaves it, no per-call bill. Apache-2.0.</p>
-<pre><code># install: Python 3.11; about 9 GB of open weights download on first use
-pip install glance-vlm
-
-# yes/no: a probability
-glance ask photo.jpg "Is there a dog?"
-# pick one: a distribution over your options
-glance ask photo.jpg "What is it?" --options dog cat car
-# a rating, with its distribution
-glance ask photo.jpg "How blurry is it?" --levels Sharp Soft Blurry
-# fit your own rubric from a few dozen images
-glance fit --rubric rubric.json --data labels/</code></pre>
-  <ul>
-    <li><b>Ask</b> from the command line, from Python (<code>from glance import Glance</code>) or over a local HTTP server (<code>glance serve</code>); several questions about one image share the cost of reading it.</li>
-    <li><b>Fit your own rubric</b> from 16 unlabeled or about 32 labeled images. A fit is a few hundred numbers; the model stays frozen. Section 5 says where this works and where it does not.</li>
-    <li><b>Swap the model</b>: the adapter is model-generic (<code>--model-id</code>, any Hugging Face image-text model with a chat template); Qwen3-VL and SmolVLM2 are the families checked so far, and accuracy depends on the model (section 6).</li>
-    <li><b>Check us</b>: every table and figure here regenerates from result files in the repository, which also holds the notebook of registered experiments and their misses.</li>
-    <li><b>Hand it to an agent</b>: <a href="https://github.com/yoheinakajima/glance/blob/main/AGENTS.md">AGENTS.md</a> is a one-page operating guide, and <a href="llms.txt">llms.txt</a> summarises the project and its limits.</li>
-  </ul>
-  <p class="useit-foot">This panel belongs to the website. The paper begins below.</p>
-</aside>
 
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
@@ -101,6 +92,10 @@ glance fit --rubric rubric.json --data labels/</code></pre>
   <p class="abstract">Ratings behave differently. On five image-quality scales, zero-shot, every system orders images correctly (the open model is within one level on 0.99 of images) and places the level boundaries wrongly, by a constant offset per rubric; a low-cost hosted model leads (0.763 against 0.669), and an 8B model is no better than a 4B one. Because a read answer is a vector of logits, it can be fitted: 16 unlabeled images of the rubric remove most of the offset (0.758) and 32 labels reach 0.857; the hosted models were not given examples, so this is a comparison of products, not of models. On a real image-quality benchmark (KADID-10k) the approach missed every target we registered, hand-built features and a small trained quality model do as well or better on low-level artefacts, and on rubrics that are not image quality (tilt, how much of a subject is cut off) even 300 labels reach only 0.55.</p>
   <p class="abstract">The open model’s cost is of the same order as the low-cost hosted models and one to two orders below the flagships; no image leaves the machine. The readout is shared with other training-free tools and is not claimed as new; what is offered is the measurement, registered before it was run, with its misses.</p>
 </section>
+
+<section aria-labelledby="regimes" class="regimes"><h2 id="regimes" class="plain">Summary: the result in three regimes</h2><div class="table-scroll"><table><thead><tr><th>What you ask</th><th>What we measured, Qwen3-VL-4B + Glance</th><th>What to do</th></tr></thead><tbody><tr><td><b>Recognition</b><span class="note">yes/no and pick-one about what is in a photograph</span></td><td>0.939 and 0.933 on fresh photographs, against 0.961 and 0.937 for the best hosted model; the same model writing its answer scores 0.945 and 0.930</td><td>Read it. One forward pass of a small open model, nothing generated.</td></tr><tr><td><b>Ratings on a rubric</b><span class="note">a level on an image-quality scale</span></td><td>zero-shot the order is right (within one level on 0.99 of images) and the exact level often wrong (0.669); 0.758 after the model has seen 16 unlabeled images of the rubric</td><td>Show it a few images of the rubric first. Outside image quality this does not work (section 5.1).</td></tr><tr><td><b>Geometry</b><span class="note">relative size, line direction, tilt</span></td><td>0.52 on the largest of four shapes and 0.65 on stripe direction, where the best hosted models score 1.00; the direction is in its hidden state (0.99 by a linear probe) and the relative size is not</td><td>Do not rely on this readout. Use a larger hosted model.</td></tr></tbody></table></div></section>
+
+
 
 <section aria-labelledby="method">
   <h2 id="method"><span class="num">1</span>Method: score the allowed answers in one forward pass</h2>
@@ -228,6 +223,10 @@ uv run glance --model-id &lt;any Hugging Face image-text model&gt; --revision &l
   <p>The lab notebook records each hypothesis before its experiment, each verdict after, and its errata. Frontier model outputs are never stored; only whether each answer was right.</p>
 </section>
 
+<section aria-labelledby="disclosure"><h2 id="disclosure" class="plain">Disclosure</h2>
+  <p>This work was carried out with AI assistance throughout: an AI assistant wrote most of the code, ran the experiments and drafted the text under the author’s direction, and the project’s notebook records each registration, result and correction with its time. The author reviewed the claims and is responsible for them. Hosted models’ answers were used for evaluation only and are not stored; only whether each answer was right is kept.</p>
+</section>
+
 <section aria-labelledby="refs">
   <h2 id="refs"><span class="num">11</span>References</h2>
   <ol class="refs"><li>Agrahri (TrueStandard), 2026. Is Jev really 193x faster? We measured 1.7x and 100x: independent timings of hosted Jev against fast classifiers and against a thinking-model workflow. <a href="https://truestandard.ai/blog/is-jev-really-193x-faster">truestandard.ai/blog/is-jev-really-193x-faster</a></li><li>Alain and Bengio, 2016. Understanding intermediate layers using linear classifier probes. <a href="https://arxiv.org/abs/1610.01644">arxiv.org/abs/1610.01644</a></li><li>dorarep, 2026. Jev against small LLMs (in Japanese): latency as the number of questions per request grows from 1 to 100. <a href="https://zenn.dev/dorarep/articles/8f1efbf10e3e8c">zenn.dev/dorarep/articles/8f1efbf10e3e8c</a></li><li>Goedecke, 2026. Jev means structured output is interesting again: one constrained token against written structured output on a small open model. <a href="https://seangoedecke.com/jev-means-structured-output-is-interesting-again/">seangoedecke.com/jev-means-structured-output-is-</a></li><li>Guo, Pleiss, Sun and Weinberger, 2017. On calibration of modern neural networks (temperature, vector and matrix scaling). <a href="https://arxiv.org/abs/1706.04599">arxiv.org/abs/1706.04599</a></li><li>Kadavath et al., 2022. Language models (mostly) know what they know: reading P(True) for a proposed answer. <a href="https://arxiv.org/abs/2207.05221">arxiv.org/abs/2207.05221</a></li><li>Kull et al., 2019. Beyond temperature scaling: Dirichlet calibration. <a href="https://arxiv.org/abs/1910.12656">arxiv.org/abs/1910.12656</a></li><li>Lin et al., 2024. VQAScore: the probability of “Yes” from one forward pass of a VQA model. <a href="https://linzhiqiu.github.io/papers/vqascore/">linzhiqiu.github.io/papers/vqascore/</a></li><li>Liu et al., 2023. G-Eval: a rubric score as the probability-weighted sum over rating tokens. <a href="https://arxiv.org/abs/2303.16634">arxiv.org/abs/2303.16634</a></li><li>TypeSafe, 2026. Introducing System One models and Jev (the vendor’s launch post; its figures are the vendor’s own). <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">typesafe.ai/blog/introducing-system-one-models-a</a></li><li>Wang, Chan and Loy, 2023. CLIP-IQA: frozen CLIP with antonym prompts as an image-quality score. <a href="https://arxiv.org/abs/2207.12396">arxiv.org/abs/2207.12396</a></li><li>Wu et al., 2024a. Q-Bench: a softmax over “good” and “poor” logits as a zero-shot quality score. <a href="https://arxiv.org/abs/2309.14181">arxiv.org/abs/2309.14181</a></li><li>Wu et al., 2024b. Q-Align: fine-tuning an LMM on text-defined rating levels and reading the level tokens. <a href="https://proceedings.mlr.press/v235/wu24ah.html">proceedings.mlr.press/v235/wu24ah.html</a></li><li>Zhang et al., 2025. YOFO: fine-tuned Qwen-VL judging many yes/no requirements in one forward pass. <a href="https://arxiv.org/abs/2511.16600">arxiv.org/abs/2511.16600</a></li><li>Zhang, Wu, Jia, Lin and Zhai, 2025. Q-SiT: teaching LMMs for image quality scoring and interpreting (Q-SiT-mini, 0.9B, is the trained quality model we compared against). <a href="https://arxiv.org/abs/2503.09197">arxiv.org/abs/2503.09197</a></li><li>Zheng et al., 2024. Large language models are not robust multiple choice selectors (option-letter bias). <a href="https://arxiv.org/abs/2309.03882">arxiv.org/abs/2309.03882</a></li><li>vLLM project. Automatic prefix caching, including multimodal inputs. <a href="https://docs.vllm.ai/en/stable/design/prefix_caching/">docs.vllm.ai/en/stable/design/prefix_caching/</a></li><li>Simple Jev. Any Hugging Face model as a classifier, by reading next-token logits (training-free). <a href="https://github.com/featherless-ai/simple-jev">github.com/featherless-ai/simple-jev</a></li><li>jev-visual. The same readout on a Qwen vision-language model, with a shared multimodal prefix (training-free). <a href="https://github.com/hr98w/jev-visual">github.com/hr98w/jev-visual</a></li><li>LitJev. A Jev-like typed-decision endpoint on an off-the-shelf Qwen model (training-free). <a href="https://github.com/zhengxuyu/litjev">github.com/zhengxuyu/litjev</a></li></ol>
@@ -237,3 +236,5 @@ uv run glance --model-id &lt;any Hugging Face image-text model&gt; --revision &l
   <p>Open model: Qwen3-VL-4B-Instruct, Apache-2.0. Photographs: CC0, CC BY and CC BY-SA, attributed per file in the repository and not redistributed. Code, the pre-registration notebook and every result file: github.com/yoheinakajima/glance (public with the release). This page is generated by <code>tools/make_site.py</code>; cite it by its snapshot id.</p>
 </footer>
 </main>
+</body>
+</html>

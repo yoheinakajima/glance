@@ -297,7 +297,7 @@ dark_note = ("Black bars are open models on a laptop read with Glance; the light
 basis_note = ("yes/no and pick-one accuracy pooled over the three fresh photo sets, Table 3; seconds and dollars as measured on the Commons photographs, because hosted cost depends on image size"
               if matrix.get("accuracy_basis", "").startswith("three") else "the test half of the Commons set, the first of three photo sets; Table 3 pools all three")
 POOLED = load("results/lab/pooled_photos.json")
-SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Qwen3-VL-4B, writing JSON", "Qwen3-VL-2B, written": "Qwen3-VL-2B, writing JSON", "Qwen3-VL-2B, read": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read": "Qwen3-VL-8B + Glance",
+SHORT = {"Qwen3-VL-4B, read": "Qwen3-VL-4B + Glance", "Qwen3-VL-4B, written": "Qwen3-VL-4B, writing JSON", "Qwen3-VL-2B, written": "Qwen3-VL-2B, writing JSON", "Qwen3-VL-2B, read": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read": "Qwen3-VL-8B + Glance", "SmolVLM2-2.2B, read": "SmolVLM2-2.2B + Glance",
          "Qwen3-VL-4B, read (Glance)": "Qwen3-VL-4B + Glance", "Qwen3-VL-2B, read (Glance)": "Qwen3-VL-2B + Glance", "Qwen3-VL-8B, read (Glance)": "Qwen3-VL-8B + Glance"}  # display names
 
 
