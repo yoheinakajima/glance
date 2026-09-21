@@ -23,16 +23,35 @@ REPORTS = [["uv", "run", "python", "tools/fresh_report.py", "--set", "commons", 
            ["uv", "run", "python", "tools/compare_frontier_lab.py", "--run", LAB, "--run", "20260920T165949Z-8ff72a", "--run", "20260920T170146Z-8ff72a"]]
 REBUILD = [["uv", "run", "python", "tools/frontier_cost.py"], ["uv", "run", "python", "tools/make_matrix.py"], ["uv", "run", "python", "tools/make_results_zeroshot.py"],
            ["uv", "run", "python", "tools/make_site.py"]]
+FLAGSHIP_AND_CHEAP = [  # provider, key hint, [(candidate model ids: the first whose test call works is used, run-folder suffix), ...]
+    ("Anthropic", "console.anthropic.com -> API keys", [(["anthropic/claude-opus-5"], "opus"), (["anthropic/claude-haiku-4-5"], "haiku")]),
+    ("OpenAI", "platform.openai.com -> API keys", [(["openai/gpt-5.6"], "gpt"), (["openai/gpt-5.6-luna", "openai/gpt-5-nano"], "gptsmall")]),
+    ("Google, through OpenRouter", "openrouter.ai -> Keys", [(["openrouter/google/gemini-3.1-pro-preview"], "gemini"),
+                                                             (["openrouter/google/gemini-3.1-flash-lite", "openrouter/google/gemini-3.1-flash-lite-preview"], "flashlite")]),
+]
+
+
+def newest_run_with(cfg, suite: str):
+    """The newest finished eval run that holds local rows for `suite` (the harder insect-order test is run by the GPU queue)."""
+    for run_dir in sorted(cfg.path("runs").iterdir(), reverse=True):
+        f = run_dir / "predictions.jsonl"
+        if f.exists() and "-" not in run_dir.name.split("Z-", 1)[-1] and f'"suite": "{suite}"' in f.read_text():
+            return run_dir.name
+    return None
+
+
 # provider -> candidate model ids (the first one whose test call works is used), key hint, run-folder suffix
 JOBS = {
+    "orders": {"what": "The HARDER fresh test (insect orders on iNaturalist, lab/NOTES.md entry 47): three flagships and three cheapest models, about 315 calls each.",
+               "providers": FLAGSHIP_AND_CHEAP, "bases": [("@inat_orders_choice", None)]},
     "cheap": {"what": "The cheapest current vision model of each provider on all three tests: Commons photos (196 calls), iNaturalist photos (300), lab ratings (1,000).",
-              "providers": [("Anthropic", ["anthropic/claude-haiku-4-5"], "console.anthropic.com -> API keys", "haiku"),
-                            ("OpenAI", ["openai/gpt-5.6-luna", "openai/gpt-5-nano"], "platform.openai.com -> API keys", "gptsmall"),
-                            ("Google, through OpenRouter", ["openrouter/google/gemini-3.1-flash-lite", "openrouter/google/gemini-3.1-flash-lite-preview"], "openrouter.ai -> Keys", "flashlite")],
+              "providers": [("Anthropic", "console.anthropic.com -> API keys", [(["anthropic/claude-haiku-4-5"], "haiku")]),
+                            ("OpenAI", "platform.openai.com -> API keys", [(["openai/gpt-5.6-luna", "openai/gpt-5-nano"], "gptsmall")]),
+                            ("Google, through OpenRouter", "openrouter.ai -> Keys", [(["openrouter/google/gemini-3.1-flash-lite", "openrouter/google/gemini-3.1-flash-lite-preview"], "flashlite")])],
               "bases": [(COMMONS, None), (INAT, None), (LAB, 200)]},  # (run to copy, items per suite; 200 = the lab images every other model saw)
     "inat": {"what": "The three flagship models on the 200 iNaturalist photos: 300 calls each.",
-             "providers": [("Anthropic", ["anthropic/claude-opus-5"], "console.anthropic.com -> API keys", ""), ("OpenAI", ["openai/gpt-5.6"], "platform.openai.com -> API keys", "gpt"),
-                           ("Google, through OpenRouter", ["openrouter/google/gemini-3.1-pro-preview"], "openrouter.ai -> Keys", "gemini")],
+             "providers": [("Anthropic", "console.anthropic.com -> API keys", [(["anthropic/claude-opus-5"], "")]), ("OpenAI", "platform.openai.com -> API keys", [(["openai/gpt-5.6"], "gpt")]),
+                           ("Google, through OpenRouter", "openrouter.ai -> Keys", [(["openrouter/google/gemini-3.1-pro-preview"], "gemini")])],
              "bases": [(INAT, None)]},
 }
 
@@ -59,17 +78,27 @@ def main() -> int:
     if sys.platform == "darwin":
         subprocess.Popen(["caffeinate", "-i", "-w", str(os.getpid())])
     print(f"\n{job['what']}\nOne key per provider. Input is hidden and kept in memory only. Press Enter with nothing to skip a provider.\n")
+    bases = []
+    for base, n in job["bases"]:
+        if base.startswith("@"):  # resolved at run time: the newest local run of that suite
+            found = newest_run_with(cfg, base[1:])
+            if not found:
+                print(f"No finished local run of `{base[1:]}` yet: the GPU queue has not produced it. Try again later.")
+                return 1
+            base = found
+        bases.append((base, n))
     ready = []
-    for provider, candidates, hint, suffix in job["providers"]:
+    for provider, hint, models in job["providers"]:
         key = getpass.getpass(f"{provider} API key ({hint}): ").strip()
         if not key:
             print("  skipped")
             continue
-        model = next((m for m in candidates if check_model_key(cfg, m, key, out=sys.stdout)), None)
-        if model is None:
-            print(f"  {provider}: no candidate model answered the test call ({', '.join(candidates)}); skipped")
-            continue
-        ready += [(stripped_copy(cfg, base, suffix), model, key, n) for base, n in job["bases"]]
+        for candidates, suffix in models:
+            model = next((m for m in candidates if check_model_key(cfg, m, key, out=sys.stdout)), None)
+            if model is None:
+                print(f"  {provider}: no candidate model answered the test call ({', '.join(candidates)}); skipped")
+                continue
+            ready += [(stripped_copy(cfg, base, suffix), model, key, n) for base, n in bases]
     if not ready:
         print("\nNothing to run.")
         return 1
@@ -93,6 +122,8 @@ def main() -> int:
     for run_id, model, state in done:
         print(f"  {model} on {run_id}: {state}")
     finished = [run_id for run_id, _, state in done if state == "finished"]
+    if args.set == "orders" and finished:
+        subprocess.run(["uv", "run", "python", "tools/fresh_report.py", "--set", "orders", "--run", bases[0][0]] + [a for r in finished for a in ("--run", r)], check=False, stdout=subprocess.DEVNULL)
     for cmd in REPORTS:
         base = cmd[cmd.index("--run") + 1]
         extra = [a for run_id in finished if run_id.startswith(base[:16]) and run_id not in cmd for a in ("--run", run_id)]

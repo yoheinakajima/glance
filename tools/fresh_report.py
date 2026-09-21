@@ -15,7 +15,7 @@ from glance.logging_utils import read_jsonl
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 parser = argparse.ArgumentParser()
 parser.add_argument("--run", action="append", required=True, help="first run gives the local rows; every run adds its frontier rows")
-parser.add_argument("--set", choices=["commons", "inat"], default="commons", help="which fresh photo set the run holds (E10 Commons, E12 iNaturalist)")
+parser.add_argument("--set", choices=["commons", "inat", "orders"], default="commons", help="which fresh photo set the run holds (E10 Commons, E12 iNaturalist)")
 args = parser.parse_args()
 rows = read_jsonl(ROOT / "runs" / args.run[0] / "predictions.jsonl")
 for extra in args.run[1:]:
@@ -31,6 +31,9 @@ SETS = {  # suites, output name, title, label-noise note, number of classes
              "subjects, and evidence photos (tracks, droppings, shells, burrows) that count as the organism on iNaturalist.",
              "Is the main subject a <class>?", "Pick one of 10: \"What kind of organism is the main subject?\""),
 }
+SETS["orders"] = ("inat_orders_choice", "inat_orders_yesno", "fresh_inat_orders", "labels are the insect ORDER of iNaturalist research-grade community identifications",
+                  "A deliberately harder test (lab/NOTES.md entry 47): the seven classes are insect orders that look alike, and every 'no' question names another insect order.",
+                  "Is the main subject a <insect order>?", "Pick one of 7 insect orders: \"What kind of insect is the main subject?\"")
 CHOICE, YESNO, OUT_NAME, LABEL_SOURCE, NOISE_NOTE, YESNO_TITLE, CHOICE_TITLE = SETS[args.set]
 
 
