@@ -2268,3 +2268,11 @@ readout with its best per-rubric calibration 0.486; the fitted four-pass read 0.
 - Entry 20's "the v0 readout as shipped stays below 0.55": SUPPORTED (0.292).
 The note in entry 36c about 67 cut-off items (calibrated statements 0.896) did NOT hold up on the full data: over all five rubrics
 that readout is below the four-pass read. It was flagged as partial for that reason.
+
+## 2026-09-21 09:57 Entry 64: release 0.3.1 and the three-regimes summary (the owner's go)
+
+The page opens with "The result in three regimes" (recognition: read it; ratings on a rubric: show it a few images of the rubric
+first; geometry: do not rely on this readout), every number from a result file; a reviewer's suggestion, with the labeled fit left
+out of the summary at the owner's wish. `glance-vlm` 0.3.1: no change to the package's behaviour since 0.3.0; it carries the README as
+it stands now (pooled headline, three sizes, the second family, the `num2words` note, the limits) and three lab-only tools
+(`gen_accuracy --config`, `generic_eval --suites`, `probe_hidden`). Published through the same token-free workflow, TestPyPI first.

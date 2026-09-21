@@ -420,6 +420,34 @@ def pip_live():
     return live
 
 
+def regimes():
+    """The whole result in three rows (a reviewer's suggestion, adopted 2026-09-21): what kind of question, what was measured, what to do.
+    Every number comes from a result file."""
+    y, c = POOLED["kinds"]["yesno"]["systems"], POOLED["kinds"]["choice"]["systems"]
+    best = lambda e: max(r["pooled"][0] for r in e.values() if "verdict" in r)  # noqa: E731
+    own_y, own_c = y["Qwen3-VL-4B, read"]["pooled"][0], c["Qwen3-VL-4B, read"]["pooled"][0]
+    wr_y, wr_c = y["Qwen3-VL-4B, written"]["pooled"][0], c["Qwen3-VL-4B, written"]["pooled"][0]
+    pr = load("results/lab/probes.json") or {}
+    acc = {k: v["open 4B model, read"]["all_items"]["accuracy"] for k, v in pr.get("suites", {}).items()}
+    hosted_perfect = pr.get("paired", {}).get("probe_largest", {}).get("best_hosted_accuracy")
+    ctl = (load("results/lab/probe_controls.json") or {}).get("sets", {})
+    rows = [("Recognition", "yes/no and pick-one about what is in a photograph",
+             f"{own_y:.3f} and {own_c:.3f} on fresh photographs, against {best(y):.3f} and {best(c):.3f} for the best hosted model; the same model writing its answer scores {wr_y:.3f} and {wr_c:.3f}",
+             "Read it. One forward pass of a small open model, nothing generated."),
+            ("Ratings on a rubric", "a level on an image-quality scale",
+             f"zero-shot the order is right (within one level on {raw['within_1']:.2f} of images) and the exact level often wrong ({jd['json_zero']:.3f}); {jd['json_u16']:.3f} after the model has seen 16 unlabeled images of the rubric",
+             "Show it a few images of the rubric first. Outside image quality this does not work (section 5.1)."),
+            ("Geometry", "relative size, line direction, tilt",
+             (f"{acc.get('probe_largest', float('nan')):.2f} on the largest of four shapes and {acc.get('probe_stripes', float('nan')):.2f} on stripe direction, where the best hosted models score {hosted_perfect:.2f}"
+              if hosted_perfect else "weak on relative size and line direction")
+             + (f"; the direction is in its hidden state ({ctl['probe_stripes']['hidden_state_probe_cv'][0]:.2f} by a linear probe) and the relative size is not" if ctl else ""),
+             "Do not rely on this readout. Use a larger hosted model.")]
+    body = "".join(f'<tr><td><b>{a}</b><span class="note">{b}</span></td><td>{c_}</td><td>{d}</td></tr>' for a, b, c_, d in rows)
+    return ('<section aria-labelledby="regimes" class="regimes"><h2 id="regimes" class="plain">The result in three regimes</h2>'
+            '<div class="table-scroll"><table><thead><tr><th>What you ask</th><th>What we measured, Qwen3-VL-4B + Glance</th><th>What to do</th></tr></thead><tbody>'
+            + body + "</tbody></table></div></section>\n")
+
+
 def use_it():
     """A panel that belongs to the WEBSITE, not to the paper: what the repository lets a reader do, with the commands. The paper
     version drops this block (it is the only element with class `site-only`)."""
@@ -694,9 +722,10 @@ BODY = f"""
   <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+  <p class="links"><a href="#regimes">Summary</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
 
+{regimes()}
 {use_it()}
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
@@ -873,6 +902,8 @@ svg .grid{stroke:var(--rule);stroke-width:1}svg .whisk{stroke:var(--ink);stroke-
 svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:var(--own)}
 .misses{list-style:none;padding:0;display:flex;flex-direction:column;gap:.85rem}
 .verdict{display:block;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}.verdict.miss{color:var(--miss)}
+.regimes{margin:1.2rem 0 1.6rem}.regimes td{white-space:normal;vertical-align:top;font-size:.93rem;line-height:1.45;padding-top:.6rem;padding-bottom:.6rem}.regimes td:first-child{min-width:8.5rem}.regimes td:nth-child(2){min-width:17rem}.regimes td:nth-child(3){min-width:12rem}
+@media (max-width:620px){.regimes thead{display:none}.regimes table,.regimes tbody,.regimes tr,.regimes td{display:block}.regimes td{min-width:0!important;padding:.15rem 0}.regimes tr{padding:.65rem 0;border-top:.75px solid var(--rule)}.regimes tr:first-child{border-top:0}.regimes td:nth-child(3){font-style:italic}}
 .useit{border:1px solid var(--rule);background:var(--tint);padding:1.05rem 1.25rem .95rem;margin:1.4rem 0 2.4rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
 .useit-top{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem 1rem;flex-wrap:wrap}.useit h2{margin:0;border:0;padding:0}.useit .gh{font-weight:500;white-space:nowrap}
 .useit p{margin:.55rem 0}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}

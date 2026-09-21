@@ -1,6 +1,6 @@
 [project]
 name = "glance-vlm"  # the distribution name on PyPI ("glance" is taken); the import name and the command stay `glance`
-version = "0.3.0"
+version = "0.3.1"
 description = "Ask a frozen open vision-language model typed questions about images (yes/no, pick-one, rating) and read probabilities from one forward pass; nothing is generated or trained."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"

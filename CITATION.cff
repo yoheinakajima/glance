@@ -6,7 +6,7 @@ authors:
   - family-names: Nakajima
     given-names: Yohei
 license: Apache-2.0
-version: 0.3.0
+version: 0.3.1
 date-released: 2026-09-21
 url: "https://glance.yohei.me"
 repository-code: "https://github.com/yoheinakajima/glance"
