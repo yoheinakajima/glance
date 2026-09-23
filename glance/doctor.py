@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import os
 import platform
 import shutil
@@ -88,7 +89,19 @@ def run_doctor(cfg: Config) -> dict[str, Any]:
     }
     dtype = "float32"
     image_token_budget = None
-    if tier in cfg.models.vlm_tiers:
+    if cfg.vlm.backend == "mlx":
+        vlm = cfg.models.mlx
+        selected_models["vlm"] = f"{vlm.id}@{vlm.revision}"
+        dtype = vlm.dtype
+        image_token_budget = cfg.models.image_token_budget_override or vlm.image_token_budget
+        if platform.system() != "Darwin" or platform.machine().lower() not in ("arm64", "aarch64"):
+            warnings.append("the experimental MLX backend requires Apple Silicon; use --backend torch on this machine")
+        elif any(importlib.util.find_spec(name) is None for name in ("mlx", "mlx_vlm")):
+            warnings.append(
+                'the experimental MLX backend is not installed; run `pip install "glance-vlm[mlx]"` '
+                "or `uv sync --extra mlx`"
+            )
+    elif tier in cfg.models.vlm_tiers:
         vlm = cfg.models.vlm_tiers[tier]
         selected_models["vlm"] = f"{vlm.id}@{vlm.revision}"
         dtype = vlm.dtype
@@ -110,6 +123,7 @@ def run_doctor(cfg: Config) -> dict[str, Any]:
         "torch_version": torch.__version__,
         "free_disk_gb": free_disk_gb,
         "selected_tier": tier,
+        "vlm_backend": cfg.vlm.backend,
         "selected_models": selected_models,
         "image_token_budget": image_token_budget,
         "warnings": warnings,

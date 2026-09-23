@@ -13,7 +13,7 @@ from .config import load_config
 def _cmd_doctor(args: argparse.Namespace) -> int:
     from .doctor import run_doctor
 
-    cfg = load_config(args.config)
+    cfg = load_config(args.config, _config_overrides(args))
     report = run_doctor(cfg)
     out_path = cfg.path("logs") / "doctor.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -28,6 +28,8 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
 def _config_overrides(args: argparse.Namespace) -> dict:
     overrides: dict = {}
+    if getattr(args, "backend", None):
+        overrides.setdefault("vlm", {})["backend"] = args.backend
     if getattr(args, "image_token_budget", None):
         overrides.setdefault("models", {})["image_token_budget_override"] = args.image_token_budget
     if getattr(args, "prefix_cache", False):
@@ -239,6 +241,13 @@ def _rubric_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--prefix-cache", action="store_true", help="VLM: share the image prefill between readouts (faster)")
 
 
+def _backend_arg(p: argparse.ArgumentParser) -> None:
+    p.add_argument(
+        "--backend", choices=["torch", "mlx"], default=argparse.SUPPRESS,
+        help="local VLM runtime: torch (default) or experimental mlx on Apple Silicon",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="glance", description="Glance: typed questions about images (yes/no, pick-one, rating), answered with probabilities from one forward pass of a frozen open vision-language model")
     parser.add_argument("--config", default=None, help="path to a config yaml (default: configs/default.yaml)")
@@ -247,13 +256,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--revision", help="commit of --model-id to pin (recommended)")
     parser.add_argument("--image-longest-edge", type=int, help="image size handed to --model-id's image processor")
     parser.add_argument("--dtype", help="auto (default), bfloat16, float16 or float32 for --model-id")
+    parser.add_argument("--backend", choices=["torch", "mlx"], default=None,
+                        help="local VLM runtime: torch (default) or experimental mlx on Apple Silicon")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("doctor", help="detect device, pick the model tier, write logs/doctor.json")
+    _backend_arg(p)
     p.add_argument("--json", action="store_true", help="print the report as JSON")
     p.set_defaults(func=_cmd_doctor)
 
     p = sub.add_parser("decide", help="answer the questions in a request JSON file (same path as POST /v1/decide)")
+    _backend_arg(p)
     p.add_argument("request", help="path to a request JSON file")
     p.add_argument("--model", choices=["siglip", "vlm", "frontier"], help="override the request's model")
     p.add_argument("--choice-method", choices=["independent", "letter"], help="override options.choice_method")
@@ -265,6 +278,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=_cmd_decide)
 
     p = sub.add_parser("ask", help="one question about one image: yes/no by default, --options for pick-one, --levels for a rating")
+    _backend_arg(p)
     p.add_argument("image", help="path to the image")
     p.add_argument("question", help='the question, e.g. "Is there a dog?"')
     p.add_argument("--options", nargs="+", help="pick one of these")
@@ -274,12 +288,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=_cmd_ask)
 
     p = sub.add_parser("score", help="rate one image on a rubric (Glance elicitation; uses your `glance fit` calibration if there is one)")
+    _backend_arg(p)
     p.add_argument("image", help="path to the image")
     _rubric_args(p)
     p.add_argument("--full", action="store_true", help="print the whole response, not only the answer")
     p.set_defaults(func=_cmd_score)
 
     p = sub.add_parser("fit", help="fit a calibration for one rating rubric from a few dozen labeled images (no training)")
+    _backend_arg(p)
     p.add_argument("--data", required=True, help="folder with one sub-folder per level (0/, 1/, ...), or a JSONL/CSV with image,level")
     _rubric_args(p)
     p.add_argument("--name", help="a label stored in the calibration file")
@@ -288,6 +304,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=_cmd_fit)
 
     p = sub.add_parser("eval", help="run eval suites and write runs/<run_id>/")
+    _backend_arg(p)
     p.add_argument("--suite", action="append", help="suite name, repeatable or comma-separated (default: all)")
     p.add_argument("--model", action="append", help="siglip, vlm, frontier; repeatable (default: all three)")
     p.add_argument("--n", type=int, help="items per suite (default: 1000 on CUDA, 500 on Apple Silicon)")
@@ -323,6 +340,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=_cmd_baseline)
 
     p = sub.add_parser("serve", help="local HTTP server on 127.0.0.1 (POST /v1/decide, GET /v1/models, GET /healthz)")
+    _backend_arg(p)
     p.add_argument("--port", type=int, help="port (default: server.port in the config)")
     p.add_argument("--preload", action="append", help="backends to load at startup: siglip, vlm (default: load on first use)")
     p.add_argument("--no-prefix-cache", action="store_true", help="VLM: use the reference path")

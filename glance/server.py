@@ -66,7 +66,7 @@ def create_app(cfg: Config | None = None, engine: Engine | None = None, preload:
             "harness_version": __version__,
             "device": doctor["device"], "dtype": doctor["dtype"], "selected_tier": doctor["selected_tier"],
             "loaded": sorted(engine.loaded_backends()), "load_errors": load_errors,
-            "prefix_cache": cfg.vlm.prefix_cache,
+            "prefix_cache": cfg.vlm.prefix_cache, "vlm_backend": doctor["vlm_backend"],
         })
 
     return app

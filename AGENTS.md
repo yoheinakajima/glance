@@ -31,6 +31,8 @@ g.ask(image, {"name": {"type": ..., "instructions": ..., "criteria": ...}, ...})
 HTTP: `uv run glance serve --preload vlm --prefix-cache`, then `POST http://127.0.0.1:8077/v1/decide` with
 `{"model": "vlm", "state": {"images": [{"id": "img0", "path": "..."}]}, "questions": {...}, "options": {...}}`.
 Sample requests: `samples/*.json`. Schema: `glance/schema.py`; narrative spec: `HANDOFF.md` section 5.
+Experimental Apple-Silicon runtime: `uv sync --extra mlx`, then `uv run glance serve --backend mlx --preload vlm`; the request
+model remains `vlm`, PyTorch stays the default, and unsupported machines fail explicitly rather than falling back.
 
 Rules that matter:
 - Refer to images as `` `img0` ``, `` `img1` `` inside `instructions`. Option descriptions (`criteria` values) help pick-one.

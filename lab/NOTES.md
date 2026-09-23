@@ -2276,3 +2276,71 @@ first; geometry: do not rely on this readout), every number from a result file; 
 out of the summary at the owner's wish. `glance-vlm` 0.3.1: no change to the package's behaviour since 0.3.0; it carries the README as
 it stands now (pooled headline, three sizes, the second family, the `num2words` note, the limits) and three lab-only tools
 (`gen_accuracy --config`, `generic_eval --suites`, `probe_hidden`). Published through the same token-free workflow, TestPyPI first.
+
+## 2026-09-23 Entry 65: experimental MLX backend promotion gate, registered before implementation
+
+Speedlab E017 measured a Qwen3-VL-2B 8-bit MLX direct scorer against the pinned PyTorch/MPS Glance path on an Apple M5 with
+32 GB unified memory. It shared one multimodal prefix across nine statement suffixes, read the same Yes/No token variants, and
+lowered fresh-frame p50 from 358.5 to 259.6 ms (27.6%; exact replication 281.7 to 211.3 ms, 25.0%). All 84 fixed-suite decisions
+matched and maximum answer-probability drift was 0.039. The implementation still lived in the lab harness and covered only
+statement scoring. This entry fixes the promotion test before moving any of it into the package.
+
+- Candidate: `mlx-community/Qwen3-VL-2B-Instruct-8bit@b0338e0e843d8e1befe873d144b81fefdc47efa6`, exposed as backend name
+  `mlx`, Apple Silicon only, installed through an optional `mlx` extra. PyTorch `vlm` stays the default.
+- Scope: the existing request and response schema, independent statement scoring, label-token scoring for letter choices and
+  rating methods, one to four images, context, `/v1/models`, health/preload reporting, Python API and CLI routing. Unsupported
+  hardware or model families must fail before inference with an actionable error. No automatic fallback may silently change the
+  backend or model.
+- H67 (contract): CPU-only tests with fakes pass without importing MLX; request parsing, routing, prompt hashing, usage/timing
+  fields and typed answers retain the same shapes. The base wheel has no MLX dependency; `pip install "glance-vlm[mlx]"` is the
+  explicit opt-in.
+- H68 (semantic parity): on the E017 fixed suite, the packaged backend matches all 84 PyTorch decisions and maximum answer-
+  probability drift stays at or below 0.10. Its shared-prefix result differs from independent full MLX prompts by no more than
+  the existing 0.145 raw-z observation.
+- H69 (speed): after two warmups and seven paired repetitions per image, packaged MLX retains at least a 5% fresh-frame p50
+  advantage over the pinned 2B PyTorch/MPS backend. Report p50/p95, realized image tokens, prefix/suffix time and peak memory.
+- Quality and stopping rule: stop promotion if the API must change, any existing CPU-only test regresses, the optional dependency
+  leaks into a base import, a non-Apple machine can begin loading weights, any decision changes, probability drift exceeds 0.10,
+  or the speed advantage falls below 5%. A miss remains on the branch with its reason; it does not become the default backend.
+
+This gate does not establish general parity: after it passes, the backend remains marked experimental until a larger labeled
+suite, ratings, sustained load, multiple Apple Silicon generations and lower-memory machines have been measured.
+
+Clarification before implementation: `mlx` is the explicit runtime selector (`--backend mlx` / `Glance(backend="mlx")`), while
+the stable request field remains `"model": "vlm"`. This keeps the wire schema unchanged and makes the implementation choice a
+local deployment concern; responses identify the pinned MLX model id and revision, so it cannot be mistaken for the PyTorch arm.
+
+## 2026-09-23 Entry 65b: packaged MLX backend passes the promotion gate and remains experimental
+
+The candidate now runs through the ordinary `Engine`, scorer, Python API, CLI and server routing rather than the Speedlab-only
+scorer. It was installed from the locked `mlx` extra (`mlx` 0.32.2, PyPI `mlx-vlm` 0.7.2) and tested with the exact pinned 8-bit
+checkpoint. The curated result is `lab/MLX_BACKEND.json`. `tools/mlx_backend_acceptance.py` makes the paired run reproducible;
+its raw output defaults to the ignored `lab/runs/mlx_backend_acceptance.json`. The reference server must be the pinned
+Qwen3-VL-2B PyTorch/MPS model with prefix sharing and a 128 image-token override, as in Speedlab E017; the tool rejects any
+other loaded reference before measuring.
+
+On the registered Apple M5 / 32 GB machine, three fixed 320 px JPEGs, four questions (nine statements), two warmups and seven
+measured paired repetitions per image:
+
+| runtime | fresh-frame wall p50 | p95 | prefix p50 | suffix/readout p50 | realized image tokens |
+| --- | ---: | ---: | ---: | ---: | --- |
+| pinned 2B PyTorch/MPS | 484.569 ms | 500.553 ms | 215 ms | 270 ms | 70, 77, 80 |
+| pinned 2B 8-bit MLX | 373.620 ms | 382.007 ms | 178 ms | 178 ms | 70, 77, 80 |
+
+MLX is 1.297x faster, a 22.9% median reduction; observed peak MLX memory was 3.377 GB. This packaged measurement is slower in
+absolute terms than E017's isolated prototype run, but it retains the registered advantage through the complete Glance path.
+
+- H67 (contract): SUPPORTED. The full CPU-only suite passed (373 passed, 12 model-dependent skips); the focused contract suite
+  was 79 passed and 11 skipped. Importing and constructing `Glance(backend="mlx")` did not import optional MLX modules,
+  unsupported hardware is rejected before optional imports, the base dependency set is unchanged, and the wire request still
+  says `"model": "vlm"`. Doctor and health report the selected runtime; no fallback exists.
+- H68 (semantic): SUPPORTED. All 84 of 84 paired question decisions matched; maximum answer-probability drift was 0.038903
+  (raw-z drift 0.516090, reported but not a registered limit). Shared-prefix MLX versus nine independent full MLX prompts had
+  maximum raw-z delta 0.117874, under the fixed 0.145 limit. Separate real-model smoke requests exercised digit ratings,
+  rotated letter choices, context and two images; the expected dog and second-image receipt choices were returned.
+- H69 (speed): SUPPORTED. The 22.9% median reduction exceeds the registered 5% floor; MLX p95 was also lower (382.007 versus
+  500.553 ms).
+
+Verdict: promote as an explicit, optional, pinned experimental backend, not as the default and not as a generic MLX adapter.
+The remaining promotion work is evidence, not another abstraction: a larger labeled parity suite, sustained camera load,
+multiple Apple Silicon generations and a lower-memory machine.

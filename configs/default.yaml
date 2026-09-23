@@ -41,9 +41,16 @@ models:
   # Only Qwen3-VL and SmolVLM2 are measured in this repository. Example:
   #   generic: {id: HuggingFaceTB/SmolVLM2-2.2B-Instruct, revision: 482adb537c021c86670beed01cd58990d01e72e4, image_longest_edge: 768}
   generic: null
+  # Experimental Apple-Silicon runtime selected with `--backend mlx`. The stable request model remains `vlm`.
+  mlx:
+    id: mlx-community/Qwen3-VL-2B-Instruct-8bit
+    revision: b0338e0e843d8e1befe873d144b81fefdc47efa6
+    dtype: int8
+    image_token_budget: 384
   image_token_budget_override: null
 
 vlm:
+  backend: torch                  # torch (default, portable) or mlx (experimental, Apple Silicon only)
   batch_size: 8                  # reference path: full prompts per forward batch
   suffix_batch_size: 16          # cached path: statement suffixes per forward batch
   prefix_cache: false            # false = reference path (same as --no-prefix-cache); flipped on in M4
