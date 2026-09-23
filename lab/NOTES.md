@@ -2276,3 +2276,32 @@ first; geometry: do not rely on this readout), every number from a result file; 
 out of the summary at the owner's wish. `glance-vlm` 0.3.1: no change to the package's behaviour since 0.3.0; it carries the README as
 it stands now (pooled headline, three sizes, the second family, the `num2words` note, the limits) and three lab-only tools
 (`gen_accuracy --config`, `generic_eval --suites`, `probe_hidden`). Published through the same token-free workflow, TestPyPI first.
+
+## 2026-09-23 Entry 65: experimental MLX backend promotion gate, registered before implementation
+
+Speedlab E017 measured a Qwen3-VL-2B 8-bit MLX direct scorer against the pinned PyTorch/MPS Glance path on an Apple M5 with
+32 GB unified memory. It shared one multimodal prefix across nine statement suffixes, read the same Yes/No token variants, and
+lowered fresh-frame p50 from 358.5 to 259.6 ms (27.6%; exact replication 281.7 to 211.3 ms, 25.0%). All 84 fixed-suite decisions
+matched and maximum answer-probability drift was 0.039. The implementation still lived in the lab harness and covered only
+statement scoring. This entry fixes the promotion test before moving any of it into the package.
+
+- Candidate: `mlx-community/Qwen3-VL-2B-Instruct-8bit@b0338e0e843d8e1befe873d144b81fefdc47efa6`, exposed as backend name
+  `mlx`, Apple Silicon only, installed through an optional `mlx` extra. PyTorch `vlm` stays the default.
+- Scope: the existing request and response schema, independent statement scoring, label-token scoring for letter choices and
+  rating methods, one to four images, context, `/v1/models`, health/preload reporting, Python API and CLI routing. Unsupported
+  hardware or model families must fail before inference with an actionable error. No automatic fallback may silently change the
+  backend or model.
+- H67 (contract): CPU-only tests with fakes pass without importing MLX; request parsing, routing, prompt hashing, usage/timing
+  fields and typed answers retain the same shapes. The base wheel has no MLX dependency; `pip install "glance-vlm[mlx]"` is the
+  explicit opt-in.
+- H68 (semantic parity): on the E017 fixed suite, the packaged backend matches all 84 PyTorch decisions and maximum answer-
+  probability drift stays at or below 0.10. Its shared-prefix result differs from independent full MLX prompts by no more than
+  the existing 0.145 raw-z observation.
+- H69 (speed): after two warmups and seven paired repetitions per image, packaged MLX retains at least a 5% fresh-frame p50
+  advantage over the pinned 2B PyTorch/MPS backend. Report p50/p95, realized image tokens, prefix/suffix time and peak memory.
+- Quality and stopping rule: stop promotion if the API must change, any existing CPU-only test regresses, the optional dependency
+  leaks into a base import, a non-Apple machine can begin loading weights, any decision changes, probability drift exceeds 0.10,
+  or the speed advantage falls below 5%. A miss remains on the branch with its reason; it does not become the default backend.
+
+This gate does not establish general parity: after it passes, the backend remains marked experimental until a larger labeled
+suite, ratings, sustained load, multiple Apple Silicon generations and lower-memory machines have been measured.
