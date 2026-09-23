@@ -1,7 +1,11 @@
 Glance Speedlab
 ================
 
-21 measured experiments on low-latency local camera VLM inference.
-Headline: 8-bit MLX direct scoring reduced fresh-frame p50 from 358.5 ms to 259.6 ms (1.381x; 27.6% lower) on Apple M5, 32 GB unified memory.
+A measurement-first working paper and reproducible local demo for live-camera Glance inference.
+21 preregistered experiments were run on Apple M5, 32 GB unified memory.
+Reference option: PyTorch/MPS FP16, 358.5 ms fresh-frame p50.
+Experimental option: MLX 8-bit, 259.6 ms fresh-frame p50 (1.381x; 27.6% lower).
 Guardrail: 84/84 fixed-suite decisions matched; maximum probability drift 0.039.
-Source and full evidence: https://github.com/yoheinakajima/glance-speedlab
+Try both locally: https://github.com/yoheinakajima/glance-speedlab
+Use the opt-in MLX backend: https://github.com/yoheinakajima/glance
+Full paper and evidence: https://github.com/yoheinakajima/glance-speedlab/blob/main/paper/PAPER.md
