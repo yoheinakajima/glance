@@ -16,6 +16,7 @@ def test_default_config_loads_and_pins_models():
     assert sha.match(cfg.models.siglip.revision)
     for tier in cfg.models.vlm_tiers.values():
         assert sha.match(tier.revision)
+    assert sha.match(cfg.models.mlx.revision)
     assert cfg.server.host == "127.0.0.1"
     assert cfg.path("logs").is_absolute()
 

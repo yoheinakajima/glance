@@ -7,11 +7,11 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from dotenv import load_dotenv
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 _PACKAGE_DIR = Path(__file__).resolve().parent
 _CHECKOUT = _PACKAGE_DIR.parent if (_PACKAGE_DIR.parent / "configs" / "default.yaml").is_file() else None
@@ -64,15 +64,26 @@ class GenericModelConfig(_Strict):
     image_longest_edge: int | None = None  # handed to the model's image processor; None keeps the model's default
 
 
+class MlxModelConfig(_Strict):
+    """Pinned Apple-Silicon candidate. Other MLX model families are deliberately not accepted yet."""
+
+    id: str = "mlx-community/Qwen3-VL-2B-Instruct-8bit"
+    revision: str = "b0338e0e843d8e1befe873d144b81fefdc47efa6"
+    dtype: str = "int8"
+    image_token_budget: int = 384
+
+
 class ModelsConfig(_Strict):
     siglip: SiglipModelConfig
     vlm_tiers: dict[str, VlmTierConfig]
     tier_override: str | None = None
     generic: GenericModelConfig | None = None
+    mlx: MlxModelConfig = Field(default_factory=MlxModelConfig)
     image_token_budget_override: int | None = None
 
 
 class VlmConfig(_Strict):
+    backend: Literal["torch", "mlx"] = "torch"
     batch_size: int = 8
     suffix_batch_size: int = 16
     prefix_cache: bool = False

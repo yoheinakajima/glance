@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "experiment": "Entry 65 packaged MLX backend acceptance",
+  "timestamp": "2026-09-23T19:28:00Z",
+  "environment": {
+    "hardware": "Apple M5, 10-core GPU, 32 GB unified memory",
+    "mlx": "0.32.2",
+    "mlx_vlm": "0.7.2",
+    "mlx_model": "mlx-community/Qwen3-VL-2B-Instruct-8bit@b0338e0e843d8e1befe873d144b81fefdc47efa6",
+    "torch_model": "Qwen/Qwen3-VL-2B-Instruct@89644892e4d85e24eaac8bacfd4f463576704203"
+  },
+  "protocol": {
+    "warmups": 2,
+    "repeats_per_image": 7,
+    "images": [
+      "dog",
+      "receipt",
+      "invoice"
+    ],
+    "questions": 4,
+    "statements": 9,
+    "decisions": 84,
+    "fresh_reference_frames": true
+  },
+  "scope_smoke": {
+    "digit_rating": true,
+    "letter_choice": "dog",
+    "context": true,
+    "multi_image_choice": "img1",
+    "multi_image_tokens": 147
+  },
+  "shared_path_validation_max_z_delta": 0.11787429,
+  "aggregate": {
+    "torch": {
+      "wall_ms": {
+        "n": 21,
+        "min": 439.27,
+        "p50": 484.569,
+        "p95": 500.553,
+        "max": 511.34,
+        "mean": 482.607
+      },
+      "prefix_ms": {
+        "n": 21,
+        "min": 181.0,
+        "p50": 215.0,
+        "p95": 224.0,
+        "max": 237.0,
+        "mean": 214.286
+      },
+      "score_ms": {
+        "n": 21,
+        "min": 217.0,
+        "p50": 270.0,
+        "p95": 276.0,
+        "max": 276.0,
+        "mean": 266.476
+      },
+      "image_tokens": [
+        70,
+        77,
+        80
+      ]
+    },
+    "mlx": {
+      "wall_ms": {
+        "n": 21,
+        "min": 297.334,
+        "p50": 373.62,
+        "p95": 382.007,
+        "max": 383.205,
+        "mean": 363.596
+      },
+      "prefix_ms": {
+        "n": 21,
+        "min": 139.0,
+        "p50": 178.0,
+        "p95": 183.0,
+        "max": 184.0,
+        "mean": 173.714
+      },
+      "score_ms": {
+        "n": 21,
+        "min": 140.0,
+        "p50": 178.0,
+        "p95": 180.0,
+        "max": 183.0,
+        "mean": 171.905
+      },
+      "image_tokens": [
+        70,
+        77,
+        80
+      ],
+      "speedup_vs_torch": 1.297,
+      "latency_reduction_percent": 22.9,
+      "peak_memory_gb": 3.377
+    }
+  },
+  "guardrail": {
+    "decision_matches": 84,
+    "decision_total": 84,
+    "max_probability_delta": 0.038903,
+    "max_z_delta": 0.51609038,
+    "passed": true
+  },
+  "promotion_candidate": true
+}

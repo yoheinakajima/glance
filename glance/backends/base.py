@@ -62,7 +62,7 @@ class LabelScores:
     """Raw logits over label tokens (A, B, C, ...) for each prompt. Used by the `letter` choice method."""
 
     logits: np.ndarray  # [n_prompts, n_labels]
-    off_mass: np.ndarray  # [n_prompts]; 1 - P(label tokens)
+    off_mass: np.ndarray | None  # [n_prompts]; 1 - P(label tokens), or None when an optimized head skips full-vocab logits
     prompt_hashes: list[str]
     usage: BackendUsage = field(default_factory=BackendUsage)
     timing_ms: dict[str, float] = field(default_factory=dict)

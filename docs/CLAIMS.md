@@ -65,6 +65,7 @@ M5 laptop. If a number here disagrees with a results file, the results file wins
 | --- | --- | --- | --- |
 | One rating of a fresh image: 1,089 ms with `ens4d` (441 ms for the naive readout). Per rating when rubrics share an image: 584 ms at 5, 341 ms at 25; `fast2` 240 and 133 ms. | Supported | `lab/PACKING.json` | One laptop. `ens4d` is SLOWER than the naive readout for a single rating. An earlier 609 ms figure was wrong (entry 16). |
 | Packing rubrics behind a shared image prefill changes no prediction. | Supported | `lab/REFCHECK_packed.json` (100 of 100), `results/lab/harness_rating_check.json` (200 of 200) | Our packing is independent sequences sharing a cached prefix, not several questions in one sequence. |
+| The opt-in 8-bit MLX runtime lowers fresh-frame median latency for the pinned 2B model by 22.9% in the packaged acceptance run (484.6 -> 373.6 ms); the Speedlab prototype and exact replication measured 27.6% and 25.0%. | Supported, experimental | `lab/MLX_BACKEND.json`, `lab/NOTES.md` entries 65 and 65b; Glance Speedlab E017 | One Apple M5 with 32 GB, three fixed 320 px images, four questions / nine statements, 2 warmups + 7 measured repetitions per image. All 84 packaged decisions matched PyTorch and maximum probability drift was 0.039. It is not evidence that MLX is faster on every Mac, workload, image size or Glance model; lower-memory Macs and sustained load are untested. |
 | Self-hosted cost per 1,000 ratings is $0.019 to $0.243 on a rented GPU at laptop speed; frontier APIs are $3.74 to $18.70 at list price. | With caveats | `results/lab/cost_model.json` | Dollars are arithmetic on stated assumptions (cloud prices checked 2026-09-20; laptop power NOT measured); API figures are upper estimates, no call was made. Labels and engineering time are not counted. |
 | Faster or cheaper than Jev. | Do not claim | | Jev does not accept images; no measurement exists. |
 
@@ -89,6 +90,8 @@ M5 laptop. If a number here disagrees with a results file, the results file wins
 - "A few labels fix any rubric." True of the five image-quality scales (0.57 -> 0.86 with 32 labels); false of the five non-quality rubrics (0.33 -> 0.55 with 300).
 - "Better than specialised quality models." A 0.9B trained quality scorer with the same 32-label fit is level with it (entry 37c).
 - Interim KADID numbers as results.
+- "MLX is faster on Macs" without the one-machine, pinned-2B, fixed-suite qualifier; no Intel Mac or lower-memory Apple
+  Silicon machine has been tested, and PyTorch remains the default.
 
 ## G. What we learned that is worth sharing, in order of how sure we are
 

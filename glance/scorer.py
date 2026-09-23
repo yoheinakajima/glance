@@ -265,7 +265,7 @@ def score_questions(
             qid=qid, qtype=q.type, keys=_keys(q), method="letter", z=per_option.mean(axis=0),
             statements=[
                 {"prompt_hash": result.prompt_hashes[r], "shift": s, "label_logits": per_option[r].tolist(),
-                 "off_mass": float(result.off_mass[r])}
+                 "off_mass": None if result.off_mass is None else float(result.off_mass[r])}
                 for r, s in enumerate(shifts)
             ],
         )
@@ -363,7 +363,8 @@ def _score_ratings(backend, images, context, questions: dict[str, ScoreQuestion]
             logits = np.asarray(result.logits[row], dtype=np.float64)
             member_logits[qid][member] = logits[::-1] if reverse else logits
             records[qid].append({"member": member, "prompt_hash": result.prompt_hashes[row],
-                                 "label_logits": member_logits[qid][member].tolist(), "off_mass": float(result.off_mass[row])})
+                                 "label_logits": member_logits[qid][member].tolist(),
+                                 "off_mass": None if result.off_mass is None else float(result.off_mass[row])})
     for qid, q in questions.items():
         ordered = [member_logits[qid][m] for m in members]
         scores[qid] = QuestionScore(

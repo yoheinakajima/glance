@@ -49,6 +49,10 @@ glance = "glance.cli:main"
 lab = [
     "num2words>=0.5.14",
 ]
+mlx = [
+    "mlx>=0.32.2,<0.33; platform_system == 'Darwin' and platform_machine == 'arm64'",
+    "mlx-vlm==0.7.2; platform_system == 'Darwin' and platform_machine == 'arm64'",
+]
 
 [build-system]
 requires = ["hatchling"]

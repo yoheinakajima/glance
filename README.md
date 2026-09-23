@@ -43,6 +43,27 @@ uv run glance serve --preload vlm --prefix-cache          # a local HTTP server 
 curl -s localhost:8077/v1/decide -H 'content-type: application/json' -d @samples/dog.json
 ```
 
+### Experimental faster Apple-Silicon runtime
+
+An opt-in MLX backend is available for the pinned 8-bit Qwen3-VL-2B checkpoint. It keeps the same `"model": "vlm"` request and
+typed response shapes; only the local runtime changes. The packaged path measured 22.9% lower fresh-frame median latency; its
+Speedlab prototype measured 25.0–27.6%. All three runs used one Apple M5 with 32 GB unified memory, with 84/84 fixed-suite
+decisions matching and maximum answer-probability drift 0.039. That suite is small, so MLX remains experimental and PyTorch
+remains the default.
+
+```bash
+pip install "glance-vlm[mlx]"
+glance ask photo.jpg "Is there a dog?" --backend mlx
+glance serve --backend mlx --preload vlm
+```
+
+Python selects the same path with `Glance(backend="mlx")`.
+
+From a source checkout, use `uv sync --extra mlx` instead of `pip install`. The first run downloads the pinned approximately
+2.7 GB MLX checkpoint. This path requires Apple Silicon, was tested on an M5 with 32 GB, and is not an automatic fallback: an
+unsupported machine, missing optional dependency, changed model id, or changed revision produces an explicit error. The full
+experiment record and live comparison UI are in [Glance Speedlab](https://github.com/yoheinakajima/glance-speedlab).
+
 Images are referred to as `` `img0` `` (then `` `img1` ``, ...) inside the question text. A yes/no answer is `noul`, the
 probability that the statement is true. A pick-one answer has `choice`, `probabilities` and `confidence`. A rating has
 `score` (the expected level, 0 to K-1), `probabilities` over the levels and `confidence`; use the expectation and the

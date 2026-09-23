@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..config import Config
+from ..schema import BackendError
 from .base import Backend, BackendUsage, LabelScores, PickItem, PickResult, Statement, StatementScores, model_string
 
 __all__ = [
@@ -24,6 +25,14 @@ def load_backend(name: str, cfg: Config, **kwargs) -> Backend:
         from .siglip import SiglipBackend
 
         return SiglipBackend(cfg, **kwargs)
+    if name == "vlm" and cfg.vlm.backend == "mlx":
+        if cfg.models.generic is not None:
+            raise BackendError(
+                "--backend mlx currently supports only the pinned Qwen3-VL-2B 8-bit checkpoint; remove --model-id"
+            )
+        from .vlm_mlx import MlxVlmBackend
+
+        return MlxVlmBackend(cfg, **kwargs)
     if name == "vlm" and cfg.models.generic is not None:  # the caller chose a model by id: the any-model backend
         from .generic_hf import GenericVlmBackend
 

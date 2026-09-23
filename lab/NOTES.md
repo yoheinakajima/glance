@@ -2309,3 +2309,38 @@ suite, ratings, sustained load, multiple Apple Silicon generations and lower-mem
 Clarification before implementation: `mlx` is the explicit runtime selector (`--backend mlx` / `Glance(backend="mlx")`), while
 the stable request field remains `"model": "vlm"`. This keeps the wire schema unchanged and makes the implementation choice a
 local deployment concern; responses identify the pinned MLX model id and revision, so it cannot be mistaken for the PyTorch arm.
+
+## 2026-09-23 Entry 65b: packaged MLX backend passes the promotion gate and remains experimental
+
+The candidate now runs through the ordinary `Engine`, scorer, Python API, CLI and server routing rather than the Speedlab-only
+scorer. It was installed from the locked `mlx` extra (`mlx` 0.32.2, PyPI `mlx-vlm` 0.7.2) and tested with the exact pinned 8-bit
+checkpoint. The curated result is `lab/MLX_BACKEND.json`. `tools/mlx_backend_acceptance.py` makes the paired run reproducible;
+its raw output defaults to the ignored `lab/runs/mlx_backend_acceptance.json`. The reference server must be the pinned
+Qwen3-VL-2B PyTorch/MPS model with prefix sharing and a 128 image-token override, as in Speedlab E017; the tool rejects any
+other loaded reference before measuring.
+
+On the registered Apple M5 / 32 GB machine, three fixed 320 px JPEGs, four questions (nine statements), two warmups and seven
+measured paired repetitions per image:
+
+| runtime | fresh-frame wall p50 | p95 | prefix p50 | suffix/readout p50 | realized image tokens |
+| --- | ---: | ---: | ---: | ---: | --- |
+| pinned 2B PyTorch/MPS | 484.569 ms | 500.553 ms | 215 ms | 270 ms | 70, 77, 80 |
+| pinned 2B 8-bit MLX | 373.620 ms | 382.007 ms | 178 ms | 178 ms | 70, 77, 80 |
+
+MLX is 1.297x faster, a 22.9% median reduction; observed peak MLX memory was 3.377 GB. This packaged measurement is slower in
+absolute terms than E017's isolated prototype run, but it retains the registered advantage through the complete Glance path.
+
+- H67 (contract): SUPPORTED. The full CPU-only suite passed (373 passed, 12 model-dependent skips); the focused contract suite
+  was 79 passed and 11 skipped. Importing and constructing `Glance(backend="mlx")` did not import optional MLX modules,
+  unsupported hardware is rejected before optional imports, the base dependency set is unchanged, and the wire request still
+  says `"model": "vlm"`. Doctor and health report the selected runtime; no fallback exists.
+- H68 (semantic): SUPPORTED. All 84 of 84 paired question decisions matched; maximum answer-probability drift was 0.038903
+  (raw-z drift 0.516090, reported but not a registered limit). Shared-prefix MLX versus nine independent full MLX prompts had
+  maximum raw-z delta 0.117874, under the fixed 0.145 limit. Separate real-model smoke requests exercised digit ratings,
+  rotated letter choices, context and two images; the expected dog and second-image receipt choices were returned.
+- H69 (speed): SUPPORTED. The 22.9% median reduction exceeds the registered 5% floor; MLX p95 was also lower (382.007 versus
+  500.553 ms).
+
+Verdict: promote as an explicit, optional, pinned experimental backend, not as the default and not as a generic MLX adapter.
+The remaining promotion work is evidence, not another abstraction: a larger labeled parity suite, sustained camera load,
+multiple Apple Silicon generations and a lower-memory machine.
