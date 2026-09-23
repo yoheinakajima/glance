@@ -2305,3 +2305,7 @@ statement scoring. This entry fixes the promotion test before moving any of it i
 
 This gate does not establish general parity: after it passes, the backend remains marked experimental until a larger labeled
 suite, ratings, sustained load, multiple Apple Silicon generations and lower-memory machines have been measured.
+
+Clarification before implementation: `mlx` is the explicit runtime selector (`--backend mlx` / `Glance(backend="mlx")`), while
+the stable request field remains `"model": "vlm"`. This keeps the wire schema unchanged and makes the implementation choice a
+local deployment concern; responses identify the pinned MLX model id and revision, so it cannot be mistaken for the PyTorch arm.
