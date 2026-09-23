@@ -52,17 +52,19 @@ decisions matching and maximum answer-probability drift 0.039. That suite is sma
 remains the default.
 
 ```bash
-pip install "glance-vlm[mlx]"
-glance ask photo.jpg "Is there a dog?" --backend mlx
-glance serve --backend mlx --preload vlm
+git clone https://github.com/yoheinakajima/glance && cd glance
+uv sync --extra mlx
+uv run glance ask photo.jpg "Is there a dog?" --backend mlx
+uv run glance serve --backend mlx --preload vlm
 ```
 
 Python selects the same path with `Glance(backend="mlx")`.
 
-From a source checkout, use `uv sync --extra mlx` instead of `pip install`. The first run downloads the pinned approximately
-2.7 GB MLX checkpoint. This path requires Apple Silicon, was tested on an M5 with 32 GB, and is not an automatic fallback: an
-unsupported machine, missing optional dependency, changed model id, or changed revision produces an explicit error. The full
-experiment record and live comparison UI are in [Glance Speedlab](https://github.com/yoheinakajima/glance-speedlab).
+The MLX extra is currently available from the repository and will enter PyPI in the next package release. The first run
+downloads the pinned approximately 2.7 GB MLX checkpoint. This path requires Apple Silicon, was tested on an M5 with 32 GB, and
+is not an automatic fallback: an unsupported machine, missing optional dependency, changed model id, or changed revision
+produces an explicit error. The full experiment record and live comparison UI are in
+[Glance Speedlab](https://github.com/yoheinakajima/glance-speedlab).
 
 Images are referred to as `` `img0` `` (then `` `img1` ``, ...) inside the question text. A yes/no answer is `noul`, the
 probability that the statement is true. A pick-one answer has `choice`, `probabilities` and `confidence`. A rating has
