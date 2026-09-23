@@ -460,6 +460,7 @@ def use_it():
     return f"""<aside class="useit site-only" aria-labelledby="useit">
   <div class="useit-top"><h2 id="useit" class="plain">Use it</h2><a class="gh" href="{repo}">github.com/yoheinakajima/glance&nbsp;→</a></div>
   <p>Glance is also a tool you can run: the readout and the fits measured on this page, packaged. One open model on your own machine, typed answers with probabilities, no image leaves it, no per-call bill. Apache-2.0.</p>
+  <p class="tryit"><b>Speed lab</b>: twenty-one measured latency experiments, including an experimental 8-bit MLX scorer that lowered fresh-frame p50 by 25–28% on the fixed suite. <a href="speed/">Read the report and run it locally&nbsp;→</a><span class="note">The speed result is on one Apple M5 machine and a small quality guardrail; the report keeps the rejected experiments and exact scope beside the headline.</span></p>
   <p class="tryit"><b>Try it in your browser</b>, no install: <a href="{demo}">live demo&nbsp;→</a> <a href="{replicate}">Replicate&nbsp;→</a> <a href="{space}">Hugging Face Space&nbsp;→</a><span class="note">The same readout on Qwen3-VL-4B, hosted: yes/no and pick-one. These run in the cloud, so your image is sent to them and the first answer can take a minute while a machine starts; the tool below runs on your own machine.</span></p>
 <pre><code>{install}
 

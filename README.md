@@ -5,7 +5,7 @@ Yes/no, pick-one and ratings are READ from the logits of one forward pass of a f
 default, Apache-2.0). Nothing is generated, nothing is trained, no image leaves the machine. Glance is a calibration and
 measurement harness around that readout. It is not a model.
 
-Project page with every result: https://glance.yohei.me · Coding agents: read [`AGENTS.md`](AGENTS.md).
+Project page with every result: https://glance.yohei.me · Latency experiments and the local camera lab: https://glance.yohei.me/speed/ · Coding agents: read [`AGENTS.md`](AGENTS.md).
 
 ## Try it
 
