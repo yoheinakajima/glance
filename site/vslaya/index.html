@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Glance vs Laya Vision on one Apple M5: typed closed-form vision decisions. Fresh-photo accuracy is close; Laya is faster; Glance leads most secondary boards in this slice.">
+<meta name="description" content="Glance vs Laya Vision on one Apple M5: one accuracy×speed score, then secondary boards and fresh-photo. Laya leads the unified score on speed; Glance leads most secondary suites on accuracy.">
 <link rel="canonical" href="https://glance.yohei.me/vslaya/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Glance vs Laya Vision — a laptop measurement">
-<meta property="og:description" content="Same machine, same images, same typed questions. Fresh-photo accuracy is close; Laya is faster; Glance leads most secondary boards in this slice.">
+<meta property="og:title" content="Glance vs Laya Vision — one score, then the suites">
+<meta property="og:description" content="One accuracy×speed score on a laptop, then the secondary board mix and the fresh-photo check. Measured 2026-09-24 PT.">
 <meta property="og:url" content="https://glance.yohei.me/vslaya/">
 <meta property="og:image" content="https://glance.yohei.me/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<title>Glance vs Laya Vision — a laptop measurement</title>
+<title>Glance vs Laya Vision — one score, then the suites</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap">
 <style>
 
@@ -74,6 +74,14 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 
 .lede{font-size:1.15rem;line-height:1.55;text-wrap:balance}
 .caveat{font-size:.9rem;color:var(--muted);border-left:2px solid var(--rule);padding-left:1rem}
+.scorecard{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.4rem 0 1rem}
+.score{border:1px solid var(--rule);background:var(--tint);padding:1rem 1.15rem;display:flex;flex-direction:column;gap:.35rem}
+.score.winner{border-color:var(--ink)}
+.score .who{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.score .big{font-size:2.4rem;line-height:1;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.score .axes{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.82rem;color:var(--muted);line-height:1.45}
+@media (max-width:560px){.scorecard{grid-template-columns:1fr}.score .big{font-size:2rem}}
+.formula{font-size:.9rem}
 </style>
 </head>
 <body>
@@ -81,33 +89,76 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 <header>
   <p class="running">glance-vlm · comparison note · measured 2026-09-24 PT · Apple M5, 32&nbsp;GB, MPS · harness: typed-decision-bench · not mixed with Laya’s published Cauldron %</p>
   <h1>Glance vs Laya Vision</h1>
-  <p class="papertitle">A product comparison of two typed-decision vision systems on one laptop</p>
-  <p class="lede">Same images, same question text, same machine. Glance is a frozen ~4B open VLM read without generating. Laya Vision is a trained ~201M decision model. Accuracy on contamination-safer fresh photographs is close; Laya is substantially faster; on a diversified secondary mix Glance leads most suites in this slice.</p>
-  <p class="byline">Yohei Nakajima <span class="aff">· independent · measured with AI assistance; numbers are from the harness, not invented</span></p>
-  <p class="links"><a href="/">Glance paper</a> · <a href="/speed/">Speedlab</a> · <a href="https://github.com/yoheinakajima/glance">glance</a> · <a href="https://r33drichards.github.io/laya-vision/">Laya Vision docs</a></p>
+  <p class="papertitle">One accuracy×speed score on a laptop, then the suites that make it</p>
+  <p class="lede">Same images, same typed questions, same machine. The headline is a single product score: equal-weight accuracy across every suite we ran, times relative speed, combined as a geometric mean. That score then breaks into the <b>secondary board mix</b> (where the interesting gap is) and the <b>fresh-photo</b> check (contamination-safer, closer).</p>
+  <p class="byline">Yohei Nakajima <span class="aff">· independent · measured with AI assistance; every number below is from the harness</span></p>
+  <p class="links"><a href="#score">Score</a> · <a href="#secondary">Secondary</a> · <a href="#fresh">Fresh photo</a> · <a href="#latency">Latency</a> · <a href="#limits">Limits</a> · <a href="/">Glance paper</a> · <a href="/speed/">Speedlab</a></p>
 </header>
 
-<section aria-labelledby="takeaway">
-  <h2 id="takeaway" class="plain">Takeaway</h2>
+<section aria-labelledby="score">
+  <h2 id="score" class="plain">The score</h2>
+  <div class="scorecard">
+    <div class="score winner">
+      <div class="who">Laya Vision · unified</div>
+      <div class="big">0.830</div>
+      <div class="axes">Accuracy 0.689 · Speed 1.00<br>p50 121.4&nbsp;ms · trained ~201M · CC BY-NC-SA 4.0</div>
+    </div>
+    <div class="score">
+      <div class="who">Glance · unified</div>
+      <div class="big">0.518</div>
+      <div class="axes">Accuracy 0.886 · Speed 0.302<br>p50 401.5&nbsp;ms · frozen 4B readout · Apache-2.0</div>
+    </div>
+  </div>
+  <p class="formula"><b>Unified</b> = √(Accuracy × Speed). <b>Accuracy</b> is the unweighted mean of ten suite accuracies (two fresh + eight secondary), so the secondary mix is not buried under one photo set. <b>Speed</b> is min(p50) / p50 on the dog.jpg 3-question batch (warmup excluded). <b>Cost</b> is not a third axis here: both systems run on-device with no API bill, so relative wall time is the cost proxy and is already in Speed.</p>
+  <p class="caveat">Laya wins the unified score because it is much faster; Glance wins the accuracy axis (0.886 vs 0.689). Dropping the pets37 suite (where Laya’s breed keys collapsed to 0.175) raises Laya’s unified score to <b>0.864</b> and barely moves Glance (<b>0.518</b>) — the pets miss is real and left in the headline accuracy. This is a <b>product</b> comparison, not a matched-backbone bakeoff. Laya was run <i>outside</i> Glance (Glance only runs Apache-2.0/MIT weights). Laya’s published L4 ~41&nbsp;ms is <b>not</b> claimed here.</p>
   <div class="table-scroll"><table>
-    <thead><tr><th>Question</th><th>What we measured</th><th>What to do with it</th></tr></thead>
+    <thead><tr><th>Axis</th><th class="n">Glance</th><th class="n">Laya</th><th>What it is</th></tr></thead>
     <tbody>
-      <tr><td><b>Fresh photographs</b><span class="note">Commons test split · primary track</span></td>
-        <td>Pick-one: Laya <b>0.892</b> (58/65) vs Glance <b>0.862</b> (56/65). Yes/no: Glance <b>0.950</b> (76/80) vs Laya <b>0.900</b> (72/80).</td>
-        <td>Treat as close on recognition; do not declare a single winner from this alone.</td></tr>
-      <tr><td><b>Speed</b><span class="note">3-question batch on one still · warmup excluded</span></td>
-        <td>Laya p50 <b>121.4&nbsp;ms</b> vs Glance <b>401.5&nbsp;ms</b> (~3.3×). Diverse-run batch p50: Laya ~104&nbsp;ms, Glance ~546&nbsp;ms.</td>
-        <td>If wall time on device is the product metric, Laya wins this comparison.</td></tr>
-      <tr><td><b>Secondary boards</b><span class="note">POPE, GQA, pets, iNat, probe, local A-OKVQA / ScienceQA / VQAv2-yn minis</span></td>
-        <td>Glance ≥ Laya on every suite in the slice except a ScienceQA tie at <b>0.875</b>. Pets breed labels collapsed for Laya (0.175) — reported, not hidden.</td>
-        <td>Useful as a stress mix; several sets are COCO/VG/Cauldron-adjacent. Not the primary claim.</td></tr>
+      <tr><td>Accuracy (10 suites, equal weight)</td><td class="n own">0.886</td><td class="n">0.689</td><td>Mean of suite exact-match rates</td></tr>
+      <tr><td>Speed (relative)</td><td class="n">0.302</td><td class="n own">1.000</td><td>121.4 / p50 on dog 3-q batch</td></tr>
+      <tr class="own"><td>Unified √(acc × speed)</td><td class="n">0.518</td><td class="n own">0.830</td><td>Headline product score</td></tr>
+      <tr><td>Fresh-only accuracy (2 suites)</td><td class="n">0.906</td><td class="n">0.896</td><td>Contamination-safer check</td></tr>
+      <tr><td>Secondary-only accuracy (8 suites)</td><td class="n own">0.881</td><td class="n">0.638</td><td>Where the accuracy gap opens</td></tr>
     </tbody>
   </table></div>
-  <p class="caveat">This is a <b>product</b> comparison (frozen 4B readout vs trained ~201M head), not a matched-backbone bakeoff. Laya weights are CC&nbsp;BY-NC-SA&nbsp;4.0, so Laya was run <i>outside</i> Glance (Glance only runs Apache-2.0/MIT weights). Laya’s published L4 median (~41&nbsp;ms) was <b>not</b> reproduced here; all latency below is M5 MPS wall time.</p>
+</section>
+
+<section aria-labelledby="secondary">
+  <h2 id="secondary"><span class="num">1</span> Secondary boards — where the gap is</h2>
+  <p>Eight closed-form suites, same items for both systems (<code>run_compare.py --diverse</code>, ~4.3&nbsp;min wall, 320 items × 2, zero item errors). Several sets are COCO / Visual Genome / Cauldron-adjacent; treat them as a stress mix, not as the contamination-safer claim. Local A-OKVQA / ScienceQA / VQAv2-yn minis are <b>measured here</b> — not Laya’s published HF table cells.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th><th>Δ (G−L)</th><th>Track</th></tr></thead>
+    <tbody>
+      <tr><td>pope</td><td class="n">50</td><td class="n own">0.880</td><td class="n">0.860</td><td class="n">+0.020</td><td>held-out / COCO-adjacent</td></tr>
+      <tr><td>gqa_yesno</td><td class="n">40</td><td class="n own">0.725</td><td class="n">0.550</td><td class="n">+0.175</td><td>VG-adjacent</td></tr>
+      <tr><td>pets37</td><td class="n">40</td><td class="n own">0.875</td><td class="n">0.175</td><td class="n">+0.700</td><td>classic · Laya breed-key collapse</td></tr>
+      <tr><td>inat_choice</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.650</td><td class="n">+0.250</td><td>post-cutoff secondary</td></tr>
+      <tr><td>probe_spatial</td><td class="n">30</td><td class="n own">0.967</td><td class="n">0.667</td><td class="n">+0.300</td><td>synthetic</td></tr>
+      <tr><td>aokvqa</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.625</td><td class="n">+0.275</td><td>official mini / Cauldron-adj.</td></tr>
+      <tr><td>scienceqa</td><td class="n">40</td><td class="n">0.875</td><td class="n">0.875</td><td class="n">0.000</td><td>official mini / Cauldron-adj.</td></tr>
+      <tr><td>vqav2_yn</td><td class="n">40</td><td class="n own">0.925</td><td class="n">0.700</td><td class="n">+0.225</td><td>official mini / COCO-adj.</td></tr>
+      <tr class="own"><td>Secondary mean</td><td class="n">320</td><td class="n own">0.881</td><td class="n">0.638</td><td class="n">+0.243</td><td>equal weight per suite</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">Glance is ahead or tied on every secondary suite in this slice. The pets37 collapse (Laya 0.175) is a real failure under these option keys, not a harness mismatch; it is included in the headline accuracy and called out in the score caveat.</p>
+</section>
+
+<section aria-labelledby="fresh">
+  <h2 id="fresh"><span class="num">2</span> Fresh photographs — contamination-safer check</h2>
+  <p>Wikimedia Commons photos already in Glance’s eval cache, <b>test</b> split only. Requested <code>--fresh-n 80</code>; loader returned all available test items with images (choice n=65 = full test split; yes/no n=80). On this track the two systems are close; the unified score’s accuracy gap is <i>not</i> coming from here.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th><th>Δ (G−L)</th></tr></thead>
+    <tbody>
+      <tr><td>fresh_choice</td><td class="n">65</td><td class="n">0.862 (56)</td><td class="n own">0.892 (58)</td><td class="n">−0.030</td></tr>
+      <tr><td>fresh_yesno</td><td class="n">80</td><td class="n own">0.950 (76)</td><td class="n">0.900 (72)</td><td class="n">+0.050</td></tr>
+      <tr class="own"><td>Fresh mean</td><td class="n">145</td><td class="n">0.906</td><td class="n">0.896</td><td class="n">+0.010</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">Exploratory n=20 mini earlier: choice tied at 0.900; yes/no Glance 0.850 / Laya 0.800. Lab blur score mini (n=40, unaligned rubrics) stays out of the unified score: Glance exact 0.500 / MAE 0.519; Laya exact 0.275 / MAE 0.851.</p>
 </section>
 
 <section aria-labelledby="systems">
-  <h2 id="systems"><span class="num">1</span> Systems</h2>
+  <h2 id="systems"><span class="num">3</span> Systems</h2>
   <div class="table-scroll"><table>
     <thead><tr><th>Arm</th><th>Checkpoint</th><th>Nature</th><th>License</th></tr></thead>
     <tbody>
@@ -115,48 +166,16 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
       <tr><td>Laya Vision</td><td><code>thaitea/laya-vision</code> @ <code>8b318c99…</code></td><td>Trained SmolVLM-fork decision model (~201M)</td><td>CC BY-NC-SA 4.0</td></tr>
     </tbody>
   </table></div>
-  <p>Both answer <code>noul</code> (yes/no), <code>choice</code>, and <code>score</code> in one forward pass without generating prose. Harness: local <code>typed-decision-bench</code> adapters; same items for both arms.</p>
-</section>
-
-<section aria-labelledby="fresh">
-  <h2 id="fresh"><span class="num">2</span> Primary: fresh Commons photographs</h2>
-  <p>Contamination-safer track: Wikimedia Commons photos already cached by Glance’s eval harness, <b>test</b> split only. Requested <code>--fresh-n 80</code>; loader returned all available test items with images (choice n=65 = full test split; yes/no n=80).</p>
-  <div class="table-scroll"><table>
-    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th></tr></thead>
-    <tbody>
-      <tr><td>fresh_choice</td><td class="n">65</td><td class="n">0.862 (56)</td><td class="n own">0.892 (58)</td></tr>
-      <tr><td>fresh_yesno</td><td class="n">80</td><td class="n own">0.950 (76)</td><td class="n">0.900 (72)</td></tr>
-    </tbody>
-  </table></div>
-  <p class="caption">Earlier exploratory mini (n=20 each): choice tied at 0.900; yes/no Glance 0.850 / Laya 0.800. Lab blur score mini (n=40, unaligned rubrics): Glance exact 0.500 / MAE 0.519; Laya exact 0.275 / MAE 0.851 — secondary only; do not rank products on score alone.</p>
-</section>
-
-<section aria-labelledby="diverse">
-  <h2 id="diverse"><span class="num">3</span> Secondary: diversified closed-form mix</h2>
-  <p><code>run_compare.py --diverse --skip-smoke</code>, ~4.3&nbsp;min wall, 320 items × 2 systems, zero item errors. Official minis prepared locally (A-OKVQA / ScienceQA-image / VQAv2 yes/no at n≈40); <b>local measurements only</b> — not Laya’s HF table cells.</p>
-  <div class="table-scroll"><table>
-    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th><th>Track</th></tr></thead>
-    <tbody>
-      <tr><td>pope</td><td class="n">50</td><td class="n own">0.880</td><td class="n">0.860</td><td>held-out / COCO-adjacent</td></tr>
-      <tr><td>gqa_yesno</td><td class="n">40</td><td class="n own">0.725</td><td class="n">0.550</td><td>VG-adjacent</td></tr>
-      <tr><td>pets37</td><td class="n">40</td><td class="n own">0.875</td><td class="n">0.175</td><td>classic · Laya breed-key collapse</td></tr>
-      <tr><td>inat_choice</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.650</td><td>post-cutoff secondary</td></tr>
-      <tr><td>probe_spatial</td><td class="n">30</td><td class="n own">0.967</td><td class="n">0.667</td><td>synthetic</td></tr>
-      <tr><td>aokvqa</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.625</td><td>official mini / Cauldron-adj.</td></tr>
-      <tr><td>scienceqa</td><td class="n">40</td><td class="n">0.875</td><td class="n">0.875</td><td>official mini / Cauldron-adj.</td></tr>
-      <tr><td>vqav2_yn</td><td class="n">40</td><td class="n own">0.925</td><td class="n">0.700</td><td>official mini / COCO-adj.</td></tr>
-    </tbody>
-  </table></div>
-  <p class="caption">Bold = higher accuracy in that row (or both on a tie). Pets37’s Laya score is a real failure mode under these option keys, not a harness mismatch; keep it visible. ECE deferred (n still modest per suite).</p>
+  <p>Both answer <code>noul</code>, <code>choice</code>, and <code>score</code> in one forward pass without generating prose. Harness: <code>typed-decision-bench</code>.</p>
 </section>
 
 <section aria-labelledby="latency">
-  <h2 id="latency"><span class="num">4</span> Latency</h2>
-  <p>Speedlab-aligned discipline: warmup separate from measured trials; wall ms on idle MPS; repeated still path may exercise caches (not live-camera fresh frames).</p>
+  <h2 id="latency"><span class="num">4</span> Latency (the speed axis)</h2>
+  <p>Speedlab-aligned: warmup separate; wall ms on idle MPS; repeated still path may exercise caches (not live-camera fresh frames). The unified Speed axis uses the first row.</p>
   <div class="table-scroll"><table>
     <thead><tr><th>Loop</th><th class="n">Glance p50</th><th class="n">Laya p50</th><th class="n">Glance p90</th><th class="n">Laya p90</th></tr></thead>
     <tbody>
-      <tr><td>dog.jpg · 3-q batch · warmup 3 + 30 trials</td><td class="n">401.5&nbsp;ms</td><td class="n own">121.4&nbsp;ms</td><td class="n">~404&nbsp;ms</td><td class="n">~122&nbsp;ms</td></tr>
+      <tr class="own"><td>dog.jpg · 3-q batch · warmup 3 + 30 trials</td><td class="n">401.5&nbsp;ms</td><td class="n own">121.4&nbsp;ms</td><td class="n">~404&nbsp;ms</td><td class="n">~122&nbsp;ms</td></tr>
       <tr><td>diverse compare · per-item batch (load-once)</td><td class="n">545.6&nbsp;ms</td><td class="n own">104.2&nbsp;ms</td><td class="n">1287.7&nbsp;ms</td><td class="n">116.6&nbsp;ms</td></tr>
     </tbody>
   </table></div>
@@ -165,12 +184,12 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 <section aria-labelledby="limits">
   <h2 id="limits"><span class="num">5</span> Limits</h2>
   <ul>
-    <li>One machine (Apple M5). Numbers will move on other chips and runtimes.</li>
-    <li>Mini slices on secondary boards (n≈30–50). Enough to shape a story; not enough for tight ranking CIs.</li>
-    <li>Fresh-photo is the contamination-safer primary claim. Older VQA boards may favour whoever saw them in training.</li>
-    <li>Score / blur rubrics were unaligned across systems — reported, not used to crown a winner.</li>
-    <li>No claim that local A-OKVQA / ScienceQA / VQAv2 minis match Laya’s published HF table percentages.</li>
-    <li>Stock JevBench is text-only; this note is the vision sibling protocol, not a JevBench submission.</li>
+    <li>One machine (Apple M5). The score will move on other chips and runtimes.</li>
+    <li>Equal suite weight is a presentation choice: it elevates the secondary mix by design. An n-weighted accuracy is Glance 0.888 / Laya 0.723 — same qualitative story.</li>
+    <li>Mini slices on secondary boards (n≈30–50). Enough to shape a score; not enough for tight ranking CIs. ECE deferred.</li>
+    <li>Older VQA boards may favour whoever saw them in training; fresh-photo remains the contamination-safer check.</li>
+    <li>No claim that local official minis match Laya’s published HF percentages.</li>
+    <li>Stock JevBench is text-only; the two-axis geometric mean here is in that spirit, for vision, on this laptop only.</li>
   </ul>
 </section>
 
@@ -181,11 +200,10 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 /opt/homebrew/bin/python3.11 run_compare.py --fresh-n 80 --blur-n 40 --skip-smoke
 /opt/homebrew/bin/python3.11 run_compare.py --diverse --skip-smoke
 </code></pre>
-  <p>Protocol and paper draft live beside the harness. This page is a short public note; the long draft retains run logs and archive paths.</p>
 </section>
 
 <footer>
-  <p>Glance · <a href="/">glance.yohei.me</a> · comparison note for <a href="/vslaya/">/vslaya</a> · measured 2026-09-24 PT · Laya Vision is independent work (thaitea / r33drichards); this page is not affiliated with TypeSafe or Jev.</p>
+  <p>Glance · <a href="/">glance.yohei.me</a> · <a href="/vslaya/">/vslaya</a> · measured 2026-09-24 PT · Laya Vision is independent work (thaitea / r33drichards); this page is not affiliated with TypeSafe or Jev.</p>
 </footer>
 </main>
 </body>
