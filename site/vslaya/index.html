@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Glance vs Laya Vision on one Apple M5: typed closed-form vision decisions. Fresh-photo accuracy is close; Laya is faster; Glance leads most secondary boards in this slice.">
+<link rel="canonical" href="https://glance.yohei.me/vslaya/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Glance vs Laya Vision — a laptop measurement">
+<meta property="og:description" content="Same machine, same images, same typed questions. Fresh-photo accuracy is close; Laya is faster; Glance leads most secondary boards in this slice.">
+<meta property="og:url" content="https://glance.yohei.me/vslaya/">
+<meta property="og:image" content="https://glance.yohei.me/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>Glance vs Laya Vision — a laptop measurement</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono&display=swap">
+<style>
+
+:root{--paper:#ffffff;--ink:#14171a;--muted:#56616b;--rule:#d5dbe1;--link:#1a4480;--miss:#8f2d2d;--own:#14171a;--tint:#f3f5f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0f1214;--ink:#e4e8eb;--muted:#98a3ad;--rule:#2b3239;--link:#8fb4e8;--miss:#e39a9a;--own:#e4e8eb;--tint:#171b1f}}
+:root[data-theme="dark"]{--paper:#0f1214;--ink:#e4e8eb;--muted:#98a3ad;--rule:#2b3239;--link:#8fb4e8;--miss:#e39a9a;--own:#e4e8eb;--tint:#171b1f}
+body{background:var(--paper);color:var(--ink);font:400 1.0625rem/1.62 "STIX Two Text","Iowan Old Style","Palatino Linotype",Georgia,serif;padding-inline:20px;padding-block:2.5rem 4rem}
+main{max-width:41rem;margin-inline:auto;display:flex;flex-direction:column;gap:2.75rem}
+section,header{display:flex;flex-direction:column;gap:.9rem}
+p,ul,pre,table,figure,h1,h2,h3{margin:0}
+a{color:var(--link);text-decoration-thickness:.06em;text-underline-offset:.18em}
+a:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.running,.caption,figcaption,.links,.note,th,.ci,.tick,.lab,.val,footer,.verdict{font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.running{font-size:.78rem;color:var(--muted);letter-spacing:.02em;border-bottom:1px solid var(--rule);padding-bottom:.7rem}
+h1{font-size:2.6rem;line-height:1.1;font-weight:600;letter-spacing:-.01em;margin-top:1.2rem}
+.subtitle{font-size:1.28rem;line-height:1.42;text-wrap:balance}
+.byline{font-size:1.05rem}
+.links{font-size:.9rem;color:var(--muted)}
+h2{font-size:1.32rem;font-weight:600;line-height:1.25;text-wrap:balance;border-top:1.5px solid var(--ink);padding-top:.7rem}
+.papertitle{font-size:1.5rem;line-height:1.25;font-weight:600;margin:.1rem 0 1rem;max-width:34rem}@media (max-width:480px){.papertitle{font-size:1.25rem}}
+h2.plain{border-top:0;padding-top:0;font-size:1rem;font-family:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.num{display:inline-block;min-width:1.6rem;color:var(--muted);font-weight:400}
+h3{font-size:1.06rem;font-weight:600;font-style:italic;margin-top:.6rem}
+.abstract{font-size:1.1rem;line-height:1.6}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:.95rem;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}.table-scroll{overflow-x:auto}
+thead th{font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:left;padding:.5rem .9rem .45rem 0;border-bottom:.75px solid var(--ink);white-space:nowrap}
+td{padding:.42rem .9rem .42rem 0;vertical-align:baseline;white-space:nowrap}
+td:first-child{white-space:normal;min-width:11rem}
+.n{text-align:right}td.n:last-child,th.n:last-child{padding-right:0}
+tr.own td{font-weight:600}tr.sep td{border-top:.75px solid var(--rule)}td.own{font-weight:600}tr.group td{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:.85rem;padding-bottom:.15rem}
+.ci{font-size:.78rem;color:var(--muted);font-weight:400}.note{font-size:.78rem;color:var(--muted);font-weight:400;display:block}
+.pending{color:var(--muted);font-style:italic;text-align:center}
+.protocol{margin:0;display:grid;grid-template-columns:7.5rem 1fr;gap:.7rem 1rem;font-size:.95rem}.protocol dt{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:.2rem}.protocol dd{margin:0}.protocol code{white-space:normal;word-break:break-word}@media (max-width:560px){.protocol{grid-template-columns:1fr;gap:.2rem}.protocol dd{margin-bottom:.6rem}}.refs{font-family:"IBM Plex Sans",Arial,sans-serif;font-size:.84rem;line-height:1.5;padding-left:1.4rem;display:flex;flex-direction:column;gap:.35rem}.aff{color:var(--muted);font-size:.9rem}td code,th code{white-space:normal}.caption,figcaption{font-size:.82rem;line-height:1.5;color:var(--muted)}
+figure{display:flex;flex-direction:column;gap:.6rem;margin-block:.4rem}
+.figure-scroll{overflow-x:auto}
+svg text{fill:var(--ink)}svg .tick,svg .val{font-size:11px;fill:var(--muted)}svg .lab{font-size:12.5px;fill:var(--muted)}svg .lab.own{fill:var(--ink);font-weight:600}
+svg .grid{stroke:var(--rule);stroke-width:1}svg .whisk{stroke:var(--ink);stroke-width:1.25}
+svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:var(--own)}
+.misses{list-style:none;padding:0;display:flex;flex-direction:column;gap:.85rem}
+.verdict{display:block;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}.verdict.miss{color:var(--miss)}
+.regimes{margin:1.2rem 0 1.6rem}.regimes td{white-space:normal;vertical-align:top;font-size:.93rem;line-height:1.45;padding-top:.6rem;padding-bottom:.6rem}.regimes td:first-child{min-width:8.5rem}.regimes td:nth-child(2){min-width:17rem}.regimes td:nth-child(3){min-width:12rem}
+@media (max-width:620px){.regimes thead{display:none}.regimes table,.regimes tbody,.regimes tr,.regimes td{display:block}.regimes td{min-width:0!important;padding:.15rem 0}.regimes tr{padding:.65rem 0;border-top:.75px solid var(--rule)}.regimes tr:first-child{border-top:0}.regimes td:nth-child(3){font-style:italic}}
+.useit{border:1px solid var(--rule);background:var(--tint);padding:1.05rem 1.25rem .95rem;margin:1.4rem 0 2.4rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.useit-top{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem 1rem;flex-wrap:wrap}.useit h2{margin:0;border:0;padding:0}.useit .gh{font-weight:500;white-space:nowrap}
+.useit p{margin:.55rem 0}
+.useit .tryit a{font-weight:500;white-space:nowrap;margin-right:.9rem}.useit .tryit .note{display:block;margin-top:.2rem;color:var(--muted);font-size:.84rem}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
+.useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
+pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
+code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
+footer{font-size:.8rem;line-height:1.55;color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem}
+@media (max-width:480px){h1{font-size:2.1rem}.subtitle{font-size:1.12rem}body{font-size:1rem}}
+
+figure svg{width:100%;height:auto;display:block}
+.only-narrow{display:none}@media (max-width:560px){.only-wide{display:none}.only-narrow{display:block}}
+svg .m-tick{font-size:11px;fill:var(--muted)}svg .m-lab{font-size:12px;fill:var(--muted)}svg .m-strong{fill:var(--ink);font-weight:600}svg .m-ink{fill:var(--ink)}svg .m-written{fill:var(--ink);opacity:.42}svg .m-head{font-size:12.5px;fill:var(--ink);font-weight:600}
+svg .m-grid{stroke:var(--rule);stroke-width:1}svg .m-spoke{stroke:var(--rule);stroke-width:1.2}svg .m-whisk{stroke:var(--muted);stroke-width:1}
+svg .m-box{fill:var(--paper);stroke:var(--ink);stroke-width:1.1}svg .m-arrow{stroke:var(--ink);stroke-width:1.2}svg .m-bar{fill:var(--muted)}svg .m-outline{fill:var(--paper);stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}svg .m-own{fill:var(--ink)}svg .m-host{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}svg .m-prov{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;stroke-dasharray:2 2}
+svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--muted);stroke-width:1.1}svg .m-s-prov{fill:var(--paper);stroke:var(--muted);stroke-width:1.1;stroke-dasharray:1.6 1.6}
+.key svg{width:11px;height:11px;vertical-align:-1px;margin:0 3px 0 8px;display:inline}
+
+.lede{font-size:1.15rem;line-height:1.55;text-wrap:balance}
+.caveat{font-size:.9rem;color:var(--muted);border-left:2px solid var(--rule);padding-left:1rem}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <p class="running">glance-vlm · comparison note · measured 2026-09-24 PT · Apple M5, 32&nbsp;GB, MPS · harness: typed-decision-bench · not mixed with Laya’s published Cauldron %</p>
+  <h1>Glance vs Laya Vision</h1>
+  <p class="papertitle">A product comparison of two typed-decision vision systems on one laptop</p>
+  <p class="lede">Same images, same question text, same machine. Glance is a frozen ~4B open VLM read without generating. Laya Vision is a trained ~201M decision model. Accuracy on contamination-safer fresh photographs is close; Laya is substantially faster; on a diversified secondary mix Glance leads most suites in this slice.</p>
+  <p class="byline">Yohei Nakajima <span class="aff">· independent · measured with AI assistance; numbers are from the harness, not invented</span></p>
+  <p class="links"><a href="/">Glance paper</a> · <a href="/speed/">Speedlab</a> · <a href="https://github.com/yoheinakajima/glance">glance</a> · <a href="https://r33drichards.github.io/laya-vision/">Laya Vision docs</a></p>
+</header>
+
+<section aria-labelledby="takeaway">
+  <h2 id="takeaway" class="plain">Takeaway</h2>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Question</th><th>What we measured</th><th>What to do with it</th></tr></thead>
+    <tbody>
+      <tr><td><b>Fresh photographs</b><span class="note">Commons test split · primary track</span></td>
+        <td>Pick-one: Laya <b>0.892</b> (58/65) vs Glance <b>0.862</b> (56/65). Yes/no: Glance <b>0.950</b> (76/80) vs Laya <b>0.900</b> (72/80).</td>
+        <td>Treat as close on recognition; do not declare a single winner from this alone.</td></tr>
+      <tr><td><b>Speed</b><span class="note">3-question batch on one still · warmup excluded</span></td>
+        <td>Laya p50 <b>121.4&nbsp;ms</b> vs Glance <b>401.5&nbsp;ms</b> (~3.3×). Diverse-run batch p50: Laya ~104&nbsp;ms, Glance ~546&nbsp;ms.</td>
+        <td>If wall time on device is the product metric, Laya wins this comparison.</td></tr>
+      <tr><td><b>Secondary boards</b><span class="note">POPE, GQA, pets, iNat, probe, local A-OKVQA / ScienceQA / VQAv2-yn minis</span></td>
+        <td>Glance ≥ Laya on every suite in the slice except a ScienceQA tie at <b>0.875</b>. Pets breed labels collapsed for Laya (0.175) — reported, not hidden.</td>
+        <td>Useful as a stress mix; several sets are COCO/VG/Cauldron-adjacent. Not the primary claim.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caveat">This is a <b>product</b> comparison (frozen 4B readout vs trained ~201M head), not a matched-backbone bakeoff. Laya weights are CC&nbsp;BY-NC-SA&nbsp;4.0, so Laya was run <i>outside</i> Glance (Glance only runs Apache-2.0/MIT weights). Laya’s published L4 median (~41&nbsp;ms) was <b>not</b> reproduced here; all latency below is M5 MPS wall time.</p>
+</section>
+
+<section aria-labelledby="systems">
+  <h2 id="systems"><span class="num">1</span> Systems</h2>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Arm</th><th>Checkpoint</th><th>Nature</th><th>License</th></tr></thead>
+    <tbody>
+      <tr class="own"><td>Glance</td><td><code>Qwen/Qwen3-VL-4B-Instruct</code> @ <code>ebb281ec…</code></td><td>Frozen VLM + typed logit readout</td><td>Apache-2.0</td></tr>
+      <tr><td>Laya Vision</td><td><code>thaitea/laya-vision</code> @ <code>8b318c99…</code></td><td>Trained SmolVLM-fork decision model (~201M)</td><td>CC BY-NC-SA 4.0</td></tr>
+    </tbody>
+  </table></div>
+  <p>Both answer <code>noul</code> (yes/no), <code>choice</code>, and <code>score</code> in one forward pass without generating prose. Harness: local <code>typed-decision-bench</code> adapters; same items for both arms.</p>
+</section>
+
+<section aria-labelledby="fresh">
+  <h2 id="fresh"><span class="num">2</span> Primary: fresh Commons photographs</h2>
+  <p>Contamination-safer track: Wikimedia Commons photos already cached by Glance’s eval harness, <b>test</b> split only. Requested <code>--fresh-n 80</code>; loader returned all available test items with images (choice n=65 = full test split; yes/no n=80).</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th></tr></thead>
+    <tbody>
+      <tr><td>fresh_choice</td><td class="n">65</td><td class="n">0.862 (56)</td><td class="n own">0.892 (58)</td></tr>
+      <tr><td>fresh_yesno</td><td class="n">80</td><td class="n own">0.950 (76)</td><td class="n">0.900 (72)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">Earlier exploratory mini (n=20 each): choice tied at 0.900; yes/no Glance 0.850 / Laya 0.800. Lab blur score mini (n=40, unaligned rubrics): Glance exact 0.500 / MAE 0.519; Laya exact 0.275 / MAE 0.851 — secondary only; do not rank products on score alone.</p>
+</section>
+
+<section aria-labelledby="diverse">
+  <h2 id="diverse"><span class="num">3</span> Secondary: diversified closed-form mix</h2>
+  <p><code>run_compare.py --diverse --skip-smoke</code>, ~4.3&nbsp;min wall, 320 items × 2 systems, zero item errors. Official minis prepared locally (A-OKVQA / ScienceQA-image / VQAv2 yes/no at n≈40); <b>local measurements only</b> — not Laya’s HF table cells.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Suite</th><th class="n">n</th><th class="n">Glance</th><th class="n">Laya</th><th>Track</th></tr></thead>
+    <tbody>
+      <tr><td>pope</td><td class="n">50</td><td class="n own">0.880</td><td class="n">0.860</td><td>held-out / COCO-adjacent</td></tr>
+      <tr><td>gqa_yesno</td><td class="n">40</td><td class="n own">0.725</td><td class="n">0.550</td><td>VG-adjacent</td></tr>
+      <tr><td>pets37</td><td class="n">40</td><td class="n own">0.875</td><td class="n">0.175</td><td>classic · Laya breed-key collapse</td></tr>
+      <tr><td>inat_choice</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.650</td><td>post-cutoff secondary</td></tr>
+      <tr><td>probe_spatial</td><td class="n">30</td><td class="n own">0.967</td><td class="n">0.667</td><td>synthetic</td></tr>
+      <tr><td>aokvqa</td><td class="n">40</td><td class="n own">0.900</td><td class="n">0.625</td><td>official mini / Cauldron-adj.</td></tr>
+      <tr><td>scienceqa</td><td class="n">40</td><td class="n">0.875</td><td class="n">0.875</td><td>official mini / Cauldron-adj.</td></tr>
+      <tr><td>vqav2_yn</td><td class="n">40</td><td class="n own">0.925</td><td class="n">0.700</td><td>official mini / COCO-adj.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="caption">Bold = higher accuracy in that row (or both on a tie). Pets37’s Laya score is a real failure mode under these option keys, not a harness mismatch; keep it visible. ECE deferred (n still modest per suite).</p>
+</section>
+
+<section aria-labelledby="latency">
+  <h2 id="latency"><span class="num">4</span> Latency</h2>
+  <p>Speedlab-aligned discipline: warmup separate from measured trials; wall ms on idle MPS; repeated still path may exercise caches (not live-camera fresh frames).</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Loop</th><th class="n">Glance p50</th><th class="n">Laya p50</th><th class="n">Glance p90</th><th class="n">Laya p90</th></tr></thead>
+    <tbody>
+      <tr><td>dog.jpg · 3-q batch · warmup 3 + 30 trials</td><td class="n">401.5&nbsp;ms</td><td class="n own">121.4&nbsp;ms</td><td class="n">~404&nbsp;ms</td><td class="n">~122&nbsp;ms</td></tr>
+      <tr><td>diverse compare · per-item batch (load-once)</td><td class="n">545.6&nbsp;ms</td><td class="n own">104.2&nbsp;ms</td><td class="n">1287.7&nbsp;ms</td><td class="n">116.6&nbsp;ms</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section aria-labelledby="limits">
+  <h2 id="limits"><span class="num">5</span> Limits</h2>
+  <ul>
+    <li>One machine (Apple M5). Numbers will move on other chips and runtimes.</li>
+    <li>Mini slices on secondary boards (n≈30–50). Enough to shape a story; not enough for tight ranking CIs.</li>
+    <li>Fresh-photo is the contamination-safer primary claim. Older VQA boards may favour whoever saw them in training.</li>
+    <li>Score / blur rubrics were unaligned across systems — reported, not used to crown a winner.</li>
+    <li>No claim that local A-OKVQA / ScienceQA / VQAv2 minis match Laya’s published HF table percentages.</li>
+    <li>Stock JevBench is text-only; this note is the vision sibling protocol, not a JevBench submission.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="repro">
+  <h2 id="repro"><span class="num">6</span> Reproduce</h2>
+<pre><code>cd ~/code/typed-decision-bench
+/opt/homebrew/bin/python3.11 run_latency.py --warmup 3 --trials 30
+/opt/homebrew/bin/python3.11 run_compare.py --fresh-n 80 --blur-n 40 --skip-smoke
+/opt/homebrew/bin/python3.11 run_compare.py --diverse --skip-smoke
+</code></pre>
+  <p>Protocol and paper draft live beside the harness. This page is a short public note; the long draft retains run logs and archive paths.</p>
+</section>
+
+<footer>
+  <p>Glance · <a href="/">glance.yohei.me</a> · comparison note for <a href="/vslaya/">/vslaya</a> · measured 2026-09-24 PT · Laya Vision is independent work (thaitea / r33drichards); this page is not affiliated with TypeSafe or Jev.</p>
+</footer>
+</main>
+</body>
+</html>
