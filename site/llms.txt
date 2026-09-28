@@ -16,4 +16,5 @@ fit reaches only 0.55. For image-quality scoring alone, a small trained quality 
 - Operating guide for coding agents: AGENTS.md in the repository
 - Every claim with evidence and caveats: docs/CLAIMS.md
 - Results, generated from result files: docs/paper/RESULTS_ZEROSHOT.md, results/lab/matrix.md
+- External aggregate: results/external/image_jevbench_v0_1_2.json (Image JevBench v0.1.2; #6 of 49 on its four-axis composite; not an accuracy-only or general VLM ranking)
 - Pre-registration notebook: lab/NOTES.md

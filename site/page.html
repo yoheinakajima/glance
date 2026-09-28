@@ -46,6 +46,10 @@ svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:
 .useit p{margin:.55rem 0}
 .useit .tryit a{font-weight:500;white-space:nowrap;margin-right:.9rem}.useit .tryit .note{display:block;margin-top:.2rem;color:var(--muted);font-size:.84rem}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
 .useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
+.external-result{border:1.5px solid var(--ink);padding:1.15rem 1.25rem 1rem;margin:.2rem 0 1.2rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.external-result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem 1.25rem;flex-wrap:wrap}.external-result-top h2{color:var(--ink);font:600 1.35rem/1.2 "STIX Two Text","Iowan Old Style",Georgia,serif;text-transform:none;letter-spacing:0}.external-result-top a{font-weight:500;white-space:nowrap}.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}.external-result>p{margin:.7rem 0}
+.external-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;border-block:1px solid var(--rule);padding:.75rem 0}.external-result-grid div{display:flex;flex-direction:column;gap:.08rem;min-width:0}.external-result-grid b{font:600 1.55rem/1.05 "STIX Two Text","Iowan Old Style",Georgia,serif}.external-result-grid span{font-size:.75rem;line-height:1.3;color:var(--muted)}.external-result-foot{font-size:.76rem;color:var(--muted)}
+@media (max-width:620px){.external-result-grid{grid-template-columns:repeat(2,1fr)}.external-result-top a{white-space:normal}}
 pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
 code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
 footer{font-size:.8rem;line-height:1.55;color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem}
@@ -61,12 +65,12 @@ svg .m-s-own{fill:var(--muted)}svg .m-s-host{fill:var(--paper);stroke:var(--mute
 </style>
 <main>
 <header>
-  <p class="running">glance-vlm · working paper · v0.3.1 · snapshot 9aaa939, 2026-09-23 · every experiment registered before it ran · results regenerate from the repository</p>
+  <p class="running">glance-vlm · working paper · v0.3.1 · snapshot d458a27, 2026-09-27 · every experiment registered before it ran · results regenerate from the repository</p>
   <h1>Glance</h1>
   <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#regimes">Summary</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+  <p class="links"><a href="#regimes">Summary</a> · <a href="#external-result">External benchmark</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
 
 <section aria-labelledby="regimes" class="regimes"><h2 id="regimes" class="plain">The result in three regimes</h2><div class="table-scroll"><table><thead><tr><th>What you ask</th><th>What we measured, Qwen3-VL-4B + Glance</th><th>What to do</th></tr></thead><tbody><tr><td><b>Recognition</b><span class="note">yes/no and pick-one about what is in a photograph</span></td><td>0.939 and 0.933 on fresh photographs, against 0.961 and 0.937 for the best hosted model; the same model writing its answer scores 0.945 and 0.930</td><td>Read it. One forward pass of a small open model, nothing generated.</td></tr><tr><td><b>Ratings on a rubric</b><span class="note">a level on an image-quality scale</span></td><td>zero-shot the order is right (within one level on 0.99 of images) and the exact level often wrong (0.669); 0.758 after the model has seen 16 unlabeled images of the rubric</td><td>Show it a few images of the rubric first. Outside image quality this does not work (section 5.1).</td></tr><tr><td><b>Geometry</b><span class="note">relative size, line direction, tilt</span></td><td>0.52 on the largest of four shapes and 0.65 on stripe direction, where the best hosted models score 1.00; the direction is in its hidden state (0.99 by a linear probe) and the relative size is not</td><td>Do not rely on this readout. Use a larger hosted model.</td></tr></tbody></table></div></section>
@@ -97,6 +101,21 @@ glance fit --rubric rubric.json --data labels/</code></pre>
   <p class="useit-foot">This panel belongs to the website. The paper begins below.</p>
 </aside>
 
+<aside class="external-result site-only" aria-labelledby="external-result">
+  <div class="external-result-top">
+    <div><p class="eyebrow">Independent benchmark · Image JevBench v0.1.2</p>
+    <h2 id="external-result" class="plain">#6 of 49 on the four-axis composite</h2></div>
+    <a href="https://www.benchmarkheaven.com/image-jev-bench">View the full ranking&nbsp;→</a>
+  </div>
+  <p>The exact frozen Qwen3-VL-4B + Glance configuration scored <b>66.86</b> across 684 public and sealed decisions. The composite balances intelligence, calibration, speed and modeled cost; it is not an accuracy-only or general VLM ranking.</p>
+  <div class="external-result-grid" role="list" aria-label="Image JevBench results">
+    <div role="listitem"><b>#11</b><span>speed · 0.089s p50</span></div>
+    <div role="listitem"><b>#11</b><span>cost · $0.0303 / 1,000</span></div>
+    <div role="listitem"><b>#9</b><span>core track · 500 items</span></div>
+    <div role="listitem"><b>#9</b><span>everyday-photo track · 184 items</span></div>
+  </div>
+  <p class="external-result-foot">Axes: intelligence 59.37 · calibration 72.97 · speed 88.73 · cost 55.54. Calibration is the clearest improvement opportunity. Published 2026-09-27; exact source revision <code>d458a276</code>. The benchmark publishes aggregate sealed results only and is 70.6% synthetic.</p>
+</aside>
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
