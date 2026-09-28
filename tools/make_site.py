@@ -50,6 +50,28 @@ h2h, gen, lf = load("results/lab/frontier_head_to_head.json"), load("results/lab
 cost, measured, ladder = load("results/lab/cost_model.json"), load("results/lab/frontier_cost_measured.json"), load("lab/READOUT_LADDER.json")
 nullp, scaling, genb = load("results/lab/null_prior.json"), load("results/lab/scaling.json"), load("lab/GENBENCH.json")
 jd = load("results/lab/jsondigits.json")["mean"]
+image_jevbench = load("results/external/image_jevbench_v0_1_2.json")
+
+
+def external_benchmark():
+    """Render the published third-party aggregate from its checked-in, source-linked snapshot."""
+    b, o, tracks = image_jevbench, image_jevbench["overall"], image_jevbench["tracks"]
+    axes = o["axes"]
+    return f"""<aside class="external-result site-only" aria-labelledby="external-result">
+  <div class="external-result-top">
+    <div><p class="eyebrow">Independent benchmark · {html.escape(b['benchmark'])} v{html.escape(b['version'])}</p>
+    <h2 id="external-result" class="plain">#{o['rank']} of {b['population']['systems']} on the four-axis composite</h2></div>
+    <a href="{html.escape(b['source_url'])}">View the full ranking&nbsp;→</a>
+  </div>
+  <p>The exact frozen Qwen3-VL-4B + Glance configuration scored <b>{o['composite']:.2f}</b> across {b['population']['scored_items']} public and sealed decisions. The composite balances intelligence, calibration, speed and modeled cost; it is not an accuracy-only or general VLM ranking.</p>
+  <div class="external-result-grid" role="list" aria-label="Image JevBench results">
+    <div role="listitem"><b>#{o['axis_ranks']['speed']}</b><span>speed · {o['latency_seconds']['p50']:.3f}s p50</span></div>
+    <div role="listitem"><b>#{o['axis_ranks']['cost']}</b><span>cost · ${o['usd_per_1000']:.4f} / 1,000</span></div>
+    <div role="listitem"><b>#{tracks['core']['rank']}</b><span>core track · {tracks['core']['items']} items</span></div>
+    <div role="listitem"><b>#{tracks['everyday_photo']['rank']}</b><span>everyday-photo track · {tracks['everyday_photo']['items']} items</span></div>
+  </div>
+  <p class="external-result-foot">Axes: intelligence {axes['intelligence']:.2f} · calibration {axes['calibration']:.2f} · speed {axes['speed']:.2f} · cost {axes['cost']:.2f}. Calibration is the clearest improvement opportunity. Published {b['scored_at']}; exact source revision <code>{b['glance_revision'][:8]}</code>. The benchmark publishes aggregate sealed results only and is {b['population']['synthetic_share_percent']:.1f}% synthetic.</p>
+</aside>"""
 
 # ---- Figure 1: fresh photos ------------------------------------------------------------------------
 rows1 = []
@@ -725,11 +747,12 @@ BODY = f"""
   <p class="papertitle">Reading typed visual judgements from a frozen open vision-language model</p>
   <p class="subtitle">Coarse recognition close to the best hosted models (level on pick-one, two points behind on yes/no) is already in a small open vision-language model, and it can be read without generating. What remains hard about quality ratings is where the rubric draws its lines. On geometric judgements (relative size, line direction) the best hosted models are perfect and the small open model, read this way, is far behind.</p>
   <p class="byline">Yohei Nakajima <span class="aff">· independent · built with AI assistance throughout (the notebook records who did what)</span></p>
-  <p class="links"><a href="#regimes">Summary</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
+  <p class="links"><a href="#regimes">Summary</a> · <a href="#external-result">External benchmark</a> · <a href="#useit">Use it</a> · <a href="#method">Method</a> · <a href="#evidence">Yes/no and pick-one</a> · <a href="#stops">Where it stops</a> · <a href="#read">Read against write</a> · <a href="#ratings">Ratings</a> · <a href="#models">Scale and family</a> · <a href="#cost">Cost and speed</a> · <a href="#new">What is not new</a> · <a href="#limits">Limits and misses</a> · <a href="#refs">References</a></p>
 </header>
 
 {regimes()}
 {use_it()}
+{external_benchmark()}
 <section aria-labelledby="abstract">
   <h2 id="abstract" class="plain">Abstract</h2>
   <p class="abstract">A <em>typed</em> question is one whose legal answers form a closed set known before the model runs: yes or no, one of a list, a level on a rubric. We put such questions about images to a frozen open vision-language model (Qwen3-VL-4B, Apache-2.0, on a laptop) and read the answer from the logits of one forward pass; nothing is generated.</p>
@@ -912,6 +935,10 @@ svg .dot{fill:var(--paper);stroke:var(--ink);stroke-width:1.5}svg .dot.own{fill:
 .useit p{margin:.55rem 0}
 .useit .tryit a{font-weight:500;white-space:nowrap;margin-right:.9rem}.useit .tryit .note{display:block;margin-top:.2rem;color:var(--muted);font-size:.84rem}.useit pre{background:var(--paper);margin:.75rem 0 .7rem;font-size:.78rem}.useit ul{margin:.3rem 0 0;padding-left:1.1rem}.useit li{margin:.28rem 0}
 .useit code{font-size:.86em}.useit li code{white-space:nowrap}.useit-foot{font-size:.76rem;color:var(--muted);margin:.8rem 0 0}
+.external-result{border:1.5px solid var(--ink);padding:1.15rem 1.25rem 1rem;margin:.2rem 0 1.2rem;font:400 .92rem/1.5 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.external-result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem 1.25rem;flex-wrap:wrap}.external-result-top h2{color:var(--ink);font:600 1.35rem/1.2 "STIX Two Text","Iowan Old Style",Georgia,serif;text-transform:none;letter-spacing:0}.external-result-top a{font-weight:500;white-space:nowrap}.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}.external-result>p{margin:.7rem 0}
+.external-result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;border-block:1px solid var(--rule);padding:.75rem 0}.external-result-grid div{display:flex;flex-direction:column;gap:.08rem;min-width:0}.external-result-grid b{font:600 1.55rem/1.05 "STIX Two Text","Iowan Old Style",Georgia,serif}.external-result-grid span{font-size:.75rem;line-height:1.3;color:var(--muted)}.external-result-foot{font-size:.76rem;color:var(--muted)}
+@media (max-width:620px){.external-result-grid{grid-template-columns:repeat(2,1fr)}.external-result-top a{white-space:normal}}
 pre{background:var(--tint);border-left:2px solid var(--rule);padding:.8rem 1rem;overflow-x:auto;font:400 .82rem/1.55 "IBM Plex Mono",ui-monospace,Menlo,monospace}
 code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em}
 footer{font-size:.8rem;line-height:1.55;color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem}

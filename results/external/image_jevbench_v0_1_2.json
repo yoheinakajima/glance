@@ -1,0 +1,63 @@
+{
+  "benchmark": "Image JevBench",
+  "version": "0.1.2",
+  "scored_at": "2026-09-27",
+  "source_url": "https://www.benchmarkheaven.com/image-jev-bench",
+  "system": "Glance frozen Qwen3-VL-4B",
+  "glance_revision": "d458a27654ad9258977526395547c51e632fa5cd",
+  "population": {
+    "systems": 49,
+    "scored_items": 684,
+    "public_items": 228,
+    "sealed_items": 456,
+    "synthetic_share_percent": 70.6
+  },
+  "overall": {
+    "rank": 6,
+    "composite": 66.86,
+    "axes": {
+      "intelligence": 59.37,
+      "calibration": 72.97,
+      "speed": 88.73,
+      "cost": 55.54
+    },
+    "public": {
+      "correct": 177,
+      "total": 228,
+      "accuracy_percent": 77.6
+    },
+    "sealed": {
+      "correct": 322,
+      "total": 456,
+      "accuracy_percent": 70.6
+    },
+    "matched_gap_percentage_points": -2.8,
+    "usd_per_1000": 0.0303,
+    "latency_seconds": {
+      "p50": 0.089,
+      "p95": 0.129
+    },
+    "axis_ranks": {
+      "speed": 11,
+      "cost": 11
+    }
+  },
+  "tracks": {
+    "core": {
+      "items": 500,
+      "rank": 9,
+      "composite": 65.04,
+      "public_accuracy_percent": 71.2,
+      "sealed_accuracy_percent": 66.2
+    },
+    "everyday_photo": {
+      "items": 184,
+      "rank": 9,
+      "composite": 72.25,
+      "public_accuracy_percent": 87.6,
+      "sealed_accuracy_percent": 87.4
+    }
+  },
+  "scoring_note": "The composite is an equal-weight harmonic mean of Intelligence, Calibration, Speed, and Cost after the benchmark's gates.",
+  "scope_note": "This is an external aggregate for the exact frozen configuration, not an accuracy-only or general VLM ranking. Public and sealed item-level content is not published. Computer and browser preview tracks are unscored."
+}
